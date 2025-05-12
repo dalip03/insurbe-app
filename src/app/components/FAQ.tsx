@@ -37,7 +37,7 @@ export default function FAQ() {
         {/* Left Column */}
         <div className=''>
           <h2 className="text-3xl font-bold mb-4">Frequently asked questions</h2>
-          <p className="text-gray-600 mb-6">Everything you need to know about Insurbe</p>
+          <p className="text-black mb-6">Everything you need to know about Insurbe</p>
           <button className="bg-purple-600 text-white px-6 py-2 rounded font-medium hover:bg-purple-700 transition">
             Get Your Free Quote
           </button>

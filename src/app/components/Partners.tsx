@@ -46,7 +46,7 @@ export default function ClientLogos() {
         <h2 className="text-3xl font-bold">
           Trusted Partners in Your Insurance Journey
         </h2>
-        {/* <p className="text-gray-600">Partnering with Industry Leaders</p> */}
+        {/* <p className="text-black">Partnering with Industry Leaders</p> */}
       </div>
    <div className="px-4">
   <Slider {...settings}>

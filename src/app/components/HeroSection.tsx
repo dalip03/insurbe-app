@@ -17,12 +17,12 @@ export default function HeroSection() {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="text-3xl sm:text-3xl lg:text-4xl font-bold text-gray-900 font-jost"
+          className="text-3xl sm:text-3xl lg:text-4xl font-bold text-black font-jost"
         >   
           Unlock the Best Insurance Solutions in Germany with Ease
         </motion.h1>
 
-        <ul className="mt-6 space-y-3 text-gray-700 text-base ">
+        <ul className="mt-6 space-y-3 text-black text-base  font-lexend">
           <li className="flex items-center ">
             <Image src="/icons/arrow.svg" alt='arrow' width={16} height={16}/>
             For Students, Professionals and Families moving to Germany

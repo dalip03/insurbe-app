@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import { Jost } from "next/font/google";
+import { Geist, Geist_Mono, Jost, Lexend } from "next/font/google";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -14,9 +13,17 @@ const geistMono = Geist_Mono({
 });
 
 const jost = Jost({
-  variable: "--font-jost",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500", "700"],
+  variable: "--font-jost",
+  display: "swap",
+});
+
+const lexend = Lexend({
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+  variable: "--font-lexend",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -26,11 +33,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="en" className={`${jost.variable}`}>
+    <html lang="en" className={`${jost.variable} ${lexend.variable}`}>
       <body
         className={`font-jost ${geistSans.variable} ${geistMono.variable} antialiased gradient-to-br from-white to-[#fdf3ff] min-h-screen`}
       >

@@ -19,7 +19,7 @@ export default function ContactBanner() {
           Let us guide you to the best insurance with{" "}
           <span className="text-purple-600">Insurbe</span>
         </h2>
-        <p className="text-sm text-gray-600 mb-6">
+        <p className="text-sm text-black mb-6">
           Get a quote in Less than 5 minutes
         </p>
         <button className="bg-purple-600 text-white px-6 py-2 rounded shadow hover:bg-purple-700 transition">

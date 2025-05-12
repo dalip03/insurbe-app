@@ -46,8 +46,8 @@ export default function ChooseUs() {
                 className="object-contain"
               />
             </div>
-            <h3 className="text-lg font-semibold">{item.title}</h3>
-            <p className="text-sm text-gray-600 mt-2">{item.desc}</p>
+            <h3 className="text-lg ">{item.title}</h3>
+            <p className="text-sm text-black mt-2">{item.desc}</p>
           </div>
         ))}
       </div>
