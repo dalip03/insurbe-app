@@ -41,7 +41,7 @@ export default function ClientLogos() {
   };
 
   return (
-    <section className="py-12 bg-gradient-to-br from-white to-[#fdf3ff]">
+    <section className="py-12 bg-gradient-to-br from-[#fdf3ff] to-white">
       <div className="text-center mb-8">
         <h2 className="text-3xl font-bold">
           Trusted Partners in Your Insurance Journey

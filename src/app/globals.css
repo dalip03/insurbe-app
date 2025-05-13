@@ -28,3 +28,22 @@ body {
   color: var(--foreground);
   font-family: var(--font-jost); /* You can change this to var(--font-lexend) wherever needed */
 }
+
+@layer utilities {
+  .custom-border-animate::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: 2px solid #A970D7;
+    transform: scaleX(0) scaleY(0);
+    transform-origin: bottom left;
+    transition: transform 0.5s ease-in-out;
+    border-radius: 0.75rem; /* match Tailwind rounded-xl */
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .group:hover .custom-border-animate::before {
+    transform: scaleX(1) scaleY(1);
+  }
+}

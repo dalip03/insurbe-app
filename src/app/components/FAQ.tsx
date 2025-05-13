@@ -32,7 +32,7 @@ export default function FAQ() {
   }
 
   return (
-    <section className="py-16 px-6">
+    <section className="py-16 px-6 bg-gradient-to-br from-[#fdf3ff] to-white">
       <div className="max-w-7xl mx-auto grid md:grid-cols-2 items-start px-10 ">
         {/* Left Column */}
         <div className=''>
