@@ -31,7 +31,7 @@ export default function Expectations() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
-      className="py-20 px-6 md:px-12 bg-gradient-to-br from-white to-[#fdf3ff]"
+      className="py-16 px-4 md:px-10 lg:px-20 bg-gradient-to-br from-white to-[#fdf3ff]"
     >
       <div className="max-w-7xl mx-auto px-4">
         <h2 className="text-3xl font-bold text-start text-gray-900 mb-2 px-2">
@@ -41,13 +41,12 @@ export default function Expectations() {
         <p className="text-start text-black text-sm sm:text-base mt-2 px-2">
           Best Offers at competitive prices, never seen before
         </p>
-
-        <div className="flex items-center gap-5 flex-wrap justify-center mt-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
           {cards.map((card, index) => (
             <motion.div
               key={index}
               whileHover={{ scale: 1.03 }}
-              className="relative flex flex-col justify-between w-[360px] h-[396px] p-[50px_95px_40px_20px] rounded-[16px] shadow-[0.5px_2px_20px_rgba(0,0,0,0.12)] overflow-hidden"
+              className="relative flex flex-col justify-between w-full h-[396px] p-6 rounded-[16px] shadow-[0.5px_2px_20px_rgba(0,0,0,0.12)] overflow-hidden"
               style={{
                 backgroundImage: `url(${card.image})`,
                 backgroundSize: "cover",
@@ -55,10 +54,10 @@ export default function Expectations() {
                 backgroundRepeat: "no-repeat",
               }}
             >
-              {/* Optional dark overlay for readability */}
+              {/* Optional dark overlay */}
               <div className="absolute inset-0 z-0 opacity-0"></div>
 
-              <div className="relative z-10 text-white flex flex-col justify-between h-full  pr-10">
+              <div className="relative z-10 text-white flex flex-col justify-between h-full pr-6">
                 <h3 className="text-2xl font-semibold">{card.title}</h3>
                 <p className="text-md">{card.description}</p>
               </div>

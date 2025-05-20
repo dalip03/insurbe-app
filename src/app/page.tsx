@@ -12,15 +12,12 @@ import ProductBanner from "./components/ProductBanner";
 export default function Home() {
   return (
     <main>
-      <Header />
       <HeroSection />
       <Partners />
       <ChooseUs />
       <ProductBanner />
       <Expectations />
       <FAQ />
-      <ContactBanner />
-      <Footer />
     </main>
   )
 }
