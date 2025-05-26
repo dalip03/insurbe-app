@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 const plans = [
   {
     title: "Public (GKV)",
@@ -36,7 +38,7 @@ const plans = [
 
 export default function OurServices() {
   return (
-    <section className="bg-gradient-to-br from-[#f5f0ff] to-[#fefcfc] py-20 px-4 md:px-12">
+    <section className="bg-gradient-to-br from-[#f5f0ff] to-[#fefcfc] py-6 px-4 md:px-16 ">
       <div className="max-w-6xl mx-auto text-center">
         <span className="inline-block bg-white border border-gray-200 px-4 py-1 rounded-full text-xs font-medium text-gray-500 mb-4">
           Unbreakable Quality
@@ -49,12 +51,16 @@ export default function OurServices() {
           today
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 ">
           {plans.map((plan, index) => (
             <div
               key={index}
-              className="group border border-gray-200 rounded-xl p-6 transition duration-300 hover:bg-white hover:shadow-lg flex flex-col justify-between"
+              className="relative group rounded-xl p-6 transition duration-300 hover:bg-white hover:shadow-lg flex flex-col justify-between "
             >
+              <div className="absolute top-0 right-0 opacity-0 group-hover:opacity-100 group-hover:visible invisible transition duration-300">
+                <Image src="/img/people.png" alt="img" height={54} width={54}/>
+              </div>
+
               <div className="text-left">
                 <h4 className={`text-sm font-medium ${plan.accent} mb-2`}>
                   {plan.title}
@@ -79,6 +85,7 @@ export default function OurServices() {
                   Get Started
                 </button>
               </div>
+
             </div>
           ))}
         </div>

@@ -5,9 +5,9 @@ const ProductHeroSection = () => {
   return (
     <section className="relative bg-[#8224E3] bg-gradient-to-br from-[#8224E3] to-[#9B5CE7] text-white py-24 px-4 md:px-10 lg:px-20 overflow-hidden">
       {/* Grid overlay */}
-      <div className="absolute inset-0 bg-[radial-gradient(transparent_1px,_rgba(255,255,255,0.05)_1px)] bg-[size:40px_40px] pointer-events-none z-0" />
 
       <div className="relative z-10 text-center max-w-3xl mx-auto">
+      <div className="absolute inset-0 bg-[url('/img/productbg.png')] bg-cover bg-no-repeat bg-center opacity-80 z-0" />
         <span className="inline-block bg-white/20 text-white px-4 py-1 rounded-full text-sm font-medium mb-4">
           Insurbe
         </span>
