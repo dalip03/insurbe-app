@@ -2,7 +2,7 @@ import ContactSection from '../components/career' // Adjust path based on your s
 
 export default function CareerPage() {
   return (
-    <main className="min-h-screen">
+    <main className="">
       {/* Other sections like Hero, Open Positions etc. */}
 
       {/* Contact Section at the bottom */}
