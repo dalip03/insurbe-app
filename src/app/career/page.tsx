@@ -1,4 +1,4 @@
-import ContactSection from '../components/ContactSection' // Adjust path based on your structure
+import ContactSection from '../components/career' // Adjust path based on your structure
 
 export default function CareerPage() {
   return (
