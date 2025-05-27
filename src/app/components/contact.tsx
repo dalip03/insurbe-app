@@ -29,7 +29,7 @@ const images = [
 
 const ContactUs = () => {
   return (
-    <section className="bg-gradient-to-br from-white via-[#f7e9ff] to-white py-16 px-4 md:px-10 lg:px-20">
+    <section className="bg-gradient-to-br from-white via-[#f7e9ff] to-white py-16 px-4 md:px-10 lg:px-20 overflow-x-hidden">
       {/* Header */}
       <div className="text-center mb-10">
         <h2 className="text-4xl md:text-5xl font-bold mb-4">
