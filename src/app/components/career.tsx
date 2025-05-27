@@ -1,117 +1,78 @@
-'use client'
+'use client';
+import React from 'react';
 
-import Image from 'next/image'
-import { useState } from 'react'
-
-export default function ContactSection() {
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    message: '',
-  })
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value })
-  }
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    console.log(formData)
-  }
-
+const ContactSection = () => {
   return (
-    <section className="bg-gradient-to-r from-white via-white to-pink-100 py-20 px-6 sm:px-10 md:px-20">
-      <h2 className="text-4xl md:text-5xl font-extrabold text-black mb-14 leading-tight">
-        Get in touch with us. <br /> We’re here to assist you.
-      </h2>
+    <section className="w-full px-4 md:px-10 py-20 bg-white">
+      <div className="max-w-7xl mx-auto">
+        <h2 className="text-4xl md:text-5xl font-bold mb-10 leading-tight text-gray-900">
+          Get in touch with us. <br /> We’re here to assist you.
+        </h2>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
-        {/* Left Form */}
-        <form
-          onSubmit={handleSubmit}
-          className="w-full space-y-5"
-        >
-          <div className="flex flex-col sm:flex-row gap-4">
-            <input
-              type="text"
-              name="firstName"
-              value={formData.firstName}
-              onChange={handleChange}
-              placeholder="FIRST NAME"
-              className="flex-1 border border-gray-300 rounded-md p-3 text-sm"
-              required
-            />
-            <input
-              type="text"
-              name="lastName"
-              value={formData.lastName}
-              onChange={handleChange}
-              placeholder="LAST NAME"
-              className="flex-1 border border-gray-300 rounded-md p-3 text-sm"
-              required
+        <div className="grid md:grid-cols-2 gap-10">
+          {/* Form */}
+          <form className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">First Name</label>
+                <input type="text" placeholder="Vivek" className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#8224E3]" />
+              </div>
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">Last Name</label>
+                <input type="text" placeholder="Shahi" className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#8224E3]" />
+              </div>
+            </div>
+
+            <div>
+              <label className="text-sm text-gray-500 mb-1 block">Email</label>
+              <input type="email" placeholder="hello@insurbe.com" className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#8224E3]" />
+            </div>
+
+            <div>
+              <label className="text-sm text-gray-500 mb-1 block">Message</label>
+              <textarea placeholder="I am coming to Germany in June" rows={4} className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#8224E3]" />
+            </div>
+
+            <button type="submit" className="bg-[#8224E3] hover:bg-[#6b1dc2] text-white px-6 py-2 rounded-md w-full font-semibold transition">
+              Submit
+            </button>
+          </form>
+
+          {/* Map */}
+          <div className="w-full h-full rounded-xl overflow-hidden shadow-md">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2960.290168182957!2d-72.58234762515691!3d42.101255951414785!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89e6e6e332f00113%3A0x48fa34cbf226ca80!2s123%20Maple%20St%2C%20Springfield%2C%20MA%2001105%2C%20USA!5e0!3m2!1sen!2sin!4v1748326693662!5m2!1sen!2sin"
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
             />
           </div>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            placeholder="EMAIL"
-            className="w-full border border-gray-300 rounded-md p-3 text-sm"
-            required
-          />
-          <textarea
-            name="message"
-            rows={4}
-            value={formData.message}
-            onChange={handleChange}
-            placeholder="Message"
-            className="w-full border border-gray-300 rounded-md p-3 text-sm"
-            required
-          />
-          <button
-            type="submit"
-            className="w-full bg-[#6F3FF5] hover:bg-[#5e33d6] text-white font-semibold py-3 rounded-md transition"
-          >
-            Submit
-          </button>
-        </form>
+        </div>
 
-        {/* Right Map + Info */}
-        <div className="w-full space-y-6">
-          <div className="rounded-xl overflow-hidden relative">
-            <Image
-              src="/map-placeholder.png" // Replace with actual map or embed
-              alt="Map"
-              width={800}
-              height={500}
-              className="rounded-xl w-full h-[280px] object-cover"
-            />
-            <div className="absolute bottom-3 left-3 bg-white p-4 rounded-xl shadow-md">
-              <p className="text-sm font-medium">Visit us</p>
-              <p className="text-xs text-gray-600">Office : 123 Maple Street, Springfield</p>
+        {/* Contact Info */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-16 border-t pt-10">
+          <div className="flex items-center gap-4">
+            <div className="text-2xl">📞</div>
+            <div>
+              <p className="text-sm text-gray-500">Phone</p>
+              <p className="text-sm font-medium">+48 6232 1151 22</p>
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row justify-between gap-6 pt-4 border-t border-gray-200">
-            <div className="flex items-center gap-2 text-sm">
-              <span className="text-xl">📞</span>
-              <div>
-                <p className="text-gray-700 font-medium">Phone</p>
-                <p className="text-gray-600 text-xs">Office : +48 6232 1151 22</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 text-sm">
-              <span className="text-xl">✉️</span>
-              <div>
-                <p className="text-gray-700 font-medium">Email</p>
-                <p className="text-gray-600 text-xs">Office : hello@uiwiki.co</p>
-              </div>
+          <div className="flex items-center gap-4">
+            <div className="text-2xl">✉️</div>
+            <div>
+              <p className="text-sm text-gray-500">Email</p>
+              <p className="text-sm font-medium">hello@uiwiki.co</p>
             </div>
           </div>
         </div>
       </div>
     </section>
-  )
-}
+  );
+};
+
+export default ContactSection;
