@@ -1,10 +1,12 @@
 import React from 'react'
-import ContactUs from '../components/contact'
+
+import ContactSection from '../components/career'
 
 function page() {
   return (
     <div>
-      <ContactUs/>
+      <ContactSection />
+      
     </div>
   )
 }
