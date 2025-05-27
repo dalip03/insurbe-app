@@ -21,7 +21,7 @@ export default function Footer() {
                 The only digital solution for all your <br /> insurance needs.
               </p>
               <div className="flex gap-4">
-                <div className="text-2x font-bold flex items-center">
+                {/* <div className="text-2x font-bold flex items-center">
                   <Link href="/" className="font-bold font-serif">
                     <Image
                       src="/img/footerIcon2.svg"
@@ -30,7 +30,7 @@ export default function Footer() {
                       height={20}
                     />
                   </Link>
-                </div>{" "}
+                </div>{" "} */}
                 <div className="text-2xl font-bold">
                   <Link href="/" className="font-bold font-serif">
                     <Image
@@ -43,13 +43,13 @@ export default function Footer() {
                 </div>{" "}
               </div>
               <p className="text-sm text-[#FFFFFFCC]">
-                Insurbe GmbH is a registered insurance intermediary in <br />{" "}
-                Germany (BaFin regulated)
+                Insurbe is a registered insurance intermediary in <br />{" "}
+                Germany
               </p>
             </div>
 
             {/* Navigation Links */}
-            <div className="grid grid-cols-2 gap-10">
+            <div className="grid grid-cols-2 gap-14 px-20">
               <div>
                 <h2 className="text-xl font-semibold mb-4">Navigation</h2>
                 <ul className="space-y-4">

@@ -1,6 +1,6 @@
 import React from 'react'
+import ContactSection from '../components/contact'
 
-import ContactSection from '../components/career'
 
 function page() {
   return (

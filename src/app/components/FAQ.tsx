@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function FAQ() {
   const faqs = [
@@ -33,33 +34,45 @@ export default function FAQ() {
   };
 
   return (
-    <section className="pt-16 px-4 md:px-10 lg:px-20  bg-gradient-to-br from-[#fdf3ff] to-white">
-      <div className="max-w-7xl mx-auto grid items-start px-10 ">
-        <div className="text-center pb-2">
+    <section className="pt-16 px-4 md:px-10 lg:px-20 bg-gradient-to-br from-[#fdf3ff] to-white">
+      <div className="max-w-7xl mx-auto grid items-start px-10">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="text-center pb-2"
+        >
           <button className="rounded-2xl bg-[rgba(130,36,227,0.10)] text-primary px-4 py-1 font-semibold">
             FAQs
           </button>
-        </div>
-        {/* Left Column */}
-        <div className="text-center">
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          viewport={{ once: true }}
+          className="text-center"
+        >
           <h2 className="text-4xl font-bold mb-4 py-2">
             Frequently Asked Questions
           </h2>
-          {/* <p className="text-black mb-6">
-            Everything you need to know about Insurbe
-          </p> */}
-        </div>
+        </motion.div>
 
-        {/* Right Column - FAQs */}
         <div className="space-y-4">
           {faqs.map((faq, index) => (
-            <div
+            <motion.div
               key={index}
-              className="py-4 cursor-pointer bg-[#FFFFFF33] "
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: index * 0.1 }}
+              viewport={{ once: true }}
+              className="py-4 cursor-pointer bg-[#FFFFFF33]"
               onClick={() => toggleFAQ(index)}
             >
-              <div className="flex justify-between items-center ">
-                <h3 className=" text-sm md:text-base font-semibold">
+              <div className="flex justify-between items-center">
+                <h3 className="text-sm md:text-base font-semibold">
                   {faq.question}
                 </h3>
                 <span className="w-6 h-6 block relative">
@@ -76,18 +89,36 @@ export default function FAQ() {
                   />
                 </span>
               </div>
-              {openIndex === index && (
-                <p className="text-sm text-gray-700 mt-2">{faq.answer}</p>
-              )}
-            </div>
+
+              <AnimatePresence>
+                {openIndex === index && (
+                  <motion.p
+                    key="answer"
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="text-sm text-gray-700 mt-2 overflow-hidden"
+                  >
+                    {faq.answer}
+                  </motion.p>
+                )}
+              </AnimatePresence>
+            </motion.div>
           ))}
         </div>
 
-        <div className="text-center pt-8">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          viewport={{ once: true }}
+          className="text-center pt-8"
+        >
           <button className="bg-purple-600 text-white px-6 py-2 rounded font-medium hover:bg-purple-700 transition">
             Ask a Question
           </button>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

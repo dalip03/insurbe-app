@@ -1,122 +1,142 @@
-import React from "react";
+"use client";
 import Image from "next/image";
+import React from "react";
+import { motion } from "framer-motion";
+import { useInView } from "react-intersection-observer";
 
-const positions = [
-  {
-    category: "Sales",
-    jobs: [
-      { title: "Country Sales Head", location: "Amsterdam" },
-      { title: "Sales Rep", location: "Remote – Berlin" },
-      { title: "Field Sales Agent", location: "Paris" },
-    ],
-  },
-  {
-    category: "Others",
-    jobs: [{ title: "Customer Support Representative", location: "Remote" }],
-  },
-];
+const ContactSection = () => {
+  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.2 });
 
-const images = [
-  "/contact/contact1.png",
-  "/contact/contact2.png",
-  "/contact/contact3.png",
-  "/contact/contact4.png",
-  "/contact/contact1.png",
-  "/contact/contact5.png",
-  "/contact/contact3.png",
-  "/contact/contact2.png",
-];
-
-const ContactUs = () => {
   return (
-    <section className="bg-gradient-to-br from-white via-[#f7e9ff] to-white py-16 px-4 md:px-10 lg:px-20 overflow-x-hidden">
-      {/* Header */}
-      <div className="text-center mb-10">
-        <h2 className="text-4xl md:text-5xl font-bold mb-4">
-          Want to Work with Us?
-        </h2>
-        <p className="text-gray-600 text-lg max-w-xl mx-auto">
-          Do meaningful work. Take ownership. Push your ideas. Never stop
-          learning.
-        </p>
-      </div>
+    <section className="bg-[linear-gradient(0deg,#FFF_0%,#FFF_100%),linear-gradient(180deg,rgba(255,255,255,0.08)_0%,rgba(255,255,255,0.20)_100%)] backdrop-blur-[75px] pb-20 pt-10 px-4 md:px-10 lg:px-20">
+      <div className="max-w-7xl mx-auto">
+        <motion.h2
+          ref={ref}
+          initial={{ opacity: 0, y: 50 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6 }}
+          className="text-5xl md:text-6xl font-bold mb-12 leading-tight text-gray-900"
+        >
+          Get in touch with us. We’re <br /> here to assist you.
+        </motion.h2>
 
-      {/* Image Gallery */}
-      <div className="space-y-6 mb-16">
-        {/* Row 1 - Left to Right */}
-        <div className="flex  space-x-4 scrollbar-hide">
-          {images.map((src, index) => (
-            <div key={index} className="flex-shrink-0 w-64">
-              <Image
-                src={src}
-                alt={`Team ${index}`}
-                width={300}
-                height={200}
-                className="w-full h-40 object-cover rounded-xl"
-              />
-            </div>
-          ))}
-        </div>
-
-        {/* Row 2 - Right to Left */}
-        <div className="flex  space-x-4 flex-row-reverse scrollbar-hide">
-          {images.map((src, index) => (
-            <div key={index} className="flex-shrink-0 w-64">
-              <Image
-                src={src}
-                alt={`Team ${index + images.length}`}
-                width={300}
-                height={200}
-                className="w-full h-40 object-cover rounded-xl"
-              />
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Open Positions */}
-      <div className="max-w-3xl mx-auto">
-        <h3 className="text-2xl font-semibold mb-6 text-center">
-          Open positions at Insurbe
-        </h3>
-
-        {positions.map((group, index) => (
-          <div key={index} className="mb-6">
-            <h4 className="text-gray-500 text-sm uppercase mb-2">
-              {group.category}
-            </h4>
-            {group.jobs.map((job, idx) => (
-              <div
-                key={idx}
-                className="flex justify-between items-center bg-white rounded-xl px-4 py-4 shadow-sm hover:shadow-md transition mb-2 cursor-pointer"
-              >
-                <div>
-                  <p className="font-medium text-gray-900">{job.title}</p>
-                  <p className="text-sm text-gray-400">{job.location}</p>
-                </div>
-                <span className="text-[#8224E3] text-xl">&rarr;</span>
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ delay: 0.2, duration: 0.6 }}
+          className="grid lg:grid-cols-2 gap-16"
+        >
+          {/* Form Section */}
+          <form className="space-y-6 px-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  First Name
+                </label>
+                <input
+                  type="text"
+                  placeholder="Vivek"
+                  className="w-full border border-gray-300 text-black rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#8224E3]"
+                />
               </div>
-            ))}
-          </div>
-        ))}
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  Last Name
+                </label>
+                <input
+                  type="text"
+                  placeholder="Shahi"
+                  className="w-full border border-gray-300 text-black rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#8224E3]"
+                />
+              </div>
+            </div>
 
-        {/* Open Application */}
-        <div className="mt-10 p-6 bg-white rounded-xl shadow">
-          <h4 className="font-semibold mb-2">Open application</h4>
-          <p className="text-gray-600 text-sm">
-            Believe you’re a great fit but can’t find a position listed for your
-            skillset? Reach out to us at{" "}
-            <a
-              href="mailto:careers@insurbe.com"
-              className="text-[#8224E3] underline"
+            <div>
+              <label className="text-sm text-gray-500 mb-1 block">Email</label>
+              <input
+                type="email"
+                placeholder="hello@insurbe.com"
+                className="w-full border border-gray-300 text-black rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#8224E3]"
+              />
+            </div>
+
+            <div>
+              <label className="text-sm text-gray-500 mb-1 block">Message</label>
+              <textarea
+                placeholder="I am coming to Germany in June"
+                rows={9}
+                className="w-full border border-gray-300 text-black rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#8224E3]"
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="bg-[#8224E3] hover:bg-[#6b1dc2] text-white px-6 py-2 rounded-md w-full font-semibold transition"
             >
-              careers@insurbe.com
-            </a>
-          </p>
-        </div>
+              Submit
+            </button>
+          </form>
+
+          {/* Map + Contact Info Section */}
+          <div>
+            {/* Map */}
+            <div className="w-full h-[400px] rounded-xl shadow-md overflow-hidden">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2960.290168182957!2d-72.58234762515691!3d42.101255951414785!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89e6e6e332f00113%3A0x48fa34cbf226ca80!2s123%20Maple%20St%2C%20Springfield%2C%20MA%2001105%2C%20USA!5e0!3m2!1sen!2sin!4v1748326693662!5m2!1sen!2sin"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
+
+            {/* Contact Info */}
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ delay: 0.4, duration: 0.6 }}
+              className="py-4 pt-10 text-gray-300/70"
+            >
+              <hr />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mt-8">
+                <div className="flex items-center gap-4">
+                  <Image
+                    src="/icons/PhoneIcon.svg"
+                    alt="Phone Icon"
+                    height={28}
+                    width={28}
+                  />
+                  <div>
+                    <p className="text-sm text-gray-700">Phone</p>
+                    <p className="text-xs text-gray-500">
+                      Office: +48 6232 1151 22
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-4">
+                  <Image
+                    src="/icons/emailIcon.svg"
+                    alt="Email Icon"
+                    height={28}
+                    width={28}
+                  />
+                  <div>
+                    <p className="text-sm text-gray-700">Email</p>
+                    <p className="text-xs text-gray-500">
+                      Office: hello@uiwiki.co
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </motion.div>
       </div>
     </section>
   );
 };
 
-export default ContactUs;
+export default ContactSection;

@@ -14,8 +14,8 @@ export default function ContactBanner() {
   <div className="  max-w-5xl mx-auto px-4 lg:px-8">
     <div className="bg-white rounded-2xl shadow-[0_0_49.7px_0_rgba(0,0,0,0.25)] overflow-hidden flex flex-col md:flex-row items-center">
       {/* Text Content */}
-      <div className="p-8 md:p-12 flex-1">
-        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
+      <div className="p-8 md:p-12 flex-1 ">
+        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 pr-10">
           Let us guide you to the best insurance with{" "}
           <span className="text-purple-600">Insurbe</span>
         </h2>

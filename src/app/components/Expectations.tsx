@@ -1,4 +1,5 @@
 "use client";
+
 import { motion } from "framer-motion";
 
 const cards = [
@@ -25,26 +26,53 @@ const cards = [
   },
 ];
 
+// Animation variants
+const fadeInUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      delay: i * 0.2,
+      duration: 0.6,
+      ease: "easeOut",
+    },
+  }),
+};
+
 export default function Expectations() {
   return (
     <motion.section
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.6 }}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.2 }}
       className="py-16 px-4 md:px-10 lg:px-20 bg-gradient-to-br from-white to-[#fdf3ff]"
     >
       <div className="max-w-7xl mx-auto px-4">
-        <h2 className="text-3xl font-bold text-start text-gray-900 mb-2 px-2">
-          We Actively Strive To Exceed Our <br /> Customers’{" "}
-          <span className="text-purple-600">Expectations</span>
-        </h2>
-        <p className="text-start text-black text-sm sm:text-base mt-2 px-2">
-          Best Offers at competitive prices, never seen before
-        </p>
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          viewport={{ once: true, amount: 0.2 }}
+        >
+          <h2 className="text-3xl font-bold text-start text-gray-900 mb-2 px-2">
+            We Actively Strive To Exceed Our <br /> Customers’{" "}
+            <span className="text-purple-600">Expectations</span>
+          </h2>
+          <p className="text-start text-black text-sm sm:text-base mt-2 px-2">
+            Best Offers at competitive prices, never seen before
+          </p>
+        </motion.div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
           {cards.map((card, index) => (
             <motion.div
               key={index}
+              custom={index}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={fadeInUp}
               whileHover={{ scale: 1.03 }}
               className="relative flex flex-col justify-between w-full h-[396px] p-6 rounded-[16px] shadow-[0.5px_2px_20px_rgba(0,0,0,0.12)] overflow-hidden"
               style={{
@@ -54,9 +82,7 @@ export default function Expectations() {
                 backgroundRepeat: "no-repeat",
               }}
             >
-              {/* Optional dark overlay */}
               <div className="absolute inset-0 z-0 opacity-0"></div>
-
               <div className="relative z-10 text-white flex flex-col justify-between h-full pr-6">
                 <h3 className="text-2xl font-semibold">{card.title}</h3>
                 <p className="text-md">{card.description}</p>

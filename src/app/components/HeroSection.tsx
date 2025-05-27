@@ -3,6 +3,28 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 
+const listItemVariants = {
+  hidden: { opacity: 0, x: -20 },
+  visible: (i: number) => ({
+    opacity: 1,
+    x: 0,
+    transition: {
+      delay: i * 0.2 + 0.6,
+      type: "spring",
+      stiffness: 100,
+    },
+  }),
+};
+
+const buttonVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { delay: 1.2, type: "spring", stiffness: 120 },
+  },
+};
+
 export default function HeroSection() {
   return (
     <motion.section
@@ -14,47 +36,68 @@ export default function HeroSection() {
       {/* Left Content */}
       <div className="text-left max-w-xl">
         <motion.h1
-          initial={{ opacity: 0, y: -20 }}
+          initial={{ opacity: 0, y: -40 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
+          transition={{ type: "spring", stiffness: 120, delay: 0.2 }}
           className="text-3xl sm:text-3xl lg:text-4xl font-bold text-black font-jost"
         >
           Unlock the Best Insurance Solutions in Germany with Ease
         </motion.h1>
 
-        <ul className="mt-6 space-y-3 text-black text-base  font-lexend">
-          <li className="flex items-center ">
-            <Image src="/icons/arrow.svg" alt="arrow" width={16} height={16} />
-            For Students, Professionals and Families moving to Germany
-          </li>
-          <li className="flex items-center">
-            <Image src="/icons/arrow.svg" alt="arrow" width={16} height={16} />
-            From health and liability to legal and pension coverage
-          </li>
-          <li className="flex items-center">
-            <Image src="/icons/arrow.svg" alt="arrow" width={16} height={16} />
-            Best options tailored to your unique needs
-          </li>
-        </ul>
+        <motion.ul
+          initial="hidden"
+          animate="visible"
+          className="mt-6 space-y-3 text-black text-base font-lexend"
+        >
+          {[
+            "For Students, Professionals and Families moving to Germany",
+            "From health and liability to legal and pension coverage",
+            "Best options tailored to your unique needs",
+          ].map((text, i) => (
+            <motion.li
+              key={i}
+              custom={i}
+              variants={listItemVariants}
+              className="flex items-center"
+            >
+              <Image src="/icons/arrow.svg" alt="arrow" width={16} height={16} />
+              <span className="ml-2">{text}</span>
+            </motion.li>
+          ))}
+        </motion.ul>
 
-        <div className="mt-8 flex flex-wrap gap-4 justify-center md:justify-start ">
-          <button className="px-6 py-2 bg-purple-600 text-white rounded-md shadow hover:bg-purple-700 transition">
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={buttonVariants}
+          className="mt-8 flex flex-wrap gap-4 justify-center md:justify-start"
+        >
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="px-6 py-2 bg-purple-600 text-white rounded-md shadow hover:bg-purple-700 transition"
+          >
             Get Started
-          </button>
-          <button className="px-6 py-2 border border-purple-600 text-purple-600 rounded-md hover:bg-purple-50 transition">
+          </motion.button>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="px-6 py-2 border border-purple-600 text-purple-600 rounded-md hover:bg-purple-50 transition"
+          >
             Contact Us
-          </button>
-        </div>
+          </motion.button>
+        </motion.div>
       </div>
+
       {/* Right Visual Section */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.3 }}
-        className="relative w-full max-w-md lg:max-w-lg xl:max-w-xl mx-auto "
+        initial={{ opacity: 0, x: 60 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 0.5, type: "spring", stiffness: 100 }}
+        className="relative w-full max-w-md lg:max-w-lg xl:max-w-xl mx-auto"
       >
         {/* Background Vector */}
-        <div className="">
+        <div>
           <Image
             src="/img/vector.png"
             alt="Decorative Background Vector"
@@ -63,7 +106,8 @@ export default function HeroSection() {
             className="absolute inset-0 w-150 h-190 object-contain z-0 pointer-events-none"
           />
         </div>
-        {/* Woman Image (centered, in front of vector) */}
+
+        {/* Woman Image */}
         <Image
           src="/img/women.png"
           alt="Main Woman"
@@ -73,7 +117,7 @@ export default function HeroSection() {
           priority
         />
 
-        {/* Floating Card Images with Animation */}
+        {/* Floating Card 1 */}
         <motion.img
           src="/img/label2.png"
           alt="Card 1"
@@ -81,23 +125,8 @@ export default function HeroSection() {
           height={140}
           className="absolute top-6 md:left-20 left-[-30px] object-contain"
           animate={{
-            y: [0, -10, 0], // Float up & down
-          }}
-          transition={{
-            duration: 4,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-
-        <motion.img
-          src="/img/Label1.png"
-          alt="Card 2"
-          width={220}
-          height={140}
-          className="absolute top-44 sm:right-[-40px] right-0 object-contain"
-          animate={{
-            y: [0, -12, 0],
+            y: [0, -10, 0],
+            rotate: [0, 2, -2, 0],
           }}
           transition={{
             duration: 5,
@@ -106,6 +135,25 @@ export default function HeroSection() {
           }}
         />
 
+        {/* Floating Card 2 */}
+        <motion.img
+          src="/img/Label1.png"
+          alt="Card 2"
+          width={220}
+          height={140}
+          className="absolute top-44 sm:right-[-40px] right-0 object-contain"
+          animate={{
+            y: [0, -14, 0],
+            rotate: [0, -2, 2, 0],
+          }}
+          transition={{
+            duration: 6,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+
+        {/* Floating Card 3 */}
         <motion.img
           src="/img/label3.png"
           alt="Card 3"
@@ -114,9 +162,10 @@ export default function HeroSection() {
           className="absolute -bottom-14 left-1/2 -translate-x-1/2 z-20 object-contain"
           animate={{
             y: [0, -8, 0],
+            rotate: [0, 1, -1, 0],
           }}
           transition={{
-            duration: 6,
+            duration: 7,
             repeat: Infinity,
             ease: "easeInOut",
           }}

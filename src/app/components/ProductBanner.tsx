@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 const products = [
   {
@@ -27,17 +28,37 @@ const products = [
 
 export default function ProductBanner() {
   return (
-    <section className="bg-gradient-to-br from-[#fdf3ff] to-white py-16  text-center">
-      <p className="text-sm text-purple-700 font-medium mb-2">
+    <section className="bg-gradient-to-br from-[#fdf3ff] to-white py-16 text-center">
+      <motion.p
+        initial={{ opacity: 0, y: 10 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        viewport={{ once: true }}
+        className="text-sm text-purple-700 font-medium mb-2"
+      >
         When in Germany Think Insubre
-      </p>
-      <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-12 leading-snug">
-        Our Curated Products for People <br /> Traveling to Germany
-      </h2>
+      </motion.p>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-2 max-w-3xl mx-auto px-4 ">
+      <motion.h2
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.1 }}
+        viewport={{ once: true }}
+        className="text-3xl md:text-4xl font-bold text-gray-900 mb-12 leading-snug"
+      >
+        Our Curated Products for People <br /> Traveling to Germany
+      </motion.h2>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-2 max-w-3xl mx-auto px-4">
         {products.map((product, index) => (
-          <div key={index} className="relative">
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: index * 0.15 }}
+            viewport={{ once: true }}
+            className="relative"
+          >
             <div className="bg-gradient-to-br from-[#0F1535] to-[#11225C] rounded-2xl text-white flex flex-col sm:flex-row items-start justify-between relative min-h-[160px]">
               <div className="text-left z-10 sm:max-w-[70%] p-5">
                 <h3 className="text-lg font-semibold">{product.title}</h3>
@@ -57,7 +78,7 @@ export default function ProductBanner() {
                 />
               </div>
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
     </section>

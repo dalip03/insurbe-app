@@ -1,4 +1,6 @@
+'use client'
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 const plans = [
   {
@@ -36,6 +38,31 @@ const plans = [
   },
 ];
 
+// Variants for card container
+const cardVariants = {
+  hidden: { opacity: 0, scale: 0.95 },
+  visible: { 
+    opacity: 1, 
+    scale: 1, 
+    transition: {
+      duration: 0.5,
+      ease: "easeOut",
+      when: "beforeChildren",
+      staggerChildren: 0.15,
+    },
+  },
+  hover: {
+    scale: 1.05,
+    transition: { duration: 0.3 },
+  },
+};
+
+// Variants for child elements inside card (text, button, image)
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
+};
+
 export default function OurServices() {
   return (
     <section className="bg-gradient-to-br from-[#f5f0ff] to-[#fefcfc] py-6 px-4 md:px-16 ">
@@ -43,50 +70,68 @@ export default function OurServices() {
         <span className="inline-block bg-white border border-gray-200 px-4 py-1 rounded-full text-xs font-medium text-gray-500 mb-4">
           Unbreakable Quality
         </span>
-        <h2 className="text-3xl md:text-4xl font-bold text-black mb-3">
+        <motion.h2 
+          initial={{ opacity: 0, y: 20 }} 
+          animate={{ opacity: 1, y: 0 }} 
+          transition={{ duration: 0.6 }}
+          className="text-3xl md:text-4xl font-bold text-black mb-3"
+        >
           Affordable Excellence
-        </h2>
-        <p className="text-gray-600 text-base md:text-lg mb-12">
-          Comparing with the best Insurance, start experiencing our services
-          today
-        </p>
+        </motion.h2>
+        <motion.p 
+          initial={{ opacity: 0, y: 20 }} 
+          animate={{ opacity: 1, y: 0 }} 
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="text-gray-600 text-base md:text-lg mb-12"
+        >
+          Comparing with the best Insurance, start experiencing our services today
+        </motion.p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 ">
           {plans.map((plan, index) => (
-            <div
+            <motion.div
               key={index}
-              className="relative group rounded-xl p-6 transition duration-300 hover:bg-white hover:shadow-lg flex flex-col justify-between "
+              className="relative group rounded-xl p-6 hover:bg-white hover:shadow-lg flex flex-col justify-between cursor-pointer"
+              variants={cardVariants}
+              initial="hidden"
+              animate="visible"
+              whileHover="hover"
+              transition={{ delay: index * 0.15 }}
             >
-              <div className="absolute top-0 right-0 opacity-0 group-hover:opacity-100 group-hover:visible invisible transition duration-300">
-                <Image src="/img/people.png" alt="img" height={54} width={54}/>
-              </div>
+              {/* Image */}
+              <motion.div 
+                className="absolute top-0 right-0 opacity-0 group-hover:opacity-100 group-hover:visible invisible transition duration-300"
+                variants={itemVariants}
+              >
+                <Image src="/img/people.png" alt="img" height={54} width={54} />
+              </motion.div>
 
-              <div className="text-left">
-                <h4 className={`text-sm font-medium ${plan.accent} mb-2`}>
+              <motion.div className="text-left" variants={itemVariants}>
+                <motion.h4 className={`text-sm font-medium ${plan.accent} mb-2`} variants={itemVariants}>
                   {plan.title}
-                </h4>
-                <p className="text-3xl font-bold mb-1">
+                </motion.h4>
+                <motion.p className="text-3xl font-bold mb-1" variants={itemVariants}>
                   {plan.price}
                   <span className="text-sm font-normal text-gray-500">/mo</span>
-                </p>
+                </motion.p>
 
-                <p className="font-semibold text-sm mt-6 mb-4">
+                <motion.p className="font-semibold text-sm mt-6 mb-4" variants={itemVariants}>
                   What’s included:
-                </p>
-                <ul className="space-y-2 text-sm text-gray-700">
-                  {plan.features.map((item, i) => (
-                    <li key={i}>✨ {item}</li>
-                  ))}
-                </ul>
-              </div>
+                </motion.p>
 
-              <div className="mt-6 flex justify-center">
-                <button className="w-full  py-2 px-4 border border-gray-300 text-black rounded-md transition-all duration-300 group-hover:bg-[#8224E3] group-hover:text-white group-hover:border-[#8224E3]">
+                <motion.ul className="space-y-2 text-sm text-gray-700" variants={itemVariants}>
+                  {plan.features.map((item, i) => (
+                    <motion.li key={i} variants={itemVariants}>✨ {item}</motion.li>
+                  ))}
+                </motion.ul>
+              </motion.div>
+
+              <motion.div className="mt-6 flex justify-center" variants={itemVariants}>
+                <button className="w-full py-2 px-4 border border-gray-300 text-black rounded-md transition-all duration-300 group-hover:bg-[#8224E3] group-hover:text-white group-hover:border-[#8224E3]">
                   Get Started
                 </button>
-              </div>
-
-            </div>
+              </motion.div>
+            </motion.div>
           ))}
         </div>
       </div>

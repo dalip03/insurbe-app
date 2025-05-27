@@ -23,8 +23,6 @@ const Header = () => {
     setIsOpen(!isOpen);
   };
 
-
-
   return (
     <header className="sticky top-0 w-full z-60 bg-white font">
       <nav className="flex justify-between items-center px-6 md:px-10 xl:px-20 py-4 w-full">
@@ -58,39 +56,44 @@ const Header = () => {
         </button>
       </nav>
 
-      {/* Drawer */}
       {isOpen && (
         <motion.div
           initial={{ x: "100%" }}
           animate={{ x: 0 }}
           exit={{ x: "100%" }}
-          transition={{ type: "spring", stiffness: 120, damping: 12 }}
-          className="fixed top-0 right-0 w-3/4 h-screen bg-black/90 text-white shadow-lg p-6 flex flex-col z-50"
+          transition={{ duration: 0.3, ease: "easeInOut" }}
+          className="fixed inset-0 z-50 flex"
         >
-          {/* Close Button */}
-          <button onClick={toggleDrawer} className="self-end mb-4">
-            <X size={28} />
-          </button>
+          {/* Transparent Black Overlay (20%) */}
+          <div
+            className="w-1/5 bg-black/80 backdrop-blur-xs"
+            onClick={toggleDrawer} // Close drawer when clicking on overlay
+          />
 
-          {/* Drawer Heading */}
-          <h2 className="text-2xl font-bold mb-6">Menu</h2>
+          {/* White Drawer (80%) */}
+          <div className="w-4/5 h-full bg-white text-black p-6 flex flex-col">
+            {/* Close Button */}
+            <button onClick={toggleDrawer} className="self-end mb-8">
+              <X size={28} className="text-[#8224E3] font-bold" />
+            </button>
 
-          {/* Menu Links */}
-          <div className="flex flex-col space-y-4">
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                href={link.href}
-                onClick={toggleDrawer}
-                className={`text-lg transition duration-300 ${
-                  pathname === link.href
-                    ? "text-primary font-bold"
-                    : "hover:text-gray-400"
-                }`}
-              >
-                {link.name}
-              </Link>
-            ))}
+            {/* Menu Links */}
+            <div className="flex flex-col space-y-6 pl-2 mt-20">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  onClick={toggleDrawer}
+                  className={`text-lg leading-14 ${
+                    pathname === link.href
+                      ? "text-[#8224E3] underline underline-offset-4"
+                      : "text-black hover:text-[#8224E3]"
+                  }`}
+                >
+                  {link.name}
+                </Link>
+              ))}
+            </div>
           </div>
         </motion.div>
       )}

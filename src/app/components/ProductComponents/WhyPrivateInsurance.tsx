@@ -1,11 +1,18 @@
 "use client";
 
+import { motion } from "framer-motion";
+
 export default function WhyPrivateInsurance() {
   return (
     <section className="py-20 px-6 md:px-16 bg-gradient-to-br from-white to-[#fdf3ff] overflow-hidden">
       <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-12 max-w-7xl mx-auto">
-        {/* Left Side Content */}
-        <div>
+        
+        {/* Left Side Content with fade + slide from left */}
+        <motion.div
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
+        >
           <h2 className="text-3xl md:text-4xl font-bold text-black mb-6">
             Why Private or Expat Health Insurance?
           </h2>
@@ -19,19 +26,24 @@ export default function WhyPrivateInsurance() {
           <button className="px-6 py-3 bg-[#8224E3] hover:bg-[#6d1dbf] text-white text-sm font-medium rounded-md shadow">
             Check My Eligibility
           </button>
-        </div>
+        </motion.div>
 
-        {/* Right Side Image Card */}
-        <div className="flex justify-center">
+        {/* Right Side Image Card with fade + slide from right */}
+        <motion.div
+          className="flex justify-center"
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.7, ease: "easeOut", delay: 0.3 }}
+        >
           <div className="relative bg-[#0f172a] rounded-xl p-6 shadow-lg w-full h-96 max-w-sm">
             {/* Top Profile Bar */}
-              <img
-                src="/img/label2.png"
-                alt="Card 1"
-                width={340}
-                height={220}
-                className="absolute -top-12 md:right-0 left-[20px] object-contain "
-              />
+            <img
+              src="/img/label2.png"
+              alt="Card 1"
+              width={340}
+              height={220}
+              className="absolute -top-12 md:right-0 left-[20px] object-contain"
+            />
             {/* Card Content */}
             <div className="absolute bottom-4 left-4 bg-white rounded-xl p-4 shadow-inner h-54 w-64">
               <h4 className="text-sm font-medium text-gray-700 mb-4">
@@ -59,7 +71,7 @@ export default function WhyPrivateInsurance() {
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
