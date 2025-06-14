@@ -6,7 +6,7 @@ export default function Footer() {
   return (
     <div>
       <ContactBanner />
-      <footer className="bg-[#8224E3] text-white py-4 px-6 pt-50 -mt-58 relative z-10">
+      <footer className="bg-primary text-white py-4 px-6 pt-50 -mt-58 relative z-10">
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col md:flex-row justify-between gap-8">
             {/* Brand Info */}
@@ -14,7 +14,7 @@ export default function Footer() {
               {/* Logo */}
               <div className="text-2xl font-bold">
                 <Link href="/" className="font-bold font-serif">
-                  <Image src="/logo1.svg" alt="Logo" width={140} height={20} />
+                  <Image src="/icons/logo_white.png" alt="Logo" width={140} height={20} />
                 </Link>
               </div>{" "}
               <p className="text-sm text-gray-400 ">

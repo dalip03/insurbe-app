@@ -1,7 +1,7 @@
 import ChooseUs from "./components/ChooseUs";
 import Expectations from "./components/Expectations";
 import FAQ from "./components/FAQ";
-import HeroSection from "./components/HeroSection";
+import HeroSection from "./components/Herosection";
 import Partners from "./components/Partners";
 import ProductBanner from "./components/ProductBanner";
 

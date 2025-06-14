@@ -34,14 +34,14 @@ const Header = () => {
         </div>
 
         {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center gap-6 text-lg">
+        <div className="hidden md:flex items-center gap-10 text-lg ">
           {navLinks.map((link) => (
             <Link
               key={link.name}
               href={link.href}
-              className={`relative overflow-hidden h-6  ${
+              className={`relative overflow-hidden h-7 px-1  ${
                 pathname === link.href
-                  ? "text-primary border-b-2 border-primary "
+                  ? "text-primary border-b-2 border-primary font-semibold pb-1 "
                   : "text-black"
               }`}
             >
@@ -74,7 +74,7 @@ const Header = () => {
           <div className="w-4/5 h-full bg-white text-black p-6 flex flex-col">
             {/* Close Button */}
             <button onClick={toggleDrawer} className="self-end mb-8">
-              <X size={28} className="text-[#8224E3] font-bold" />
+              <X size={28} className="text-primary font-bold" />
             </button>
 
             {/* Menu Links */}
@@ -86,8 +86,8 @@ const Header = () => {
                   onClick={toggleDrawer}
                   className={`text-lg leading-14 ${
                     pathname === link.href
-                      ? "text-[#8224E3] underline underline-offset-4"
-                      : "text-black hover:text-[#8224E3]"
+                      ? "text-primary underline underline-offset-4"
+                      : "text-black hover:text-primary"
                   }`}
                 >
                   {link.name}

@@ -57,7 +57,7 @@ export default function Expectations() {
         >
           <h2 className="text-3xl font-bold text-start text-gray-900 mb-2 px-2">
             We Actively Strive To Exceed Our <br /> Customers’{" "}
-            <span className="text-purple-600">Expectations</span>
+            <span className="text-primary">Expectations</span>
           </h2>
           <p className="text-start text-black text-sm sm:text-base mt-2 px-2">
             Best Offers at competitive prices, never seen before

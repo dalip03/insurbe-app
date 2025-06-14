@@ -1,6 +1,7 @@
 "use client";
-import React, { useRef } from "react";
-import { motion, useInView } from "framer-motion";
+
+import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import Image from "next/image";
 
 const positions = [
@@ -35,14 +36,47 @@ const fadeInUp = {
 };
 
 const CareerSection = () => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true });
+  const [scrollDuration, setScrollDuration] = useState(180);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const isMobile = window.innerWidth < 768;
+      setScrollDuration(isMobile ? 260 : 100);
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const renderLoopingRow = (reverse = false) => (
+    <div className={`relative w-full overflow-hidden`}>
+      <motion.div
+        className={`flex space-x-3 ${reverse ? "flex-row-reverse" : ""}`}
+        animate={{ x: reverse ? ["0%", "-50%"] : ["-50%", "0%"] }}
+  transition={{ duration: scrollDuration, repeat: Infinity, ease: "linear" }}
+        style={{ width: "200%" }}
+      >
+        {[...images, ...images].map((src, index) => (
+          <div
+            key={`${reverse ? "r" : "f"}-${index}`}
+            className="flex-shrink-0 w-80 "
+          >
+            <Image
+              src={src}
+              alt={`Team ${index}`}
+              width={300}
+              height={200}
+              className="w-full h-60 object-cover rounded-xl"
+            />
+          </div>
+        ))}
+      </motion.div>
+    </div>
+  );
 
   return (
-    <section
-      ref={ref}
-      className="bg-gradient-to-br from-white via-[#f7e9ff] to-white py-16 overflow-x-hidden"
-    >
+    <section className="bg-gradient-to-br from-white via-[#f7e9ff] to-white py-16 overflow-x-hidden">
       {/* Header */}
       <motion.div
         variants={fadeInUp}
@@ -64,45 +98,21 @@ const CareerSection = () => {
       <motion.div
         variants={fadeInUp}
         initial="hidden"
-        animate={isInView ? "visible" : "hidden"}
+        animate="visible"
         className="space-y-3 mb-16"
       >
-        {/* Row 1 */}
-        <div className="flex overflow-x-auto scrollbar-hide space-x-3 px-2 md:px-0">
-          {images.map((src, index) => (
-            <div key={index} className="flex-shrink-0 w-64 sm:w-56">
-              <Image
-                src={src}
-                alt={`Team ${index}`}
-                width={300}
-                height={200}
-                className="w-full h-40 object-cover rounded-xl"
-              />
-            </div>
-          ))}
-        </div>
+        {/* Row 1 - Scroll Left to Right */}
+        {renderLoopingRow(false)}
 
-        {/* Row 2 */}
-        <div className="flex overflow-x-auto scrollbar-hide space-x-3 px-2 md:px-0 flex-row-reverse">
-          {images.map((src, index) => (
-            <div key={index} className="flex-shrink-0 w-64 sm:w-56">
-              <Image
-                src={src}
-                alt={`Team ${index + images.length}`}
-                width={300}
-                height={200}
-                className="w-full h-40 object-cover rounded-xl"
-              />
-            </div>
-          ))}
-        </div>
+        {/* Row 2 - Scroll Right to Left */}
+        {renderLoopingRow(true)}
       </motion.div>
 
       {/* Open Positions */}
       <motion.div
         variants={fadeInUp}
         initial="hidden"
-        animate={isInView ? "visible" : "hidden"}
+        animate="visible"
         className="max-w-3xl mx-auto px-4 md:px-10 lg:px-20"
       >
         <h3 className="text-2xl font-semibold mb-6 text-center">
@@ -127,7 +137,7 @@ const CareerSection = () => {
                   <p className="font-medium text-gray-900">{job.title}</p>
                   <p className="text-sm text-gray-400">{job.location}</p>
                 </div>
-                <span className="text-[#8224E3] text-xl">&rarr;</span>
+                <span className="text-primary text-xl">&rarr;</span>
               </motion.div>
             ))}
           </div>

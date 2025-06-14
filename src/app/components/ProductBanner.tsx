@@ -34,7 +34,7 @@ export default function ProductBanner() {
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         viewport={{ once: true }}
-        className="text-sm text-purple-700 font-medium mb-2"
+        className="text-sm text-primary font-medium mb-2"
       >
         When in Germany Think Insubre
       </motion.p>
@@ -63,7 +63,7 @@ export default function ProductBanner() {
               <div className="text-left z-10 sm:max-w-[70%] p-5">
                 <h3 className="text-lg font-semibold">{product.title}</h3>
                 <p className="text-sm text-white/80 mt-2">{product.desc}</p>
-                <button className="mt-4 bg-white text-purple-600 font-medium text-sm px-4 py-2 rounded-md shadow-sm hover:bg-purple-100 transition">
+                <button className="mt-4 bg-white text-primary font-medium text-sm px-4 py-2 rounded-md shadow-sm hover:bg-purple-100 transition">
                   Explore Plans
                 </button>
               </div>

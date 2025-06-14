@@ -61,7 +61,7 @@ export default function InsuranceSteps() {
                 variants={stepVariants}
                 className={`text-left px-4 py-2 w-50 rounded-sm font-medium text-sm transition-all duration-200 ${
                   index === 0
-                    ? "bg-[#8224E3] text-white"
+                    ? "bg-primary text-white"
                     : "text-gray-800 hover:bg-gray-100"
                 }`}
               >
@@ -84,7 +84,7 @@ export default function InsuranceSteps() {
                     transition={{ type: "spring", stiffness: 300, damping: 20 }}
                     className={`w-24 h-24 rounded-full flex items-center justify-center text-sm font-medium border-4 transition-all duration-300 ${
                       isSelected
-                        ? "bg-[#8224E3] text-white border-[#8224E3]"
+                        ? "bg-primary text-white border-primary"
                         : "border-[#e0d4f5] text-gray-700"
                     }`}
                   >
@@ -98,7 +98,7 @@ export default function InsuranceSteps() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               transition={{ type: "spring", stiffness: 300, damping: 20 }}
-              className="mt-4 bg-[#8224E3] hover:bg-[#6e1bd1] transition text-white px-6 py-2 rounded-md"
+              className="mt-4 bg-primary hover:bg-primary/95 transition text-white px-6 py-2 rounded-md"
             >
               Next
             </motion.button>

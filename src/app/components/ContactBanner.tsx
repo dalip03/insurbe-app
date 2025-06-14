@@ -17,12 +17,12 @@ export default function ContactBanner() {
       <div className="p-8 md:p-12 flex-1 ">
         <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 pr-10">
           Let us guide you to the best insurance with{" "}
-          <span className="text-purple-600">Insurbe</span>
+          <span className="text-primary">Insurbe</span>
         </h2>
         <p className="text-sm text-black mb-6">
           Get a quote in Less than 5 minutes
         </p>
-        <button className="bg-purple-600 text-white px-6 py-2 rounded shadow hover:bg-purple-700 transition">
+        <button className="bg-primary text-white px-6 py-2 rounded shadow hover:bg-primary/95 transition">
           Send Message
         </button>
       </div>

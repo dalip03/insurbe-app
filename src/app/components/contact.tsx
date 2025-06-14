@@ -71,7 +71,7 @@ const ContactSection = () => {
 
             <button
               type="submit"
-              className="bg-[#8224E3] hover:bg-[#6b1dc2] text-white px-6 py-2 rounded-md w-full font-semibold transition"
+              className="bg-primary hover:bg-primary/96 text-white px-6 py-2 rounded-md w-full font-semibold transition"
             >
               Submit
             </button>

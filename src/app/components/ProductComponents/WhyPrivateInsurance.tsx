@@ -23,7 +23,7 @@ export default function WhyPrivateInsurance() {
             More personalized coverage with optional add-ons for dental, vision,
             and travel.
           </p>
-          <button className="px-6 py-3 bg-[#8224E3] hover:bg-[#6d1dbf] text-white text-sm font-medium rounded-md shadow">
+          <button className="px-6 py-3 bg-primary hover:bg-primary/95 text-white text-sm font-medium rounded-md shadow">
             Check My Eligibility
           </button>
         </motion.div>
@@ -55,7 +55,7 @@ export default function WhyPrivateInsurance() {
                   <p className="text-sm text-gray-500">2500 USDT</p>
                   <p className="text-xs text-gray-400">$99,204.55</p>
                 </div>
-                <button className="text-xs bg-[#8224E3] text-white px-3 py-1 rounded-full">
+                <button className="text-xs bg-primary text-white px-3 py-1 rounded-full">
                   Withdraw
                 </button>
               </div>
@@ -65,7 +65,7 @@ export default function WhyPrivateInsurance() {
                   <p className="text-sm text-gray-500">2500 LINK</p>
                   <p className="text-xs text-gray-400">$97,560.15</p>
                 </div>
-                <button className="text-xs bg-[#8224E3] text-white px-3 py-1 rounded-full">
+                <button className="text-xs bg-primary text-white px-3 py-1 rounded-full">
                   Withdraw
                 </button>
               </div>

@@ -115,7 +115,7 @@ export default function FAQ() {
           viewport={{ once: true }}
           className="text-center pt-8"
         >
-          <button className="bg-purple-600 text-white px-6 py-2 rounded font-medium hover:bg-purple-700 transition">
+          <button className="bg-primary text-white px-6 py-2 rounded font-medium hover:bg-primary/95 transition">
             Ask a Question
           </button>
         </motion.div>

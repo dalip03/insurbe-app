@@ -39,8 +39,8 @@ const CardsSection = () => {
         >
           <p className="text-sm font-medium text-gray-500">Upcoming Events</p>
           <ul className="mt-2 space-y-2 text-sm">
-            <li>📅 Bitcoin Halving – $44,000</li>
-            <li>🚀 Solana Partnership – $13,200</li>
+            <li> Bitcoin Halving – $44,000</li>
+            <li> Solana Partnership – $13,200</li>
           </ul>
         </motion.div>
 
@@ -58,7 +58,7 @@ const CardsSection = () => {
             {[60, 80, 100, 50].map((height, idx) => (
               <motion.div
                 key={idx}
-                className="bg-purple-500 w-4 rounded-t-md"
+                className="bg-primary w-4 rounded-t-md"
                 style={{ height: `${height}px` }}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}

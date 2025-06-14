@@ -127,7 +127,7 @@ export default function OurServices() {
               </motion.div>
 
               <motion.div className="mt-6 flex justify-center" variants={itemVariants}>
-                <button className="w-full py-2 px-4 border border-gray-300 text-black rounded-md transition-all duration-300 group-hover:bg-[#8224E3] group-hover:text-white group-hover:border-[#8224E3]">
+                <button className="w-full py-2 px-4 border border-gray-300 text-black rounded-md transition-all duration-300 group-hover:bg-primary group-hover:text-white group-hover:border-[#c59eec]">
                   Get Started
                 </button>
               </motion.div>

@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 
 const ProductHeroSection = () => {
   return (
-    <section className="relative bg-[#8224E3] bg-gradient-to-br from-[#8224E3] to-[#9B5CE7] text-white py-24 px-4 md:px-10 lg:px-20 overflow-hidden">
+    <section className="relative bg-primary bg-gradient-to-br from-primary to-primary text-white py-24 px-4 md:px-10 lg:px-20 overflow-hidden">
       {/* Grid overlay */}
 
       <div className="relative z-10 text-center max-w-3xl mx-auto">
@@ -44,10 +44,10 @@ const ProductHeroSection = () => {
           transition={{ duration: 0.7, delay: 0.4 }}
           className="flex flex-col sm:flex-row gap-4 justify-center"
         >
-          <button className="bg-transparent border border-white text-white px-6 py-3 rounded-md hover:bg-white hover:text-[#8224E3] transition font-semibold">
+          <button className="bg-transparent border border-white text-white px-6 py-3 rounded-md hover:bg-white hover:text-primary transition font-semibold">
             Talk to an Advisor
           </button>
-          <button className="bg-white text-[#8224E3] px-6 py-3 rounded-md hover:opacity-90 transition font-semibold">
+          <button className="bg-white text-primary px-6 py-3 rounded-md hover:opacity-90 transition font-semibold">
             Check My Eligibility
           </button>
         </motion.div>
