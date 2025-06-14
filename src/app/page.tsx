@@ -9,7 +9,7 @@ import ProductBanner from "./components/ProductBanner";
 export default function Home() {
   return (
     <main>
-      <HeroSection />
+      <HeroSection/>
       <Partners />
       <ChooseUs />
       <ProductBanner />
