@@ -4,6 +4,7 @@ import AboutPlatformSection from '../components/AboutUsComponents/AboutPlatformS
 import MeetTheTeamSection from '../components/AboutUsComponents/MeetTheTeamSection'
 import ExpansionSection from '../components/AboutUsComponents/ExpansionSection'
 import Growth from '../components/AboutUsComponents/AboutGrowth'
+import AboutGrowth from '../components/AboutUsComponents/AboutGrouwth'
 
 function About() {
   return (
@@ -12,6 +13,7 @@ function About() {
       <AboutPlatformSection/>
       <MeetTheTeamSection/>
       <ExpansionSection/>
+      <AboutGrowth/>
       <Growth/>
     </div>
   )
