@@ -8,25 +8,25 @@ export default function AboutHeroSection() {
         Insurbe’s Journey
       </h2>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
         {/* Left Text Content */}
         <div className="space-y-6">
            <span className="inline-block bg-gray-100 text-gray-600 text-sm font-medium px-3 py-1 rounded-full mb-4">
             The Birth
           </span>
-          <h3 className="text-3xl md:text-4xl font-bold text-gray-900">
+          <h3 className="text-3xl md:text-[64px] font-medium text-gray-900 ">
             2020: Foundation and Vision
           </h3>
-          <p className="text-gray-600 text-lg">
+          <p className="text-gray-600 text-lg pr-10">
             Insurbe was founded with a vision to simplify the insurance process
             for individuals and families.
           </p>
 
           <div className="flex space-x-4">
-            <button className="bg-[#8224E3] hover:bg-[#6b1cc1] text-white px-6 py-3 rounded-md text-sm font-medium shadow transition">
+            <button className="bg-primary hover:bg-primary/60 text-white px-6 py-3 rounded-md text-sm font-medium shadow transition">
               Contact us →
             </button>
-            <button className="border border-gray-300/20 text-black px-6 py-2 rounded-md font-medium hover:bg-gray-100 transition">
+            <button className="border border-gray-200 text-black px-6 py-2 rounded-md font-medium hover:bg-gray-100 transition">
               Get Started →
             </button>
           </div>

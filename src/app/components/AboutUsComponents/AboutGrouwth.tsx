@@ -54,14 +54,14 @@ export default function AboutGrowth() {
             <span className="inline-block bg-white/10 text-xs px-3 py-1 rounded-full font-medium">
               Building
             </span>
-            <h1 className="text-3xl md:text-4xl font-bold leading-tight">
+            <h1 className="text-3xl md:text-[64px] font-medium leading-tight">
               2023: Growth and Innovation
             </h1>
-            <p className="text-white/80 text-base md:text-lg max-w-md">
+            <p className="text-white/80 text-[18px] md:text-lg max-w-md">
               Achieved 100,000 satisfied customers and launched AI-driven
               recommendation tools to enhance user experience.
             </p>
-            <button className="bg-white text-[#8224E3] hover:bg-gray-100 px-6 py-3 rounded-md text-sm font-semibold transition">
+            <button className="bg-white text-primary hover:bg-gray-100 px-6 py-3 rounded-md text-sm font-semibold transition">
               Read About Us →
             </button>
           </div>

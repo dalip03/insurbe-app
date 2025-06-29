@@ -11,16 +11,16 @@ const Growth = () => {
           <span className="inline-block bg-gray-100 text-gray-600 text-sm font-medium px-3 py-1 rounded-full mb-4">
             Growth
           </span>
-          <h2 className="text-3xl md:text-4xl font-bold text-[#111827] mb-4">
+          <h2 className="text-3xl md:text-[64px] font-medium text-[#111827] mb-4">
             2024: Strategic <br /> Partnerships
           </h2>
-          <p className="text-gray-600 mb-6 max-w-md mx-auto lg:mx-0">
+          <p className="text-gray-600 text-[18px] mb-6 max-w-md mx-auto lg:mx-0">
             Continued scaling operations while forming strategic partnerships
             with leading insurance providers worldwide.
           </p>
 
           <div className="flex justify-center lg:justify-start gap-4">
-            <button className="bg-[#8224E3] text-white px-6 py-2 rounded-md font-medium hover:bg-[#6e1fc3] transition">
+            <button className="bg-primary text-white px-6 py-2 rounded-md font-medium hover:bg-[#6e1fc3] transition">
               Know more →
             </button>
           </div>

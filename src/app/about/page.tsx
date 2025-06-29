@@ -5,6 +5,8 @@ import MeetTheTeamSection from '../components/AboutUsComponents/MeetTheTeamSecti
 import ExpansionSection from '../components/AboutUsComponents/ExpansionSection'
 import Growth from '../components/AboutUsComponents/AboutGrowth'
 import AboutGrowth from '../components/AboutUsComponents/AboutGrouwth'
+import AboutPartners from '../components/AboutUsComponents/AboutPartners'
+import AboutJourney from '../components/AboutUsComponents/AboutJourney'
 
 function About() {
   return (
@@ -15,6 +17,8 @@ function About() {
       <ExpansionSection/>
       <AboutGrowth/>
       <Growth/>
+      <AboutPartners/>
+      <AboutJourney/>
     </div>
   )
 }

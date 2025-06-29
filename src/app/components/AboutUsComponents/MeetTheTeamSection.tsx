@@ -22,8 +22,8 @@ const teamMembers = [
 export default function MeetTheTeamSection() {
   return (
     <section className="py-20 px-4 sm:px-10 md:px-20 bg-white text-center">
-      <h2 className="text-3xl md:text-4xl font-bold mb-4">Meet the Team</h2>
-      <p className="text-gray-600 max-w-2xl mx-auto mb-12">
+      <h2 className="text-3xl md:text-[60px] font-medium mb-4">Meet the Team</h2>
+      <p className="text-gray-600 font-[18px] max-w-2xl mx-auto mb-6">
         We&apos;re a passionate team of innovators, problem-solvers, and customer
         advocates.
       </p>
