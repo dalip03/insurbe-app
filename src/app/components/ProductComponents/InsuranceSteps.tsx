@@ -35,7 +35,7 @@ export default function InsuranceSteps() {
             transition={{ duration: 0.6, ease: "easeOut" }}
             className="text-3xl md:text-4xl font-bold text-black mb-3"
           >
-            Find the Right Insurance Plan in Under 2 Minutes
+            Just 2 minutes to find your best-fit insurance type.
           </motion.h2>
 
           <motion.p
@@ -44,8 +44,7 @@ export default function InsuranceSteps() {
             transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
             className="text-gray-500 text-base md:text-lg"
           >
-            Choose the best pricing plan for you and start experiencing our
-            services today
+            No calls, no commitments — unless you want them.
           </motion.p>
         </div>
         <div className="flex flex-col md:flex-row gap-10 items-center justify-between">

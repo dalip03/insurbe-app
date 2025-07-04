@@ -13,60 +13,46 @@ const CardsSection = () => {
     }),
   };
 
+  const cards = [
+    {
+      title: "Specialized for Expats & Professionals",
+      description:
+        "Whether you’re on a Blue Card, freelancing, or salaried, we’ve got you covered.",
+    },
+    {
+      title: "Compare Trusted Insurers",
+      description:
+        "DKV, Ottonova, Allianz, Signal Iduna, ARAG, Hallesche, Hanse Merkur, and more.",
+    },
+    {
+      title: "Human Help When You Need It",
+      description:
+        "Book a free call with a licensed advisor after the assessment.",
+    },
+  ];
+
   return (
     <div className="-mt-20 relative z-20 px-4 md:px-10 lg:px-20">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
-        <motion.div
-          className="bg-white rounded-xl p-6 shadow-md text-black text-left"
-          custom={0}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          variants={cardVariants}
-        >
-          <p className="text-sm font-medium text-gray-500">Earnings</p>
-          <h3 className="text-2xl font-bold">$6750 USD</h3>
-          <p className="text-sm text-green-500 mt-1">+2.9%</p>
-        </motion.div>
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+        {cards.map(({ title, description }, i) => {
+          // Conditional col-span classes
+          const colSpanClass = i === 1 ? "md:col-span-2" : "md:col-span-1";
 
-        <motion.div
-          className="bg-white rounded-xl p-6 shadow-md text-black text-left"
-          custom={1}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          variants={cardVariants}
-        >
-          <p className="text-sm font-medium text-gray-500">Upcoming Events</p>
-          <ul className="mt-2 space-y-2 text-sm">
-            <li> Bitcoin Halving – $44,000</li>
-            <li> Solana Partnership – $13,200</li>
-          </ul>
-        </motion.div>
-
-        <motion.div
-          className="bg-white rounded-xl p-6 shadow-md text-black text-left"
-          custom={2}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          variants={cardVariants}
-        >
-          <p className="text-sm font-medium text-gray-500">Monthly Spend</p>
-          <h3 className="text-2xl font-bold">$2520 USD</h3>
-          <div className="flex items-end gap-2 mt-4">
-            {[60, 80, 100, 50].map((height, idx) => (
-              <motion.div
-                key={idx}
-                className="bg-primary w-4 rounded-t-md"
-                style={{ height: `${height}px` }}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 + idx * 0.15, duration: 0.5 }}
-              />
-            ))}
-          </div>
-        </motion.div>
+          return (
+            <motion.div
+              key={i}
+              className={`bg-white rounded p-6 shadow-md text-[#511E6D] text-left ${colSpanClass}`}
+              custom={i}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={cardVariants}
+            >
+              <h3 className="text-xl font-semibold mb-2">{title}</h3>
+              <p className="text-gray-600 text-sm">{description}</p>
+            </motion.div>
+          );
+        })}
       </div>
     </div>
   );

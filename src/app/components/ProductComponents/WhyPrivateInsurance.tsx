@@ -6,7 +6,6 @@ export default function WhyPrivateInsurance() {
   return (
     <section className="py-20 px-6 md:px-16 bg-gradient-to-br from-white to-[#fdf3ff] overflow-hidden">
       <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-12 max-w-7xl mx-auto">
-        
         {/* Left Side Content with fade + slide from left */}
         <motion.div
           initial={{ opacity: 0, x: -50 }}
