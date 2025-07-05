@@ -5,16 +5,16 @@ import HeroSection1 from "./components/HeroSection1";
 import Partners from "./components/Partners";
 import ProductBanner from "./components/ProductBanner";
 
-
 export default function Home() {
   return (
     <main>
-      <HeroSection1/>
+      <HeroSection1 />
       <Partners />
+
       <ChooseUs />
       <ProductBanner />
       <Expectations />
       <FAQ />
     </main>
-  )
+  );
 }

@@ -50,28 +50,34 @@ const CareerSection = () => {
   }, []);
 
   const renderLoopingRow = (reverse = false) => (
-    <div className={`relative w-full overflow-hidden`}>
-      <motion.div
-        className={`flex space-x-3 ${reverse ? "flex-row-reverse" : ""}`}
-        animate={{ x: reverse ? ["0%", "-50%"] : ["-50%", "0%"] }}
-  transition={{ duration: scrollDuration, repeat: Infinity, ease: "linear" }}
-        style={{ width: "200%" }}
-      >
-        {[...images, ...images].map((src, index) => (
-          <div
-            key={`${reverse ? "r" : "f"}-${index}`}
-            className="flex-shrink-0 w-80 "
-          >
-            <Image
-              src={src}
-              alt={`Team ${index}`}
-              width={300}
-              height={200}
-              className="w-full h-60 object-cover rounded-xl"
-            />
-          </div>
-        ))}
-      </motion.div>
+    <div className="w-full flex justify-center overflow-hidden px-4">
+      <div className="relative w-full max-w-7xl overflow-hidden">
+        <motion.div
+          className={`flex space-x-3 ${reverse ? "flex-row-reverse" : ""}`}
+          animate={{ x: reverse ? ["0%", "-50%"] : ["-50%", "0%"] }}
+          transition={{
+            duration: scrollDuration,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+          style={{ width: "200%" }}
+        >
+          {[...images, ...images].map((src, index) => (
+            <div
+              key={`${reverse ? "r" : "f"}-${index}`}
+              className="flex-shrink-0 w-80"
+            >
+              <Image
+                src={src}
+                alt={`Team ${index}`}
+                width={300}
+                height={200}
+                className="w-full h-60 object-cover rounded-xl"
+              />
+            </div>
+          ))}
+        </motion.div>
+      </div>
     </div>
   );
 

@@ -29,21 +29,24 @@ export default function MeetTheTeamSection() {
       </p>
 
       {/* Team Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 justify-items-center ">
-        {teamMembers.map((member, index) => (
-          <div
-            key={index}
-            className="relative w-64 h-90 rounded-2xl overflow-hidden shadow-md bg-[#5e2b9c] "
-          >
-            <Image
-              src={member.image}
-              alt={member.name}
-              fill
-              className="object-cover"
-            />
-          </div>
-        ))}
+      <div className="w-full px-4 sm:px-8 py-10 flex justify-center">
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 max-w-7xl justify-items-center w-full">
+    {teamMembers.map((member, index) => (
+      <div
+        key={index}
+        className="relative w-64 h-80 rounded-2xl overflow-hidden shadow-md bg-[#5e2b9c]"
+      >
+        <Image
+          src={member.image}
+          alt={member.name}
+          fill
+          className="object-cover"
+        />
       </div>
+    ))}
+  </div>
+</div>
+
     </section>
   );
 }

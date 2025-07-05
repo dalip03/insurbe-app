@@ -53,8 +53,8 @@ export default function PensionPlansSection() {
       <p className="text-gray-500 max-w-xl mx-auto mb-12">
         We partner with leading insurers in Germany to offer
       </p>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full mx-auto mb-14">
+      {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-4xl mx-auto mb-10"> */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-6xl mx-auto mb-14">
         {plans.map(({ logoSrc, logoAlt, title, description, partner }, i) => (
           <div
             key={i}
