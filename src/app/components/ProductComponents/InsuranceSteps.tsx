@@ -1,107 +1,212 @@
 "use client";
-import { useState } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 
-const jobOptions = ["Mechanical", "Technical", "Consultant"];
-const steps = [
-  "Select Job Industry",
+// Step labels
+const stepLabels = [
   "Select Income Range",
-  "When are you coming?",
-  "Credit Usage",
-  "Have You Already Found Insurance",
-  "Estimated Monthly Spend",
+  "What's your plan to stay?",
+  "Mode of communication",
+  "What's your Email?",
+  "Select Marital Status"
 ];
 
-export default function InsuranceSteps() {
-  const [selectedJob, setSelectedJob] = useState("Technical");
+// Option sets
+const incomeOptions = [
+  "Below €30,000",
+  "€30,000 - €50,000",
+  "Above €50,000"
+];
 
-  // Variants for steps buttons (fade & slight move)
-  const stepVariants = {
-    hidden: { opacity: 0, x: -20 },
-    visible: (i: number) => ({
-      opacity: 1,
-      x: 0,
-      transition: { delay: i * 0.1, duration: 0.3 },
-    }),
-  };
+const stayPlans = ["Short term", "Permanent", "Undecided"];
+const modes = ["Email", "Call"];
+const maritalOptions = ["Yes", "No"];
 
-  return (
-    <section className="bg-gradient-to-br from-[#f5f0ff] to-white py-20 px-4 md:px-34">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-12">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-            className="text-3xl md:text-4xl font-bold text-black mb-3"
+// --- Types ---
+type FormData = {
+  incomeRange?: string;
+  plan?: string;
+  mode?: string;
+  email?: string;
+  marital?: string;
+};
+
+type RightContentProps = {
+  step: number;
+  formData: FormData;
+  setFormData: React.Dispatch<React.SetStateAction<FormData>>;
+};
+
+// --- Dynamic Right Panel Content ---
+function RightContent({ step, formData, setFormData }: RightContentProps) {
+  switch (step) {
+    case 0:
+      // Income Range dropdown
+      return (
+        <>
+          <label className="block mb-2 font-medium text-gray-700">Income Range</label>
+          <select
+            className="w-full rounded-md py-2 px-4 border border-gray-300"
+            value={formData.incomeRange ?? ""}
+            onChange={e =>
+              setFormData(f => ({ ...f, incomeRange: e.target.value }))
+            }
           >
-            Just 2 minutes to find your best-fit insurance type.
-          </motion.h2>
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
-            className="text-gray-500 text-base md:text-lg"
-          >
-            No calls, no commitments — unless you want them.
-          </motion.p>
-        </div>
-        <div className="flex flex-col md:flex-row gap-10 items-center justify-between">
-          {/* Step List */}
-          <div className="flex flex-col gap-5 w-full md:w-1/3 justify-center items-left">
-            {steps.map((step, index) => (
-              <motion.button
-                key={index}
-                custom={index}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                variants={stepVariants}
-                className={`text-left px-4 py-2 w-50 rounded-sm font-medium text-sm transition-all duration-200 ${
-                  index === 0
-                    ? "bg-primary text-white"
-                    : "text-gray-800 hover:bg-gray-100"
+            <option value="" disabled>Select An Option</option>
+            {incomeOptions.map(opt => <option key={opt}>{opt}</option>)}
+          </select>
+        </>
+      );
+    case 1:
+      // Plan to Stay
+      return (
+        <>
+          <label className="block mb-4 font-medium text-gray-700">What&apos;s your plan to stay?</label>
+          <div className="flex gap-4">
+            {stayPlans.map(opt => (
+              <button
+                key={opt}
+                type="button"
+                onClick={() => setFormData(f => ({ ...f, plan: opt }))}
+                className={`px-4 py-2 rounded-xl border transition ${
+                  formData.plan === opt
+                    ? "bg-[#511E6D] text-white border-[#511E6D]"
+                    : "bg-white text-gray-700 border-gray-300"
                 }`}
               >
-                {step}
-              </motion.button>
+                {opt}
+              </button>
             ))}
           </div>
-
-          {/* Job Selection */}
-          <div className="flex-1 flex flex-col items-center gap-6">
-            <div className="flex items-center justify-end gap-10">
-              {jobOptions.map((job) => {
-                const isSelected = selectedJob === job;
-                return (
-                  <motion.button
-                    key={job}
-                    onClick={() => setSelectedJob(job)}
-                    whileTap={{ scale: 0.95 }}
-                    whileHover={{ scale: 1.05 }}
-                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                    className={`w-24 h-24 rounded-full flex items-center justify-center text-sm font-medium border-4 transition-all duration-300 ${
-                      isSelected
-                        ? "bg-primary text-white border-primary"
-                        : "border-[#e0d4f5] text-gray-700"
-                    }`}
-                  >
-                    {job}
-                  </motion.button>
-                );
-              })}
-            </div>
-
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              transition={{ type: "spring", stiffness: 300, damping: 20 }}
-              className="mt-4 bg-primary hover:bg-primary/95 transition text-white px-6 py-2 rounded-md"
-            >
-              Next
-            </motion.button>
+        </>
+      );
+    case 2:
+      // Mode of Communication radio
+      return (
+        <>
+          <label className="block mb-4 font-medium text-gray-700">Mode of communication</label>
+          <div className="flex gap-10 mt-4 mb-2">
+            {modes.map(opt => (
+              <button
+                key={opt}
+                type="button"
+                onClick={() => setFormData(f => ({ ...f, mode: opt }))}
+                className={`w-24 h-24 flex items-center justify-center rounded-full border-2 transition-all text-lg font-medium ${
+                  formData.mode === opt
+                    ? "bg-[#511E6D] text-white border-[#511E6D]"
+                    : "bg-white text-gray-700 border-gray-300"
+                }`}
+              >
+                {opt}
+              </button>
+            ))}
           </div>
+        </>
+      );
+    case 3:
+      // Email input
+      return (
+        <>
+          <label className="block mb-2 font-medium text-gray-700">What&apos;s your Email?</label>
+          <input
+            type="email"
+            className="w-full rounded-md py-2 px-4 border border-gray-300"
+            placeholder="Please Enter your Email"
+            value={formData.email ?? ""}
+            onChange={e => setFormData(f => ({ ...f, email: e.target.value }))}
+          />
+        </>
+      );
+    case 4:
+      // Marital Status radio
+      return (
+        <>
+          <h2 className="text-2xl font-bold mb-4">Are you married?</h2>
+          <div className="flex gap-8">
+            {maritalOptions.map(opt => (
+              <button
+                key={opt}
+                type="button"
+                onClick={() => setFormData(f => ({ ...f, marital: opt }))}
+                className={`px-8 py-3 rounded-lg font-semibold border ${
+                  formData.marital === opt
+                    ? "bg-[#511E6D] text-white border-[#511E6D]"
+                    : "bg-white text-[#511E6D] border-gray-200"
+                }`}
+              >
+                {opt.toUpperCase()}
+              </button>
+            ))}
+          </div>
+        </>
+      );
+    default:
+      return <div />;
+  }
+}
+
+// ---- Main Form Component ----
+export default function InsuranceSteps() {
+  const [currentStep, setCurrentStep] = useState<number>(0);
+  const [formData, setFormData] = useState<FormData>({});
+
+  // Step button appearance
+  const stepButton = (step: string, idx: number) => (
+    <button
+      key={idx}
+      type="button"
+      className={`w-full text-left px-5 py-3 rounded-md font-semibold text-base tracking-tight 
+        ${currentStep === idx
+          ? "bg-[#511E6D] text-white shadow"
+          : "bg-transparent text-gray-900 hover:bg-gray-100"
+        }`}
+      onClick={() => setCurrentStep(idx)}
+    >
+      {step}
+    </button>
+  );
+
+  return (
+    <section className="bg-gradient-to-br from-[#f5f0ff] to-white py-20 px-4 md:px-10">
+      <div className="max-w-4xl mx-auto">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-black mb-3">Just 2 minutes to find your best-fit insurance type.</h2>
+          <p className="text-gray-500 text-base md:text-lg">No calls, no commitments — unless you want them.</p>
+        </div>
+        <div className="flex gap-10 md:gap-0 items-start justify-between">
+          {/* Left Steps List */}
+          <div className="w-1/3 min-w-[210px] flex flex-col gap-2">
+            {stepLabels.map((step, idx) => stepButton(step, idx))}
+          </div>
+          {/* Right Panel */}
+          <motion.div
+            key={currentStep}
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3 }}
+            className="w-full max-w-lg p-8 flex flex-col items-start"
+          >
+            <RightContent step={currentStep} formData={formData} setFormData={setFormData} />
+            <div className="flex gap-3 mt-8 self-end">
+              <button
+                type="button"
+                className={`px-4 py-2 rounded border font-medium ${
+                  currentStep === 0 ? "bg-gray-100 text-gray-400 cursor-not-allowed" : "bg-[#e0daf2] text-[#511E6D] hover:bg-[#d9c9ef]"
+                }`}
+                disabled={currentStep === 0}
+                onClick={() => setCurrentStep(curr => Math.max(0, curr - 1))}
+              >
+                Back
+              </button>
+              <button
+                type="button"
+                className="px-4 py-2 rounded bg-[#511E6D] text-white font-medium"
+                onClick={() => setCurrentStep(curr => Math.min(stepLabels.length - 1, curr + 1))}
+              >
+                Next
+              </button>
+            </div>
+          </motion.div>
         </div>
       </div>
     </section>

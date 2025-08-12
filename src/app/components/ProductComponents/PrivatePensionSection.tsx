@@ -26,6 +26,7 @@ const reasons = [
 ];
 
 export default function PrivatePensionSection() {
+      
   return (
     <section className="py-16 px-4 sm:px-10 lg:px-20 bg-white text-center ">
       <h2 className="text-3xl sm:text-4xl font-bold text-[#111827] mb-10">
@@ -44,7 +45,7 @@ export default function PrivatePensionSection() {
         ))}
       </div>
 
-      <button className="bg-primary text-white px-6 py-3 rounded-md font-medium hover:bg-[#3a0669] transition">
+      <button  className="bg-primary text-white px-6 py-3 rounded-md font-medium hover:bg-[#3a0669] transition">
         Check My Eligibility
       </button>
     </section>

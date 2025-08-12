@@ -44,7 +44,7 @@ const plans = [
 
 export default function PensionPlansSection() {
   return (
-    <section className="py-20 px-4 sm:px-10 lg:px-24 bg-gradient-to-b from-white to-gray-50 text-center">
+    <section className=" px-4 sm:px-10 lg:px-24 bg-gradient-to-b from-white to-gray-50 text-center">
       <span className="inline-block text-black/80 px-4 py-2 rounded-full text-sm font-medium mb-4 border border-gray-300">
         Seamless Synergy
       </span>

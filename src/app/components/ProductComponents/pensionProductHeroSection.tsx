@@ -4,6 +4,12 @@ import React from "react";
 import { motion } from "framer-motion";
 
 const PensionProductHeroSection = () => {
+   const scrollToForm = () => {
+    const section = document.getElementById("questionnaire-section");
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth" });
+    }
+  };
   return (
     <section className="relative bg-primary bg-gradient-to-br from-primary to-primary text-white py-24 px-4 md:px-10 lg:px-20 overflow-hidden">
       {/* Grid overlay */}
@@ -48,7 +54,10 @@ const PensionProductHeroSection = () => {
           <button className="bg-transparent border border-white text-white px-6 py-3 rounded-md hover:bg-white hover:text-primary transition font-semibold">
             Talk to an Advisor
           </button>
-          <button className="bg-white text-primary px-6 py-3 rounded-md hover:opacity-90 transition font-semibold">
+          <button
+            onClick={scrollToForm}
+            className="bg-white text-primary px-6 py-3 rounded-md hover:opacity-90 transition font-semibold"
+          >
             Check My Eligibility
           </button>
         </motion.div>

@@ -4,6 +4,10 @@ import React from "react";
 import { motion } from "framer-motion";
 
 const ProductHeroSection = () => {
+   
+
+  
+
   return (
     <section className="relative bg-primary bg-gradient-to-br from-primary to-primary text-white py-24 px-4 md:px-10 lg:px-20 overflow-hidden">
       {/* Grid overlay */}
@@ -33,7 +37,7 @@ const ProductHeroSection = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.3 }}
-          className="text-lg mb-10 px-24 text-white/90"
+          className="text-lg mb-10 px-30 text-white/90"
         >
           Don’t settle - we help professionals unlock better care, smarter
           coverage, and bigger savings.
@@ -45,12 +49,20 @@ const ProductHeroSection = () => {
           transition={{ duration: 0.7, delay: 0.4 }}
           className="flex flex-col sm:flex-row gap-4 justify-center mb-20"
         >
-          <button className="bg-transparent border border-white text-white px-6 py-3 rounded-md hover:bg-white hover:text-primary transition font-semibold">
-            Talk to an Advisor
-          </button>
-          <button className="bg-white text-primary px-6 py-3 rounded-md hover:opacity-90 transition font-semibold">
-            Check My Eligibility
-          </button>
+          <div>
+            <button
+               onClick={(e) => {
+                    e.preventDefault(); // prevent default link jump
+                    window.scrollBy({ top: 400, behavior: "smooth" }); 
+                  }}
+              className="bg-white text-primary px-6 py-3 rounded-md hover:opacity-90 transition font-semibold cursor-pointer"
+            >
+              Take the Questionnaire
+            </button>
+            <p className="mt-2 text-[#FFFFFF99]/60 italic">
+              take less than a minute
+            </p>
+          </div>
         </motion.div>
       </div>
     </section>
