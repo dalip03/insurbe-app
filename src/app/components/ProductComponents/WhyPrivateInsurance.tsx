@@ -30,7 +30,7 @@ export default function WhyPrivateInsurance() {
 
         {/* Right Side Image Card with fade + slide from right */}
         <motion.div
-          className="flex justify-center"
+          className="flex justify-end"
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.7, ease: "easeOut", delay: 0.3 }}

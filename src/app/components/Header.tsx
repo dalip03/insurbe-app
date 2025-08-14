@@ -90,13 +90,13 @@ const Header = () => {
               />
             </div>
             {/* Right: Menu */}
-            <div className="w-1/2 flex flex-col justify-center px-12 py-12 bg-white">
+            <div className="w-1/2 flex flex-col  px-12 py-12 bg-white">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-2">
                 {link.submenu.map((sublink) => (
                   <Link
                     key={sublink.name}
                     href={sublink.href}
-                    className="block font-semibold text-lg text-[#652eb5] hover:text-primary py-2 transition whitespace-nowrap"
+                    className="block font-semibold text-lg text-primary hover:text-primary/90 py-2 transition whitespace-nowrap"
                     tabIndex={showProducts ? 0 : -1}
                     onClick={() => setShowProducts(false)} 
                   >
