@@ -304,7 +304,7 @@ export default function InsuranceSteps() {
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.3 }}
-            className="w-full max-w-lg p-8 flex flex-col items-start border border-gray-200 rounded-lg "
+            className="w-full max-w-lg p-8 flex flex-col items-start "
           >
             <RightContent
               step={currentStep}
