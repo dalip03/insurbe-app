@@ -65,7 +65,7 @@ export default function PensionPlansSection() {
               {/* Logo only */}
               <div className="flex items-center">
                 {logoSrc.endsWith(".svg") ? (
-                  <img
+                  <Image
                     src={logoSrc}
                     alt={logoAlt || "Logo"}
                     width={100}

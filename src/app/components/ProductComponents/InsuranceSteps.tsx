@@ -6,20 +6,20 @@ import { motion } from "framer-motion";
 const stepLabels = [
   "Select Income Range",
   "What's your plan to stay?",
+  "Select Marital Status",
+  "Dependent Status",
   "Mode of communication",
   "What's your Email?",
-  "Select Marital Status",
   "What's your Age?",
-  "Dependent Status",
 ];
 
 // Option sets
-const incomeOptions = ["Below €30,000", "€30,000 - €50,000", "Above €50,000"];
-const stayPlans = ["Short term", "Permanent", "Undecided"];
+const incomeOptions = ["Below 63000", "63000 - 73800", "Above 73800"];
+const stayPlans = ["Yes", "No"];
 const modes = ["Email", "Call"];
 const maritalOptions = ["Yes", "No"];
 const ageOptions = ["Below 18", "18-30", "31-45", "46-60", "Above 60"];
-const dependentOptions = ["Yes", "No"];
+const dependentOptions = ["1", "2", "3", "4", "5"];
 
 // Types
 type FormData = {
@@ -30,6 +30,8 @@ type FormData = {
   marital?: string;
   dependent?: string;
   age?: string;
+  text?: string;
+  number?: string;
 };
 
 type RightContentProps = {
@@ -39,7 +41,13 @@ type RightContentProps = {
 };
 
 // Thank You modal component
-function ThankYouModal({ open, onClose }: { open: boolean; onClose: () => void }) {
+function ThankYouModal({
+  open,
+  onClose,
+}: {
+  open: boolean;
+  onClose: () => void;
+}) {
   if (!open) return null;
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4">
@@ -63,13 +71,19 @@ function RightContent({ step, formData, setFormData }: RightContentProps) {
     case 0:
       return (
         <>
-          <label className="block mb-2 font-medium text-gray-700">Income Range</label>
+          <label className="block mb-2 font-medium text-gray-700">
+            Income Range
+          </label>
           <select
             className="w-full rounded-md py-2 px-4 border border-gray-300"
             value={formData.incomeRange ?? ""}
-            onChange={(e) => setFormData((f) => ({ ...f, incomeRange: e.target.value }))}
+            onChange={(e) =>
+              setFormData((f) => ({ ...f, incomeRange: e.target.value }))
+            }
           >
-            <option value="" disabled>Select An Option</option>
+            <option value="" disabled>
+              Select An Option
+            </option>
             {incomeOptions.map((opt) => (
               <option key={opt}>{opt}</option>
             ))}
@@ -79,23 +93,77 @@ function RightContent({ step, formData, setFormData }: RightContentProps) {
     case 1:
       return (
         <>
-          <label className="block mb-2 font-medium text-gray-700">What&apos;s your plan to stay?</label>
-          <select
-            className="w-full rounded-md py-2 px-4 border border-gray-300"
-            value={formData.plan ?? ""}
-            onChange={(e) => setFormData((f) => ({ ...f, plan: e.target.value }))}
-          >
-            <option value="" disabled>Select An Option</option>
+          <label className="block mb-2 font-medium text-gray-700">
+            Are you confident you&apos;ll stay in Germany more than 5 years?
+          </label>
+          <div className="flex gap-8 flex-wrap">
             {stayPlans.map((opt) => (
-              <option key={opt}>{opt}</option>
+              <button
+                key={opt}
+                type="button"
+                onClick={() => setFormData((f) => ({ ...f, plan: opt }))}
+                className={`px-8 py-3 rounded-md  border ${
+                  formData.plan === opt
+                    ? "bg-[#511E6D] text-white border-[#511E6D]"
+                    : "bg-white text-[#511E6D] border-gray-200"
+                }`}
+              >
+                {opt.toUpperCase()}
+              </button>
             ))}
-          </select>
+          </div>
         </>
       );
     case 2:
       return (
         <>
-          <label className="block mb-4 font-medium text-gray-700">Mode of communication</label>
+          <h2 className="font-medium text-gray-700 mb-4">Are you married?</h2>
+          <div className="flex gap-8 flex-wrap">
+            {maritalOptions.map((opt) => (
+              <button
+                key={opt}
+                type="button"
+                onClick={() => setFormData((f) => ({ ...f, marital: opt }))}
+                className={`px-8 py-3 rounded-md border ${
+                  formData.marital === opt
+                    ? "bg-[#511E6D] text-white border-[#511E6D]"
+                    : "bg-white text-[#511E6D] border-gray-200"
+                }`}
+              >
+                {opt.toUpperCase()}
+              </button>
+            ))}
+          </div>
+        </>
+      );
+    case 3:
+      return (
+        <>
+          <h2 className="font-medium text-gray-700 mb-4">
+            How many dependent do you want to issue?
+          </h2>
+          <select
+            className="w-full rounded-md py-2 px-4 border border-gray-300"
+            value={formData.dependent ?? ""}
+            onChange={(e) =>
+              setFormData((f) => ({ ...f, dependent: e.target.value }))
+            }
+          >
+            <option value="" disabled>
+              Select An Option
+            </option>
+            {dependentOptions.map((opt) => (
+              <option key={opt}>{opt}</option>
+            ))}
+          </select>
+        </>
+      );
+    case 4:
+      return (
+        <>
+          <label className="block mb-4 font-medium text-gray-700">
+            Would you prefer to be contacted by email or phone?
+          </label>
           <div className="flex gap-6 mt-4 mb-2 flex-wrap">
             {modes.map((opt) => (
               <button
@@ -114,79 +182,71 @@ function RightContent({ step, formData, setFormData }: RightContentProps) {
           </div>
         </>
       );
-    case 3:
-      return (
-        <>
-          <label className="block mb-2 font-medium text-gray-700">What&apos;s your Email?</label>
-          <input
-            type="email"
-            className="w-full rounded-md py-2 px-4 border border-gray-300"
-            placeholder="Please Enter your Email"
-            value={formData.email ?? ""}
-            onChange={(e) => setFormData((f) => ({ ...f, email: e.target.value }))}
-          />
-        </>
-      );
-    case 4:
-      return (
-        <>
-          <h2 className="text-xl font-semibold mb-4">Are you married?</h2>
-          <div className="flex gap-8 flex-wrap">
-            {maritalOptions.map((opt) => (
-              <button
-                key={opt}
-                type="button"
-                onClick={() => setFormData((f) => ({ ...f, marital: opt }))}
-                className={`px-8 py-3 rounded-lg font-semibold border ${
-                  formData.marital === opt
-                    ? "bg-[#511E6D] text-white border-[#511E6D]"
-                    : "bg-white text-[#511E6D] border-gray-200"
-                }`}
-              >
-                {opt.toUpperCase()}
-              </button>
-            ))}
-          </div>
-        </>
-      );
     case 5:
       return (
         <>
-          <label className="block mb-2 font-medium text-gray-700">Select your Age Range</label>
+        <h2 className="font-medium mb-4">Please provide basics Info</h2>
+          <label className="block mb-2 font-sm text-gray-700">
+            Name
+          </label>
+          <input
+            type="text"
+            className="w-full rounded-md py-2 px-4 border border-gray-300 mb-2"
+            placeholder="Please Enter your Name"
+            value={formData.text ?? ""}
+            onChange={(e) =>
+              setFormData((f) => ({ ...f, text: e.target.value }))
+            }
+          />
+          <label className="block mb-2 font-sm text-gray-700">
+            Email
+          </label>
+           <input
+            type="email"
+            className="w-full rounded-md py-2 px-4 border border-gray-300 mb-2"
+            placeholder="Please Enter your Email"
+            value={formData.email ?? ""}
+            onChange={(e) =>
+              setFormData((f) => ({ ...f, email: e.target.value }))
+            }
+          />
+          <label className="block mb-2 font-sm text-gray-700">
+           Phone Number
+          </label>
+           <input
+            type="number"
+            className="w-full rounded-md py-2 px-4 border border-gray-300 "
+            placeholder="Please Enter your Number"
+            value={formData.number ?? ""}
+            onChange={(e) =>
+              setFormData((f) => ({ ...f, number: e.target.value }))
+            }
+          />
+        </>
+      );
+    case 6:
+      return (
+        <>
+          <label className="block mb-2 font-medium text-gray-700">
+            Select your Age Range
+          </label>
           <select
             className="w-full rounded-md py-2 px-4 border border-gray-300"
             value={formData.age ?? ""}
-            onChange={(e) => setFormData((f) => ({ ...f, age: e.target.value }))}
+            onChange={(e) =>
+              setFormData((f) => ({ ...f, age: e.target.value }))
+            }
           >
-            <option value="" disabled>Select An Option</option>
+            <option value="" disabled>
+              Select An Option
+            </option>
             {ageOptions.map((opt) => (
               <option key={opt}>{opt}</option>
             ))}
           </select>
         </>
       );
-    case 6:
-      return (
-        <>
-          <h2 className="text-xl font-semibold mb-4">Dependent Status</h2>
-          <div className="flex gap-8 flex-wrap">
-            {dependentOptions.map((opt) => (
-              <button
-                key={opt}
-                type="button"
-                onClick={() => setFormData((f) => ({ ...f, dependent: opt }))}
-                className={`px-8 py-3 rounded-lg font-semibold border ${
-                  formData.dependent === opt
-                    ? "bg-[#511E6D] text-white border-[#511E6D]"
-                    : "bg-white text-[#511E6D] border-gray-200"
-                }`}
-              >
-                {opt.toUpperCase()}
-              </button>
-            ))}
-          </div>
-        </>
-      );
+
     default:
       return <div />;
   }
@@ -246,7 +306,11 @@ export default function InsuranceSteps() {
             transition={{ duration: 0.3 }}
             className="w-full max-w-lg p-8 flex flex-col items-start border border-gray-200 rounded-lg bg-white"
           >
-            <RightContent step={currentStep} formData={formData} setFormData={setFormData} />
+            <RightContent
+              step={currentStep}
+              formData={formData}
+              setFormData={setFormData}
+            />
             <div className="flex gap-3 mt-8 self-end">
               <button
                 type="button"
@@ -283,8 +347,14 @@ export default function InsuranceSteps() {
             <p className="text-sm text-gray-500 mb-1">
               Step {currentStep + 1} of {stepLabels.length}
             </p>
-            <h3 className="text-lg font-semibold mb-4">{stepLabels[currentStep]}</h3>
-            <RightContent step={currentStep} formData={formData} setFormData={setFormData} />
+            <h3 className="text-lg font-semibold mb-4">
+              {stepLabels[currentStep]}
+            </h3>
+            <RightContent
+              step={currentStep}
+              formData={formData}
+              setFormData={setFormData}
+            />
             <div className="flex gap-3 mt-8 justify-end">
               {currentStep > 0 && (
                 <button
@@ -308,7 +378,10 @@ export default function InsuranceSteps() {
       </div>
 
       {/* Thank You modal */}
-      <ThankYouModal open={thankYouOpen} onClose={() => setThankYouOpen(false)} />
+      <ThankYouModal
+        open={thankYouOpen}
+        onClose={() => setThankYouOpen(false)}
+      />
     </section>
   );
 }
