@@ -11,7 +11,7 @@ export default function PublicHealthModal({
 }) {
   if (!open) return null;
   return (
-    <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center">
+    <div className="fixed inset-0 z-60 bg-black/40 flex items-center justify-center">
       <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-lg relative">
         <button
           className="absolute right-6 top-6 text-gray-400 hover:text-gray-700 text-2xl"

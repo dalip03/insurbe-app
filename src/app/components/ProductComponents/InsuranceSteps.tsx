@@ -2,10 +2,9 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 
-// Step labels
 const stepLabels = [
   "Select Income Range",
-  "What's your plan to stay?",
+  "Are you confident you'll stay in Germany more than 5 years?",
   "Select Marital Status",
   "Dependent Status",
   "Mode of communication",
@@ -13,7 +12,6 @@ const stepLabels = [
   "What's your Age?",
 ];
 
-// Option sets
 const incomeOptions = ["Below 63000", "63000 - 73800", "Above 73800"];
 const stayPlans = ["Yes", "No"];
 const modes = ["Email", "Call"];
@@ -21,7 +19,6 @@ const maritalOptions = ["Yes", "No"];
 const ageOptions = ["Below 18", "18-30", "31-45", "46-60", "Above 60"];
 const dependentOptions = ["1", "2", "3", "4", "5"];
 
-// Types
 type FormData = {
   incomeRange?: string;
   plan?: string;
@@ -40,7 +37,6 @@ type RightContentProps = {
   setFormData: React.Dispatch<React.SetStateAction<FormData>>;
 };
 
-// Thank You modal component
 function ThankYouModal({
   open,
   onClose,
@@ -65,44 +61,57 @@ function ThankYouModal({
   );
 }
 
-// Right panel content
-function RightContent({ step, formData, setFormData }: RightContentProps) {
+// Shows required/error for empty step
+function RequiredNotice({ show }: { show: boolean }) {
+  return show ? (
+    <p className="text-xs text-red-600 mt-2 mb-0 pl-1">This field is required.</p>
+  ) : null;
+}
+
+function RightContent({
+  step,
+  formData,
+  setFormData,
+  requiredError,
+}: RightContentProps & { requiredError: boolean }) {
   switch (step) {
     case 0:
       return (
         <>
           <label className="block mb-2 font-medium text-gray-700">
-            Income Range
+            Income Range <span className="text-red-500">*</span>
           </label>
           <select
             className="w-full rounded-md py-2 px-4 border border-gray-300"
+            required
             value={formData.incomeRange ?? ""}
-            onChange={(e) =>
-              setFormData((f) => ({ ...f, incomeRange: e.target.value }))
+            onChange={e =>
+              setFormData(f => ({ ...f, incomeRange: e.target.value }))
             }
           >
             <option value="" disabled>
               Select An Option
             </option>
-            {incomeOptions.map((opt) => (
+            {incomeOptions.map(opt => (
               <option key={opt}>{opt}</option>
             ))}
           </select>
+          <RequiredNotice show={requiredError && !formData.incomeRange} />
         </>
       );
     case 1:
       return (
         <>
           <label className="block mb-2 font-medium text-gray-700">
-            Are you confident you&apos;ll stay in Germany more than 5 years?
+            Are you confident you&apos;ll stay in Germany more than 5 years? <span className="text-red-500">*</span>
           </label>
           <div className="flex gap-8 flex-wrap">
-            {stayPlans.map((opt) => (
+            {stayPlans.map(opt => (
               <button
                 key={opt}
                 type="button"
-                onClick={() => setFormData((f) => ({ ...f, plan: opt }))}
-                className={`px-8 py-3 rounded-md  border ${
+                onClick={() => setFormData(f => ({ ...f, plan: opt }))}
+                className={`px-8 py-3 rounded-md border ${
                   formData.plan === opt
                     ? "bg-[#511E6D] text-white border-[#511E6D]"
                     : "bg-white text-[#511E6D] border-gray-200"
@@ -112,18 +121,21 @@ function RightContent({ step, formData, setFormData }: RightContentProps) {
               </button>
             ))}
           </div>
+          <RequiredNotice show={requiredError && !formData.plan} />
         </>
       );
     case 2:
       return (
         <>
-          <h2 className="font-medium text-gray-700 mb-4">Are you married?</h2>
+          <h2 className="font-medium text-gray-700 mb-4">
+            Are you married? <span className="text-red-500">*</span>
+          </h2>
           <div className="flex gap-8 flex-wrap">
-            {maritalOptions.map((opt) => (
+            {maritalOptions.map(opt => (
               <button
                 key={opt}
                 type="button"
-                onClick={() => setFormData((f) => ({ ...f, marital: opt }))}
+                onClick={() => setFormData(f => ({ ...f, marital: opt }))}
                 className={`px-8 py-3 rounded-md border ${
                   formData.marital === opt
                     ? "bg-[#511E6D] text-white border-[#511E6D]"
@@ -134,42 +146,44 @@ function RightContent({ step, formData, setFormData }: RightContentProps) {
               </button>
             ))}
           </div>
+          <RequiredNotice show={requiredError && !formData.marital} />
         </>
       );
     case 3:
       return (
         <>
           <h2 className="font-medium text-gray-700 mb-4">
-            How many dependent do you want to issue?
+            How many dependent do you want to issue? <span className="text-red-500">*</span>
           </h2>
           <select
             className="w-full rounded-md py-2 px-4 border border-gray-300"
             value={formData.dependent ?? ""}
-            onChange={(e) =>
-              setFormData((f) => ({ ...f, dependent: e.target.value }))
+            onChange={e =>
+              setFormData(f => ({ ...f, dependent: e.target.value }))
             }
           >
             <option value="" disabled>
               Select An Option
             </option>
-            {dependentOptions.map((opt) => (
+            {dependentOptions.map(opt => (
               <option key={opt}>{opt}</option>
             ))}
           </select>
+          <RequiredNotice show={requiredError && !formData.dependent} />
         </>
       );
     case 4:
       return (
         <>
           <label className="block mb-4 font-medium text-gray-700">
-            Would you prefer to be contacted by email or phone?
+            Would you prefer to be contacted by email or phone? <span className="text-red-500">*</span>
           </label>
           <div className="flex gap-6 mt-4 mb-2 flex-wrap">
-            {modes.map((opt) => (
+            {modes.map(opt => (
               <button
                 key={opt}
                 type="button"
-                onClick={() => setFormData((f) => ({ ...f, mode: opt }))}
+                onClick={() => setFormData(f => ({ ...f, mode: opt }))}
                 className={`w-24 h-24 flex items-center justify-center rounded-full border-2 transition-all text-lg font-medium ${
                   formData.mode === opt
                     ? "bg-[#511E6D] text-white border-[#511E6D]"
@@ -180,105 +194,149 @@ function RightContent({ step, formData, setFormData }: RightContentProps) {
               </button>
             ))}
           </div>
+          <RequiredNotice show={requiredError && !formData.mode} />
         </>
       );
     case 5:
       return (
         <>
-        <h2 className="font-medium mb-4">Please provide basics Info</h2>
+          <h2 className="font-medium mb-4">Please provide basics Info</h2>
           <label className="block mb-2 font-sm text-gray-700">
-            Name
+            Name <span className="text-red-500">*</span>
           </label>
           <input
             type="text"
             className="w-full rounded-md py-2 px-4 border border-gray-300 mb-2"
             placeholder="Please Enter your Name"
             value={formData.text ?? ""}
-            onChange={(e) =>
-              setFormData((f) => ({ ...f, text: e.target.value }))
+            onChange={e =>
+              setFormData(f => ({ ...f, text: e.target.value }))
             }
           />
+          <RequiredNotice show={requiredError && !formData.text} />
           <label className="block mb-2 font-sm text-gray-700">
-            Email
+            Email <span className="text-red-500">*</span>
           </label>
-           <input
+          <input
             type="email"
             className="w-full rounded-md py-2 px-4 border border-gray-300 mb-2"
             placeholder="Please Enter your Email"
             value={formData.email ?? ""}
-            onChange={(e) =>
-              setFormData((f) => ({ ...f, email: e.target.value }))
+            onChange={e =>
+              setFormData(f => ({ ...f, email: e.target.value }))
             }
           />
+          <RequiredNotice show={requiredError && !formData.email} />
           <label className="block mb-2 font-sm text-gray-700">
-           Phone Number
+            Phone Number <span className="text-red-500">*</span>
           </label>
-           <input
+          <input
             type="number"
             className="w-full rounded-md py-2 px-4 border border-gray-300 "
             placeholder="Please Enter your Number"
             value={formData.number ?? ""}
-            onChange={(e) =>
-              setFormData((f) => ({ ...f, number: e.target.value }))
+            onChange={e =>
+              setFormData(f => ({ ...f, number: e.target.value }))
             }
           />
+          <RequiredNotice show={requiredError && !formData.number} />
         </>
       );
     case 6:
       return (
         <>
           <label className="block mb-2 font-medium text-gray-700">
-            Select your Age Range
+            Select your Age Range <span className="text-red-500">*</span>
           </label>
           <select
             className="w-full rounded-md py-2 px-4 border border-gray-300"
             value={formData.age ?? ""}
-            onChange={(e) =>
-              setFormData((f) => ({ ...f, age: e.target.value }))
+            onChange={e =>
+              setFormData(f => ({ ...f, age: e.target.value }))
             }
           >
             <option value="" disabled>
               Select An Option
             </option>
-            {ageOptions.map((opt) => (
+            {ageOptions.map(opt => (
               <option key={opt}>{opt}</option>
             ))}
           </select>
+          <RequiredNotice show={requiredError && !formData.age} />
         </>
       );
-
     default:
       return <div />;
   }
 }
 
-// ---- Main form
 export default function InsuranceSteps() {
   const [currentStep, setCurrentStep] = useState<number>(0);
   const [formData, setFormData] = useState<FormData>({});
   const [thankYouOpen, setThankYouOpen] = useState(false);
+  const [requiredError, setRequiredError] = useState(false);
 
-  const stepButton = (step: string, idx: number) => (
-    <button
-      key={idx}
-      type="button"
-      className={`w-full text-left px-5 py-3 rounded-md font-semibold text-base tracking-tight 
-        ${
-          currentStep === idx
-            ? "bg-[#511E6D] text-white shadow"
-            : "bg-transparent text-gray-900 hover:bg-gray-100"
-        }`}
-      onClick={() => setCurrentStep(idx)}
-    >
-      {step}
-    </button>
-  );
+  // GKV landing redirect
+  const redirectToGKV = () => {
+    window.location.href = "https://www.tk.de/en"; // user requested
+  };
+
+  const isStepComplete = () => {
+    switch (currentStep) {
+      case 0:
+        return !!formData.incomeRange;
+      case 1:
+        return !!formData.plan;
+      case 2:
+        return !!formData.marital;
+      case 3:
+        return !!formData.dependent;
+      case 4:
+        return !!formData.mode;
+      case 5:
+        return !!formData.text && !!formData.email && !!formData.number;
+      case 6:
+        return !!formData.age;
+      default:
+        return true;
+    }
+  };
 
   const handleNext = () => {
+    setRequiredError(false);
+
+    // All fields required per step
+    if (!isStepComplete()) {
+      setRequiredError(true);
+      return;
+    }
+
+    // Step 0: Income Check and redirect logic
+    if (currentStep === 0) {
+      if (
+        formData.incomeRange === "Below 63000" ||
+        formData.incomeRange === "63000 - 73800"
+      ) {
+        redirectToGKV();
+        return;
+      }
+      setCurrentStep(1);
+      return;
+    }
+    // Step 1: Duration of Stay and redirect logic
+    if (currentStep === 1) {
+      if (formData.plan === "No") {
+        redirectToGKV();
+        return;
+      }
+      setCurrentStep(2);
+      return;
+    }
+    // Next or Finish:
     if (currentStep === stepLabels.length - 1) {
       setThankYouOpen(true);
     } else {
-      setCurrentStep((c) => Math.min(stepLabels.length - 1, c + 1));
+      setCurrentStep(c => Math.min(stepLabels.length - 1, c + 1));
     }
   };
 
@@ -293,11 +351,24 @@ export default function InsuranceSteps() {
             No calls, no commitments — unless you want them.
           </p>
         </div>
-
-        {/* Desktop layout */}
+        {/* Desktop */}
         <div className="hidden md:flex gap-10 items-start justify-between">
           <div className="w-1/3 min-w-[210px] flex flex-col gap-2">
-            {stepLabels.map((step, idx) => stepButton(step, idx))}
+            {stepLabels.map((step, idx) => (
+              <button
+                key={idx}
+                type="button"
+                className={`w-full text-left px-5 py-3 rounded-md font-semibold text-base tracking-tight 
+                  ${
+                    currentStep === idx
+                      ? "bg-[#511E6D] text-white shadow"
+                      : "bg-transparent text-gray-900 hover:bg-gray-100"
+                  }`}
+                onClick={() => setCurrentStep(idx)}
+              >
+                {step}
+              </button>
+            ))}
           </div>
           <motion.div
             key={currentStep}
@@ -310,6 +381,7 @@ export default function InsuranceSteps() {
               step={currentStep}
               formData={formData}
               setFormData={setFormData}
+              requiredError={requiredError}
             />
             <div className="flex gap-3 mt-8 self-end">
               <button
@@ -334,8 +406,7 @@ export default function InsuranceSteps() {
             </div>
           </motion.div>
         </div>
-
-        {/* Mobile layout */}
+        {/* Mobile */}
         <div className="block md:hidden">
           <motion.div
             key={currentStep}
@@ -354,6 +425,7 @@ export default function InsuranceSteps() {
               step={currentStep}
               formData={formData}
               setFormData={setFormData}
+              requiredError={requiredError}
             />
             <div className="flex gap-3 mt-8 justify-end">
               {currentStep > 0 && (
@@ -376,8 +448,6 @@ export default function InsuranceSteps() {
           </motion.div>
         </div>
       </div>
-
-      {/* Thank You modal */}
       <ThankYouModal
         open={thankYouOpen}
         onClose={() => setThankYouOpen(false)}

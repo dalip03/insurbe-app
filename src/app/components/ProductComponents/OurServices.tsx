@@ -3,9 +3,12 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import ServiceModal from "./ServiceModal";
 import { useState } from "react";
+import PrivateHealthModal from "./PrivateHealthModal";
+import PublicHealthTabbedModal from "./PublicHealthModal";
 
 const plans = [
   {
+    key: "public",
     title: "Public (GKV)",
     price: "€800+",
     features: [
@@ -17,6 +20,7 @@ const plans = [
     accent: "text-purple-700",
   },
   {
+    key: "private",
     title: "Full Private (PKV)",
     price: "€400",
     features: [
@@ -28,6 +32,7 @@ const plans = [
     accent: "text-purple-700",
   },
   {
+    key: "expat",
     title: "Expat Private",
     price: "€200",
     features: [
@@ -67,6 +72,7 @@ const itemVariants = {
 
 export default function OurServices() {
   const [showModal, setShowModal] = useState(false);
+  const [openModal, setOpenModal] = useState<null | "public" | "private">(null);
 
   return (
     <section className="bg-gradient-to-br from-[#f5f0ff] to-[#fefcfc] py-6 px-4 md:px-16 ">
@@ -137,8 +143,8 @@ export default function OurServices() {
                   className="space-y-2 text-sm text-gray-700"
                   variants={itemVariants}
                 >
-                  {plan.features.map((item, i) => (
-                    <motion.li key={i} variants={itemVariants}>
+                  {plan.features.map((item) => (
+                    <motion.li key={item} variants={itemVariants}>
                       ✨ {item}
                     </motion.li>
                   ))}
@@ -150,7 +156,10 @@ export default function OurServices() {
                 variants={itemVariants}
               >
                 <button
-                  onClick={() => setShowModal(true)}
+                  onClick={() => {
+                    if (plan.key === "public") setOpenModal("public");
+                    if (plan.key === "private") setOpenModal("private");
+                  }}
                   className="w-full py-2 px-4 border border-gray-300 text-black rounded-md transition-all duration-300 group-hover:bg-primary group-hover:text-white group-hover:border-[#c59eec]"
                 >
                   Get Started
@@ -160,6 +169,15 @@ export default function OurServices() {
           ))}
         </div>
         <ServiceModal open={showModal} onClose={() => setShowModal(false)} />
+        {/* Modals */}
+        <PublicHealthTabbedModal
+          open={openModal === "public"}
+          onClose={() => setOpenModal(null)}
+        />
+        <PrivateHealthModal
+          open={openModal === "private"}
+          onClose={() => setOpenModal(null)}
+        />
       </div>
     </section>
   );

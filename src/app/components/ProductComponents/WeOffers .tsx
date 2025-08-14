@@ -1,8 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import PublicHealthModal from "./PublicHealthModal";
-import PrivateHealthModal from "./PrivateHealthModal";
-
+import ServiceModal from "./ServiceModal";
 
 const plans = [
   {
@@ -29,14 +27,18 @@ const plans = [
 ];
 
 export default function WeOffers() {
-  const [openModal, setOpenModal] = useState<null | "public" | "private">(null);
+  const [showModal, setShowModal] = useState(false);
 
   return (
     <div className="relative mt-6 px-4 md:px-10 lg:px-20 min-h-[520px] flex flex-col items-center bg-gradient-to-r from-[#f8f7fb] to-white">
       {/* Header */}
       <div className="mb-2 text-center">
-        <div className="text-xs font-semibold tracking-wide text-gray-500 mb-1">Seamless Synergy</div>
-        <h2 className="text-4xl md:text-5xl font-extrabold text-[#1d1e25] mb-3">Plans We Offer</h2>
+        <div className="text-xs font-semibold tracking-wide text-gray-500 mb-1">
+          Seamless Synergy
+        </div>
+        <h2 className="text-4xl md:text-5xl font-extrabold text-[#1d1e25] mb-3">
+          Plans We Offer
+        </h2>
         <p className="text-base text-gray-600 mb-8">
           We partner with leading insurers in Germany to offer
         </p>
@@ -51,14 +53,13 @@ export default function WeOffers() {
             <span className="absolute top-5 right-6 bg-[#511e6d] text-white text-xs rounded-full px-4 py-1 font-semibold">
               {plan.tag}
             </span>
-            <h4 className="text-lg font-semibold text-[#1d1e25] mb-2">{plan.title}</h4>
+            <h4 className="text-lg font-semibold text-[#1d1e25] mb-2">
+              {plan.title}
+            </h4>
             <p className="text-sm text-gray-600 mb-6">{plan.description}</p>
             <button
               className="mt-auto bg-[#e0daf2] text-[#511e6d] text-sm font-medium px-4 py-2 rounded shadow hover:bg-[#d9c9ef] transition"
-              onClick={() => {
-                if (plan.key === "public") setOpenModal("public");
-                if (plan.key === "private") setOpenModal("private");
-              }}
+              onClick={() => setShowModal(true)}
             >
               Explore
             </button>
@@ -66,8 +67,7 @@ export default function WeOffers() {
         ))}
       </div>
       {/* Modals */}
-      <PublicHealthModal open={openModal === "public"} onClose={() => setOpenModal(null)} />
-      <PrivateHealthModal open={openModal === "private"} onClose={() => setOpenModal(null)} />
+      <ServiceModal open={showModal} onClose={() => setShowModal(false)} />
     </div>
   );
 }

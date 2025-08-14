@@ -31,7 +31,7 @@ export default function PrivateHealthModal({
           </div>
           <form className="flex flex-col gap-5">
             <div>
-              <label className="block mb-1 font-medium text-gray-700">
+              <label className="block mb-1 font-medium text-black text-left">
                 Name
               </label>
               <input
@@ -41,7 +41,7 @@ export default function PrivateHealthModal({
               />
             </div>
             <div>
-              <label className="block mb-1 font-medium text-gray-700">
+              <label className="block mb-1 font-medium text-black text-left">
                 Email
               </label>
               <input
