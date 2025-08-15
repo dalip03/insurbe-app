@@ -96,13 +96,14 @@ const Header = () => {
                           {[
                             {
                               name: "Working Professionals",
-                              href: "/working-professionals",
+                              href: "/products/privateProducts",
                             },
                             { name: "Visa Seekers", href: "/visa-seekers" },
                             { name: "Students", href: "/students" },
-                            { name: "Family", href: "/family" },
-                            { name: "Private", href: "/private" },
-                            { name: "Pension", href: "/pension" },
+                            {
+                              name: "Family",
+                              href: "/products/pensionProducts",
+                            },
                           ].map((item) => (
                             <li key={item.name} className="text-right">
                               <Link
