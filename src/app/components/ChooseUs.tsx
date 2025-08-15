@@ -8,32 +8,32 @@ export default function ChooseUs() {
     {
       title: "Health Insurance",
       desc: "Generic text to outline the benefits of Insurbe and the particular feature.",
-      icon: "/icons/student.svg",
+      icon: "/insurance/student.svg",
     },
     {
       title: "Private Pension Scheme",
       desc: "Generic text to outline the benefits of Insurbe and the particular feature.",
-      icon: "/icons/support.svg",
+      icon: "/insurance/pension1.svg",
     },
     {
       title: "Liability Insurance",
       desc: "Generic text to outline the benefits of Insurbe and the particular feature.",
-      icon: "/icons/job.svg",
+      icon: "/insurance/liability1.svg",
     },
     {
       title: "Household Insurance",
       desc: "Generic text to outline the benefits of Insurbe and the particular feature.",
-      icon: "/icons/family.svg",
+      icon: "/insurance/house1.svg",
     },
     {
       title: "Legal Insurance",
       desc: "Generic text to outline the benefits of Insurbe and the particular feature.",
-      icon: "/icons/family.svg",
+      icon: "/insurance/legal1.svg",
     },
     {
       title: "Travel Insurance",
       desc: "Generic text to outline the benefits of Insurbe and the particular feature.",
-      icon: "/icons/family.svg",
+      icon: "/insurance/travel1.svg",
     },
   ];
 

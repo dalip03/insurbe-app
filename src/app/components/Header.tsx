@@ -58,73 +58,83 @@ const Header = () => {
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-10 text-lg">
-        {navLinks.map((link) =>
-  link.submenu ? (
-    <div
-      key={link.name}
-      className="relative"
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
-      <span
-        className={`cursor-pointer h-7 px-1 ${
-          pathname.includes("/products")
-            ? "text-primary border-b-2 border-primary font-semibold pb-1"
-            : "text-black"
-        }`}
-      >
-        {link.name}
-      </span>
-      {/* --- FULL WIDTH, HALF SPLIT MEGA MENU --- */}
-      {showProducts && (
-        <div className="fixed left-0 top-[72px] w-screen z-50">
-          <div className="flex w-full min-h-[340px] max-h-[480px] shadow-2xl rounded-b-2xl overflow-hidden bg-white">
-            {/* Left: Image */}
-            <div className="relative w-1/2 h-[340px] md:h-[420px] lg:h-[480px] bg-[#efebfd]">
-              <Image
-                src="/img/stock.jpg"
-                alt="Mega Menu Promo"
-                fill
-                className="object-cover rounded-none"
-                priority
-              />
-            </div>
-            {/* Right: Menu */}
-            <div className="w-1/2 flex flex-col  px-12 py-12 bg-white">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-2">
-                {link.submenu.map((sublink) => (
-                  <Link
-                    key={sublink.name}
-                    href={sublink.href}
-                    className="block font-semibold text-lg text-primary hover:text-primary/90 py-2 transition whitespace-nowrap"
-                    tabIndex={showProducts ? 0 : -1}
-                    onClick={() => setShowProducts(false)} 
-                  >
-                    {sublink.name}
-                  </Link>
-                ))}
+          {navLinks.map((link) =>
+            link.submenu ? (
+              <div
+                key={link.name}
+                className="relative"
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+              >
+                <span
+                  className={`cursor-pointer h-7 px-1 ${
+                    pathname.includes("/products")
+                      ? "text-primary border-b-2 border-primary font-semibold pb-1"
+                      : "text-black"
+                  }`}
+                >
+                  {link.name}
+                </span>
+                {/* --- FULL WIDTH, HALF SPLIT MEGA MENU --- */}
+                {showProducts && (
+                  <div className="fixed left-0 top-[72px] w-screen z-50">
+                    <div className="flex w-full bg-[#FCEAF8] min-h-[320px] py-8 px-0">
+                      {/* Left: Centered image in a card with margin */}
+                      <div className="flex flex-1 items-center justify-center">
+                        <div className="rounded-md  overflow-hidden p-2">
+                          <img
+                            src="/img/stock.jpg"
+                            alt="Mega Menu Promo"
+                            className="object-cover rounded-md w-[610px] h-[280px]"
+                            style={{ objectPosition: "center" }}
+                          />
+                        </div>
+                      </div>
+                      {/* Right: Centered vertical menu */}
+                      <div className="flex flex-1 items-center justify-center">
+                        <ul className="flex flex-col gap-8 w-full max-w-[230px] pr-10">
+                          {[
+                            {
+                              name: "Working Professionals",
+                              href: "/working-professionals",
+                            },
+                            { name: "Visa Seekers", href: "/visa-seekers" },
+                            { name: "Students", href: "/students" },
+                            { name: "Family", href: "/family" },
+                            { name: "Private", href: "/private" },
+                            { name: "Pension", href: "/pension" },
+                          ].map((item) => (
+                            <li key={item.name} className="text-right">
+                              <Link
+                                href={item.href}
+                                className="block text-black text-lg font-normal hover:text-primary transition"
+                                tabIndex={showProducts ? 0 : -1}
+                                onClick={() => setShowProducts(false)}
+                              >
+                                {item.name}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  ) : (
-    <Link
-      key={link.name}
-      href={link.href}
-      className={`relative overflow-hidden h-7 px-1 ${
-        pathname === link.href
-          ? "text-primary border-b-2 border-primary font-semibold pb-1"
-          : "text-black"
-      }`}
-    >
-      {link.name}
-    </Link>
-  )
-)}
-
-
+            ) : (
+              <Link
+                key={link.name}
+                href={link.href}
+                className={`relative overflow-hidden h-7 px-1 ${
+                  pathname === link.href
+                    ? "text-primary border-b-2 border-primary font-semibold pb-1"
+                    : "text-black"
+                }`}
+              >
+                {link.name}
+              </Link>
+            )
+          )}
         </div>
 
         {/* Mobile Menu Button */}

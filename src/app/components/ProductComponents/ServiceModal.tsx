@@ -75,7 +75,7 @@ export default function WorkingProfessionalsInsuranceModal({
               </div>
               <button
                 type="submit"
-                className="w-full bg-primary text-white font-semibold py-2 rounded-md hover:bg-[#6937e4] transition-all"
+                className="w-full bg-primary text-white font-semibold py-2 rounded-md hover:bg-primary/90 transition-all"
               >
                 Next
               </button>
