@@ -98,8 +98,8 @@ const Header = () => {
                               name: "Working Professionals",
                               href: "/products/privateProducts",
                             },
-                            { name: "Visa Seekers", href: "/visa-seekers" },
-                            { name: "Students", href: "/students" },
+                            { name: "Visa Seekers", href: "/comingSoon" },
+                            { name: "Students", href: "/comingSoon" },
                             {
                               name: "Family",
                               href: "/products/pensionProducts",
