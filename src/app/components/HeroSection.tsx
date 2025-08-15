@@ -25,7 +25,7 @@ const buttonVariants = {
   },
 };
 
-export default function HeroSection() {
+export default function HeroSectionTop() {
   return (
     <motion.section
       initial={{ opacity: 0 }}
