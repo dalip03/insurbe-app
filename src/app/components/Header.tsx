@@ -83,7 +83,7 @@ const Header = () => {
                       <div className="flex flex-1 items-center justify-center">
                         <div className="rounded-md  overflow-hidden p-2">
                           <img
-                            src="/img/stock.jpg"
+                            src="/img/menuFamily.png"
                             alt="Mega Menu Promo"
                             className="object-cover rounded-md w-[610px] h-[280px]"
                             style={{ objectPosition: "center" }}
@@ -98,12 +98,13 @@ const Header = () => {
                               name: "Working Professionals",
                               href: "/products/privateProducts",
                             },
-                            { name: "Visa Seekers", href: "/comingSoon" },
-                            { name: "Students", href: "/comingSoon" },
                             {
                               name: "Family",
                               href: "/products/pensionProducts",
                             },
+                            { name: "Visa Seekers", href: "/products/visaSeakers" },
+                            { name: "Students", href: "/products/students" },
+                            
                           ].map((item) => (
                             <li key={item.name} className="text-right">
                               <Link
