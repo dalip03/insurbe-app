@@ -144,7 +144,7 @@ export default function HeroSection1() {
             className="absolute -right-22 top-[24px] z-30 object-contain"
           >
             <Image
-              src="/img/label1.png"
+              src="/img/Label1.png"
               alt="June 2024 Statistic"
               width={240}
               height={74}
