@@ -368,9 +368,9 @@ export default function InsuranceSteps() {
               <button
                 key={idx}
                 type="button"
-                className={`w-full text-left px-5 py-3 rounded-md font-semibold text-base tracking-tight ${
+                className={`w-full text-left px-5 py-3 rounded-md text-base tracking-tight ${
                   currentStep === idx
-                    ? "bg-[#511E6D] text-white shadow"
+                    ? "bg-[#511E6D] text-white shadow font-semibold"
                     : "bg-transparent text-gray-900 hover:bg-gray-100"
                 }`}
                 onClick={() => setCurrentStep(idx)}
