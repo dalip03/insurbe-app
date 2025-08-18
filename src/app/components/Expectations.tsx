@@ -7,21 +7,21 @@ const cards = [
     title: "Peace Of Mind",
     description:
       "Rest easy with comprehensive health insurance that protects you and your family against unexpected medical and other expenses.",
-    image: "/img/laptop.png",
+    image: "/contact/Mind.png",
     bg: "from-[#0F1535] to-[#1F255C]",
   },
   {
     title: "Tailored Cover",
     description:
       "Choose from a variety of customizable plans designed to fit your unique needs. With InsurBe, you get coverage that’s as individual as you are.",
-    image: "/img/laptop.png",
+    image: "/contact/Tailored.png",
     bg: "from-[#7847E1] to-[#9B4DDF]",
   },
   {
     title: "Set For Life",
     description:
       "Our health insurance plans provide long-term financial security, ensuring that you’re covered for any medical needs throughout your life.",
-    image: "/img/laptop.png",
+    image: "/contact/SetLife.png",
     bg: "from-[#6D98EB] to-[#D59EFF]",
   },
 ];
