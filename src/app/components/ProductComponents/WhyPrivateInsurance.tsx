@@ -1,8 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 export default function WhyPrivateInsurance() {
+  const router = useRouter();
   return (
     <section className="px-6 md:px-16 bg-gradient-to-br from-white to-[#fdf3ff] overflow-hidden">
       <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-12 max-w-7xl mx-auto">
@@ -23,7 +25,7 @@ export default function WhyPrivateInsurance() {
             More personalized coverage with optional add-ons for dental, vision,
             and travel.
           </p>
-          <button className="px-6 py-3 bg-primary hover:bg-primary/95 text-white text-sm font-medium rounded-md shadow">
+          <button onClick={()=> router.push('/products/insuranceJourney')} className=" cursor-pointer px-6 py-3 bg-primary hover:bg-primary/95 text-white text-sm font-medium rounded-md shadow">
             Check My Eligibility
           </button>
         </motion.div>

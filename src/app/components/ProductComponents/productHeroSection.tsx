@@ -2,9 +2,10 @@
 
 import React from "react";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 const ProductHeroSection = () => {
-   
+   const router = useRouter();
 
   
 
@@ -49,13 +50,11 @@ const ProductHeroSection = () => {
           transition={{ duration: 0.7, delay: 0.4 }}
           className="flex flex-col sm:flex-row gap-4 justify-center mb-20"
         >
-          <div>
+          <div className="cursor-pointer">
             <button
-               onClick={(e) => {
-                    e.preventDefault(); // prevent default link jump
-                    window.scrollBy({ top: 400, behavior: "smooth" }); 
-                  }}
-              className="bg-white text-primary px-6 py-3 rounded-md hover:opacity-90 transition font-semibold cursor-pointer"
+               onClick={() => router.push('/products/insuranceJourney')}
+                  
+              className="bg-white text-primary  px-6 py-3 rounded-md hover:opacity-90 transition font-semibold cursor-pointer"
             >
               Take the Questionnaire
             </button>

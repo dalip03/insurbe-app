@@ -26,7 +26,6 @@ const navLinks = [
     ],
   },
   { name: "Careers", href: "/career" },
-  { name: "Calculator", href: "/calculator" },
   { name: "Contact", href: "/contact" },
 ];
 

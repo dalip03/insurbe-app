@@ -14,7 +14,7 @@ function ProductPage() {
       <CardsSection />
       <WeOffers />
       <WhyPrivateInsurance />
-      <InsuranceSteps />
+      {/* <InsuranceSteps /> */}
       <OurServices />
 
       <FAQ />
