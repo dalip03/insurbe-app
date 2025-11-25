@@ -1,0 +1,428 @@
+// app/api/getOrderEinzel/route.ts
+import { NextRequest } from "next/server";
+import { XMLParser } from "fast-xml-parser";
+import http from "node:http";
+import https from "node:https";
+
+const HALLESCHE_URL =
+  process.env.HALLESCHE_URL ||
+  "https://www.kv-rechner0.de/HallescheVVG_Net/GC_KrankenService.svc";
+
+const SOAP_ACTION_ORDER =
+  'GEWA.COMP.VVGService/IGC_KrankenService_WCF/getOrder';
+
+// small helpers
+<<<<<<< HEAD
+function escapeXml(str = ""): string {
+=======
+function escapeXml(str = "") {
+>>>>>>> ab555e28e21ef0580f2d15900c27b2d4f8abcf7d
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&apos;");
+}
+
+function buildGetOrderEnvelope({
+  tarifId,
+  vorname,
+  name,
+  geburtsdatum,
+  beginn,
+  anrede = "Item1",
+  geschlecht = "Item1",
+}: {
+  tarifId: string;
+  vorname: string;
+  name: string;
+  geburtsdatum: string;
+  beginn: string;
+  anrede?: string;
+  geschlecht?: string;
+}) {
+  return `<?xml version="1.0" encoding="utf-8"?>
+<soap-env:Envelope xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap-env:Header/>
+  <soap-env:Body>
+    <ns0:getOrder xmlns:ns0="GEWA.COMP.VVGService">
+      <ns0:request>
+        <ns1:Antrag xmlns:ns1="http://www.bipro.net/namespace/tarifierung">
+          <ns2:Dokumentanforderung xmlns:ns2="http://www.bipro.net/namespace/allgemein">
+            <ns2:CT_Dokumentanforderung>
+              <ns2:ArtID>
+                <ns3:ST_DokumentartID xmlns:ns3="http://www.bipro.net/namespace/datentypen">Antrag</ns3:ST_DokumentartID>
+              </ns2:ArtID>
+            </ns2:CT_Dokumentanforderung>
+          </ns2:Dokumentanforderung>
+
+          <ns1:Partner>
+            <ns7:CT_Partner xmlns:ns7="http://www.bipro.net/namespace/partner" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ns7:CT_Person">
+              <ns7:Anrede>${escapeXml(anrede)}</ns7:Anrede>
+              <ns7:Name>${escapeXml(name)}</ns7:Name>
+              <ns7:GeschlechtSpecified>true</ns7:GeschlechtSpecified>
+              <ns7:Vorname>${escapeXml(vorname)}</ns7:Vorname>
+              <ns7:Geburtsdatum>${escapeXml(geburtsdatum)}</ns7:Geburtsdatum>
+              <ns7:Geschlecht>${escapeXml(geschlecht)}</ns7:Geschlecht>
+            </ns7:CT_Partner>
+          </ns1:Partner>
+
+          <ns1:Verkaufsprodukt>
+            <ns1:CT_Verkaufsprodukt>
+              <ns1:Beginn>${escapeXml(beginn)}</ns1:Beginn>
+              <ns1:Produkt>
+                <ns1:CT_Produkt>
+                  <ns1:Elementarprodukt>
+                    <ns1:CT_Elementarprodukt xmlns:ns9="http://www.bipro.net/namespace/kranken" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ns9:CT_Tarif">
+                      <ns8:TarifID xmlns:ns8="http://www.bipro.net/namespace/kranken">${escapeXml(tarifId)}</ns8:TarifID>
+                    </ns1:CT_Elementarprodukt>
+                  </ns1:Elementarprodukt>
+                </ns1:CT_Produkt>
+              </ns1:Produkt>
+            </ns1:CT_Verkaufsprodukt>
+          </ns1:Verkaufsprodukt>
+
+        </ns1:Antrag>
+      </ns0:request>
+    </ns0:getOrder>
+  </soap-env:Body>
+</soap-env:Envelope>`;
+}
+
+// fast-xml-parser
+const xmlParser = new XMLParser({
+  ignoreAttributes: false,
+  removeNSPrefix: true,
+  trimValues: true,
+  textNodeName: "_text",
+});
+
+<<<<<<< HEAD
+interface Doc {
+  kurz: string | null;
+  base64: string;
+  createdAt: string | null;
+  raw: Record<string, unknown>;
+}
+
+// small walker: find CT_Datei / Datei nodes and extract base64
+function collectDocs(parsed: Record<string, unknown>): Doc[] {
+  const docs: unknown[] = [];
+
+  // recursive walker to collect potential nodes
+  (function rec(o: unknown): void {
+    if (!o || typeof o !== "object") return;
+    const obj = o as Record<string, unknown>;
+    for (const k of Object.keys(obj)) {
+      const local = k.includes(":") ? k.split(":").pop() : k;
+      const v = obj[k];
+=======
+// small walker: find CT_Datei / Datei nodes and extract base64
+function collectDocs(parsed: any) {
+  const docs: any[] = [];
+  (function rec(o: any) {
+    if (!o || typeof o !== "object") return;
+    for (const k of Object.keys(o)) {
+      const local = k.includes(":") ? k.split(":").pop() : k;
+      const v = o[k];
+>>>>>>> ab555e28e21ef0580f2d15900c27b2d4f8abcf7d
+      if (local === "CT_Datei" || local === "Datei") {
+        if (Array.isArray(v)) v.forEach((item) => docs.push(item));
+        else docs.push(v);
+      }
+      if (Array.isArray(v)) v.forEach(rec);
+      else if (v && typeof v === "object") rec(v);
+    }
+  })(parsed);
+
+<<<<<<< HEAD
+  const out: Doc[] = [];
+
+  // normalize to Doc[]
+  (function normalize(node: unknown): void {
+    if (!node || typeof node !== "object") return;
+    if (Array.isArray(node)) return node.forEach(normalize);
+
+    const obj = node as Record<string, unknown>;
+    let base64: string | null = null;
+
+    // extract base64
+    if (obj.Daten) {
+      const daten = obj.Daten;
+=======
+  const out: any[] = [];
+  (function normalize(node: any) {
+    if (!node || typeof node !== "object") return;
+    if (Array.isArray(node)) return node.forEach(normalize);
+
+    // try a few shapes to get base64 in Daten -> Value or node._text
+    let base64: string | null = null;
+    if (node.Daten) {
+      const daten = node.Daten;
+>>>>>>> ab555e28e21ef0580f2d15900c27b2d4f8abcf7d
+      if (typeof daten === "string") base64 = daten;
+      else if (daten && typeof daten === "object") {
+        for (const key of Object.keys(daten)) {
+          const kLocal = key.includes(":") ? key.split(":").pop() : key;
+          if (!kLocal) continue;
+          if (/Value$/i.test(kLocal) || kLocal === "_" || kLocal === "#text") {
+<<<<<<< HEAD
+            const v = (daten as Record<string, unknown>)[key];
+            if (typeof v === "string") { base64 = v.replace(/\s/g, ""); break; }
+            if (v && typeof v === "object") {
+              const maybe = (v as Record<string, unknown>)._ ?? (v as Record<string, unknown>)._text;
+              if (typeof maybe === "string") { base64 = maybe.replace(/\s/g, ""); break; }
+            }
+=======
+            const v = daten[key];
+            if (typeof v === "string") { base64 = v.replace(/\s/g, ""); break; }
+            if (v && typeof v === "object" && typeof (v._ ?? v._text) === "string") { base64 = (v._ ?? v._text).replace(/\s/g, ""); break; }
+>>>>>>> ab555e28e21ef0580f2d15900c27b2d4f8abcf7d
+          }
+        }
+      }
+    }
+<<<<<<< HEAD
+
+    if (!base64) {
+      if (typeof obj._text === "string") base64 = obj._text.replace(/\s/g, "");
+      else if (typeof obj["#text"] === "string") base64 = obj["#text"].replace(/\s/g, "");
+    }
+
+    const kurz = (() => {
+      const kb = obj.Kurzbeschreibung;
+      if (typeof kb === "string") return kb;
+      if (kb && typeof kb === "object") {
+        const val = (kb as Record<string, unknown>)._ ?? (kb as Record<string, unknown>)._text ?? null;
+        return typeof val === "string" ? val : null;
+      }
+      return null;
+    })();
+
+    const createdAt = (() => {
+      const cd = obj.Erstelldatum;
+      if (typeof cd === "string") return cd;
+      if (cd && typeof cd === "object") {
+        const val = (cd as Record<string, unknown>)._ ?? (cd as Record<string, unknown>)._text ?? null;
+        return typeof val === "string" ? val : null;
+      }
+      return null;
+    })();
+
+    if (base64) {
+      out.push({ kurz, base64, createdAt, raw: obj });
+    }
+  })(docs);
+
+  return out;
+}
+
+
+// find Status.Meldung if present (null-safe)
+function extractStatusMeldung(parsed: Record<string, unknown>): string | null {
+  const found: string[] = [];
+
+  (function rec(o: unknown) {
+    if (!o || typeof o !== "object") return;
+    const obj = o as Record<string, unknown>;
+
+    for (const k of Object.keys(obj)) {
+      const local = k.includes(":") ? k.split(":").pop() : k;
+      const v = obj[k];
+
+      if (/^Status$/i.test(local || "") && v && typeof v === "object") {
+        const statusObj = v as Record<string, unknown>;
+        const meldKeys = ["Meldung", "meldung", "MeldungField", "MeldungText"];
+        for (const mk of meldKeys) {
+          if (mk in statusObj) {
+            const meld = statusObj[mk];
+            if (typeof meld === "string" && meld.trim()) { found.push(meld.trim()); break; }
+            if (meld && typeof meld === "object") {
+              const maybe = (meld as Record<string, unknown>)._ ?? (meld as Record<string, unknown>)._text ?? (meld as Record<string, unknown>)["#text"];
+              if (typeof maybe === "string" && maybe.trim()) { found.push(maybe.trim()); break; }
+=======
+    if (!base64) {
+      if (typeof node._text === "string") base64 = node._text.replace(/\s/g, "");
+      else if (typeof node["#text"] === "string") base64 = node["#text"].replace(/\s/g, "");
+    }
+
+    const kurz = (node.Kurzbeschreibung && (typeof node.Kurzbeschreibung === "string" ? node.Kurzbeschreibung : (node.Kurzbeschreibung?._ ?? null))) || null;
+    const createdAt = (node.Erstelldatum && (typeof node.Erstelldatum === "string" ? node.Erstelldatum : (node.Erstelldatum?._ ?? null))) || null;
+
+    out.push({ kurz, base64, createdAt, raw: node });
+  })(docs);
+
+  return out.filter(d => d.base64);
+}
+
+// find Status.Meldung if present (null-safe)
+function extractStatusMeldung(parsed: any): string | null {
+  const found: string[] = [];
+  (function rec(o: any) {
+    if (!o || typeof o !== "object") return;
+    for (const k of Object.keys(o)) {
+      const local = k.includes(":") ? k.split(":").pop() : k;
+      if (!local) continue;
+      const v = o[k];
+      // If this node looks like a "Status" container
+      if (/^Status$/i.test(local) && v && typeof v === "object") {
+        // common shapes: v.Meldung, v.meldung, v.MeldungField, or nested objects
+        const meldKeys = ["Meldung", "meldung", "MeldungField", "MeldungText"];
+        for (const mk of meldKeys) {
+          if (mk in v) {
+            const meld = v[mk];
+            if (typeof meld === "string" && meld.trim()) {
+              found.push(meld.trim());
+              break;
+            }
+            if (meld && typeof meld === "object") {
+              // null-safe access to typical text properties
+              const maybe = (typeof meld._ === "string" ? meld._ : (typeof meld._text === "string" ? meld._text : (typeof meld["#text"] === "string" ? meld["#text"] : null)));
+              if (typeof maybe === "string" && maybe.trim()) {
+                found.push(maybe.trim());
+                break;
+              }
+>>>>>>> ab555e28e21ef0580f2d15900c27b2d4f8abcf7d
+            }
+          }
+        }
+      }
+
+<<<<<<< HEAD
+      if (Array.isArray(v)) v.forEach(rec);
+      else if (v && typeof v === "object") rec(v);
+    }
+  })(parsed);
+
+=======
+      // descend
+      if (Array.isArray(v)) {
+        for (const item of v) rec(item);
+      } else if (v && typeof v === "object") {
+        rec(v);
+      }
+    }
+  })(parsed);
+>>>>>>> ab555e28e21ef0580f2d15900c27b2d4f8abcf7d
+  return found.length ? found[0] : null;
+}
+
+// simple PDF sniff
+function isBufferPdf(buf: Buffer) {
+  return buf.length > 4 && buf.slice(0, 4).toString() === "%PDF";
+}
+
+const httpAgent = new http.Agent({ keepAlive: true, maxSockets: 10 });
+const httpsAgent = new https.Agent({ keepAlive: true, maxSockets: 10 });
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { tarifId, vorname, name, geburtsdatum, beginn, anrede, geschlecht } = body || {};
+
+    if (!tarifId || !vorname || !name || !geburtsdatum || !beginn) {
+      return new Response(JSON.stringify({ status: { meldung: "missing required fields" } }), { status: 400, headers: { "Content-Type": "application/json" } });
+    }
+
+    const xml = buildGetOrderEnvelope({ tarifId, vorname, name, geburtsdatum, beginn, anrede, geschlecht });
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 20000);
+
+    const isHttps = HALLESCHE_URL.startsWith("https:");
+    const res = await fetch(HALLESCHE_URL, {
+      method: "POST",
+      body: xml,
+      signal: controller.signal,
+      headers: {
+        "Content-Type": "text/xml; charset=utf-8",
+        "SOAPAction": `"${SOAP_ACTION_ORDER}"`,
+        "Accept": "application/xml, text/xml, */*",
+      },
+<<<<<<< HEAD
+      // @ts-expect-error Node fetch types don't support `agent` in Next.js
+=======
+      // @ts-ignore
+>>>>>>> ab555e28e21ef0580f2d15900c27b2d4f8abcf7d
+      agent: isHttps ? httpsAgent : httpAgent,
+    });
+
+    clearTimeout(timeout);
+
+    if (!res.ok) {
+<<<<<<< HEAD
+=======
+      const txt = await res.text().catch(() => "");
+>>>>>>> ab555e28e21ef0580f2d15900c27b2d4f8abcf7d
+      return new Response(JSON.stringify({ status: { meldung: `upstream error ${res.status}` } }), { status: 502, headers: { "Content-Type": "application/json" } });
+    }
+
+    const rawText = await res.text();
+    const parsed = xmlParser.parse(rawText);
+
+<<<<<<< HEAD
+=======
+    // check for Status.Meldung (error info)
+>>>>>>> ab555e28e21ef0580f2d15900c27b2d4f8abcf7d
+    const statusMeldung = extractStatusMeldung(parsed);
+    if (statusMeldung) {
+      return new Response(JSON.stringify({ status: { meldung: statusMeldung } }), { status: 400, headers: { "Content-Type": "application/json" } });
+    }
+
+<<<<<<< HEAD
+    const docs = collectDocs(parsed);
+
+=======
+    // extract docs
+    const docs = collectDocs(parsed);
+
+    // if exactly one doc, return binary PDF directly (fast path)
+>>>>>>> ab555e28e21ef0580f2d15900c27b2d4f8abcf7d
+    if (docs.length === 1) {
+      const base64 = docs[0].base64;
+      const buffer = Buffer.from(base64, "base64");
+      const isPdf = isBufferPdf(buffer);
+      const contentType = isPdf ? "application/pdf" : "application/octet-stream";
+      const filename = (docs[0].kurz || "antrag").replace(/[^a-z0-9_\-\.]/gi, "_").slice(0, 200);
+
+      return new Response(buffer, {
+        status: 200,
+        headers: {
+          "Content-Type": contentType,
+          "Content-Length": String(buffer.length),
+          "Content-Disposition": `attachment; filename="${filename}.pdf"`,
+        },
+      });
+    }
+
+<<<<<<< HEAD
+=======
+    // if multiple docs, return JSON with base64 for client to download
+>>>>>>> ab555e28e21ef0580f2d15900c27b2d4f8abcf7d
+    if (docs.length > 1) {
+      const out = { documents: docs.map((d, idx) => ({ id: idx, fileName: d.kurz || `doc_${idx + 1}`, base64: d.base64 })) };
+      return new Response(JSON.stringify(out), { status: 200, headers: { "Content-Type": "application/json" } });
+    }
+
+<<<<<<< HEAD
+    return new Response(JSON.stringify({ status: { meldung: "no documents found in response" } }), { status: 400, headers: { "Content-Type": "application/json" } });
+
+  } catch (err: unknown) {
+    console.error("getOrderEinzel error:", err);
+    const message = err instanceof Error
+      ? err.message
+      : typeof err === "string"
+        ? err
+        : "Unknown error";
+
+=======
+    // none found -> return friendly status.meldung
+    return new Response(JSON.stringify({ status: { meldung: "no documents found in response" } }), { status: 400, headers: { "Content-Type": "application/json" } });
+  } catch (err: any) {
+    console.error("getOrderEinzel error:", err);
+    const message = err?.name === "AbortError" ? "upstream timeout" : (err?.message || String(err));
+>>>>>>> ab555e28e21ef0580f2d15900c27b2d4f8abcf7d
+    return new Response(JSON.stringify({ status: { meldung: message } }), { status: 500, headers: { "Content-Type": "application/json" } });
+  }
+}

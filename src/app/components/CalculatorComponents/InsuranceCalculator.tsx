@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
@@ -12,33 +13,72 @@ const statusOptions: EmploymentStatus[] = [
   "Other",
 ];
 
+// Simple premium logic
+function calculatePremium(
+  status: EmploymentStatus,
+  income: number,
+  age: number,
+  hasKids: boolean
+) {
+  let base = 50;
+
+  if (status === "Freelancer") base += 20;
+  if (status === "Self Employed") base += 30;
+
+  base += income * 0.003;
+
+  if (age > 30) base += (age - 30) * 1.5;
+
+  if (hasKids) base += 25;
+
+  return Math.round(base);
+}
+
 export default function InsuranceCalculator() {
   const [status, setStatus] = useState<EmploymentStatus>("Salaried");
-  const [income, setIncome] = useState<string>("€ 6,500");
+  const [income, setIncome] = useState<string>("6500");
   const [age, setAge] = useState<string>("30");
   const [hasKids, setHasKids] = useState<boolean>(false);
 
+  const [premium, setPremium] = useState<number | null>(null);
+
+  function handleCalculate() {
+    const inc = parseFloat(income.replace(/[^0-9]/g, ""));
+    const ag = parseInt(age);
+
+    if (!inc || !ag) {
+      setPremium(null);
+      return;
+    }
+
+    const result = calculatePremium(status, inc, ag, hasKids);
+    setPremium(result);
+  }
+
   return (
-    <div className="w-full max-w-6xl mx-auto flex flex-col items-center content-center gap-4">
+    <div className="w-full max-w-6xl mx-auto flex flex-col items-center gap-6 px-4">
+      
+      {/* MAIN CONTAINER */}
       <motion.div
-        className="w-full  rounded-2xl bg-white shadow-lg flex flex-col md:flex-row p-8"
+        className="w-full rounded-2xl bg-white shadow-lg flex flex-col md:flex-row p-6 md:p-10 gap-10"
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        {/* Form Section */}
-        <div className="flex-1 space-y-6 mr-10">
-          <h2 className="text-2xl font-bold text-gray-900 mb-1">
+        {/* LEFT - FORM */}
+        <div className="flex-1 space-y-6">
+          <h2 className="text-2xl font-bold text-gray-900">
             Get a Premium Estimation
           </h2>
-          <p className="mb-5 text-gray-500">By filling basic information</p>
+          <p className="text-gray-500">By filling basic information</p>
 
           {/* Employment Status */}
           <div>
             <label className="font-semibold block mb-2">
               Employment Status
             </label>
-            <div className="flex space-x-2">
+
+            <div className="flex flex-wrap gap-2">
               {statusOptions.map((option) => (
                 <button
                   key={option}
@@ -46,8 +86,8 @@ export default function InsuranceCalculator() {
                   onClick={() => setStatus(option)}
                   className={`px-5 py-2 rounded-md border transition-colors duration-150 ${
                     status === option
-                      ? "bg-primary text-white border-transparent"
-                      : "bg-white text-gray-700 border-gray-200"
+                      ? "bg-primary text-white border-primary"
+                      : "bg-white text-gray-700 border-gray-300"
                   }`}
                 >
                   {option}
@@ -56,7 +96,7 @@ export default function InsuranceCalculator() {
             </div>
           </div>
 
-          {/* Gross Monthly Income */}
+          {/* Income */}
           <div>
             <label className="font-semibold block mb-2">
               Gross Monthly Income
@@ -66,7 +106,7 @@ export default function InsuranceCalculator() {
               inputMode="numeric"
               value={income}
               onChange={(e) => setIncome(e.target.value)}
-              className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-purple-200 outline-none"
+              className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-primary/20 outline-none"
               placeholder="€ 0"
             />
           </div>
@@ -78,8 +118,7 @@ export default function InsuranceCalculator() {
               type="number"
               value={age}
               onChange={(e) => setAge(e.target.value)}
-              className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-purple-200 outline-none"
-              placeholder="Age"
+              className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-primary/20 outline-none"
               min={0}
               max={120}
             />
@@ -90,25 +129,27 @@ export default function InsuranceCalculator() {
             <label className="font-semibold block mb-2">
               Do you have kids?
             </label>
-            <div className="flex space-x-2">
+
+            <div className="flex gap-2">
               <button
                 type="button"
                 onClick={() => setHasKids(true)}
                 className={`px-6 py-2 rounded-md border ${
                   hasKids
-                    ? "bg-purple-100 border-purple-700 text-purple-900"
-                    : "bg-white text-gray-700 border-gray-200"
+                    ? "bg-primary text-white border-primary"
+                    : "bg-white text-gray-700 border-gray-300"
                 }`}
               >
                 Yes
               </button>
+
               <button
                 type="button"
                 onClick={() => setHasKids(false)}
                 className={`px-6 py-2 rounded-md border ${
                   !hasKids
                     ? "bg-primary text-white border-primary"
-                    : "bg-white text-gray-700 border-gray-200"
+                    : "bg-white text-gray-700 border-gray-300"
                 }`}
               >
                 No
@@ -117,57 +158,55 @@ export default function InsuranceCalculator() {
           </div>
 
           {/* Calculate Button */}
-          <button className="mt-4 w-full py-3 bg-primary text-white font-semibold rounded-md transition-colors hover:bg-purple-900">
+          <button
+            onClick={handleCalculate}
+            className="mt-2 w-full py-3 bg-primary text-white font-semibold rounded-md hover:bg-primary/90 transition"
+          >
             Calculate
           </button>
         </div>
 
-        {/* Result Section */}
-        <div className="flex flex-col items-center justify-center flex-shrink-0 w-full md:w-72 mt-10 md:mt-0">
-          <div className="text-lg font-semibold mb-2">Starting from</div>
+        {/* RIGHT - RESULT */}
+        <div className="w-full md:w-72 flex flex-col items-center text-center">
+          <p className="text-lg font-semibold mb-2">Starting from</p>
+
           <div className="flex items-center text-3xl font-bold text-gray-700 mb-2">
-            <span>~ €</span>
-            <span className="ml-2 text-gray-400">_____</span>
+            € <span className="ml-2">{premium ?? "____"}</span>
           </div>
-          <div className="mb-6 text-gray-600">Per Month</div>
-          <button className="px-6 py-2 bg-primary text-white rounded-md mt-2 hover:bg-primary transition-colors">
+
+          <p className="text-gray-600 mb-4">Per Month</p>
+
+          <button className="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition">
             Compare Available Plans
           </button>
         </div>
       </motion.div>
+
+      {/* BOTTOM BOX */}
       <motion.div
-        className="w-full  mx-auto  rounded-2xl bg-white shadow-lg flex px-8 py-4 items-center justify-between content-center"
+        className="w-full rounded-2xl bg-white shadow-lg flex flex-row gap-6 items-center p-6"
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
         <Image
           src="/calculator_assets/Calculator.svg"
-          alt="logo"
+          alt="calculator"
           width={60}
           height={60}
-          className="w-[60px] max-w-full h-auto"
-          draggable={false}
-          priority
         />
-        <div className="px-10 md:pr-65 ">
+
+        <div className="flex-1 text-center md:text-left">
           <h1 className="text-sm font-bold">
             You are eligible for private health insurance
           </h1>
-          <p className="text-gray-400 text-sm">
+          <p className="text-gray-500 text-sm mt-1">
             If you are in good health and have no dependents, private health
-            insurance might be a cheaper option for you. Get a quote to compare
-            the prices.
+            insurance might be a cheaper option for you.
           </p>
         </div>
 
-        <Image
-          src="/icons/arrow.svg"
-          alt="icon"
-          width={20}
-          height={20}
-          className="w-[20px] max-w-full h-auto"
-        />
+        <Image src="/icons/arrow.svg" alt="arrow" width={20} height={20} />
       </motion.div>
     </div>
   );

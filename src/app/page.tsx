@@ -7,7 +7,7 @@ import ProductBanner from "./components/ProductBanner";
 
 export default function Home() {
   return (
-    <main>
+    <main className="">
       {/* new home page designed  */}
       <HeroSection1/>
       <Partners />

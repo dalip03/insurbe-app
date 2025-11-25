@@ -81,11 +81,12 @@ const Header = () => {
                     <div className="flex w-full bg-[#FCEAF8] min-h-[320px] py-8 px-0">
                       {/* Left: Centered image in a card with margin */}
                       <div className="flex flex-1 items-center justify-center">
-                        <div className="rounded-md  overflow-hidden p-2">
-                          <img
+                        <div className="rounded-md overflow-hidden p-2 relative w-[610px] h-[280px]">
+                          <Image
                             src="/img/menuFamily.png"
                             alt="Mega Menu Promo"
-                            className="object-cover rounded-md w-[610px] h-[280px]"
+                            fill
+                            className="object-cover rounded-md"
                             style={{ objectPosition: "center" }}
                           />
                         </div>
@@ -102,9 +103,11 @@ const Header = () => {
                               name: "Family",
                               href: "/products/pensionProducts",
                             },
-                            { name: "Visa Seekers", href: "/products/visaSeakers" },
+                            {
+                              name: "Visa Seekers",
+                              href: "/products/visaSeakers",
+                            },
                             { name: "Students", href: "/products/students" },
-                            
                           ].map((item) => (
                             <li key={item.name} className="text-right">
                               <Link
@@ -152,43 +155,63 @@ const Header = () => {
           animate={{ x: 0 }}
           exit={{ x: "100%" }}
           transition={{ duration: 0.28, ease: "easeInOut" }}
-          className="fixed inset-0 z-50 flex"
+          className="fixed inset-0 z-50 flex md:hidden"
         >
           {/* Overlay */}
           <div
-            className="w-1/5 bg-black/80 backdrop-blur-sm"
+            className="w-1/4 bg-black/60 backdrop-blur-sm"
             onClick={toggleDrawer}
           />
+
           {/* Drawer */}
-          <div className="w-4/5 h-full bg-white text-black p-6 flex flex-col">
-            <button onClick={toggleDrawer} className="self-end mb-8">
+          <div className="w-3/4 h-full bg-white shadow-xl rounded-l-2xl p-6 flex flex-col overflow-y-auto">
+            {/* Close Button */}
+            <button
+              onClick={toggleDrawer}
+              className="self-end mb-8 p-2 hover:bg-gray-100 rounded-full transition"
+            >
               <X size={28} className="text-primary font-bold" />
             </button>
-            <div className="flex flex-col space-y-6 mt-20">
+            <div className="mb-10">
+              {/* Logo */}
+              <Link
+                href="/"
+                className="font-bold font-serif flex items-center gap-2"
+              >
+                <Image src="/logo.svg" alt="Logo" width={100} height={20} />
+              </Link>
+            </div>
+            {/* Navigation Links */}
+            <div className="flex flex-col space-y-6">
               {navLinks.map((link) =>
                 link.submenu ? (
                   <div key={link.name} className="flex flex-col gap-2">
-                    <span className="text-lg font-medium">{link.name}</span>
-                    {link.submenu.map((sublink) => (
-                      <Link
-                        key={sublink.name}
-                        href={sublink.href}
-                        onClick={toggleDrawer}
-                        className="pl-4 text-base text-gray-700 hover:text-primary"
-                      >
-                        {sublink.name}
-                      </Link>
-                    ))}
+                    <span className="text-lg font-semibold text-gray-800">
+                      {link.name}
+                    </span>
+
+                    <div className="flex flex-col pl-3 border-l border-gray-300 gap-2">
+                      {link.submenu.map((sublink) => (
+                        <Link
+                          key={sublink.name}
+                          href={sublink.href}
+                          onClick={toggleDrawer}
+                          className="text-base text-gray-600 hover:text-primary transition"
+                        >
+                          {sublink.name}
+                        </Link>
+                      ))}
+                    </div>
                   </div>
                 ) : (
                   <Link
                     key={link.name}
                     href={link.href}
                     onClick={toggleDrawer}
-                    className={`text-lg ${
+                    className={`text-lg font-medium transition ${
                       pathname === link.href
                         ? "text-primary underline underline-offset-4"
-                        : "text-black hover:text-primary"
+                        : "text-gray-800 hover:text-primary"
                     }`}
                   >
                     {link.name}
