@@ -1,10 +1,15 @@
 "use client";
+
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Check } from "lucide-react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 import PlansCompare from "./PlanCompares";
 
 export default function ComparePlans() {
+  const router = useRouter();
+
   const [viewMode, setViewMode] = useState("default");
   const [expandedCard, setExpandedCard] = useState<string | null>(null);
 
@@ -14,7 +19,7 @@ export default function ComparePlans() {
       name: "Barmer",
       price: "62",
       period: "/ Month",
-      badge: { text: "Barmer", color: "bg-lime-500" },
+      logo: "/icons/barme.svg",
       description: "For short term visitors with no fixed plan of stay",
       features: [
         "24/7 medical assistance/emergency call centre",
@@ -25,18 +30,18 @@ export default function ComparePlans() {
       bgColor: "bg-white",
     },
     {
-      id: "tk",
-      name: "TK",
-      price: "86",
+      id: "hallesche",
+      name: "Hallesche",
+      price: "305",
       period: "/ Month",
-      badge: { text: "TK", color: "bg-cyan-500" },
+      logo: "/icons/h.svg",
       description:
         "For Expats who are planning to stay in Germany for a longer period",
       features: [
         "24/7 medical assistance/emergency call centre",
         "English support",
         "Digital services",
-        "Best digital services and best insurance for Expats",
+        "Great digital services and best insurance for Expats",
       ],
       bgColor: "bg-purple-50",
       highlighted: true,
@@ -46,7 +51,7 @@ export default function ComparePlans() {
       name: "DAK",
       price: "49",
       period: "/ Month",
-      badge: { text: "DAK", color: "bg-orange-500" },
+      logo: "/icons/dak.svg",
       description: "Special discount for Residents of Kazakhstan",
       features: [
         "24/7 medical assistance/emergency call centre",
@@ -65,24 +70,21 @@ export default function ComparePlans() {
 
   const cardVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-purple-50 py-16 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen py-10 px-4 sm:px-6 md:px-16">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-12 gap-6">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-10 gap-6">
           <div>
-            <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-              Best Plans suggested
-              <br />
-              based on your personal
-              <br />
-              Profile
+            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 leading-snug">
+              Best Plans suggested <br />
+              based on your personal <br /> Profile
             </h1>
 
-            <div className="flex gap-3">
+            <div className="flex gap-3 mt-4">
               <button
                 onClick={() => setViewMode("default")}
                 className={`px-6 py-3 rounded-full font-semibold transition-all ${
@@ -107,58 +109,66 @@ export default function ComparePlans() {
             </div>
           </div>
 
-          <div className="text-right max-w-xs">
+          <div className="text-left lg:text-right max-w-xs">
             <p className="text-sm text-gray-600 mb-3">
-              Click on the button below to modify the charges exactly to match
-              your profile
+              Modify charges to match your profile
             </p>
-            <button className="bg-primary hover:bg-primary/10 text-white font-semibold px-6 py-3 rounded-lg shadow-lg transition-colors">
+            <button className="bg-primary hover:bg-primary/80 text-white font-semibold px-6 py-3 rounded-lg shadow-lg transition-colors w-full lg:w-auto">
               Personalized Calculation
             </button>
           </div>
         </div>
 
-        {/* Plans Grid */}
+        {/* Mobile Scroll Cards */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="grid md:grid-cols-3 gap-6"
+          className="
+            flex md:grid 
+            md:grid-cols-3 gap-6 
+            overflow-x-auto md:overflow-visible
+            snap-x snap-mandatory md:snap-none
+            pb-4
+          "
         >
           {plans.map((plan) => (
             <motion.div
               key={plan.id}
               variants={cardVariants}
-              className={`${
-                plan.bgColor
-              } rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all ${
-                plan.highlighted ? "ring-2 ring-primary" : ""
-              }`}
+              className={`
+                min-w-[85%] xs:min-w-[75%] sm:min-w-[60%] md:min-w-0
+                snap-center
+                rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all
+                ${plan.bgColor}
+                ${plan.highlighted ? "ring-2 ring-primary" : ""}
+              `}
             >
-              {/* Header */}
               <div className="flex justify-between items-start mb-4">
                 <div>
                   <h3 className="text-sm text-gray-500 mb-2">From</h3>
                   <div className="flex items-baseline gap-1">
                     <span className="text-gray-500 text-xl">€</span>
-                    <span className="text-5xl font-bold text-gray-900">
-                      {plan.price}
-                    </span>
+                    <span className="text-5xl text-gray-900">{plan.price}</span>
                     <span className="text-sm text-gray-500">{plan.period}</span>
+                  </div>
+
+                  <div className="mt-2 font-medium text-gray-900">
+                    {plan.name}
                   </div>
                 </div>
 
-                <div
-                  className={`${plan.badge.color} text-white text-xs font-bold px-3 py-1 rounded`}
-                >
-                  {plan.badge.text}
-                </div>
+                <Image
+                  src={plan.logo}
+                  width={50}
+                  height={50}
+                  alt={`${plan.name} logo`}
+                  className="object-contain"
+                />
               </div>
 
-              {/* Description */}
               <p className="text-sm text-gray-700 mb-6">{plan.description}</p>
 
-              {/* Features */}
               <ul className="space-y-3 mb-6">
                 {plan.features.map((feature, i) => (
                   <li key={i} className="flex items-start gap-2">
@@ -168,8 +178,8 @@ export default function ComparePlans() {
                 ))}
               </ul>
 
-              {/* Choose Plan */}
               <button
+                onClick={() => router.push("/calculator/premiumEstimation")}
                 className={`w-full py-3 rounded-lg font-semibold transition-all mb-3 ${
                   plan.highlighted
                     ? "bg-primary text-white shadow-md"
@@ -180,34 +190,33 @@ export default function ComparePlans() {
               </button>
             </motion.div>
           ))}
-
-          {/* Show / Hide Button BELOW Cards */}
-          <div className="col-span-3 flex justify-center mt-8">
-            {/* ONLY TK plan has extra details */}
-            {expandedCard === "tk" ? (
-              <motion.button
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                onClick={() => setExpandedCard(null)}
-                className="px-20 py-3 rounded-lg font-semibold bg-white hover:bg-gray-50 
-                 text-primary border-2 border-primary transition-all"
-              >
-                Hide Details
-              </motion.button>
-            ) : (
-              <button
-                onClick={() => setExpandedCard("tk")}
-                className="px-20 py-3 rounded-lg font-semibold bg-white hover:bg-gray-50 
-                 text-primary border-2 border-primary transition-all"
-              >
-                Show Details
-              </button>
-            )}
-          </div>
         </motion.div>
 
-        {/* Comparison Section */}
-        {expandedCard === "tk" && <PlansCompare />}
+        {/* Show / Hide Details Button */}
+        <div className="flex justify-center mt-8">
+          {expandedCard ? (
+            <button
+              onClick={() => setExpandedCard(null)}
+              className="px-20 py-3 rounded-lg font-semibold bg-white text-primary border-2 border-primary hover:bg-gray-50 transition-all"
+            >
+              Hide Details
+            </button>
+          ) : (
+            <button
+              onClick={() => setExpandedCard("tk")}
+              className="px-20 py-3 rounded-lg font-semibold bg-white text-primary border-2 border-primary hover:bg-gray-50 transition-all"
+            >
+              Show Details
+            </button>
+          )}
+        </div>
+
+        {/* Comparison Table */}
+        {expandedCard === "tk" && (
+          <div className="mt-10">
+            <PlansCompare />
+          </div>
+        )}
       </div>
     </div>
   );

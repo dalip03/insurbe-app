@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 export default function WhyPrivateInsurance() {
@@ -25,7 +26,10 @@ export default function WhyPrivateInsurance() {
             More personalized coverage with optional add-ons for dental, vision,
             and travel.
           </p>
-          <button onClick={()=> router.push('/products/insuranceJourney')} className=" cursor-pointer px-6 py-3 bg-primary hover:bg-primary/95 text-white text-sm font-medium rounded-md shadow">
+          <button
+            onClick={() => router.push("/products/insuranceJourney")}
+            className=" cursor-pointer px-6 py-3 bg-primary hover:bg-primary/95 text-white text-sm font-medium rounded-md shadow"
+          >
             Check My Eligibility
           </button>
         </motion.div>
@@ -38,10 +42,11 @@ export default function WhyPrivateInsurance() {
           transition={{ duration: 0.7, ease: "easeOut", delay: 0.3 }}
         >
           <div className="relative bg-[#0f172a] rounded-xl shadow-lg w-full h-100 max-w-sm flex items-center justify-center">
-            <img
+            <Image
               src="/img/whyPrivate.png"
               alt="Card Full"
-              className="object-cover w-full h-full rounded-xl"
+              fill
+              className="object-cover rounded-xl"
             />
           </div>
         </motion.div>

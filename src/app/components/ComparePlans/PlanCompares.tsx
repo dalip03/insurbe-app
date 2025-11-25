@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Check, X, Info } from 'lucide-react';
+import { Check, Info } from 'lucide-react';
 
 export default function PlansCompare() {
   const plans = [

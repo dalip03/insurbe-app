@@ -22,21 +22,21 @@ export default function InsuranceJourney() {
   const [popup, setPopup] = useState("");
 
   // Fetch countries API
-  interface CountryAPI {
-    name: {
-      common: string;
-    };
-  }
- useEffect(() => {
+interface CountryAPI {
+  name: {
+    common: string;
+  };
+}
+useEffect(() => {
   async function fetchCountries() {
     try {
       const res = await fetch("https://restcountries.com/v3.1/all?fields=name");
-      const data = await res.json();
+      const data: CountryAPI[] = await res.json();
 
       const list: string[] = data
-        .map((c: any) => c?.name?.common || c?.name || "")
-        .filter((name: string) => name.trim().length > 0)
-        .sort((a: string, b: string) => a.localeCompare(b));
+        .map((c: CountryAPI) => c.name.common)
+        .filter((name) => name.trim().length > 0)
+        .sort((a, b) => a.localeCompare(b));
 
       setCountries(list);
     } catch (e) {
@@ -46,6 +46,7 @@ export default function InsuranceJourney() {
 
   fetchCountries();
 }, []);
+
 
 
   // =============== HANDLERS ====================
@@ -109,14 +110,14 @@ export default function InsuranceJourney() {
       {step === 1 && (
         <div className="max-w-xl mx-auto">
           <h3 className="text-xl font-semibold mb-6">
-            What's your Employment Status?
+            What&apos;s your Employment Status?
           </h3>
 
           {["Self-employed", "Employed", "Freelancer", "Others"].map((item) => (
             <button
               key={item}
               onClick={() => handleEmploymentSelect(item)}
-              className="w-full p-4 border rounded-lg mb-3 text-left hover:border-purple-500 transition"
+              className="w-full p-4 border rounded-lg mb-3 text-left hover:border-primary transition"
             >
               {item}
             </button>
@@ -138,7 +139,7 @@ export default function InsuranceJourney() {
 
           <button
             onClick={handleOtherSubmit}
-            className="px-6 py-3 bg-purple-600 text-white rounded-lg"
+            className="px-6 py-3 bg-primary text-white rounded-lg"
           >
             Submit
           </button>
@@ -198,7 +199,7 @@ export default function InsuranceJourney() {
 
           <button
             onClick={handleContactSubmit}
-            className="px-6 py-3 bg-purple-600 text-white rounded-lg"
+            className="px-6 py-3 bg-primary text-white rounded-lg"
           >
             Submit
           </button>
@@ -226,7 +227,7 @@ export default function InsuranceJourney() {
 
           <button
             onClick={handleCountrySubmit}
-            className="px-6 py-3 bg-purple-600 text-white rounded-lg"
+            className="px-6 py-3 bg-primary text-white rounded-lg"
           >
             Submit
           </button>
@@ -235,7 +236,7 @@ export default function InsuranceJourney() {
 
       {/* ---------------- POPUP ---------------- */}
       {popup && (
-        <div className="fixed bottom-10 left-1/2 -translate-x-1/2 bg-purple-700 text-white px-6 py-3 rounded-lg shadow-lg">
+        <div className="fixed bottom-10 left-1/2 -translate-x-1/2 bg-primary text-white px-6 py-3 rounded-lg shadow-lg">
           {popup}
         </div>
       )}

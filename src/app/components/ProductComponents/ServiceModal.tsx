@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React from "react";
 
 type ModalProps = {
@@ -16,12 +17,16 @@ export default function WorkingProfessionalsInsuranceModal({
     <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/40 backdrop-blur-sm">
       <div className="flex rounded-3xl bg-white shadow-2xl max-w-3xl w-full mx-4 overflow-hidden animate-fadeIn relative">
         {/* Left side image */}
-        <div className="hidden md:block w-1/3 h-full">
-          <img
+        <div
+          className="hidden md:block w-1/3 h-full relative"
+          style={{ minHeight: "400px", maxHeight: "600px" }}
+        >
+          <Image
             src={LEFT_IMAGE_SRC}
             alt="Professional workspace"
-            className="w-full h-full object-cover"
-            style={{ minHeight: "400px", maxHeight: "600px" }}
+            fill
+            className="object-cover"
+            style={{ objectFit: "cover" }}
           />
         </div>
         {/* Right side: Form */}
