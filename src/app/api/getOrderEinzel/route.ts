@@ -12,11 +12,7 @@ const SOAP_ACTION_ORDER =
   'GEWA.COMP.VVGService/IGC_KrankenService_WCF/getOrder';
 
 // small helpers
-<<<<<<< HEAD
 function escapeXml(str = ""): string {
-=======
-function escapeXml(str = "") {
->>>>>>> ab555e28e21ef0580f2d15900c27b2d4f8abcf7d
   return String(str)
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
@@ -98,7 +94,6 @@ const xmlParser = new XMLParser({
   textNodeName: "_text",
 });
 
-<<<<<<< HEAD
 interface Doc {
   kurz: string | null;
   base64: string;
@@ -109,24 +104,13 @@ interface Doc {
 // small walker: find CT_Datei / Datei nodes and extract base64
 function collectDocs(parsed: Record<string, unknown>): Doc[] {
   const docs: unknown[] = [];
-
-  // recursive walker to collect potential nodes
+  
   (function rec(o: unknown): void {
     if (!o || typeof o !== "object") return;
     const obj = o as Record<string, unknown>;
     for (const k of Object.keys(obj)) {
       const local = k.includes(":") ? k.split(":").pop() : k;
       const v = obj[k];
-=======
-// small walker: find CT_Datei / Datei nodes and extract base64
-function collectDocs(parsed: any) {
-  const docs: any[] = [];
-  (function rec(o: any) {
-    if (!o || typeof o !== "object") return;
-    for (const k of Object.keys(o)) {
-      const local = k.includes(":") ? k.split(":").pop() : k;
-      const v = o[k];
->>>>>>> ab555e28e21ef0580f2d15900c27b2d4f8abcf7d
       if (local === "CT_Datei" || local === "Datei") {
         if (Array.isArray(v)) v.forEach((item) => docs.push(item));
         else docs.push(v);
@@ -136,55 +120,43 @@ function collectDocs(parsed: any) {
     }
   })(parsed);
 
-<<<<<<< HEAD
   const out: Doc[] = [];
-
-  // normalize to Doc[]
+  
   (function normalize(node: unknown): void {
     if (!node || typeof node !== "object") return;
     if (Array.isArray(node)) return node.forEach(normalize);
 
     const obj = node as Record<string, unknown>;
-    let base64: string | null = null;
-
-    // extract base64
-    if (obj.Daten) {
-      const daten = obj.Daten;
-=======
-  const out: any[] = [];
-  (function normalize(node: any) {
-    if (!node || typeof node !== "object") return;
-    if (Array.isArray(node)) return node.forEach(normalize);
 
     // try a few shapes to get base64 in Daten -> Value or node._text
     let base64: string | null = null;
-    if (node.Daten) {
-      const daten = node.Daten;
->>>>>>> ab555e28e21ef0580f2d15900c27b2d4f8abcf7d
+    if (obj.Daten) {
+      const daten = obj.Daten;
       if (typeof daten === "string") base64 = daten;
       else if (daten && typeof daten === "object") {
-        for (const key of Object.keys(daten)) {
+        const datenObj = daten as Record<string, unknown>;
+        for (const key of Object.keys(datenObj)) {
           const kLocal = key.includes(":") ? key.split(":").pop() : key;
           if (!kLocal) continue;
           if (/Value$/i.test(kLocal) || kLocal === "_" || kLocal === "#text") {
-<<<<<<< HEAD
-            const v = (daten as Record<string, unknown>)[key];
-            if (typeof v === "string") { base64 = v.replace(/\s/g, ""); break; }
-            if (v && typeof v === "object") {
-              const maybe = (v as Record<string, unknown>)._ ?? (v as Record<string, unknown>)._text;
-              if (typeof maybe === "string") { base64 = maybe.replace(/\s/g, ""); break; }
+            const v = datenObj[key];
+            if (typeof v === "string") { 
+              base64 = v.replace(/\s/g, ""); 
+              break; 
             }
-=======
-            const v = daten[key];
-            if (typeof v === "string") { base64 = v.replace(/\s/g, ""); break; }
-            if (v && typeof v === "object" && typeof (v._ ?? v._text) === "string") { base64 = (v._ ?? v._text).replace(/\s/g, ""); break; }
->>>>>>> ab555e28e21ef0580f2d15900c27b2d4f8abcf7d
+            if (v && typeof v === "object") {
+              const vObj = v as Record<string, unknown>;
+              const textValue = vObj._ ?? vObj._text;
+              if (typeof textValue === "string") { 
+                base64 = textValue.replace(/\s/g, ""); 
+                break; 
+              }
+            }
           }
         }
       }
     }
-<<<<<<< HEAD
-
+    
     if (!base64) {
       if (typeof obj._text === "string") base64 = obj._text.replace(/\s/g, "");
       else if (typeof obj["#text"] === "string") base64 = obj["#text"].replace(/\s/g, "");
@@ -194,17 +166,19 @@ function collectDocs(parsed: any) {
       const kb = obj.Kurzbeschreibung;
       if (typeof kb === "string") return kb;
       if (kb && typeof kb === "object") {
-        const val = (kb as Record<string, unknown>)._ ?? (kb as Record<string, unknown>)._text ?? null;
+        const kbObj = kb as Record<string, unknown>;
+        const val = kbObj._;
         return typeof val === "string" ? val : null;
       }
       return null;
     })();
 
     const createdAt = (() => {
-      const cd = obj.Erstelldatum;
-      if (typeof cd === "string") return cd;
-      if (cd && typeof cd === "object") {
-        const val = (cd as Record<string, unknown>)._ ?? (cd as Record<string, unknown>)._text ?? null;
+      const ed = obj.Erstelldatum;
+      if (typeof ed === "string") return ed;
+      if (ed && typeof ed === "object") {
+        const edObj = ed as Record<string, unknown>;
+        const val = edObj._;
         return typeof val === "string" ? val : null;
       }
       return null;
@@ -218,84 +192,50 @@ function collectDocs(parsed: any) {
   return out;
 }
 
-
 // find Status.Meldung if present (null-safe)
 function extractStatusMeldung(parsed: Record<string, unknown>): string | null {
   const found: string[] = [];
-
-  (function rec(o: unknown) {
+  
+  (function rec(o: unknown): void {
     if (!o || typeof o !== "object") return;
     const obj = o as Record<string, unknown>;
-
     for (const k of Object.keys(obj)) {
       const local = k.includes(":") ? k.split(":").pop() : k;
+      if (!local) continue;
       const v = obj[k];
-
-      if (/^Status$/i.test(local || "") && v && typeof v === "object") {
+      
+      // If this node looks like a "Status" container
+      if (/^Status$/i.test(local) && v && typeof v === "object") {
         const statusObj = v as Record<string, unknown>;
+        // common shapes: v.Meldung, v.meldung, v.MeldungField, or nested objects
         const meldKeys = ["Meldung", "meldung", "MeldungField", "MeldungText"];
         for (const mk of meldKeys) {
           if (mk in statusObj) {
             const meld = statusObj[mk];
-            if (typeof meld === "string" && meld.trim()) { found.push(meld.trim()); break; }
-            if (meld && typeof meld === "object") {
-              const maybe = (meld as Record<string, unknown>)._ ?? (meld as Record<string, unknown>)._text ?? (meld as Record<string, unknown>)["#text"];
-              if (typeof maybe === "string" && maybe.trim()) { found.push(maybe.trim()); break; }
-=======
-    if (!base64) {
-      if (typeof node._text === "string") base64 = node._text.replace(/\s/g, "");
-      else if (typeof node["#text"] === "string") base64 = node["#text"].replace(/\s/g, "");
-    }
-
-    const kurz = (node.Kurzbeschreibung && (typeof node.Kurzbeschreibung === "string" ? node.Kurzbeschreibung : (node.Kurzbeschreibung?._ ?? null))) || null;
-    const createdAt = (node.Erstelldatum && (typeof node.Erstelldatum === "string" ? node.Erstelldatum : (node.Erstelldatum?._ ?? null))) || null;
-
-    out.push({ kurz, base64, createdAt, raw: node });
-  })(docs);
-
-  return out.filter(d => d.base64);
-}
-
-// find Status.Meldung if present (null-safe)
-function extractStatusMeldung(parsed: any): string | null {
-  const found: string[] = [];
-  (function rec(o: any) {
-    if (!o || typeof o !== "object") return;
-    for (const k of Object.keys(o)) {
-      const local = k.includes(":") ? k.split(":").pop() : k;
-      if (!local) continue;
-      const v = o[k];
-      // If this node looks like a "Status" container
-      if (/^Status$/i.test(local) && v && typeof v === "object") {
-        // common shapes: v.Meldung, v.meldung, v.MeldungField, or nested objects
-        const meldKeys = ["Meldung", "meldung", "MeldungField", "MeldungText"];
-        for (const mk of meldKeys) {
-          if (mk in v) {
-            const meld = v[mk];
             if (typeof meld === "string" && meld.trim()) {
               found.push(meld.trim());
               break;
             }
             if (meld && typeof meld === "object") {
+              const meldObj = meld as Record<string, unknown>;
               // null-safe access to typical text properties
-              const maybe = (typeof meld._ === "string" ? meld._ : (typeof meld._text === "string" ? meld._text : (typeof meld["#text"] === "string" ? meld["#text"] : null)));
+              const maybe = 
+                typeof meldObj._ === "string" 
+                  ? meldObj._ 
+                  : typeof meldObj._text === "string" 
+                    ? meldObj._text 
+                    : typeof meldObj["#text"] === "string" 
+                      ? meldObj["#text"] 
+                      : null;
               if (typeof maybe === "string" && maybe.trim()) {
                 found.push(maybe.trim());
                 break;
               }
->>>>>>> ab555e28e21ef0580f2d15900c27b2d4f8abcf7d
             }
           }
         }
       }
 
-<<<<<<< HEAD
-      if (Array.isArray(v)) v.forEach(rec);
-      else if (v && typeof v === "object") rec(v);
-    }
-  })(parsed);
-
-=======
       // descend
       if (Array.isArray(v)) {
         for (const item of v) rec(item);
@@ -304,7 +244,7 @@ function extractStatusMeldung(parsed: any): string | null {
       }
     }
   })(parsed);
->>>>>>> ab555e28e21ef0580f2d15900c27b2d4f8abcf7d
+  
   return found.length ? found[0] : null;
 }
 
@@ -340,45 +280,30 @@ export async function POST(request: NextRequest) {
         "SOAPAction": `"${SOAP_ACTION_ORDER}"`,
         "Accept": "application/xml, text/xml, */*",
       },
-<<<<<<< HEAD
       // @ts-expect-error Node fetch types don't support `agent` in Next.js
-=======
-      // @ts-ignore
->>>>>>> ab555e28e21ef0580f2d15900c27b2d4f8abcf7d
       agent: isHttps ? httpsAgent : httpAgent,
     });
 
     clearTimeout(timeout);
 
     if (!res.ok) {
-<<<<<<< HEAD
-=======
-      const txt = await res.text().catch(() => "");
->>>>>>> ab555e28e21ef0580f2d15900c27b2d4f8abcf7d
+      await res.text().catch(() => "");
       return new Response(JSON.stringify({ status: { meldung: `upstream error ${res.status}` } }), { status: 502, headers: { "Content-Type": "application/json" } });
     }
 
     const rawText = await res.text();
     const parsed = xmlParser.parse(rawText);
 
-<<<<<<< HEAD
-=======
     // check for Status.Meldung (error info)
->>>>>>> ab555e28e21ef0580f2d15900c27b2d4f8abcf7d
     const statusMeldung = extractStatusMeldung(parsed);
     if (statusMeldung) {
       return new Response(JSON.stringify({ status: { meldung: statusMeldung } }), { status: 400, headers: { "Content-Type": "application/json" } });
     }
 
-<<<<<<< HEAD
-    const docs = collectDocs(parsed);
-
-=======
     // extract docs
     const docs = collectDocs(parsed);
 
     // if exactly one doc, return binary PDF directly (fast path)
->>>>>>> ab555e28e21ef0580f2d15900c27b2d4f8abcf7d
     if (docs.length === 1) {
       const base64 = docs[0].base64;
       const buffer = Buffer.from(base64, "base64");
@@ -396,33 +321,24 @@ export async function POST(request: NextRequest) {
       });
     }
 
-<<<<<<< HEAD
-=======
     // if multiple docs, return JSON with base64 for client to download
->>>>>>> ab555e28e21ef0580f2d15900c27b2d4f8abcf7d
     if (docs.length > 1) {
       const out = { documents: docs.map((d, idx) => ({ id: idx, fileName: d.kurz || `doc_${idx + 1}`, base64: d.base64 })) };
       return new Response(JSON.stringify(out), { status: 200, headers: { "Content-Type": "application/json" } });
     }
 
-<<<<<<< HEAD
-    return new Response(JSON.stringify({ status: { meldung: "no documents found in response" } }), { status: 400, headers: { "Content-Type": "application/json" } });
-
-  } catch (err: unknown) {
-    console.error("getOrderEinzel error:", err);
-    const message = err instanceof Error
-      ? err.message
-      : typeof err === "string"
-        ? err
-        : "Unknown error";
-
-=======
     // none found -> return friendly status.meldung
     return new Response(JSON.stringify({ status: { meldung: "no documents found in response" } }), { status: 400, headers: { "Content-Type": "application/json" } });
-  } catch (err: any) {
+    
+  } catch (err: unknown) {
     console.error("getOrderEinzel error:", err);
-    const message = err?.name === "AbortError" ? "upstream timeout" : (err?.message || String(err));
->>>>>>> ab555e28e21ef0580f2d15900c27b2d4f8abcf7d
+    
+    const message = err instanceof Error && err.name === "AbortError" 
+      ? "upstream timeout" 
+      : err instanceof Error 
+        ? err.message 
+        : String(err);
+    
     return new Response(JSON.stringify({ status: { meldung: message } }), { status: 500, headers: { "Content-Type": "application/json" } });
   }
 }

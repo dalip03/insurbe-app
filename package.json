@@ -22,12 +22,8 @@
     "react-slick": "^0.30.3",
     "slick-carousel": "^1.8.1",
     "soap": "^1.6.0",
-<<<<<<< HEAD
     "xml2js": "^0.6.2",
     "zustand": "^5.0.8"
-=======
-    "xml2js": "^0.6.2"
->>>>>>> ab555e28e21ef0580f2d15900c27b2d4f8abcf7d
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
