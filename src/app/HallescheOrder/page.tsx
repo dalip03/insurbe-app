@@ -20,6 +20,7 @@ function base64ToBlob(base64: string, mime = "application/pdf") {
   return new Blob([arr], { type: mime });
 }
 
+<<<<<<< HEAD
 interface DocumentItem {
   id: number;
   fileName: string;
@@ -34,6 +35,16 @@ export default function GenerateOrder() {
   const [debugText, setDebugText] = useState<string | null>(null);
   const [lastStatus, setLastStatus] = useState<number | null>(null);
   const [lastHeaders, setLastHeaders] = useState<Record<string, string> | null>(null);
+=======
+export default function GenerateOrder() {
+  const [loading, setLoading] = useState(false);
+  const [statusMeldung, setStatusMeldung] = useState<string | null>(null);
+  const [docs, setDocs] = useState<Array<{ id: number; fileName: string; base64?: string }>>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [debugText, setDebugText] = useState<string | null>(null);
+  const [lastStatus, setLastStatus] = useState<number | null>(null);
+  const [lastHeaders, setLastHeaders] = useState<Record<string,string> | null>(null);
+>>>>>>> ab555e28e21ef0580f2d15900c27b2d4f8abcf7d
 
   // new: store single-PDF blob and filename (no auto-download)
   const [pdfBlob, setPdfBlob] = useState<Blob | null>(null);
@@ -76,7 +87,11 @@ export default function GenerateOrder() {
       });
 
       setLastStatus(res.status);
+<<<<<<< HEAD
       const headersObj: Record<string, string> = {};
+=======
+      const headersObj: Record<string,string> = {};
+>>>>>>> ab555e28e21ef0580f2d15900c27b2d4f8abcf7d
       res.headers.forEach((v, k) => (headersObj[k] = v));
       setLastHeaders(headersObj);
       console.info("Response status:", res.status, "headers:", headersObj);
@@ -91,7 +106,11 @@ export default function GenerateOrder() {
             setStatusMeldung(j.status.meldung);
             return;
           }
+<<<<<<< HEAD
         } catch {
+=======
+        } catch (e) {
+>>>>>>> ab555e28e21ef0580f2d15900c27b2d4f8abcf7d
           // not JSON
         }
         throw new Error(`Server returned ${res.status} — see debugPreview`);
@@ -124,16 +143,24 @@ export default function GenerateOrder() {
       }
 
       if (Array.isArray(j?.documents)) {
+<<<<<<< HEAD
         const mapped = j.documents.map((d: Record<string, unknown>, idx: number): DocumentItem => ({
           id: typeof d.id === "number" ? d.id : idx,
           fileName: typeof d.fileName === "string" ? d.fileName : typeof d.kurz === "string" ? d.kurz : `doc_${idx + 1}`,
           base64: typeof d.base64 === "string" ? d.base64 : typeof d.Daten === "string" ? d.Daten : typeof d.data === "string" ? d.data : undefined,
+=======
+        const mapped = j.documents.map((d: any, idx: number) => ({
+          id: d.id ?? idx,
+          fileName: d.fileName ?? d.kurz ?? `doc_${idx + 1}`,
+          base64: d.base64 ?? d.Daten ?? d.data ?? undefined,
+>>>>>>> ab555e28e21ef0580f2d15900c27b2d4f8abcf7d
         }));
         setDocs(mapped);
         return;
       }
 
       if (j?.documents) {
+<<<<<<< HEAD
         const mapped = Object.values(j.documents).map((d: unknown, idx: number): DocumentItem => {
           const doc = d as Record<string, unknown>;
           return {
@@ -142,12 +169,20 @@ export default function GenerateOrder() {
             base64: typeof doc.base64 === "string" ? doc.base64 : typeof doc.Daten === "string" ? doc.Daten : typeof doc.data === "string" ? doc.data : undefined,
           };
         });
+=======
+        const mapped = Object.values(j.documents).map((d: any, idx: number) => ({
+          id: d.id ?? idx,
+          fileName: d.fileName ?? d.kurz ?? `doc_${idx + 1}`,
+          base64: d.base64 ?? d.Daten ?? d.data ?? undefined,
+        }));
+>>>>>>> ab555e28e21ef0580f2d15900c27b2d4f8abcf7d
         setDocs(mapped);
         return;
       }
 
       setDebugText(raw);
       setError("Unexpected successful response — check debug preview");
+<<<<<<< HEAD
     } catch (err: unknown) {
       console.error("GenerateOrder error:", err);
       if (err instanceof Error) {
@@ -155,6 +190,11 @@ export default function GenerateOrder() {
       } else {
         setError(String(err));
       }
+=======
+    } catch (err: any) {
+      console.error("GenerateOrder error:", err);
+      setError(err?.message || String(err));
+>>>>>>> ab555e28e21ef0580f2d15900c27b2d4f8abcf7d
     } finally {
       setLoading(false);
     }
@@ -165,6 +205,7 @@ export default function GenerateOrder() {
     try {
       const blob = base64ToBlob(base64, "application/pdf");
       downloadBlob(blob, fileName.endsWith(".pdf") ? fileName : `${fileName}.pdf`);
+<<<<<<< HEAD
     } catch (err: unknown) {
       console.error("base64->blob error", err);
       if (err instanceof Error) {
@@ -172,6 +213,11 @@ export default function GenerateOrder() {
       } else {
         setError(String(err));
       }
+=======
+    } catch (e: any) {
+      console.error("base64->blob error", e);
+      setError(String(e?.message || e));
+>>>>>>> ab555e28e21ef0580f2d15900c27b2d4f8abcf7d
     }
   }
 
@@ -181,6 +227,7 @@ export default function GenerateOrder() {
       downloadBlob(pdfBlob, pdfFileName.endsWith(".pdf") ? pdfFileName : `${pdfFileName}.pdf`);
       // optional: clear blob after download if you want single-use
       // setPdfBlob(null);
+<<<<<<< HEAD
     } catch (err: unknown) {
       console.error("download blob error", err);
       if (err instanceof Error) {
@@ -188,6 +235,11 @@ export default function GenerateOrder() {
       } else {
         setError(String(err));
       }
+=======
+    } catch (e: any) {
+      console.error("download blob error", e);
+      setError(String(e?.message || e));
+>>>>>>> ab555e28e21ef0580f2d15900c27b2d4f8abcf7d
     }
   }
 
