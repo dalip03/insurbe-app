@@ -380,7 +380,7 @@ export default function InsuranceJourney() {
                 onClick={() => handleIncomeSelect(">73800")}
                 className="w-full p-4 border cursor-pointer rounded-lg text-left hover:border-primary transition"
               >
-                &gt; €73,800
+                &gt; €77,400
               </button>
             </div>
           </div>

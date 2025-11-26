@@ -41,7 +41,7 @@ export default function ComparePlans() {
       name: "Hallesche",
       price: premium ? premium.toString() : "40",
       period: "/ Month",
-      logo: "/icons/h.svg",
+      logo: "/icons/H.svg",
       description:
         "For Expats who are planning to stay in Germany for a longer period",
       features: [
