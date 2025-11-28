@@ -199,15 +199,19 @@ export default function ComparePlans() {
               {/* Header */}
               <div className="flex justify-between items-start mb-4">
                 <div>
+                   <div className="mt-2 font-medium text-gray-900">
+                    {plan.name}
+                  </div>
                   <div className="flex items-baseline gap-1">
-                    <span className="text-gray-500 text-xl">€</span>
+                    
+                    <span className="text-gray-800 text-5xl">€</span>
                     <span className="text-5xl text-gray-900">{plan.price}</span>
                     <span className="text-sm text-gray-500">{plan.period}</span>
                   </div>
 
-                  <div className="mt-2 font-medium text-gray-900">
+                  {/* <div className="mt-2 font-medium text-gray-900">
                     {plan.name}
-                  </div>
+                  </div> */}
                 </div>
 
                 <Image
