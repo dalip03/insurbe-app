@@ -1,205 +1,135 @@
 "use client";
-
+import React from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
 
-const listItemVariants = {
-  hidden: { opacity: 0, x: -20 },
-  visible: (i: number) => ({
-    opacity: 1,
-    x: 0,
-    transition: {
-      delay: i * 0.2 + 0.6,
-      type: "spring",
-      stiffness: 100,
-    },
-  }),
-};
-
-const buttonVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { delay: 1.2, type: "spring", stiffness: 120 },
-  },
-};
-
-export default function HeroSectionTop() {
+export default function HeroSection() {
   return (
-    <motion.section
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.6 }}
-      className="bg-gradient-to-br from-white to-[#eed5f3] px-4 md:px-10 lg:px-20 overflow-hidden"
-    >
-      <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-start justify-between w-full gap-12 mt-32">
-        {/* Left Content */}
-        <div className="text-left max-w-xl">
-          <motion.h1
-            initial={{ opacity: 0, y: -40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ type: "spring", stiffness: 120, delay: 0.2 }}
-            className="text-3xl sm:text-3xl lg:text-4xl font-bold text-black font-jost"
-          >
-            Unlock the Best Insurance Solutions in Germany with Ease
-          </motion.h1>
+    <section className="relative bg-primary min-h-[650px] md:min-h-[750px] lg:min-h-[850px] w-full overflow-hidden">
+      {/* Background Circle */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div className="relative w-full h-full max-w-[900px] max-h-[900px]">
+          <Image
+            src="/images/circle-bg.png"
+            alt="Background Circle"
+            fill
+            className="object-contain opacity-10"
+            priority
+          />
+        </div>
+      </div>
 
-          <motion.ul
-            initial="hidden"
-            animate="visible"
-            className="mt-6 space-y-3 text-black text-base font-lexend"
-          >
-            {[
-              "For Students, Professionals and Families moving to Germany",
-              "From health and liability to legal and pension coverage",
-              "Best options tailored to your unique needs",
-            ].map((text, i) => (
-              <motion.li
-                key={i}
-                custom={i}
-                variants={listItemVariants}
-                className="flex items-center"
-              >
-                <Image
-                  src="/icons/arrow.svg"
-                  alt="arrow"
-                  width={16}
-                  height={16}
-                />
-                <span className="ml-2">{text}</span>
-              </motion.li>
-            ))}
-          </motion.ul>
+      {/* Left Star */}
+      <div className="absolute left-8 md:left-72 top-[45%] md:top-[40%] w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 animate-pulse z-10">
+        <Image
+          src="/hero_assets/leftstar.svg"
+          alt="Star"
+          fill
+          className="object-contain"
+        />
+      </div>
 
-          <motion.div
-            initial="hidden"
-            animate="visible"
-            variants={buttonVariants}
-            className="mt-8 flex flex-wrap gap-4 justify-center md:justify-start"
-          >
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-6 py-2 bg-primary text-white rounded-md shadow hover:bg-primary/95 transition"
-            >
-              Get Started
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-6 py-2 border border-primary text-primary rounded-md hover:bg-purple-50 transition"
-            >
-              Contact Us
-            </motion.button>
-          </motion.div>
+      {/* Right Star */}
+      <div className="absolute right-8 md:right-42  top-[42%] md:top-[32%] w-12 h-12 md:w-14 md:h-14 animate-pulse z-10">
+        <Image
+          src="/hero_assets/rightstar.svg"
+          alt="Star"
+          fill
+          className="object-contain"
+        />
+      </div>
+
+      {/* Content Container */}
+      <div className="relative z-10 w-full min-h-[650px] md:min-h-[750px] lg:min-h-[850px] flex flex-col">
+        {/* Header Text */}
+        <div className="text-center pt-8 md:pt-12 lg:pt-16 pb-6 md:pb-8 px-4 sm:px-6 lg:px-8">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight mb-4 md:mb-6 max-w-5xl mx-auto">
+            Unlock the Best Insurance Solutions in{" "}
+            <br className="hidden sm:block" />
+            Germany with Ease
+          </h1>
+
+          <div className="space-y-1.5 md:space-y-2 text-white max-w-4xl mx-auto">
+  <div className="flex items-center justify-center gap-2 text-xs sm:text-sm md:text-base lg:text-lg">
+    <span className="text-base md:text-lg lg:text-xl flex-shrink-0">
+      →
+    </span>
+    <p className="text-left">For Students, Professionals and Families moving to Germany</p>
+  </div>
+  <div className="flex items-center justify-center gap-2 text-xs sm:text-sm md:text-base lg:text-lg">
+    <span className="text-base md:text-lg lg:text-xl flex-shrink-0">
+      →
+    </span>
+    <p className="text-left">From health and liability to legal and pension coverage</p>
+  </div>
+  <div className="flex items-center justify-center gap-2 text-xs sm:text-sm md:text-base lg:text-lg">
+    <span className="text-base md:text-lg lg:text-xl flex-shrink-0">
+      →
+    </span>
+    <p className="text-left">Best options tailored to your unique needs</p>
+  </div>
+</div>
         </div>
 
-        {/* Right Visual Section */}
-        <motion.div
-          initial={{ opacity: 0, x: 60 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.5, type: "spring", stiffness: 100 }}
-          className="relative w-full max-w-lg min-h-[530px] mx-auto flex items-center justify-center"
-        >
+        {/* Images Layout - Absolutely positioned at bottom */}
+        <div className="relative flex-1 w-full max-w-7xl mx-auto">
+          <div className="absolute bottom-0 left-0 right-0 flex items-end justify-center gap-4 md:gap-8 lg:gap-16 px-4">
+            {/* Left Banner - Positioned above bottom */}
+            <div className="hidden md:block absolute left-4 lg:left-16 xl:left-24 bottom-24 lg:bottom-32 xl:bottom-36 w-44 h-28 lg:w-52 lg:h-32 xl:w-56 xl:h-36 z-20">
+              <Image
+                src="/hero_assets/herobanner.svg"
+                alt="Rating Banner"
+                fill
+                className="object-contain drop-shadow-2xl"
+                priority
+              />
+            </div>
 
-          {/* Dotted Line Background (static, no animation) */}
-          <Image
-            src="/img/vector.png"
-            alt="Dotted Line Background"
-            width={520}
-            height={220}
-            className="absolute inset-0 z-0 pointer-events-none w-[520px] h-[220px] left-[20px] top-[80px]"
-            draggable={false}
-          />
+            {/* Center Girl Image - Touching bottom */}
+            <div className="relative w-[70vw] max-w-[280px] h-[350px] sm:max-w-[340px] sm:h-[420px] md:max-w-[380px] md:h-[480px] lg:max-w-[440px] lg:h-[560px] xl:max-w-[500px] xl:h-[640px] z-10">
+              <Image
+                src="/hero_assets/herobggirl.svg"
+                alt="Student"
+                fill
+                className="object-contain object-bottom"
+                priority
+              />
+            </div>
 
-          {/* Center - Main Insurbe Logo (static) */}
-          <Image
-            src="/img/whiteLogo.svg"
-            alt="InsurBe"
-            width={200}
-            height={86}
-            className="absolute left-3/5 top-[120px] -translate-x-1/2 z-20 pointer-events-none"
-            draggable={false}
-          />
+            {/* Right Banner - Positioned above bottom */}
+            <div className="hidden md:block absolute right-4 md:right-24  bottom-24 md:bottom-52 w-48 h-32 lg:w-56 lg:h-36 xl:w-60 xl:h-40 z-20">
+              <Image
+                src="/hero_assets/herobanner1.svg"
+                alt="Expert Agents"
+                fill
+                className="object-contain drop-shadow-2xl"
+                priority
+              />
+            </div>
+          </div>
+        </div>
 
-          {/* Shivani Chauhan Card - floats */}
-          <motion.div
-            animate={{ y: [0, -16, 0], rotate: [0, 2, -2, 0] }}
-            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute -top-[50px] right-30 z-30 object-contain"
-          >
+        {/* Mobile Banners - Below the section */}
+        <div className="md:hidden flex flex-col gap-4 items-center px-4 pb-8 pt-4 z-20 bg-primary">
+          <div className="relative w-full max-w-[280px] h-28 bg-white/95 rounded-2xl shadow-xl">
             <Image
-              src="/img/label2.png"
-              alt="Shivani Chauhan Profile"
-              width={350}
-              height={64}
-              draggable={false}
+              src="/hero_assets/herobanner.svg"
+              alt="Rating Banner"
+              fill
+              className="object-contain p-2"
+              priority
             />
-          </motion.div>
-
-          {/* "June 2024" Card - floats */}
-          <motion.div
-            animate={{ y: [0, -14, 0], rotate: [0, 1, -1, 0] }}
-            transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute -right-22 top-[24px] z-30 object-contain"
-          >
+          </div>
+          <div className="relative w-full max-w-[280px] h-32 bg-white/95 rounded-2xl shadow-xl">
             <Image
-              src="/img/label1.png"
-              alt="June 2024 Statistic"
-              width={240}
-              height={74}
-              draggable={false}
+              src="/hero_assets/herobanner1.svg"
+              alt="Expert Agents"
+              fill
+              className="object-contain p-2"
+              priority
             />
-          </motion.div>
-
-          {/* Donut Chart - floats */}
-          <motion.div
-            animate={{ y: [0, -12, 0] }}
-            transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute top-[60px] -left-11 z-20 object-contain"
-          >
-            <Image
-              src="/img/UsersOverview.png"
-              alt="Insurance Issued Donut"
-              width={280}
-              height={162}
-              draggable={false}
-            />
-          </motion.div>
-
-          {/* Daily Issuances - floats */}
-          <motion.div
-            animate={{ y: [0, -10, 0], rotate: [0, -1, 1, 0] }}
-            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute bottom-52 right-31 z-30 object-contain"
-          >
-            <Image
-              src="/img/rectangle.png"
-              alt="Daily Issuances"
-              width={30}
-              height={100}
-              draggable={false}
-            />
-          </motion.div>
-
-          {/* Decorative Circle Badge - floats */}
-          <motion.div
-            animate={{ y: [0, -10, 0], rotate: [0, 2, -2, 0] }}
-            transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute bottom-40 right-3 z-40 object-contain"
-          >
-            <Image
-              src="/img/label3.png"
-              alt="Decorative Badge"
-              width={300}
-              height={154}
-              draggable={false}
-            />
-          </motion.div>
-
-        </motion.div>
+          </div>
+        </div>
       </div>
-    </motion.section>
+    </section>
   );
 }
