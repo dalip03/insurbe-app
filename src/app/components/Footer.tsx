@@ -17,8 +17,11 @@ export default function Footer() {
                   <Image src="/icons/logo_white.png" alt="Logo" width={140} height={20} />
                 </Link>
               </div>{" "}
-              <p className="text-sm text-gray-400 ">
+              <p className="text-sm text-gray-400 md:block hidden">
                 The only digital solution for all your <br /> insurance needs.
+              </p>
+              <p className="text-sm text-gray-400 md:hidden block">
+                The only digital solution for all your insurance needs.
               </p>
               <div className="flex gap-4">
                 {/* <div className="text-2x font-bold flex items-center">
@@ -31,7 +34,7 @@ export default function Footer() {
                     />
                   </Link>
                 </div>{" "} */}
-                <div className="text-2xl font-bold">
+                <div className="text-2xl font-bold ">
                   <Link href="/" className="font-bold font-serif">
                     <Image
                       src="/img/footerIcon1.svg"
@@ -49,7 +52,7 @@ export default function Footer() {
             </div>
 
             {/* Navigation Links */}
-            <div className="grid grid-cols-2 gap-14 px-20">
+            <div className="grid grid-cols-2 gap-14 md:px-20 px-4">
               <div>
                 <h2 className="text-xl font-semibold mb-4">Navigation</h2>
                 <ul className="space-y-4">
