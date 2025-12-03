@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Check, X } from "lucide-react";
 import Image from "next/image";
@@ -8,69 +8,137 @@ import { useRouter } from "next/navigation";
 import PlansCompare from "./PlanCompares";
 import InsuranceCalculator from "../CalculatorComponents/InsuranceCalculator";
 import { usePremiumStore } from "@/app/stores/premiumStore";
+import { useJourneyStore } from "@/app/stores/journeyStore";
 
 export default function ComparePlans() {
   const router = useRouter();
-  const { premium } = usePremiumStore();
+  const { premium, tkPremium } = usePremiumStore();
+  const { incomeRange } = useJourneyStore();
 
   const [viewMode, setViewMode] = useState("default");
   const [expandedCard, setExpandedCard] = useState<string | null>(null);
   const [showCalculator, setShowCalculator] = useState(false);
   const [showComingSoonModal, setShowComingSoonModal] = useState(false);
   const [selectedPlanName, setSelectedPlanName] = useState("");
+  const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
-  const plans = [
-    {
-      id: "tk",
-      name: "TK",
-      price: "62",
-      period: "/ Month",
-      logo: "/icons/tk.svg",
-      description: "For short term visitors with no fixed plan of stay",
-      features: [
-        "24/7 medical assistance/emergency call centre",
-        "English support",
-        "Digital services",
-        "Excellent coverage for families",
-      ],
-      bgColor: "bg-white",
-      available: false,
-    },
-    {
-      id: "hallesche",
-      name: "Hallesche",
-      price: premium ? premium.toString() : "40",
-      period: "/ Month",
-      logo: "/icons/H.svg",
-      description:
-        "For Expats who are planning to stay in Germany for a longer period",
-      features: [
-        "24/7 medical assistance/emergency call centre",
-        "English support",
-        "Digital services",
-        "Great digital services and best insurance for Expats",
-      ],
-      bgColor: "bg-purple-50",
-      highlighted: true,
-      available: true,
-    },
-    {
-      id: "dak",
-      name: "DAK",
-      price: "49",
-      period: "/ Month",
-      logo: "/icons/dak.svg",
-      description: "Special discount for Residents of Kazakhstan",
-      features: [
-        "24/7 medical assistance/emergency call centre",
-        "English support",
-        "Digital services",
-        "Excellent customer support in English",
-      ],
-      bgColor: "bg-pink-50",
-      available: false,
-    },
-  ];
+  // Generate plans based on income range
+  const plans = useMemo(() => {
+    const isHighIncome = incomeRange === ">77400";
+    const tkPrice = tkPremium ? Math.round(tkPremium).toString() : "62";
+    const halleschePrice = premium
+      ? Math.round(premium).toString()
+      : isHighIncome
+      ? "520"
+      : "450";
+
+    if (isHighIncome) {
+      // For >77,400: TK (calculated), Hallesche (API), DAK (static)
+      return [
+        {
+          id: "tk",
+          name: "TK (Techniker Krankenkasse)",
+          price: tkPrice,
+          period: "/ Month",
+          logo: "/icons/tk.svg",
+          description: "Germany's most popular public health insurance",
+          features: [
+            "Comprehensive coverage",
+            "Digital health services",
+            "24/7 medical hotline",
+            "Preventive care programs",
+          ],
+          bgColor: "bg-white",
+          available: false,
+        },
+        {
+          id: "hallesche",
+          name: "Hallesche",
+          price: halleschePrice,
+          period: "/ Month",
+          logo: "/icons/H.svg",
+          description:
+            "For Expats planning to stay in Germany for a longer period",
+          features: [
+            "24/7 medical assistance/emergency call centre",
+            "English support",
+            "Digital services",
+            "Great digital services and best insurance for Expats",
+          ],
+          bgColor: "bg-purple-50",
+          available: true, // Only Hallesche is available
+        },
+        {
+          id: "dak",
+          name: "DAK",
+          price: "490",
+          period: "/ Month",
+          logo: "/icons/dak.svg",
+          description: "Special discount for Residents of Kazakhstan",
+          features: [
+            "24/7 medical assistance/emergency call centre",
+            "English support",
+            "Digital services",
+            "Excellent customer support in English",
+          ],
+          bgColor: "bg-pink-50",
+          available: false,
+        },
+      ];
+    } else {
+      // For 30,001-77,400: TK (calculated), Ottonova (random), Hallesche (random)
+      return [
+        {
+          id: "tk",
+          name: "TK (Techniker Krankenkasse)",
+          price: tkPrice,
+          period: "/ Month",
+          logo: "/icons/tk.svg",
+          description: "Germany's most popular public health insurance",
+          features: [
+            "Comprehensive coverage",
+            "Digital health services",
+            "24/7 medical hotline",
+            "Preventive care programs",
+          ],
+          bgColor: "bg-white",
+          available: false,
+        },
+        {
+          id: "ottonova",
+          name: "Ottonova",
+          price: "450",
+          period: "/ Month",
+          logo: "/icons/H.svg",
+          description: "Modern digital private health insurance",
+          features: [
+            "Premium private coverage",
+            "Fast appointments with specialists",
+            "Digital first approach",
+            "Cashback on unused benefits",
+          ],
+          bgColor: "bg-blue-50",
+          available: false,
+        },
+        {
+          id: "dk",
+          name: "DK",
+          price: halleschePrice,
+          period: "/ Month",
+          logo: "/icons/dak.svg",
+          description: "Traditional private health insurance provider",
+          features: [
+            "Full private coverage",
+            "Chief physician treatment",
+            "Single room hospital stays",
+            "Alternative medicine coverage",
+          ],
+          bgColor: "bg-purple-50",
+          available: false,
+        },
+      ];
+    }
+  }, [incomeRange, premium, tkPremium]);
 
   const handlePersonalizeClick = () => {
     setViewMode("personalize");
@@ -120,7 +188,7 @@ export default function ComparePlans() {
             <div className="flex gap-3 mt-4">
               <button
                 onClick={handleDefaultClick}
-                className={`px-6 py-3 rounded-full font-semibold transition-all ${
+                className={`px-6 py-3 rounded-full font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
                   viewMode === "default"
                     ? "bg-primary text-white shadow-lg"
                     : "bg-white text-gray-700 hover:bg-gray-100"
@@ -131,7 +199,7 @@ export default function ComparePlans() {
 
               <button
                 onClick={handlePersonalizeClick}
-                className={`px-6 py-3 rounded-full cursor-pointer font-semibold transition-all ${
+                className={`px-6 py-3 rounded-full cursor-pointer font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
                   viewMode === "personalize"
                     ? "bg-primary text-white shadow-lg"
                     : "bg-white text-gray-700 hover:bg-gray-100"
@@ -148,7 +216,7 @@ export default function ComparePlans() {
             </p>
             <button
               onClick={handlePersonalizedCalculationClick}
-              className="bg-primary cursor-pointer hover:bg-primary/80 text-white font-semibold px-6 py-3 rounded-lg shadow-lg transition-colors w-full lg:w-auto"
+              className="bg-primary cursor-pointer hover:bg-primary/80 text-white font-semibold px-6 py-3 rounded-lg shadow-lg transition-colors w-full lg:w-auto focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
             >
               Personalized Calculation
             </button>
@@ -181,37 +249,46 @@ export default function ComparePlans() {
             overflow-x-auto md:overflow-visible
             snap-x snap-mandatory md:snap-none
             pb-4
+            scrollbar-hide
           "
         >
           {plans.map((plan) => (
             <motion.div
               key={plan.id}
               variants={cardVariants}
+              onMouseEnter={() => setHoveredCard(plan.id)}
+              onMouseLeave={() => setHoveredCard(null)}
               className={`
                 min-w-[85%] xs:min-w-[75%] sm:min-w-[60%] md:min-w-0
                 snap-center
                 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all
                 flex flex-col
                 ${plan.bgColor}
-                ${plan.highlighted ? "ring-2 ring-primary" : ""}
+                ${hoveredCard === plan.id ? "ring-2 ring-primary" : "ring-2 ring-transparent"}
               `}
             >
               {/* Header */}
               <div className="flex justify-between items-start mb-4">
                 <div>
-                   <div className="mt-2 font-medium text-gray-900">
-                    {plan.name}
-                  </div>
                   <div className="flex items-baseline gap-1">
-                    
-                    <span className="text-gray-800 text-5xl">€</span>
-                    <span className="text-5xl text-gray-900">{plan.price}</span>
+                    <span className="text-gray-800 text-4xl sm:text-5xl font-bold">
+                      €
+                    </span>
+                    <span className="text-4xl sm:text-5xl text-gray-900 font-bold">
+                      {plan.price}
+                    </span>
                     <span className="text-sm text-gray-500">{plan.period}</span>
                   </div>
 
-                  {/* <div className="mt-2 font-medium text-gray-900">
+                  <div className="mt-2 font-semibold text-gray-900 text-lg">
                     {plan.name}
-                  </div> */}
+                  </div>
+
+                  {plan.id === "tk" && (
+                    <p className="text-xs text-gray-500 mt-1">
+                      (Employee portion)
+                    </p>
+                  )}
                 </div>
 
                 <Image
@@ -224,13 +301,15 @@ export default function ComparePlans() {
               </div>
 
               {/* Description */}
-              <p className="text-sm text-gray-700 mb-6">{plan.description}</p>
+              <p className="text-sm text-gray-700 mb-6 leading-relaxed">
+                {plan.description}
+              </p>
 
               {/* Features - Flex grow to push button down */}
-              <ul className="space-y-3 mb-6 flex-grow">
+              <ul className="space-y-3 mb-6 flex-grow" role="list">
                 {plan.features.map((feature, i) => (
                   <li key={i} className="flex items-start gap-2">
-                    <Check className="w-5 h-5 text-gray-900 mt-0.5 flex-shrink-0" />
+                    <Check className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
                     <span className="text-sm text-gray-700">{feature}</span>
                   </li>
                 ))}
@@ -239,10 +318,10 @@ export default function ComparePlans() {
               {/* Button - Stays at bottom */}
               <button
                 onClick={() => handleChoosePlan(plan)}
-                className={`w-full py-3 rounded-lg font-semibold cursor-pointer transition-all mt-auto ${
-                  plan.highlighted
-                    ? "bg-primary text-white shadow-md hover:bg-primary/90"
-                    : "bg-white text-primary border-2 border-primary hover:bg-gray-50"
+                className={`w-full py-3 rounded-lg font-semibold cursor-pointer transition-all mt-auto shadow-md focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
+                  hoveredCard === plan.id
+                    ? "bg-primary text-white"
+                    : "bg-white text-primary border-2 border-primary"
                 }`}
               >
                 Choose plan
@@ -256,14 +335,14 @@ export default function ComparePlans() {
           {expandedCard ? (
             <button
               onClick={() => setExpandedCard(null)}
-              className="px-20 py-3 rounded-lg font-semibold bg-white text-primary border-2 border-primary hover:bg-gray-50 transition-all"
+              className="px-20 py-3 rounded-lg font-semibold bg-white text-primary border-2 border-primary hover:bg-gray-50 transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
             >
               Hide Details
             </button>
           ) : (
             <button
               onClick={() => setExpandedCard("tk")}
-              className="px-20 py-3 rounded-lg font-semibold bg-white text-primary border-2 border-primary hover:bg-gray-50 transition-all"
+              className="px-20 py-3 rounded-lg font-semibold bg-white text-primary border-2 border-primary hover:bg-gray-50 transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
             >
               Show Details
             </button>
@@ -287,7 +366,7 @@ export default function ComparePlans() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setShowComingSoonModal(false)}
-              className="fixed inset-0 bg-black/50 z-40"
+              className="fixed inset-0 bg-black/50 z-40 backdrop-blur-sm"
             />
 
             <motion.div
@@ -298,7 +377,7 @@ export default function ComparePlans() {
             >
               <button
                 onClick={() => setShowComingSoonModal(false)}
-                className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition"
+                className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition focus:outline-none focus:ring-2 focus:ring-primary rounded"
               >
                 <X className="w-6 h-6" />
               </button>
@@ -324,12 +403,14 @@ export default function ComparePlans() {
                   Coming Soon!
                 </h2>
                 <p className="text-gray-600 mb-6">
-                  <span className="font-semibold">{selectedPlanName}</span> integration is currently under development. We&apos;ll notify you once it&apos;s available.
+                  <span className="font-semibold">{selectedPlanName}</span>{" "}
+                  integration is currently under development. We&apos;ll notify
+                  you once it&apos;s available.
                 </p>
 
                 <button
                   onClick={() => setShowComingSoonModal(false)}
-                  className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-3 rounded-lg transition-colors"
+                  className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-3 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
                 >
                   Got it
                 </button>
@@ -338,6 +419,16 @@ export default function ComparePlans() {
           </>
         )}
       </AnimatePresence>
+
+      <style jsx global>{`
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+      `}</style>
     </div>
   );
 }

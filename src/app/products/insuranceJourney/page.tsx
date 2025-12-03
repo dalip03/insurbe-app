@@ -1,9 +1,22 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useJourneyStore } from "@/app/stores/journeyStore";
 import { usePremiumStore } from "@/app/stores/premiumStore";
+
+// Types
+interface CountryAPI {
+  name: { common: string };
+  flags: { svg: string; png: string };
+  cca2: string;
+}
+
+interface Country {
+  name: string;
+  flag: string;
+  code: string;
+}
 
 export default function InsuranceJourney() {
   const router = useRouter();
@@ -20,140 +33,67 @@ export default function InsuranceJourney() {
     setEmploymentStatus,
     setOtherEmployment,
     setIncomeRange,
+    setActualIncome,
     setEmail,
     setPhone,
     setSelectedCountry,
     setDob,
   } = useJourneyStore();
 
-  const { setPremium, setDocuments } = usePremiumStore();
+  const { setPremium, setDocuments, setTKPremium } = usePremiumStore();
 
-  // --- Local UI States ---
+  // Local UI States
   const [step, setStep] = useState(1);
-  const [countries, setCountries] = useState<Array<{ name: string; flag: string; code: string }>>([]);
+  const [countries, setCountries] = useState<Country[]>([]);
   const [popup, setPopup] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
   const [hasChildren, setHasChildren] = useState<boolean | null>(null);
-  const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Fetch countries API with flags
-  interface CountryAPI {
-    name: {
-      common: string;
-    };
-    flags: {
-      svg: string;
-      png: string;
-    };
-    cca2: string;
-  }
-
   // Calculate TK Price based on income
-  const calculateTKPrice = (yearlyIncome: number, hasChildren: boolean, age: number) => {
-    const maxIncome = 5812.50 * 12; // €69,750 annually (monthly cap * 12)
-    const cappedIncome = Math.min(yearlyIncome, maxIncome);
+  const calculateTKPrice = useCallback(
+    (yearlyIncome: number, hasChildren: boolean, age: number) => {
+      const maxIncome = 5812.5 * 12; // €69,750 annually (monthly cap * 12)
+      const cappedIncome = Math.min(yearlyIncome, maxIncome);
 
-    // Main premium: 14.6%
-    const mainPremium = cappedIncome * 0.146;
+      // Main premium: 14.6%
+      const mainPremium = cappedIncome * 0.146;
 
-    // TK Zusatzbeitrag: 2.45%
-    const zusatzbeitrag = cappedIncome * 0.0245;
+      // TK Zusatzbeitrag: 2.45%
+      const zusatzbeitrag = cappedIncome * 0.0245;
 
-    // Care insurance: 3.6% (with children or age < 23) or 4.2% (without children and age >= 23)
-    const careInsuranceRate = (hasChildren || age < 23) ? 0.036 : 0.042;
-    const careInsurance = cappedIncome * careInsuranceRate;
+      // Care insurance: 3.6% (with children or age < 23) or 4.2% (without children and age >= 23)
+      const careInsuranceRate = hasChildren || age < 23 ? 0.036 : 0.042;
+      const careInsurance = cappedIncome * careInsuranceRate;
 
-    // Total annual premium
-    const totalAnnual = mainPremium + zusatzbeitrag + careInsurance;
+      // Total annual premium
+      const totalAnnual = mainPremium + zusatzbeitrag + careInsurance;
 
-    // Monthly premium
-    const monthlyPremium = totalAnnual / 12;
+      // Monthly premium
+      const monthlyPremium = totalAnnual / 12;
 
-    // Employee portion (split)
-    const employeeMainPremium = cappedIncome * 0.073;
-    const employeeZusatzbeitrag = cappedIncome * 0.01225;
-    const employeeCareInsurance = cappedIncome * ((hasChildren || age < 23) ? 0.018 : 0.024);
-    const employeeMonthly = (employeeMainPremium + employeeZusatzbeitrag + employeeCareInsurance) / 12;
+      // Employee portion (split)
+      const employeeMainPremium = cappedIncome * 0.073;
+      const employeeZusatzbeitrag = cappedIncome * 0.01225;
+      const employeeCareInsurance =
+        cappedIncome * (hasChildren || age < 23 ? 0.018 : 0.024);
+      const employeeMonthly =
+        (employeeMainPremium + employeeZusatzbeitrag + employeeCareInsurance) / 12;
 
-    return {
-      monthly: Math.round(monthlyPremium * 100) / 100,
-      employeeMonthly: Math.round(employeeMonthly * 100) / 100,
-      annual: Math.round(totalAnnual * 100) / 100,
-    };
-  };
-
-  // Get mock products for middle income range
-  const getMockProducts = () => {
-    // Calculate age from dob
-    const currentYear = new Date().getFullYear();
-    const age = dob ? currentYear - parseInt(dob) : 25;
-
-    // Parse income range to get average
-    let averageIncome = 50000; // default
-    if (incomeRange === "30001-77400") {
-      averageIncome = 50000; // Use middle value
-    }
-
-    // Calculate TK price
-    const tkPrice = calculateTKPrice(
-      averageIncome,
-      hasChildren ?? false,
-      age
-    );
-
-    return [
-      {
-        id: "tk",
-        name: "TK ",
-        logo: "/products/tk-logo.png",
-        monthlyPrice: tkPrice.employeeMonthly,
-        description: "Germany's most popular public health insurance",
-        features: [
-          "Comprehensive coverage",
-          "Digital health services",
-          "24/7 medical hotline",
-          "Preventive care programs",
-        ],
-        type: "Public",
-      },
-      {
-        id: "ottonova",
-        name: "Ottonova",
-        logo: "/products/ottonova-logo.png",
-        monthlyPrice: 450,
-        description: "Modern digital private health insurance",
-        features: [
-          "Premium private coverage",
-          "Fast appointments with specialists",
-          "Digital first approach",
-          "Cashback on unused benefits",
-        ],
-        type: "Private",
-      },
-      {
-        id: "hallesche",
-        name: "Hallesche",
-        logo: "/products/hallesche-logo.png",
-        monthlyPrice: 520,
-        description: "Traditional private health insurance provider",
-        features: [
-          "Full private coverage",
-          "Chief physician treatment",
-          "Single room hospital stays",
-          "Alternative medicine coverage",
-        ],
-        type: "Private",
-      },
-    ];
-  };
+      return {
+        monthly: Math.round(monthlyPremium * 100) / 100,
+        employeeMonthly: Math.round(employeeMonthly * 100) / 100,
+        annual: Math.round(totalAnnual * 100) / 100,
+      };
+    },
+    []
+  );
 
   useEffect(() => {
     async function fetchCountries() {
       try {
-        // Check cache first
         const cached = localStorage.getItem("countries_cache");
         if (cached) {
           const { data, timestamp } = JSON.parse(cached);
@@ -169,7 +109,7 @@ export default function InsuranceJourney() {
         const data: CountryAPI[] = await res.json();
 
         const list = data
-          .map((c: CountryAPI) => ({
+          .map((c) => ({
             name: c.name.common,
             flag: c.flags.svg || c.flags.png,
             code: c.cca2,
@@ -179,7 +119,6 @@ export default function InsuranceJourney() {
 
         setCountries(list);
 
-        // Cache the result
         localStorage.setItem(
           "countries_cache",
           JSON.stringify({
@@ -195,10 +134,12 @@ export default function InsuranceJourney() {
     fetchCountries();
   }, []);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsDropdownOpen(false);
       }
     }
@@ -207,7 +148,6 @@ export default function InsuranceJourney() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Auto-dismiss popup
   useEffect(() => {
     if (popup) {
       const timer = setTimeout(() => setPopup(""), 3000);
@@ -216,41 +156,42 @@ export default function InsuranceJourney() {
   }, [popup]);
 
   // =============== HANDLERS ====================
-  const handleEmploymentSelect = (val: string) => {
+  const handleEmploymentSelect = useCallback((val: string) => {
     setEmploymentStatus(val);
-    if (val === "Others") {
-      setStep(99);
-    } else {
-      setStep(2);
-    }
-  };
+    setStep(val === "Others" ? 99 : 2);
+  }, [setEmploymentStatus]);
 
-  const handleIncomeSelect = (val: string) => {
+  const handleIncomeSelect = useCallback((val: string) => {
     setIncomeRange(val);
-    if (val === "<30000") {
-      setStep(98); // Contact form
-    } else if (val === ">77400") {
-      setStep(4); // DOB step for API call
+    
+    // Set the actual income value based on range
+    let income = 50000; // Default middle value
+    if (val === ">77400") {
+      income = 80000; // Use consistent value for high income
     } else if (val === "30001-77400") {
-      setStep(3); // Product selection step
+      income = 50000; // Middle value
     }
-  };
+    setActualIncome(income);
+    
+    if (val === "<30000") {
+      setStep(98);
+    } else if (val === ">77400" || val === "30001-77400") {
+      setStep(3); // Children question first for both ranges
+    }
+  }, [setIncomeRange, setActualIncome]);
 
-  const handleOtherSubmit = () => {
-    // Validate fields
+  const handleOtherSubmit = useCallback(() => {
     if (!otherEmployment || !email || !phone) {
       setPopup("Please fill in all fields");
       return;
     }
 
-    // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       setPopup("Please enter a valid email address");
       return;
     }
 
-    // Basic phone validation
     const phoneRegex = /^\+?[\d\s-]{10,}$/;
     if (!phoneRegex.test(phone)) {
       setPopup("Please enter a valid phone number");
@@ -261,9 +202,9 @@ export default function InsuranceJourney() {
     setTimeout(() => {
       router.push("/products/privateProducts");
     }, 2000);
-  };
+  }, [otherEmployment, email, phone, router]);
 
-  const handleContactSubmit = () => {
+  const handleContactSubmit = useCallback(() => {
     if (!email || !phone) {
       setPopup("Please fill in all fields");
       return;
@@ -285,35 +226,29 @@ export default function InsuranceJourney() {
     setTimeout(() => {
       router.push("/products/privateProducts");
     }, 2000);
-  };
+  }, [email, phone, router]);
 
-  const handleDobSubmit = () => {
+  const handleChildrenSelection = useCallback((hasKids: boolean) => {
+    setHasChildren(hasKids);
+    setStep(4); // Move to DOB step after children selection
+  }, []);
+
+  const handleDobSubmit = useCallback(() => {
     if (!dob) {
       setPopup("Please select your birth year");
       return;
     }
     setStep(5); // Move to country selection
-  };
+  }, [dob]);
 
-  const handleChildrenSelection = (hasKids: boolean) => {
-    setHasChildren(hasKids);
-    // Show products after selection
-  };
-
-  const handleProductSelect = (productId: string) => {
-    setSelectedProduct(productId);
-    // Show coming soon popup for all products
-    setPopup("🚀 Coming Soon! This feature is under development.");
-  };
-
-  const handleCountrySelect = (countryName: string) => {
+  const handleCountrySelect = useCallback((countryName: string) => {
     setSelectedCountry(countryName);
     setIsDropdownOpen(false);
     setSearchTerm("");
-  };
+  }, [setSelectedCountry]);
 
-  // API Call to get premium (for >77400 income)
-  const handleCountrySubmit = async () => {
+  // Handle Calculate Button Click
+  const handleCountrySubmit = useCallback(async () => {
     if (!selectedCountry) {
       setPopup("Please select a country");
       return;
@@ -321,52 +256,64 @@ export default function InsuranceJourney() {
 
     setLoading(true);
 
-    // Convert birth year to full date format (YYYY-01-01)
-    const fullDob = `${dob}-01-01`;
+    const currentYear = new Date().getFullYear();
+    const age = dob ? currentYear - parseInt(dob) : 25;
 
-    // Get coverage start date (today)
-    const coverageStart = new Date().toISOString().split("T")[0];
+    // Use the stored actualIncome from the store
+    const yearlyIncome = useJourneyStore.getState().actualIncome || 50000;
 
-    const payload = {
-      tarifId: "34572",
-      vorname: "User",
-      name: "Customer",
-      geburtsdatum: fullDob,
-      beginn: coverageStart,
-    };
+    // Calculate TK Premium - THIS WILL BE THE SAME FOR BOTH
+    const tkPrice = calculateTKPrice(yearlyIncome, hasChildren ?? false, age);
+    setTKPremium(tkPrice.employeeMonthly);
 
-    try {
-      const res = await fetch("/api/getOfferEinzel", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+    // Only call API for >77400 range to get Hallesche premium
+    if (incomeRange === ">77400") {
+      const fullDob = `${dob}-01-01`;
+      const coverageStart = new Date().toISOString().split("T")[0];
 
-      if (!res.ok) {
-        const txt = await res.text();
-        throw new Error(`Server ${res.status}: ${txt}`);
+      const payload = {
+        tarifId: "34572",
+        vorname: "User",
+        name: "Customer",
+        geburtsdatum: fullDob,
+        beginn: coverageStart,
+      };
+
+      try {
+        const res = await fetch("/api/getOfferEinzel", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+
+        if (!res.ok) {
+          const txt = await res.text();
+          throw new Error(`Server ${res.status}: ${txt}`);
+        }
+
+        const json = await res.json();
+        setPremium(json.premium ?? null);
+        setDocuments(json.documents ?? []);
+      } catch (e: unknown) {
+        if (e instanceof Error) {
+          setPopup(`Error: ${e.message}`);
+        } else {
+          setPopup("Failed to calculate premium. Please try again.");
+        }
+        setLoading(false);
+        return;
       }
-
-      const json = await res.json();
-
-      // Save to Zustand premium store
-      setPremium(json.premium ?? null);
-      setDocuments(json.documents ?? []);
-
-      // Navigate to calculator/results page
-      router.push("/calculator");
-    } catch (e: unknown) {
-      if (e instanceof Error) {
-        setPopup(`Error: ${e.message}`);
-      } else {
-        setPopup("Failed to calculate premium. Please try again.");
-      }
-    } finally {
-      setLoading(false);
+    } else {
+      // For middle range, set premium to null (we'll show random products)
+      setPremium(null);
     }
-  };
 
-  const stepImages: Record<number, string> = {
+    setLoading(false);
+    // Navigate to calculator page
+    router.push("/calculator");
+  }, [selectedCountry, dob, incomeRange, hasChildren, calculateTKPrice, setTKPremium, setPremium, setDocuments, router]);
+
+  const stepImages: Record<number, string> = useMemo(() => ({
     1: "/gifs_assets/step1.gif",
     99: "/gifs_assets/step2.gif",
     2: "/gifs_assets/step3.svg",
@@ -374,52 +321,37 @@ export default function InsuranceJourney() {
     98: "/gifs_assets/step2.gif",
     4: "/gifs_assets/step2.gif",
     5: "/gifs_assets/step3.svg",
-  };
+  }), []);
 
-  // Get selected country data
-  const selectedCountryData = countries.find((c) => c.name === selectedCountry);
-
-  // Filter countries based on search
-  const filteredCountries = countries.filter((c) =>
-    c.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const selectedCountryData = useMemo(
+    () => countries.find((c) => c.name === selectedCountry),
+    [countries, selectedCountry]
   );
 
-  // Generate birth year options (from 1924 to current year - 18)
+  const filteredCountries = useMemo(
+    () => countries.filter((c) =>
+      c.name.toLowerCase().includes(searchTerm.toLowerCase())
+    ),
+    [countries, searchTerm]
+  );
+
   const currentYear = new Date().getFullYear();
-  const birthYears = Array.from({ length: 100 }, (_, i) => currentYear - 18 - i);
-
-  // Get mock products
-  const products = getMockProducts();
-
-  // Calculate progress
-  const getProgress = () => {
-    const stepMap: Record<number, number> = { 1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 98: 2, 99: 1 };
-    return ((stepMap[step] || 0) / 5) * 100;
-  };
+  const birthYears = useMemo(
+    () => Array.from({ length: 100 }, (_, i) => currentYear - 18 - i),
+    [currentYear]
+  );
 
   // =============== UI ====================
   return (
     <section className="bg-gradient-to-br from-[#f5f0ff] to-white py-16 px-4 md:px-10 min-h-screen">
       <div className="max-w-3xl mx-auto text-center mb-10">
-        <h2 className="text-3xl md:text-4xl font-bold text-black mb-3">
+        <h1 className="text-3xl md:text-4xl font-bold text-black mb-3">
           Just 2 minutes to find your best-fit insurance type.
-        </h2>
+        </h1>
         <p className="text-gray-500 text-base md:text-lg">
           No calls, no commitments — unless you want them.
         </p>
       </div>
-
-      {/* Progress Bar */}
-      {/* {step !== 99 && step !== 98 && (
-        <div className="w-full max-w-3xl mx-auto mb-8">
-          <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-primary transition-all duration-300"
-              style={{ width: `${getProgress()}%` }}
-            />
-          </div>
-        </div>
-      )} */}
 
       {/* Step 1: Employment Status */}
       {step === 1 && (
@@ -428,23 +360,24 @@ export default function InsuranceJourney() {
             <div className="flex justify-center items-center">
               <Image
                 src={stepImages[1]}
-                alt="Employment GIF"
+                alt="Employment selection"
                 width={400}
                 height={300}
                 className="w-full max-w-md"
+                priority
                 unoptimized
               />
             </div>
 
             <div className="space-y-4">
-              <h3 className="text-xl font-semibold mb-6 text-gray-700">
+              <h2 className="text-xl font-semibold mb-6 text-gray-700">
                 What&apos;s your Employment Status?
-              </h3>
+              </h2>
               {["Self-employed/Freelancer", "Employed", "Others"].map((item) => (
                 <button
                   key={item}
                   onClick={() => handleEmploymentSelect(item)}
-                  className="w-full p-4 cursor-pointer border-2 rounded-lg text-left hover:border-primary hover:bg-primary/5 transition"
+                  className="w-full p-4 cursor-pointer border-2 rounded-lg text-left hover:border-primary hover:bg-primary/5 transition focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
                 >
                   {item}
                 </button>
@@ -461,7 +394,7 @@ export default function InsuranceJourney() {
             <div className="flex justify-center items-center">
               <Image
                 src={stepImages[99]}
-                alt="Other Employment GIF"
+                alt="Contact details"
                 width={400}
                 height={300}
                 className="w-full max-w-md"
@@ -470,11 +403,12 @@ export default function InsuranceJourney() {
             </div>
 
             <div className="space-y-4">
-              <h3 className="text-xl font-semibold mb-4 text-gray-700">
+              <h2 className="text-xl font-semibold mb-4 text-gray-700">
                 Please provide your details
-              </h3>
+              </h2>
 
               <input
+                type="text"
                 className="w-full border-2 p-3 rounded-lg focus:border-primary focus:outline-none"
                 placeholder="Enter employment type"
                 value={otherEmployment}
@@ -499,7 +433,7 @@ export default function InsuranceJourney() {
 
               <button
                 onClick={handleOtherSubmit}
-                className="px-6 py-3 bg-primary text-white rounded-lg w-full hover:bg-primary/90 transition font-semibold"
+                className="px-6 py-3 bg-primary text-white rounded-lg w-full hover:bg-primary/90 transition font-semibold focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
               >
                 Submit
               </button>
@@ -515,7 +449,7 @@ export default function InsuranceJourney() {
             <div className="flex justify-center items-center">
               <Image
                 src={stepImages[2]}
-                alt="Income GIF"
+                alt="Income selection"
                 width={400}
                 height={300}
                 className="w-full max-w-md"
@@ -524,24 +458,24 @@ export default function InsuranceJourney() {
             </div>
 
             <div className="space-y-4">
-              <h3 className="text-xl font-semibold mb-6 text-gray-700">
+              <h2 className="text-xl font-semibold mb-6 text-gray-700">
                 How much is your yearly gross (pretax) income?
-              </h3>
+              </h2>
               <button
                 onClick={() => handleIncomeSelect("<30000")}
-                className="w-full p-4 border-2 cursor-pointer rounded-lg text-left hover:border-primary hover:bg-primary/5 transition"
+                className="w-full p-4 border-2 cursor-pointer rounded-lg text-left hover:border-primary hover:bg-primary/5 transition focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
               >
                 &lt; €30,000
               </button>
               <button
                 onClick={() => handleIncomeSelect("30001-77400")}
-                className="w-full p-4 border-2 cursor-pointer rounded-lg text-left hover:border-primary hover:bg-primary/5 transition"
+                className="w-full p-4 border-2 cursor-pointer rounded-lg text-left hover:border-primary hover:bg-primary/5 transition focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
               >
                 €30,001 – €77,400
               </button>
               <button
                 onClick={() => handleIncomeSelect(">77400")}
-                className="w-full p-4 border-2 cursor-pointer rounded-lg text-left hover:border-primary hover:bg-primary/5 transition"
+                className="w-full p-4 border-2 cursor-pointer rounded-lg text-left hover:border-primary hover:bg-primary/5 transition focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
               >
                 &gt; €77,400
               </button>
@@ -550,113 +484,73 @@ export default function InsuranceJourney() {
         </div>
       )}
 
-      {/* Step 3: Product Selection for Middle Income (30,001 - 77,400) */}
-      {step === 3 && (
-        <div className="w-full max-w-6xl mx-auto">
-          <div className="space-y-8">
-            {/* Children Question for TK Calculation */}
-            {hasChildren === null && (
-              <div className="text-center mb-8">
-                <h3 className="text-2xl font-semibold mb-6 text-gray-700">
-                  Do you have children?
-                </h3>
-                <p className="text-sm text-gray-500 mb-6">
-                  This affects your care insurance rate
-                </p>
-                <div className="flex gap-4 justify-center">
-                  <button
-                    onClick={() => handleChildrenSelection(true)}
-                    className="px-8 py-3 border-2 cursor-pointer rounded-lg hover:border-primary hover:bg-primary/5 transition font-semibold"
-                  >
-                    Yes, I have children
-                  </button>
-                  <button
-                    onClick={() => handleChildrenSelection(false)}
-                    className="px-8 py-3 border-2 cursor-pointer rounded-lg hover:border-primary hover:bg-primary/5 transition font-semibold"
-                  >
-                    No children
-                  </button>
-                </div>
-              </div>
-            )}
+    {/* Step 3: Children Question (First for both ranges) */}
+{step === 3 && (
+  <div className="w-full max-w-6xl mx-auto">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+      <div className="flex justify-center items-center">
+        <Image
+          src={stepImages[3]}
+          alt="Children question"
+          width={400}
+          height={300}
+          className="w-full max-w-md"
+          unoptimized
+        />
+      </div>
 
-            {/* Product Cards */}
-            {hasChildren !== null && (
-              <>
-                <h3 className="text-2xl font-semibold text-center text-gray-700 mb-8">
-                  Choose Your Insurance Plan
-                </h3>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {products.map((product) => (
-                    <div
-                      key={product.id}
-                      className="border-2 rounded-xl p-6 transition-all hover:border-primary hover:shadow-lg bg-white"
-                    >
-                      <div className="flex items-center justify-between mb-4">
-                        <span className="text-xs font-semibold px-3 py-1 bg-primary/10 text-primary rounded-full">
-                          {product.type}
-                        </span>
-                      </div>
-
-                      <h4 className="text-xl font-bold text-gray-900 mb-2">
-                        {product.name}
-                      </h4>
-
-                      <div className="mb-4">
-                        <span className="text-3xl font-bold text-primary">
-                          €{product.monthlyPrice}
-                        </span>
-                        <span className="text-gray-500 text-sm">/month</span>
-                        {product.id === "tk" && (
-                          <p className="text-xs text-gray-500 mt-1">
-                            (Employee portion)
-                          </p>
-                        )}
-                      </div>
-
-                      <p className="text-sm text-gray-600 mb-4">
-                        {product.description}
-                      </p>
-
-                      <ul className="space-y-2 mb-6">
-                        {product.features.map((feature, idx) => (
-                          <li
-                            key={idx}
-                            className="flex items-start gap-2 text-sm text-gray-600"
-                          >
-                            <svg
-                              className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M5 13l4 4L19 7"
-                              />
-                            </svg>
-                            {feature}
-                          </li>
-                        ))}
-                      </ul>
-
-                      <button
-                        onClick={() => handleProductSelect(product.id)}
-                        className="w-full py-3 bg-primary text-white rounded-lg font-semibold hover:bg-primary/90 transition-all"
-                      >
-                        Choose Plan
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </>
-            )}
+      <div className="space-y-4">
+        <h2 className="text-xl font-semibold mb-4 text-gray-700">
+          Do you have children?
+        </h2>
+        <p className="text-sm text-gray-500 mb-6">
+          This affects your care insurance rate
+        </p>
+        
+        <button
+          onClick={() => handleChildrenSelection(true)}
+          className={`w-full p-4 border-2 cursor-pointer rounded-lg text-left transition focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
+            hasChildren === true
+              ? 'border-primary bg-primary/5'
+              : 'border-gray-300 hover:border-primary hover:bg-primary/5'
+          }`}
+        >
+          <div className="flex items-center gap-3">
+            <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+              hasChildren === true ? 'border-primary' : 'border-gray-300'
+            }`}>
+              {hasChildren === true && (
+                <div className="w-2.5 h-2.5 rounded-full bg-primary"></div>
+              )}
+            </div>
+            <span className="font-semibold">Yes, I have children</span>
           </div>
-        </div>
-      )}
+        </button>
+
+        <button
+          onClick={() => handleChildrenSelection(false)}
+          className={`w-full p-4 border-2 rounded-lg text-left transition focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
+            hasChildren === false
+              ? 'border-primary bg-primary/5'
+              : 'border-gray-300 hover:border-primary hover:bg-primary/5'
+          }`}
+        >
+          <div className="flex items-center gap-3">
+            <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+              hasChildren === false ? 'border-primary' : 'border-gray-300'
+            }`}>
+              {hasChildren === false && (
+                <div className="w-2.5 h-2.5 rounded-full bg-primary"></div>
+              )}
+            </div>
+            <span className="font-semibold">No children</span>
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
 
       {/* Step 98: Email + Phone Step (for <30,000 income) */}
       {step === 98 && (
@@ -665,7 +559,7 @@ export default function InsuranceJourney() {
             <div className="flex justify-center items-center">
               <Image
                 src={stepImages[98]}
-                alt="Contact GIF"
+                alt="Contact form"
                 width={400}
                 height={300}
                 className="w-full max-w-md"
@@ -674,9 +568,9 @@ export default function InsuranceJourney() {
             </div>
 
             <div className="space-y-4">
-              <h3 className="text-xl font-semibold mb-4 text-gray-700">
+              <h2 className="text-xl font-semibold mb-4 text-gray-700">
                 Enter your contact details
-              </h3>
+              </h2>
               <p className="text-sm text-gray-500 mb-4">
                 We&apos;ll help you find the best option for your income range
               </p>
@@ -696,7 +590,7 @@ export default function InsuranceJourney() {
               />
               <button
                 onClick={handleContactSubmit}
-                className="px-6 py-3 bg-primary cursor-pointer text-white rounded-lg w-full hover:bg-primary/90 transition font-semibold"
+                className="px-6 py-3 bg-primary cursor-pointer text-white rounded-lg w-full hover:bg-primary/90 transition font-semibold focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
               >
                 Submit
               </button>
@@ -705,14 +599,14 @@ export default function InsuranceJourney() {
         </div>
       )}
 
-      {/* Step 4: Birth Year */}
+      {/* Step 4: Birth Year (for both middle and high income) */}
       {step === 4 && (
         <div className="w-full max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div className="flex justify-center items-center">
               <Image
                 src={stepImages[4]}
-                alt="DOB GIF"
+                alt="Birth year selection"
                 width={400}
                 height={300}
                 className="w-full max-w-md"
@@ -721,9 +615,9 @@ export default function InsuranceJourney() {
             </div>
 
             <div className="space-y-4">
-              <h3 className="text-xl font-semibold mb-4 text-gray-700">
+              <h2 className="text-xl font-semibold mb-4 text-gray-700">
                 What&apos;s your Birth Year?
-              </h3>
+              </h2>
               <select
                 className="w-full cursor-pointer border-2 p-3 rounded-lg focus:border-primary focus:outline-none"
                 value={dob}
@@ -739,14 +633,17 @@ export default function InsuranceJourney() {
 
               {dob && (
                 <div className="text-sm text-gray-600 bg-blue-50 p-3 rounded-lg">
-                  Age: <span className="font-semibold">{currentYear - parseInt(dob)} years</span>
+                  Age:{" "}
+                  <span className="font-semibold">
+                    {currentYear - parseInt(dob)} years
+                  </span>
                 </div>
               )}
 
               <button
                 onClick={handleDobSubmit}
                 disabled={!dob}
-                className={`px-6 py-3 rounded-lg w-full font-semibold transition-all ${
+                className={`px-6 py-3 rounded-lg w-full font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
                   dob
                     ? "bg-primary text-white cursor-pointer hover:bg-primary/90"
                     : "bg-gray-300 text-gray-500 cursor-not-allowed"
@@ -759,14 +656,14 @@ export default function InsuranceJourney() {
         </div>
       )}
 
-      {/* Step 5: Country Select (for >77,400 income) */}
+      {/* Step 5: Country Select (for both ranges) */}
       {step === 5 && (
         <div className="w-full max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div className="flex justify-center items-center">
               <Image
                 src={stepImages[5]}
-                alt="Country GIF"
+                alt="Country selection"
                 width={400}
                 height={300}
                 className="w-full max-w-md"
@@ -775,15 +672,14 @@ export default function InsuranceJourney() {
             </div>
 
             <div className="space-y-4">
-              <h3 className="text-xl font-semibold mb-4 text-gray-700">
+              <h2 className="text-xl font-semibold mb-4 text-gray-700">
                 Where are you moving from?
-              </h3>
+              </h2>
 
-              {/* Custom Country Dropdown */}
               <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  className="w-full cursor-pointer border-2 p-3 rounded-lg text-left flex items-center justify-between hover:border-primary transition focus:border-primary focus:outline-none"
+                  className="w-full cursor-pointer border-2 p-3 rounded-lg text-left flex items-center justify-between hover:border-primary transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
                   disabled={loading}
                 >
                   <div className="flex items-center gap-3">
@@ -791,7 +687,7 @@ export default function InsuranceJourney() {
                       <>
                         <Image
                           src={selectedCountryData.flag}
-                          alt={selectedCountryData.name}
+                          alt=""
                           width={24}
                           height={16}
                           className="rounded"
@@ -841,7 +737,7 @@ export default function InsuranceJourney() {
                           >
                             <Image
                               src={country.flag}
-                              alt={country.name}
+                              alt=""
                               width={24}
                               height={16}
                               className="rounded"
@@ -862,7 +758,7 @@ export default function InsuranceJourney() {
               <button
                 onClick={handleCountrySubmit}
                 disabled={loading || !selectedCountry}
-                className={`px-6 py-3 rounded-lg w-full font-semibold transition-all ${
+                className={`px-6 py-3 rounded-lg w-full font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
                   loading || !selectedCountry
                     ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                     : "bg-primary text-white cursor-pointer hover:bg-primary/90"
@@ -897,9 +793,12 @@ export default function InsuranceJourney() {
         </div>
       )}
 
-      {/* POPUP - Enhanced with animation */}
+      {/* POPUP */}
       {popup && (
-        <div className="fixed bottom-10 left-1/2 -translate-x-1/2 bg-primary text-white px-6 py-3 rounded-lg shadow-xl z-50 max-w-md text-center animate-bounce">
+        <div 
+          role="alert"
+          className="fixed bottom-10 left-1/2 -translate-x-1/2 bg-primary text-white px-6 py-3 rounded-lg shadow-xl z-50 max-w-md text-center animate-bounce"
+        >
           {popup}
         </div>
       )}
