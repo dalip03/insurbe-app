@@ -107,7 +107,7 @@ export default function InsuranceJourney() {
     return [
       {
         id: "tk",
-        name: "TK",
+        name: "TK ",
         logo: "/products/tk-logo.png",
         monthlyPrice: tkPrice.employeeMonthly,
         description: "Germany's most popular public health insurance",
@@ -302,22 +302,8 @@ export default function InsuranceJourney() {
 
   const handleProductSelect = (productId: string) => {
     setSelectedProduct(productId);
-    
-    if (productId === "tk") {
-      // For TK, go to DOB step if not already collected
-      if (!dob) {
-        setStep(4);
-      } else {
-        // Show summary or next step
-        setPopup("TK selected! Proceeding...");
-        setTimeout(() => {
-          router.push("/calculator");
-        }, 1500);
-      }
-    } else {
-      // For private insurance, go to full journey
-      setStep(4);
-    }
+    // Show coming soon popup for all products
+    setPopup("🚀 Coming Soon! This feature is under development.");
   };
 
   const handleCountrySelect = (countryName: string) => {
@@ -414,7 +400,7 @@ export default function InsuranceJourney() {
   // =============== UI ====================
   return (
     <section className="bg-gradient-to-br from-[#f5f0ff] to-white py-16 px-4 md:px-10 min-h-screen">
-      <div className="max-w-4xl mx-auto text-center mb-10">
+      <div className="max-w-3xl mx-auto text-center mb-10">
         <h2 className="text-3xl md:text-4xl font-bold text-black mb-3">
           Just 2 minutes to find your best-fit insurance type.
         </h2>
@@ -423,8 +409,8 @@ export default function InsuranceJourney() {
         </p>
       </div>
 
-      {/* Progress Bar
-      {step !== 99 && step !== 98 && (
+      {/* Progress Bar */}
+      {/* {step !== 99 && step !== 98 && (
         <div className="w-full max-w-3xl mx-auto mb-8">
           <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
             <div
@@ -605,12 +591,7 @@ export default function InsuranceJourney() {
                   {products.map((product) => (
                     <div
                       key={product.id}
-                      className={`border-2 rounded-xl p-6 cursor-pointer transition-all ${
-                        selectedProduct === product.id
-                          ? "border-primary bg-primary/5 shadow-lg"
-                          : "border-gray-200 hover:border-primary hover:shadow-md"
-                      }`}
-                      onClick={() => handleProductSelect(product.id)}
+                      className="border-2 rounded-xl p-6 transition-all hover:border-primary hover:shadow-lg bg-white"
                     >
                       <div className="flex items-center justify-between mb-4">
                         <span className="text-xs font-semibold px-3 py-1 bg-primary/10 text-primary rounded-full">
@@ -638,7 +619,7 @@ export default function InsuranceJourney() {
                         {product.description}
                       </p>
 
-                      <ul className="space-y-2">
+                      <ul className="space-y-2 mb-6">
                         {product.features.map((feature, idx) => (
                           <li
                             key={idx}
@@ -663,17 +644,10 @@ export default function InsuranceJourney() {
                       </ul>
 
                       <button
-                        className={`w-full mt-6 py-3 rounded-lg font-semibold transition-all ${
-                          selectedProduct === product.id
-                            ? "bg-primary text-white"
-                            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                        }`}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleProductSelect(product.id);
-                        }}
+                        onClick={() => handleProductSelect(product.id)}
+                        className="w-full py-3 bg-primary text-white rounded-lg font-semibold hover:bg-primary/90 transition-all"
                       >
-                        {selectedProduct === product.id ? "Selected" : "Select Plan"}
+                        Choose Plan
                       </button>
                     </div>
                   ))}
@@ -923,9 +897,9 @@ export default function InsuranceJourney() {
         </div>
       )}
 
-      {/* POPUP */}
+      {/* POPUP - Enhanced with animation */}
       {popup && (
-        <div className="fixed bottom-10 left-1/2 -translate-x-1/2 bg-primary text-white px-6 py-3 rounded-lg shadow-lg z-50 max-w-md text-center">
+        <div className="fixed bottom-10 left-1/2 -translate-x-1/2 bg-primary text-white px-6 py-3 rounded-lg shadow-xl z-50 max-w-md text-center animate-bounce">
           {popup}
         </div>
       )}
