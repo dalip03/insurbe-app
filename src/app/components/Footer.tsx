@@ -37,9 +37,9 @@ export default function Footer() {
                 <div className="text-2xl font-bold ">
                   <Link href="/" className="font-bold font-serif">
                     <Image
-                      src="/img/footerIcon1.svg"
+                      src="/icons/gdpr.svg"
                       alt="Logo"
-                      width={80}
+                      width={120}
                       height={20}
                     />
                   </Link>
