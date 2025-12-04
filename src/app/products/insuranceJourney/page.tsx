@@ -167,10 +167,11 @@ const handleIncomeSelect = useCallback((val: string) => {
   // Set the actual income value based on range
   let income = 50000; // Default
   if (val === ">77400") {
-    income = 80000; // Will be capped at €69,750
+    // ✅ Use €66,150 - TK caps all incomes at this level
+    income = 66150; // Produces €602.24 (no children)
   } else if (val === "30001-77400") {
-    // ✅ CHANGED: Use €66,150 to match TK's amounts
-    income = 66150; // Matches TK website (2024 cap)
+    // ✅ Use €66,150 - matches TK website
+    income = 66150; // Produces €602.24 (no children)
   }
   setActualIncome(income);
   
@@ -180,6 +181,7 @@ const handleIncomeSelect = useCallback((val: string) => {
     setStep(3); // Children question first for both ranges
   }
 }, [setIncomeRange, setActualIncome]);
+
 
 
 
