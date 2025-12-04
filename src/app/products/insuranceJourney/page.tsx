@@ -161,24 +161,27 @@ export default function InsuranceJourney() {
     setStep(val === "Others" ? 99 : 2);
   }, [setEmploymentStatus]);
 
-  const handleIncomeSelect = useCallback((val: string) => {
-    setIncomeRange(val);
-    
-    // Set the actual income value based on range
-    let income = 50000; // Default middle value
-    if (val === ">77400") {
-      income = 80000; // Use consistent value for high income
-    } else if (val === "30001-77400") {
-      income = 50000; // Middle value
-    }
-    setActualIncome(income);
-    
-    if (val === "<30000") {
-      setStep(98);
-    } else if (val === ">77400" || val === "30001-77400") {
-      setStep(3); // Children question first for both ranges
-    }
-  }, [setIncomeRange, setActualIncome]);
+const handleIncomeSelect = useCallback((val: string) => {
+  setIncomeRange(val);
+  
+  // Set the actual income value based on range
+  let income = 50000; // Default
+  if (val === ">77400") {
+    income = 80000; // Will be capped at €69,750
+  } else if (val === "30001-77400") {
+    // ✅ CHANGED: Use €66,150 to match TK's amounts
+    income = 66150; // Matches TK website (2024 cap)
+  }
+  setActualIncome(income);
+  
+  if (val === "<30000") {
+    setStep(98);
+  } else if (val === ">77400" || val === "30001-77400") {
+    setStep(3); // Children question first for both ranges
+  }
+}, [setIncomeRange, setActualIncome]);
+
+
 
   const handleOtherSubmit = useCallback(() => {
     if (!otherEmployment || !email || !phone) {
