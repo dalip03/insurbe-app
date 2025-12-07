@@ -8,112 +8,80 @@ export default function Footer() {
       <ContactBanner />
       <footer className="bg-primary text-white py-4 px-6 pt-50 -mt-58 relative z-10">
         <div className="max-w-6xl mx-auto">
-          <div className="flex flex-col md:flex-row justify-between gap-8">
+          <div className="flex flex-col md:flex-row justify-between gap-12">
+
             {/* Brand Info */}
-            <div className="space-y-4 max-w-md">
+            <div className="space-y-4 max-w-md text-center md:text-left mx-auto md:mx-0">
               {/* Logo */}
-              <div className="text-2xl font-bold">
+              <div className="flex justify-center md:justify-start py-2">
                 <Link href="/" className="font-bold font-serif">
-                  <Image src="/icons/logo_white.png" alt="Logo" width={140} height={20} />
+                  <Image
+                    src="/icons/logo_white.png"
+                    alt="Logo"
+                    width={140}
+                    height={20}
+                  />
                 </Link>
-              </div>{" "}
-              <p className="text-sm text-gray-400 md:block hidden">
-                The only digital solution for all your <br /> insurance needs.
-              </p>
-              <p className="text-sm text-gray-400 md:hidden block">
+              </div>
+
+              {/* Subtitle */}
+              <p className="text-sm text-gray-300 px-12 md:px-0">
                 The only digital solution for all your insurance needs.
               </p>
-              <div className="flex gap-4">
-                {/* <div className="text-2x font-bold flex items-center">
-                  <Link href="/" className="font-bold font-serif">
-                    <Image
-                      src="/img/footerIcon2.svg"
-                      alt="Logo"
-                      width={140}
-                      height={20}
-                    />
-                  </Link>
-                </div>{" "} */}
-                <div className="text-2xl font-bold ">
-                  <Link href="/" className="font-bold font-serif">
-                    <Image
-                      src="/icons/gdpr.svg"
-                      alt="Logo"
-                      width={120}
-                      height={20}
-                    />
-                  </Link>
-                </div>{" "}
+
+              {/* GDPR Icon */}
+              <div className="flex justify-center md:justify-start py-4">
+                <Link href="/">
+                  <Image
+                    src="/icons/gdpr.svg"
+                    alt="GDPR Logo"
+                    width={170}
+                    height={60}
+                  />
+                </Link>
               </div>
-              <p className="text-sm text-[#FFFFFFCC]">
-                Insurbe is a registered insurance intermediary in <br />{" "}
-                Germany
+
+              {/* Register Info */}
+              <p className="text-sm text-[#FFFFFFCC] px-12 md:px-0">
+                Insurbe is a registered insurance intermediary in Germany
               </p>
             </div>
 
-            {/* Navigation Links */}
-            <div className="grid grid-cols-2 gap-14 md:px-20 px-4">
+            {/* Navigation + Links */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-14 text-center md:text-left mx-auto md:mx-0">
+
+              {/* Navigation */}
               <div>
                 <h2 className="text-xl font-semibold mb-4">Navigation</h2>
                 <ul className="space-y-4">
-                  <li>
-                    <a href="#" className="hover:text-purple-700 transition">
-                      Home
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="hover:text-purple-700 transition">
-                      Products
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="hover:text-purple-700 transition">
-                      Private Health
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="hover:text-purple-700 transition">
-                      Contact
-                    </a>
-                  </li>
+                  <li><a href="#" className="hover:text-purple-300">Home</a></li>
+                  <li><a href="#" className="hover:text-purple-300">Products</a></li>
+                  <li><a href="#" className="hover:text-purple-300">Private Health</a></li>
+                  <li><a href="#" className="hover:text-purple-300">Contact</a></li>
                 </ul>
               </div>
+
+              {/* Links */}
               <div>
                 <h2 className="text-xl font-semibold mb-4">Links</h2>
                 <ul className="space-y-4">
-                  <li>
-                    <a href="#" className="hover:text-purple-700 transition">
-                      Imprint
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="hover:text-purple-700 transition">
-                      Data Privacy
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="hover:text-purple-700 transition">
-                      Terms & Conditions
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="hover:text-purple-700 transition">
-                      About Us
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="hover:text-purple-700 transition">
-                      Careers
-                    </a>
-                  </li>
+                  <li><a href="#" className="hover:text-purple-300">Imprint</a></li>
+                  <li><a href="#" className="hover:text-purple-300">Data Privacy</a></li>
+                  <li><a href="#" className="hover:text-purple-300">Terms & Conditions</a></li>
+                  <li><a href="#" className="hover:text-purple-300">About Us</a></li>
+                  <li><a href="#" className="hover:text-purple-300">Careers</a></li>
                 </ul>
               </div>
+
             </div>
+
           </div>
 
           {/* Copyright */}
-          <div className="border-t border-gray-200 mt-8 pt-8 text-start text-sm text-white">
-            Copyright © 2024 Insurbe. All rights reserved.
+          <div className="border-t border-gray-400 mt-10 pt-6 text-center md:text-left text-sm text-white/90">
+            Copyright © 2025 Insure.  
+            <br className="md:hidden" />
+            All rights reserved.
           </div>
         </div>
       </footer>

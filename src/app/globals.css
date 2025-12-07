@@ -3,7 +3,7 @@
 @import "slick-carousel/slick/slick-theme.css";
 
 :root {
-  --background: #ffffff;
+ --background: linear-gradient(to bottom right, #fdf3ff, #ffffff);
   --foreground: #171717;
   --primary: #531D6F;
   --secondary: #ffffff;

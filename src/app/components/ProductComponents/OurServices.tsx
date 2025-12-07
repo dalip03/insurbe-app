@@ -75,7 +75,7 @@ export default function OurServices() {
   const [openModal, setOpenModal] = useState<null | "public" | "private">(null);
 
   return (
-    <section className="bg-gradient-to-br from-[#f5f0ff] to-[#fefcfc] py-6 px-4 md:px-16 ">
+    <section className="py-6 px-4 md:px-16 ">
       <div className="max-w-6xl mx-auto text-center">
         <span className="inline-block bg-white border border-gray-200 px-4 py-1 rounded-full text-xs font-medium text-gray-500 mb-4">
           Unbreakable Quality

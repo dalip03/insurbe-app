@@ -351,7 +351,7 @@ export default function InsuranceSteps() {
   };
 
   return (
-    <section className="bg-gradient-to-br from-[#f5f0ff] to-white py-16 px-4 md:px-10">
+    <section className=" py-16 px-4 md:px-10">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-black mb-3">

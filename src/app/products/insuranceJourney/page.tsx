@@ -178,7 +178,7 @@ const handleIncomeSelect = useCallback((val: string) => {
   if (val === "<30000") {
     setStep(98);
   } else if (val === ">77400" || val === "30001-77400") {
-    setStep(3); // Children question first for both ranges
+    setStep(3); // Childrdrenen question first for both ranges
   }
 }, [setIncomeRange, setActualIncome]);
 
@@ -534,7 +534,7 @@ const handleIncomeSelect = useCallback((val: string) => {
 
         <button
           onClick={() => handleChildrenSelection(false)}
-          className={`w-full p-4 border-2 rounded-lg text-left transition focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
+          className={`w-full p-4 border-2 cursor-pointer rounded-lg text-left transition focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
             hasChildren === false
               ? 'border-primary bg-primary/5'
               : 'border-gray-300 hover:border-primary hover:bg-primary/5'

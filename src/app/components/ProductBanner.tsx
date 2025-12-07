@@ -28,7 +28,7 @@ const products = [
 
 export default function ProductBanner() {
   return (
-    <section className="bg-gradient-to-br from-[#fdf3ff] to-white py-16 text-center">
+    <section className=" py-16 text-center">
       <motion.p
         initial={{ opacity: 0, y: 10 }}
         whileInView={{ opacity: 1, y: 0 }}

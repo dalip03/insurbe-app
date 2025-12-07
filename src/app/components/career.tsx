@@ -82,7 +82,7 @@ const CareerSection = () => {
   );
 
   return (
-    <section className="bg-gradient-to-br from-white via-[#f7e9ff] to-white py-16 overflow-x-hidden">
+    <section className=" py-16 overflow-x-hidden">
       {/* Header */}
       <motion.div
         variants={fadeInUp}
@@ -99,7 +99,7 @@ const CareerSection = () => {
           learning.
         </p>
       </motion.div>
-
+{/* bg-gradient-to-br from-white via-[#f7e9ff] to-white */}
       {/* Image Gallery */}
       <motion.div
         variants={fadeInUp}

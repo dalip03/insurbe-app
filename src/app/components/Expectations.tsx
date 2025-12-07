@@ -46,7 +46,7 @@ export default function Expectations() {
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
-      className="py-16 px-4 md:px-10 lg:px-20 bg-gradient-to-br from-white to-[#fdf3ff]"
+      className="py-16 px-4 md:px-10 lg:px-20 "
     >
       <div className="max-w-7xl mx-auto px-4">
         <motion.div

@@ -8,7 +8,7 @@ const ContactSection = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.2 });
 
   return (
-    <section className="bg-[linear-gradient(0deg,#FFF_0%,#FFF_100%),linear-gradient(180deg,rgba(255,255,255,0.08)_0%,rgba(255,255,255,0.20)_100%)] backdrop-blur-[75px] pb-20 pt-10 px-4 md:px-10 lg:px-20">
+    <section className=" pb-20 pt-10 px-4 md:px-10 lg:px-20">
       <div className="max-w-7xl mx-auto">
         <motion.h2
           ref={ref}

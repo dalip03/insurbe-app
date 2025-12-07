@@ -56,7 +56,7 @@ export default function ChooseUs() {
   };
 
   return (
-    <section className="py-16 px-4 md:px-10 lg:px-20 bg-gradient-to-br from-white to-[#fdf3ff] overflow-hidden">
+    <section className="py-16 px-4 md:px-10 lg:px-20  overflow-hidden">
       <div className="max-w-7xl mx-auto w-full">
         <h2 className="text-3xl font-bold text-center mb-10">
           Explore our range of Insurance Products

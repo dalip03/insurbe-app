@@ -48,7 +48,7 @@ export default function ClientLogos() {
       whileInView={{ opacity: 1 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
       viewport={{ once: true }}
-      className="py-12 bg-gradient-to-br from-[#fdf3ff] to-white"
+      className="py-12 "
     >
       <div className="max-w-7xl w-full mx-auto px-4">
         {/* Heading */}

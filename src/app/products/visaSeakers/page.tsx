@@ -3,14 +3,11 @@ import Image from "next/image";
 
 export default function ComingSoon() {
   return (
-    <div className="relative min-h-screen flex items-center justify-center bg-white overflow-hidden">
+    <div className="relative min-h-screen flex items-center justify-center  overflow-hidden">
       {/* Background pink gradient blob, always covers right side */}
       <div
         className="absolute inset-0 pointer-events-none"
-        style={{
-          background: "radial-gradient(circle at 78% 40%, #f5d9f7 60%, transparent 80%)",
-          zIndex: 0,
-        }}
+        
       />
 
       {/* Left-bottom illustration for desktop, above text on mobile */}

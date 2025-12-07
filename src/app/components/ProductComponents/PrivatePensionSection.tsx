@@ -28,7 +28,7 @@ const reasons = [
 export default function PrivatePensionSection() {
       
   return (
-    <section className="py-16 px-4 sm:px-10 lg:px-20 bg-white text-center ">
+    <section className="py-16 px-4 sm:px-10 lg:px-20  text-center ">
       <h2 className="text-3xl sm:text-4xl font-bold text-[#111827] mb-10">
         Why You Need a Private <br /> Pension in Germany?
       </h2>

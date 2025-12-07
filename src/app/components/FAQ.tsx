@@ -34,7 +34,7 @@ export default function FAQ() {
   };
 
   return (
-    <section className="pt-16 px-4 md:px-10 lg:px-20 bg-gradient-to-br from-[#fdf3ff] to-white">
+    <section className="pt-16 px-4 md:px-10 lg:px-20 ">
       <div className="max-w-7xl mx-auto grid items-start px-10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
