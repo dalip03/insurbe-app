@@ -25,7 +25,7 @@ export default function Footer() {
               </div>
 
               {/* Subtitle */}
-              <p className="text-sm text-gray-300 px-12 md:px-0">
+              <p className="text-xl text-gray-300 px-2 md:px-0">
                 The only digital solution for all your insurance needs.
               </p>
 
@@ -42,7 +42,7 @@ export default function Footer() {
               </div>
 
               {/* Register Info */}
-              <p className="text-sm text-[#FFFFFFCC] px-12 md:px-0">
+              <p className="text-xl text-gray-300 px-2 md:px-0">
                 Insurbe is a registered insurance intermediary in Germany
               </p>
             </div>
@@ -52,24 +52,24 @@ export default function Footer() {
 
               {/* Navigation */}
               <div>
-                <h2 className="text-xl font-semibold mb-4">Navigation</h2>
+                <h2 className="md:text-xl text-2xl font-semibold mb-4">Navigation</h2>
                 <ul className="space-y-4">
-                  <li><a href="#" className="hover:text-purple-300">Home</a></li>
-                  <li><a href="#" className="hover:text-purple-300">Products</a></li>
-                  <li><a href="#" className="hover:text-purple-300">Private Health</a></li>
-                  <li><a href="#" className="hover:text-purple-300">Contact</a></li>
+                  <li><a href="#" className="hover:text-purple-300 text-lg md:text-md">Home</a></li>
+                  <li><a href="#" className="hover:text-purple-300 text-lg md:text-md">Products</a></li>
+                  <li><a href="#" className="hover:text-purple-300 text-lg md:text-md">Private Health</a></li>
+                  <li><a href="#" className="hover:text-purple-300 text-lg md:text-md">Contact</a></li>
                 </ul>
               </div>
 
               {/* Links */}
               <div>
-                <h2 className="text-xl font-semibold mb-4">Links</h2>
+                <h2 className="md:text-xl text-2xl font-semibold mb-4">Links</h2>
                 <ul className="space-y-4">
-                  <li><a href="#" className="hover:text-purple-300">Imprint</a></li>
-                  <li><a href="#" className="hover:text-purple-300">Data Privacy</a></li>
-                  <li><a href="#" className="hover:text-purple-300">Terms & Conditions</a></li>
-                  <li><a href="#" className="hover:text-purple-300">About Us</a></li>
-                  <li><a href="#" className="hover:text-purple-300">Careers</a></li>
+                  <li><a href="#" className="hover:text-purple-300 text-lg md:text-md">Imprint</a></li>
+                  <li><a href="#" className="hover:text-purple-300 text-lg md:text-md">Data Privacy</a></li>
+                  <li><a href="#" className="hover:text-purple-300 text-lg md:text-md">Terms & Conditions</a></li>
+                  <li><a href="#" className="hover:text-purple-300 text-lg md:text-md">About Us</a></li>
+                  <li><a href="#" className="hover:text-purple-300 text-lg md:text-md">Careers</a></li>
                 </ul>
               </div>
 
