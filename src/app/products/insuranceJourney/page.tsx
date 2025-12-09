@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
 import { useJourneyStore } from "@/app/stores/journeyStore";
 import { usePremiumStore } from "@/app/stores/premiumStore";
 
@@ -51,6 +52,39 @@ export default function InsuranceJourney() {
   const [loading, setLoading] = useState(false);
   const [hasChildren, setHasChildren] = useState<boolean | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+    exit: {
+      opacity: 0,
+      transition: { duration: 0.3 },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { x: -20, opacity: 0 },
+    visible: {
+      x: 0,
+      opacity: 1,
+      transition: { duration: 0.4 },
+    },
+  };
+
+  const imageVariants = {
+    hidden: { scale: 0.8, opacity: 0 },
+    visible: {
+      scale: 1,
+      opacity: 1,
+      transition: { duration: 0.5 },
+    },
+  };
 
   // Calculate TK Price based on income
   const calculateTKPrice = useCallback(
@@ -161,29 +195,24 @@ export default function InsuranceJourney() {
     setStep(val === "Others" ? 99 : 2);
   }, [setEmploymentStatus]);
 
-const handleIncomeSelect = useCallback((val: string) => {
-  setIncomeRange(val);
-  
-  // Set the actual income value based on range
-  let income = 50000; // Default
-  if (val === ">77400") {
-    // ✅ Use €66,150 - TK caps all incomes at this level
-    income = 66150; // Produces €602.24 (no children)
-  } else if (val === "30001-77400") {
-    // ✅ Use €66,150 - matches TK website
-    income = 66150; // Produces €602.24 (no children)
-  }
-  setActualIncome(income);
-  
-  if (val === "<30000") {
-    setStep(98);
-  } else if (val === ">77400" || val === "30001-77400") {
-    setStep(3); // Childrdrenen question first for both ranges
-  }
-}, [setIncomeRange, setActualIncome]);
-
-
-
+  const handleIncomeSelect = useCallback((val: string) => {
+    setIncomeRange(val);
+    
+    // Set the actual income value based on range
+    let income = 50000; // Default
+    if (val === ">77400") {
+      income = 66150;
+    } else if (val === "30001-77400") {
+      income = 66150;
+    }
+    setActualIncome(income);
+    
+    if (val === "<30000") {
+      setStep(98);
+    } else if (val === ">77400" || val === "30001-77400") {
+      setStep(3);
+    }
+  }, [setIncomeRange, setActualIncome]);
 
   const handleOtherSubmit = useCallback(() => {
     if (!otherEmployment || !email || !phone) {
@@ -235,7 +264,7 @@ const handleIncomeSelect = useCallback((val: string) => {
 
   const handleChildrenSelection = useCallback((hasKids: boolean) => {
     setHasChildren(hasKids);
-    setStep(4); // Move to DOB step after children selection
+    setStep(4);
   }, []);
 
   const handleDobSubmit = useCallback(() => {
@@ -243,7 +272,7 @@ const handleIncomeSelect = useCallback((val: string) => {
       setPopup("Please select your birth year");
       return;
     }
-    setStep(5); // Move to country selection
+    setStep(5);
   }, [dob]);
 
   const handleCountrySelect = useCallback((countryName: string) => {
@@ -252,7 +281,6 @@ const handleIncomeSelect = useCallback((val: string) => {
     setSearchTerm("");
   }, [setSelectedCountry]);
 
-  // Handle Calculate Button Click
   const handleCountrySubmit = useCallback(async () => {
     if (!selectedCountry) {
       setPopup("Please select a country");
@@ -264,14 +292,11 @@ const handleIncomeSelect = useCallback((val: string) => {
     const currentYear = new Date().getFullYear();
     const age = dob ? currentYear - parseInt(dob) : 25;
 
-    // Use the stored actualIncome from the store
     const yearlyIncome = useJourneyStore.getState().actualIncome || 50000;
 
-    // Calculate TK Premium - THIS WILL BE THE SAME FOR BOTH
     const tkPrice = calculateTKPrice(yearlyIncome, hasChildren ?? false, age);
     setTKPremium(tkPrice.employeeMonthly);
 
-    // Only call API for >77400 range to get Hallesche premium
     if (incomeRange === ">77400") {
       const fullDob = `${dob}-01-01`;
       const coverageStart = new Date().toISOString().split("T")[0];
@@ -309,12 +334,10 @@ const handleIncomeSelect = useCallback((val: string) => {
         return;
       }
     } else {
-      // For middle range, set premium to null (we'll show random products)
       setPremium(null);
     }
 
     setLoading(false);
-    // Navigate to calculator page
     router.push("/calculator");
   }, [selectedCountry, dob, incomeRange, hasChildren, calculateTKPrice, setTKPremium, setPremium, setDocuments, router]);
 
@@ -349,464 +372,591 @@ const handleIncomeSelect = useCallback((val: string) => {
   // =============== UI ====================
   return (
     <section className="bg-gradient-to-br from-[#f5f0ff] to-white py-16 px-4 md:px-10 min-h-screen">
-      <div className="max-w-3xl mx-auto text-center mb-10">
+      <motion.div
+        initial={{ y: -30, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6 }}
+        className="max-w-3xl mx-auto text-center mb-10"
+      >
         <h1 className="text-3xl md:text-4xl font-bold text-black mb-3">
           Just 2 minutes to find your best-fit insurance type.
         </h1>
         <p className="text-gray-500 text-base md:text-lg">
           No calls, no commitments — unless you want them.
         </p>
-      </div>
+      </motion.div>
 
-      {/* Step 1: Employment Status */}
-      {step === 1 && (
-        <div className="w-full max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-            <div className="flex justify-center items-center">
-              <Image
-                src={stepImages[1]}
-                alt="Employment selection"
-                width={400}
-                height={300}
-                className="w-full max-w-md"
-                priority
-                unoptimized
-              />
-            </div>
+      <AnimatePresence mode="wait">
+        {/* Step 1: Employment Status */}
+        {step === 1 && (
+          <motion.div
+            key="step1"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            className="w-full max-w-6xl mx-auto"
+          >
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+              <motion.div variants={imageVariants} className="flex justify-center items-center">
+                <Image
+                  src={stepImages[1]}
+                  alt="Employment selection"
+                  width={400}
+                  height={300}
+                  className="w-full max-w-md"
+                  priority
+                  unoptimized
+                />
+              </motion.div>
 
-            <div className="space-y-4">
-              <h2 className="text-xl font-semibold mb-6 text-gray-700">
-                What&apos;s your Employment Status?
-              </h2>
-              {["Self-employed/Freelancer", "Employed", "Others"].map((item) => (
-                <button
-                  key={item}
-                  onClick={() => handleEmploymentSelect(item)}
-                  className="w-full p-4 cursor-pointer border-2 rounded-lg text-left hover:border-primary hover:bg-primary/5 transition focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-                >
-                  {item}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Step 99: If "Others" Employment */}
-      {step === 99 && (
-        <div className="w-full max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-            <div className="flex justify-center items-center">
-              <Image
-                src={stepImages[99]}
-                alt="Contact details"
-                width={400}
-                height={300}
-                className="w-full max-w-md"
-                unoptimized
-              />
-            </div>
-
-            <div className="space-y-4">
-              <h2 className="text-xl font-semibold mb-4 text-gray-700">
-                Please provide your details
-              </h2>
-
-              <input
-                type="text"
-                className="w-full border-2 p-3 rounded-lg focus:border-primary focus:outline-none"
-                placeholder="Enter employment type"
-                value={otherEmployment}
-                onChange={(e) => setOtherEmployment(e.target.value)}
-              />
-
-              <input
-                type="email"
-                className="w-full border-2 p-3 rounded-lg focus:border-primary focus:outline-none"
-                placeholder="Email address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-
-              <input
-                type="tel"
-                className="w-full border-2 p-3 rounded-lg focus:border-primary focus:outline-none"
-                placeholder="Phone number"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-              />
-
-              <button
-                onClick={handleOtherSubmit}
-                className="px-6 py-3 bg-primary text-white rounded-lg w-full hover:bg-primary/90 transition font-semibold focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-              >
-                Submit
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Step 2: Income Range */}
-      {step === 2 && (
-        <div className="w-full max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-            <div className="flex justify-center items-center">
-              <Image
-                src={stepImages[2]}
-                alt="Income selection"
-                width={400}
-                height={300}
-                className="w-full max-w-md"
-                unoptimized
-              />
-            </div>
-
-            <div className="space-y-4">
-              <h2 className="text-xl font-semibold mb-6 text-gray-700">
-                How much is your yearly gross (pretax) income?
-              </h2>
-              <button
-                onClick={() => handleIncomeSelect("<30000")}
-                className="w-full p-4 border-2 cursor-pointer rounded-lg text-left hover:border-primary hover:bg-primary/5 transition focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-              >
-                &lt; €30,000
-              </button>
-              <button
-                onClick={() => handleIncomeSelect("30001-77400")}
-                className="w-full p-4 border-2 cursor-pointer rounded-lg text-left hover:border-primary hover:bg-primary/5 transition focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-              >
-                €30,001 – €77,400
-              </button>
-              <button
-                onClick={() => handleIncomeSelect(">77400")}
-                className="w-full p-4 border-2 cursor-pointer rounded-lg text-left hover:border-primary hover:bg-primary/5 transition focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-              >
-                &gt; €77,400
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-    {/* Step 3: Children Question (First for both ranges) */}
-{step === 3 && (
-  <div className="w-full max-w-6xl mx-auto">
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-      <div className="flex justify-center items-center">
-        <Image
-          src={stepImages[3]}
-          alt="Children question"
-          width={400}
-          height={300}
-          className="w-full max-w-md"
-          unoptimized
-        />
-      </div>
-
-      <div className="space-y-4">
-        <h2 className="text-xl font-semibold mb-4 text-gray-700">
-          Do you have children?
-        </h2>
-        <p className="text-sm text-gray-500 mb-6">
-          This affects your care insurance rate
-        </p>
-        
-        <button
-          onClick={() => handleChildrenSelection(true)}
-          className={`w-full p-4 border-2 cursor-pointer rounded-lg text-left transition focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
-            hasChildren === true
-              ? 'border-primary bg-primary/5'
-              : 'border-gray-300 hover:border-primary hover:bg-primary/5'
-          }`}
-        >
-          <div className="flex items-center gap-3">
-            <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-              hasChildren === true ? 'border-primary' : 'border-gray-300'
-            }`}>
-              {hasChildren === true && (
-                <div className="w-2.5 h-2.5 rounded-full bg-primary"></div>
-              )}
-            </div>
-            <span className="font-semibold">Yes, I have children</span>
-          </div>
-        </button>
-
-        <button
-          onClick={() => handleChildrenSelection(false)}
-          className={`w-full p-4 border-2 cursor-pointer rounded-lg text-left transition focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
-            hasChildren === false
-              ? 'border-primary bg-primary/5'
-              : 'border-gray-300 hover:border-primary hover:bg-primary/5'
-          }`}
-        >
-          <div className="flex items-center gap-3">
-            <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-              hasChildren === false ? 'border-primary' : 'border-gray-300'
-            }`}>
-              {hasChildren === false && (
-                <div className="w-2.5 h-2.5 rounded-full bg-primary"></div>
-              )}
-            </div>
-            <span className="font-semibold">No children</span>
-          </div>
-        </button>
-      </div>
-    </div>
-  </div>
-)}
-
-
-      {/* Step 98: Email + Phone Step (for <30,000 income) */}
-      {step === 98 && (
-        <div className="w-full max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-            <div className="flex justify-center items-center">
-              <Image
-                src={stepImages[98]}
-                alt="Contact form"
-                width={400}
-                height={300}
-                className="w-full max-w-md"
-                unoptimized
-              />
-            </div>
-
-            <div className="space-y-4">
-              <h2 className="text-xl font-semibold mb-4 text-gray-700">
-                Enter your contact details
-              </h2>
-              <p className="text-sm text-gray-500 mb-4">
-                We&apos;ll help you find the best option for your income range
-              </p>
-              <input
-                type="email"
-                className="w-full border-2 p-3 rounded-lg focus:border-primary focus:outline-none"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <input
-                type="tel"
-                className="w-full border-2 p-3 rounded-lg focus:border-primary focus:outline-none"
-                placeholder="Phone Number"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-              />
-              <button
-                onClick={handleContactSubmit}
-                className="px-6 py-3 bg-primary cursor-pointer text-white rounded-lg w-full hover:bg-primary/90 transition font-semibold focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-              >
-                Submit
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Step 4: Birth Year (for both middle and high income) */}
-      {step === 4 && (
-        <div className="w-full max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-            <div className="flex justify-center items-center">
-              <Image
-                src={stepImages[4]}
-                alt="Birth year selection"
-                width={400}
-                height={300}
-                className="w-full max-w-md"
-                unoptimized
-              />
-            </div>
-
-            <div className="space-y-4">
-              <h2 className="text-xl font-semibold mb-4 text-gray-700">
-                What&apos;s your Birth Year?
-              </h2>
-              <select
-                className="w-full cursor-pointer border-2 p-3 rounded-lg focus:border-primary focus:outline-none"
-                value={dob}
-                onChange={(e) => setDob(e.target.value)}
-              >
-                <option value="">Select Birth Year</option>
-                {birthYears.map((year) => (
-                  <option key={year} value={year}>
-                    {year}
-                  </option>
+              <motion.div variants={containerVariants} className="space-y-4">
+                <motion.h2 variants={itemVariants} className="text-xl font-semibold mb-6 text-gray-700">
+                  What&apos;s your Employment Status?
+                </motion.h2>
+                {["Self-employed/Freelancer", "Employed", "Others"].map((item, index) => (
+                  <motion.button
+                    key={item}
+                    variants={itemVariants}
+                    whileHover={{ scale: 1.02, x: 5 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => handleEmploymentSelect(item)}
+                    className="w-full p-4 cursor-pointer border-2 rounded-lg text-left hover:border-primary hover:bg-primary/5 transition focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                  >
+                    {item}
+                  </motion.button>
                 ))}
-              </select>
-
-              {dob && (
-                <div className="text-sm text-gray-600 bg-blue-50 p-3 rounded-lg">
-                  Age:{" "}
-                  <span className="font-semibold">
-                    {currentYear - parseInt(dob)} years
-                  </span>
-                </div>
-              )}
-
-              <button
-                onClick={handleDobSubmit}
-                disabled={!dob}
-                className={`px-6 py-3 rounded-lg w-full font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
-                  dob
-                    ? "bg-primary text-white cursor-pointer hover:bg-primary/90"
-                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                }`}
-              >
-                Continue
-              </button>
+              </motion.div>
             </div>
-          </div>
-        </div>
-      )}
+          </motion.div>
+        )}
 
-      {/* Step 5: Country Select (for both ranges) */}
-      {step === 5 && (
-        <div className="w-full max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-            <div className="flex justify-center items-center">
-              <Image
-                src={stepImages[5]}
-                alt="Country selection"
-                width={400}
-                height={300}
-                className="w-full max-w-md"
-                unoptimized
-              />
+        {/* Step 99: If "Others" Employment */}
+        {step === 99 && (
+          <motion.div
+            key="step99"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            className="w-full max-w-6xl mx-auto"
+          >
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+              <motion.div variants={imageVariants} className="flex justify-center items-center">
+                <Image
+                  src={stepImages[99]}
+                  alt="Contact details"
+                  width={400}
+                  height={300}
+                  className="w-full max-w-md"
+                  unoptimized
+                />
+              </motion.div>
+
+              <motion.div variants={containerVariants} className="space-y-4">
+                <motion.h2 variants={itemVariants} className="text-xl font-semibold mb-4 text-gray-700">
+                  Please provide your details
+                </motion.h2>
+
+                <motion.input
+                  variants={itemVariants}
+                  whileFocus={{ scale: 1.01 }}
+                  type="text"
+                  className="w-full border-2 p-3 rounded-lg focus:border-primary focus:outline-none"
+                  placeholder="Enter employment type"
+                  value={otherEmployment}
+                  onChange={(e) => setOtherEmployment(e.target.value)}
+                />
+
+                <motion.input
+                  variants={itemVariants}
+                  whileFocus={{ scale: 1.01 }}
+                  type="email"
+                  className="w-full border-2 p-3 rounded-lg focus:border-primary focus:outline-none"
+                  placeholder="Email address"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+
+                <motion.input
+                  variants={itemVariants}
+                  whileFocus={{ scale: 1.01 }}
+                  type="tel"
+                  className="w-full border-2 p-3 rounded-lg focus:border-primary focus:outline-none"
+                  placeholder="Phone number"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                />
+
+                <motion.button
+                  variants={itemVariants}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={handleOtherSubmit}
+                  className="px-6 py-3 bg-primary text-white rounded-lg w-full hover:bg-primary/90 transition font-semibold focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                >
+                  Submit
+                </motion.button>
+              </motion.div>
             </div>
+          </motion.div>
+        )}
 
-            <div className="space-y-4">
-              <h2 className="text-xl font-semibold mb-4 text-gray-700">
-                Where are you moving from?
-              </h2>
+        {/* Step 2: Income Range */}
+        {step === 2 && (
+          <motion.div
+            key="step2"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            className="w-full max-w-6xl mx-auto"
+          >
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+              <motion.div variants={imageVariants} className="flex justify-center items-center">
+                <Image
+                  src={stepImages[2]}
+                  alt="Income selection"
+                  width={400}
+                  height={300}
+                  className="w-full max-w-md"
+                  unoptimized
+                />
+              </motion.div>
 
-              <div className="relative" ref={dropdownRef}>
-                <button
-                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  className="w-full cursor-pointer border-2 p-3 rounded-lg text-left flex items-center justify-between hover:border-primary transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-                  disabled={loading}
+              <motion.div variants={containerVariants} className="space-y-4">
+                <motion.h2 variants={itemVariants} className="text-xl font-semibold mb-6 text-gray-700">
+                  How much is your yearly gross (pretax) income?
+                </motion.h2>
+                <motion.button
+                  variants={itemVariants}
+                  whileHover={{ scale: 1.02, x: 5 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => handleIncomeSelect("<30000")}
+                  className="w-full p-4 border-2 cursor-pointer rounded-lg text-left hover:border-primary hover:bg-primary/5 transition focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                >
+                  &lt; €30,000
+                </motion.button>
+                <motion.button
+                  variants={itemVariants}
+                  whileHover={{ scale: 1.02, x: 5 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => handleIncomeSelect("30001-77400")}
+                  className="w-full p-4 border-2 cursor-pointer rounded-lg text-left hover:border-primary hover:bg-primary/5 transition focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                >
+                  €30,001 – €77,400
+                </motion.button>
+                <motion.button
+                  variants={itemVariants}
+                  whileHover={{ scale: 1.02, x: 5 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => handleIncomeSelect(">77400")}
+                  className="w-full p-4 border-2 cursor-pointer rounded-lg text-left hover:border-primary hover:bg-primary/5 transition focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                >
+                  &gt; €77,400
+                </motion.button>
+              </motion.div>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Step 3: Children Question */}
+        {step === 3 && (
+          <motion.div
+            key="step3"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            className="w-full max-w-6xl mx-auto"
+          >
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+              <motion.div variants={imageVariants} className="flex justify-center items-center">
+                <Image
+                  src={stepImages[3]}
+                  alt="Children question"
+                  width={400}
+                  height={300}
+                  className="w-full max-w-md"
+                  unoptimized
+                />
+              </motion.div>
+
+              <motion.div variants={containerVariants} className="space-y-4">
+                <motion.h2 variants={itemVariants} className="text-xl font-semibold mb-4 text-gray-700">
+                  Do you have children?
+                </motion.h2>
+                <motion.p variants={itemVariants} className="text-sm text-gray-500 mb-6">
+                  This affects your care insurance rate
+                </motion.p>
+                
+                <motion.button
+                  variants={itemVariants}
+                  whileHover={{ scale: 1.02, x: 5 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => handleChildrenSelection(true)}
+                  className={`w-full p-4 border-2 cursor-pointer rounded-lg text-left transition focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
+                    hasChildren === true
+                      ? 'border-primary bg-primary/5'
+                      : 'border-gray-300 hover:border-primary hover:bg-primary/5'
+                  }`}
                 >
                   <div className="flex items-center gap-3">
-                    {selectedCountryData ? (
-                      <>
-                        <Image
-                          src={selectedCountryData.flag}
-                          alt=""
-                          width={24}
-                          height={16}
-                          className="rounded"
-                        />
-                        <span>{selectedCountryData.name}</span>
-                      </>
-                    ) : (
-                      <span className="text-gray-500">Select Country</span>
-                    )}
-                  </div>
-                  <svg
-                    className={`w-5 h-5 text-gray-400 transition-transform ${
-                      isDropdownOpen ? "rotate-180" : ""
-                    }`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 9l-7 7-7-7"
-                    />
-                  </svg>
-                </button>
-
-                {isDropdownOpen && (
-                  <div className="absolute z-10 w-full mt-2 bg-white border-2 rounded-lg shadow-lg max-h-60 overflow-hidden">
-                    <div className="p-2 border-b sticky top-0 bg-white">
-                      <input
-                        type="text"
-                        placeholder="Search country..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full p-2 border-2 rounded cursor-text focus:border-primary focus:outline-none"
-                      />
-                    </div>
-
-                    <div className="overflow-y-auto max-h-48">
-                      {filteredCountries.length > 0 ? (
-                        filteredCountries.map((country) => (
-                          <button
-                            key={country.code}
-                            onClick={() => handleCountrySelect(country.name)}
-                            className="w-full p-3 flex items-center cursor-pointer gap-3 hover:bg-gray-100 transition text-left"
-                          >
-                            <Image
-                              src={country.flag}
-                              alt=""
-                              width={24}
-                              height={16}
-                              className="rounded"
-                            />
-                            <span>{country.name}</span>
-                          </button>
-                        ))
-                      ) : (
-                        <div className="p-4 text-center text-gray-500">
-                          No countries found
-                        </div>
+                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                      hasChildren === true ? 'border-primary' : 'border-gray-300'
+                    }`}>
+                      {hasChildren === true && (
+                        <motion.div
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          className="w-2.5 h-2.5 rounded-full bg-primary"
+                        ></motion.div>
                       )}
                     </div>
+                    <span className="font-semibold">Yes, I have children</span>
                   </div>
-                )}
-              </div>
+                </motion.button>
 
-              <button
-                onClick={handleCountrySubmit}
-                disabled={loading || !selectedCountry}
-                className={`px-6 py-3 rounded-lg w-full font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
-                  loading || !selectedCountry
-                    ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                    : "bg-primary text-white cursor-pointer hover:bg-primary/90"
-                }`}
-              >
-                {loading ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                        fill="none"
-                      />
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      />
-                    </svg>
-                    Calculating Premium...
-                  </span>
-                ) : (
-                  "Calculate My Premium"
-                )}
-              </button>
+                <motion.button
+                  variants={itemVariants}
+                  whileHover={{ scale: 1.02, x: 5 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => handleChildrenSelection(false)}
+                  className={`w-full p-4 border-2 cursor-pointer rounded-lg text-left transition focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
+                    hasChildren === false
+                      ? 'border-primary bg-primary/5'
+                      : 'border-gray-300 hover:border-primary hover:bg-primary/5'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                      hasChildren === false ? 'border-primary' : 'border-gray-300'
+                    }`}>
+                      {hasChildren === false && (
+                        <motion.div
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          className="w-2.5 h-2.5 rounded-full bg-primary"
+                        ></motion.div>
+                      )}
+                    </div>
+                    <span className="font-semibold">No children</span>
+                  </div>
+                </motion.button>
+              </motion.div>
             </div>
-          </div>
-        </div>
-      )}
+          </motion.div>
+        )}
+
+        {/* Step 98: Email + Phone Step */}
+        {step === 98 && (
+          <motion.div
+            key="step98"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            className="w-full max-w-6xl mx-auto"
+          >
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+              <motion.div variants={imageVariants} className="flex justify-center items-center">
+                <Image
+                  src={stepImages[98]}
+                  alt="Contact form"
+                  width={400}
+                  height={300}
+                  className="w-full max-w-md"
+                  unoptimized
+                />
+              </motion.div>
+
+              <motion.div variants={containerVariants} className="space-y-4">
+                <motion.h2 variants={itemVariants} className="text-xl font-semibold mb-4 text-gray-700">
+                  Enter your contact details
+                </motion.h2>
+                <motion.p variants={itemVariants} className="text-sm text-gray-500 mb-4">
+                  We&apos;ll help you find the best option for your income range
+                </motion.p>
+                <motion.input
+                  variants={itemVariants}
+                  whileFocus={{ scale: 1.01 }}
+                  type="email"
+                  className="w-full border-2 p-3 rounded-lg focus:border-primary focus:outline-none"
+                  placeholder="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                <motion.input
+                  variants={itemVariants}
+                  whileFocus={{ scale: 1.01 }}
+                  type="tel"
+                  className="w-full border-2 p-3 rounded-lg focus:border-primary focus:outline-none"
+                  placeholder="Phone Number"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                />
+                <motion.button
+                  variants={itemVariants}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={handleContactSubmit}
+                  className="px-6 py-3 bg-primary cursor-pointer text-white rounded-lg w-full hover:bg-primary/90 transition font-semibold focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                >
+                  Submit
+                </motion.button>
+              </motion.div>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Step 4: Birth Year */}
+        {step === 4 && (
+          <motion.div
+            key="step4"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            className="w-full max-w-6xl mx-auto"
+          >
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+              <motion.div variants={imageVariants} className="flex justify-center items-center">
+                <Image
+                  src={stepImages[4]}
+                  alt="Birth year selection"
+                  width={400}
+                  height={300}
+                  className="w-full max-w-md"
+                  unoptimized
+                />
+              </motion.div>
+
+              <motion.div variants={containerVariants} className="space-y-4">
+                <motion.h2 variants={itemVariants} className="text-xl font-semibold mb-4 text-gray-700">
+                  What&apos;s your Birth Year?
+                </motion.h2>
+                <motion.select
+                  variants={itemVariants}
+                  whileFocus={{ scale: 1.01 }}
+                  className="w-full cursor-pointer border-2 p-3 rounded-lg focus:border-primary focus:outline-none"
+                  value={dob}
+                  onChange={(e) => setDob(e.target.value)}
+                >
+                  <option value="">Select Birth Year</option>
+                  {birthYears.map((year) => (
+                    <option key={year} value={year}>
+                      {year}
+                    </option>
+                  ))}
+                </motion.select>
+
+                <AnimatePresence>
+                  {dob && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="text-sm text-gray-600 bg-blue-50 p-3 rounded-lg"
+                    >
+                      Age:{" "}
+                      <span className="font-semibold">
+                        {currentYear - parseInt(dob)} years
+                      </span>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                <motion.button
+                  variants={itemVariants}
+                  whileHover={dob ? { scale: 1.02 } : {}}
+                  whileTap={dob ? { scale: 0.98 } : {}}
+                  onClick={handleDobSubmit}
+                  disabled={!dob}
+                  className={`px-6 py-3 rounded-lg w-full font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
+                    dob
+                      ? "bg-primary text-white cursor-pointer hover:bg-primary/90"
+                      : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  }`}
+                >
+                  Continue
+                </motion.button>
+              </motion.div>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Step 5: Country Select */}
+        {step === 5 && (
+          <motion.div
+            key="step5"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            className="w-full max-w-6xl mx-auto"
+          >
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+              <motion.div variants={imageVariants} className="flex justify-center items-center">
+                <Image
+                  src={stepImages[5]}
+                  alt="Country selection"
+                  width={400}
+                  height={300}
+                  className="w-full max-w-md"
+                  unoptimized
+                />
+              </motion.div>
+
+              <motion.div variants={containerVariants} className="space-y-4">
+                <motion.h2 variants={itemVariants} className="text-xl font-semibold mb-4 text-gray-700">
+                  Where are you moving from?
+                </motion.h2>
+
+                <motion.div variants={itemVariants} className="relative" ref={dropdownRef}>
+                  <button
+                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                    className="w-full cursor-pointer border-2 p-3 rounded-lg text-left flex items-center justify-between hover:border-primary transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                    disabled={loading}
+                  >
+                    <div className="flex items-center gap-3">
+                      {selectedCountryData ? (
+                        <>
+                          <Image
+                            src={selectedCountryData.flag}
+                            alt=""
+                            width={24}
+                            height={16}
+                            className="rounded"
+                          />
+                          <span>{selectedCountryData.name}</span>
+                        </>
+                      ) : (
+                        <span className="text-gray-500">Select Country</span>
+                      )}
+                    </div>
+                    <motion.svg
+                      animate={{ rotate: isDropdownOpen ? 180 : 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="w-5 h-5 text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </motion.svg>
+                  </button>
+
+                  <AnimatePresence>
+                    {isDropdownOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.2 }}
+                        className="absolute z-10 w-full mt-2 bg-white border-2 rounded-lg shadow-lg max-h-60 overflow-hidden"
+                      >
+                        <div className="p-2 border-b sticky top-0 bg-white">
+                          <input
+                            type="text"
+                            placeholder="Search country..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="w-full p-2 border-2 rounded cursor-text focus:border-primary focus:outline-none"
+                          />
+                        </div>
+
+                        <div className="overflow-y-auto max-h-48">
+                          {filteredCountries.length > 0 ? (
+                            filteredCountries.map((country) => (
+                              <motion.button
+                                key={country.code}
+                                whileHover={{ backgroundColor: "#f3f4f6" }}
+                                onClick={() => handleCountrySelect(country.name)}
+                                className="w-full p-3 flex items-center cursor-pointer gap-3 transition text-left"
+                              >
+                                <Image
+                                  src={country.flag}
+                                  alt=""
+                                  width={24}
+                                  height={16}
+                                  className="rounded"
+                                />
+                                <span>{country.name}</span>
+                              </motion.button>
+                            ))
+                          ) : (
+                            <div className="p-4 text-center text-gray-500">
+                              No countries found
+                            </div>
+                          )}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+
+                <motion.button
+                  variants={itemVariants}
+                  whileHover={!loading && selectedCountry ? { scale: 1.02 } : {}}
+                  whileTap={!loading && selectedCountry ? { scale: 0.98 } : {}}
+                  onClick={handleCountrySubmit}
+                  disabled={loading || !selectedCountry}
+                  className={`px-6 py-3 rounded-lg w-full font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
+                    loading || !selectedCountry
+                      ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                      : "bg-primary text-white cursor-pointer hover:bg-primary/90"
+                  }`}
+                >
+                  {loading ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                          fill="none"
+                        />
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        />
+                      </svg>
+                      Calculating Premium...
+                    </span>
+                  ) : (
+                    "Calculate My Premium"
+                  )}
+                </motion.button>
+              </motion.div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* POPUP */}
-      {popup && (
-        <div 
-          role="alert"
-          className="fixed bottom-10 left-1/2 -translate-x-1/2 bg-primary text-white px-6 py-3 rounded-lg shadow-xl z-50 max-w-md text-center animate-bounce"
-        >
-          {popup}
-        </div>
-      )}
+      <AnimatePresence>
+        {popup && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 50, scale: 0.9 }}
+            transition={{ duration: 0.3 }}
+            role="alert"
+            className="fixed bottom-10 left-1/2 -translate-x-1/2 bg-primary text-white px-6 py-3 rounded-lg shadow-xl z-50 max-w-md text-center"
+          >
+            {popup}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }

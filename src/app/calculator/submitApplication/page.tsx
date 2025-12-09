@@ -1,11 +1,10 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
 import { usePremiumStore } from "@/app/stores/premiumStore";
 import { useJourneyStore } from "@/app/stores/journeyStore";
 import Image from "next/image";
-
-
 
 // Helper function to get date 2 days from now
 function getTwoDaysFromNow() {
@@ -34,6 +33,26 @@ export default function SubmitApplication() {
   // UI states
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: { duration: 0.4 },
+    },
+  };
 
   // Set default coverage start date on mount
   useEffect(() => {
@@ -233,9 +252,19 @@ export default function SubmitApplication() {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-12">
-      <div className="w-full h-40 bg-primary relative flex items-center justify-center">
+      <motion.div
+        initial={{ y: -50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6 }}
+        className="w-full h-40 bg-primary relative flex items-center justify-center"
+      >
         {/* Left Image */}
-        <div className="absolute left-0 h-full flex items-center">
+        <motion.div
+          initial={{ x: -100, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="absolute left-0 h-full flex items-center"
+        >
           <Image
             src="/icons/leftside.svg"
             alt="Left Decoration"
@@ -243,23 +272,48 @@ export default function SubmitApplication() {
             height={100}
             className="object-cover h-full"
           />
-        </div>
+        </motion.div>
 
         {/* Center Text */}
-        <div className="text-center">
-          <span className="inline-block bg-white/20 rounded-full px-4 py-1 mb-2 text-sm font-medium text-white">
+        <motion.div
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="text-center"
+        >
+          <motion.span
+            initial={{ y: -20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+            className="inline-block bg-white/20 rounded-full px-4 py-1 mb-2 text-sm font-medium text-white"
+          >
             Health Prioritized
-          </span>
-          <h1 className="text-3xl font-bold text-white">
+          </motion.span>
+          <motion.h1
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+            className="text-3xl font-bold text-white"
+          >
             Complete Your Application
-          </h1>
-          <p className="text-center text-sm text-gray-400 mb-6">
+          </motion.h1>
+          <motion.p
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+            className="text-center text-sm text-gray-400 mb-6"
+          >
             We need a few more details to process your application for Hallesche
-          </p>
-        </div>
+          </motion.p>
+        </motion.div>
 
         {/* Right Image */}
-        <div className="absolute right-0 h-full flex items-center">
+        <motion.div
+          initial={{ x: 100, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="absolute right-0 h-full flex items-center"
+        >
           <Image
             src="/icons/rightside.svg"
             alt="Right Decoration"
@@ -267,17 +321,29 @@ export default function SubmitApplication() {
             height={100}
             className="object-cover h-full"
           />
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
 
-      <div className="max-w-3xl mx-auto bg-white rounded-lg shadow-lg p-8 mt-6">
-        <form onSubmit={handleSubmit} className="space-y-6">
+      <motion.div
+        initial={{ y: 50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6, delay: 0.4 }}
+        className="max-w-3xl mx-auto bg-white rounded-lg shadow-lg p-8 mt-6"
+      >
+        <motion.form
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          onSubmit={handleSubmit}
+          className="space-y-6"
+        >
           {/* Salutation */}
-          <div>
+          <motion.div variants={itemVariants}>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Salutation *
             </label>
-            <select
+            <motion.select
+              whileFocus={{ scale: 1.01 }}
               value={salutation}
               onChange={(e) => setSalutation(e.target.value)}
               className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent"
@@ -287,16 +353,17 @@ export default function SubmitApplication() {
               <option value="Mrs">Mrs</option>
               <option value="Ms">Ms</option>
               <option value="Dr">Dr</option>
-            </select>
-          </div>
+            </motion.select>
+          </motion.div>
 
           {/* Name Fields */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 First Name *
               </label>
-              <input
+              <motion.input
+                whileFocus={{ scale: 1.01 }}
                 type="text"
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
@@ -310,7 +377,8 @@ export default function SubmitApplication() {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Last Name *
               </label>
-              <input
+              <motion.input
+                whileFocus={{ scale: 1.01 }}
                 type="text"
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
@@ -319,15 +387,16 @@ export default function SubmitApplication() {
                 required
               />
             </div>
-          </div>
+          </motion.div>
 
           {/* DOB and Gender */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Date of Birth *
               </label>
-              <input
+              <motion.input
+                whileFocus={{ scale: 1.01 }}
                 type="date"
                 value={dob}
                 onChange={(e) => setDob(e.target.value)}
@@ -335,18 +404,26 @@ export default function SubmitApplication() {
                 className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent"
                 required
               />
-              {dob && (
-                <p className="text-xs text-gray-500 mt-1">
-                  Age: {calculateAge(dob)} years
-                </p>
-              )}
+              <AnimatePresence>
+                {dob && (
+                  <motion.p
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="text-xs text-gray-500 mt-1"
+                  >
+                    Age: {calculateAge(dob)} years
+                  </motion.p>
+                )}
+              </AnimatePresence>
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Gender *
               </label>
-              <select
+              <motion.select
+                whileFocus={{ scale: 1.01 }}
                 value={gender}
                 onChange={(e) => setGender(e.target.value)}
                 className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent"
@@ -355,16 +432,17 @@ export default function SubmitApplication() {
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
                 <option value="Other">Other</option>
-              </select>
+              </motion.select>
             </div>
-          </div>
+          </motion.div>
 
           {/* Coverage Start */}
-          <div>
+          <motion.div variants={itemVariants}>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Coverage Start Date *
             </label>
-            <input
+            <motion.input
+              whileFocus={{ scale: 1.01 }}
               type="date"
               value={coverageStart}
               onChange={(e) => setCoverageStart(e.target.value)}
@@ -375,14 +453,15 @@ export default function SubmitApplication() {
             <p className="text-xs text-gray-500 mt-1">
               Default set to 2 days from today. You can change if needed.
             </p>
-          </div>
+          </motion.div>
 
           {/* Email Address */}
-          <div>
+          <motion.div variants={itemVariants}>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Email Address *
             </label>
-            <input
+            <motion.input
+              whileFocus={{ scale: 1.01 }}
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -393,14 +472,15 @@ export default function SubmitApplication() {
             <p className="text-xs text-gray-500 mt-1">
               We&apos;ll send your policy documents to this email
             </p>
-          </div>
+          </motion.div>
 
           {/* Mobile Number */}
-          <div>
+          <motion.div variants={itemVariants}>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Mobile Number *
             </label>
-            <input
+            <motion.input
+              whileFocus={{ scale: 1.01 }}
               type="tel"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
@@ -411,14 +491,15 @@ export default function SubmitApplication() {
             <p className="text-xs text-gray-500 mt-1">
               For important updates about your policy
             </p>
-          </div>
+          </motion.div>
 
           {/* Address (Optional) */}
-          <div>
+          <motion.div variants={itemVariants}>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Address (Optional)
             </label>
-            <textarea
+            <motion.textarea
+              whileFocus={{ scale: 1.01 }}
               value={address}
               onChange={(e) => setAddress(e.target.value)}
               rows={3}
@@ -428,40 +509,40 @@ export default function SubmitApplication() {
             <p className="text-xs text-gray-500 mt-1">
               This helps us process your application faster
             </p>
-          </div>
+          </motion.div>
 
           {/* Important Information */}
-          <div className="bg-purple-50 border border-purple-200 rounded-lg p-6">
+          <motion.div
+            variants={itemVariants}
+            whileHover={{ scale: 1.01 }}
+            className="bg-purple-50 border border-purple-200 rounded-lg p-6"
+          >
             <h3 className="font-semibold text-gray-900 mb-3">
               Important Information
             </h3>
             <ul className="space-y-2 text-sm text-gray-700">
-              <li className="flex items-start">
-                <span className="mr-2">•</span>
-                <span>
-                  Your application will be processed within 24-48 hours
-                </span>
-              </li>
-              <li className="flex items-start">
-                <span className="mr-2">•</span>
-                <span>
-                  You&apos;ll receive a confirmation email with your policy
-                  number
-                </span>
-              </li>
-              <li className="flex items-start">
-                <span className="mr-2">•</span>
-                <span>Coverage begins on your selected start date</span>
-              </li>
-              <li className="flex items-start">
-                <span className="mr-2">•</span>
-                <span>You can cancel within 14 days for a full refund</span>
-              </li>
+              {[
+                "Your application will be processed within 24-48 hours",
+                "You'll receive a confirmation email with your policy number",
+                "Coverage begins on your selected start date",
+                "You can cancel within 14 days for a full refund",
+              ].map((item, index) => (
+                <motion.li
+                  key={index}
+                  initial={{ x: -20, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ delay: 0.8 + index * 0.1 }}
+                  className="flex items-start"
+                >
+                  <span className="mr-2">•</span>
+                  <span>{item}</span>
+                </motion.li>
+              ))}
             </ul>
-          </div>
+          </motion.div>
 
           {/* Terms and Conditions */}
-          <div className="flex items-start">
+          <motion.div variants={itemVariants} className="flex items-start">
             <input
               type="checkbox"
               id="terms"
@@ -480,17 +561,27 @@ export default function SubmitApplication() {
                 Privacy Policy
               </a>
             </label>
-          </div>
+          </motion.div>
 
           {/* Error Display */}
-          {error && (
-            <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg">
-              {error}
-            </div>
-          )}
+          <AnimatePresence>
+            {error && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg"
+              >
+                {error}
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {/* Submit Button */}
-          <button
+          <motion.button
+            variants={itemVariants}
+            whileHover={!loading ? { scale: 1.02 } : {}}
+            whileTap={!loading ? { scale: 0.98 } : {}}
             type="submit"
             disabled={loading}
             className={`w-full py-4 cursor-pointer rounded-lg font-semibold text-white text-lg transition-all ${
@@ -522,9 +613,9 @@ export default function SubmitApplication() {
             ) : (
               "Submit Application"
             )}
-          </button>
-        </form>
-      </div>
+          </motion.button>
+        </motion.form>
+      </motion.div>
     </div>
   );
 }

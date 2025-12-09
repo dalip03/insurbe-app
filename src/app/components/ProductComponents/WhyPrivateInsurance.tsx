@@ -26,12 +26,19 @@ export default function WhyPrivateInsurance() {
             More personalized coverage with optional add-ons for dental, vision,
             and travel.
           </p>
-          <button
+          <motion.button
+            whileHover={{
+              scale: 1.07,
+              y: -4,
+              boxShadow: "0px 8px 25px rgba(0,0,0,0.25)",
+            }}
+            whileTap={{ scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 250, damping: 12 }}
             onClick={() => router.push("/products/insuranceJourney")}
-            className=" cursor-pointer px-6 py-3 bg-primary hover:bg-primary/95 text-white text-sm font-medium rounded-md shadow"
+            className="cursor-pointer px-6 py-3 bg-primary hover:bg-primary/95 text-white text-sm font-medium rounded-md shadow relative z-20"
           >
             Check My Eligibility
-          </button>
+          </motion.button>
         </motion.div>
 
         {/* Right Side Image Card with fade + slide from right */}

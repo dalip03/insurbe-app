@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import ContactBanner from "./ContactBanner";
-
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
 export default function Footer() {
   return (
     <div>
@@ -18,14 +18,14 @@ export default function Footer() {
                   <Image
                     src="/icons/logo_white.png"
                     alt="Logo"
-                    width={140}
-                    height={20}
+                    width={170}
+                    height={30}
                   />
                 </Link>
               </div>
 
               {/* Subtitle */}
-              <p className="text-xl text-gray-300 px-2 md:px-0">
+              <p className="md:text-xl text-2xl  text-gray-300 ">
                 The only digital solution for all your insurance needs.
               </p>
 
@@ -35,14 +35,14 @@ export default function Footer() {
                   <Image
                     src="/icons/gdpr.svg"
                     alt="GDPR Logo"
-                    width={170}
+                    width={210}
                     height={60}
                   />
                 </Link>
               </div>
 
               {/* Register Info */}
-              <p className="text-xl text-gray-300 px-2 md:px-0">
+              <p className="md:text-xl text-2xl text-gray-300 ">
                 Insurbe is a registered insurance intermediary in Germany
               </p>
             </div>
@@ -52,24 +52,24 @@ export default function Footer() {
 
               {/* Navigation */}
               <div>
-                <h2 className="md:text-xl text-2xl font-semibold mb-4">Navigation</h2>
+                <h2 className="md:text-xl text-3xl font-semibold mb-4">Navigation</h2>
                 <ul className="space-y-4">
-                  <li><a href="#" className="hover:text-purple-300 text-lg md:text-md">Home</a></li>
-                  <li><a href="#" className="hover:text-purple-300 text-lg md:text-md">Products</a></li>
-                  <li><a href="#" className="hover:text-purple-300 text-lg md:text-md">Private Health</a></li>
-                  <li><a href="#" className="hover:text-purple-300 text-lg md:text-md">Contact</a></li>
+                  <li><a href="#" className="hover:text-purple-300 text-xl md:text-md">Home</a></li>
+                  <li><a href="#" className="hover:text-purple-300 text-xl md:text-md">Products</a></li>
+                  <li><a href="#" className="hover:text-purple-300 text-xl md:text-md">Private Health</a></li>
+                  <li><a href="#" className="hover:text-purple-300 text-xl md:text-md">Contact</a></li>
                 </ul>
               </div>
 
               {/* Links */}
               <div>
-                <h2 className="md:text-xl text-2xl font-semibold mb-4">Links</h2>
+                <h2 className="md:text-xl text-3xl font-semibold mb-4">Links</h2>
                 <ul className="space-y-4">
-                  <li><a href="#" className="hover:text-purple-300 text-lg md:text-md">Imprint</a></li>
-                  <li><a href="#" className="hover:text-purple-300 text-lg md:text-md">Data Privacy</a></li>
-                  <li><a href="#" className="hover:text-purple-300 text-lg md:text-md">Terms & Conditions</a></li>
-                  <li><a href="#" className="hover:text-purple-300 text-lg md:text-md">About Us</a></li>
-                  <li><a href="#" className="hover:text-purple-300 text-lg md:text-md">Careers</a></li>
+                  <li><a href="#" className="hover:text-purple-300 text-xl md:text-md">Imprint</a></li>
+                  <li><a href="#" className="hover:text-purple-300 text-xl md:text-md">Data Privacy</a></li>
+                  <li><a href="#" className="hover:text-purple-300 text-xl md:text-md">Terms & Conditions</a></li>
+                  <li><a href="#" className="hover:text-purple-300 text-xl md:text-md">About Us</a></li>
+                  <li><a href="#" className="hover:text-purple-300 text-xl md:text-md">Careers</a></li>
                 </ul>
               </div>
 
@@ -78,7 +78,7 @@ export default function Footer() {
           </div>
 
           {/* Copyright */}
-          <div className="border-t border-gray-400 mt-10 pt-6 text-center md:text-left text-sm text-white/90">
+          <div className="border-t border-gray-400 mt-10 pt-6 text-center md:text-left text-md md:text-sm text-white/90">
             Copyright © 2025 Insure.  
             <br className="md:hidden" />
             All rights reserved.

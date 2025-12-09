@@ -1,49 +1,69 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Check, Info } from 'lucide-react';
+import { Check, X } from 'lucide-react';
 
-export default function PlansCompare() {
-  const plans = [
-    {
-      id: 'barmer',
-      name: 'BARMER',
-      logo: 'BARMER',
-      logoColor: 'bg-lime-500',
-      price: '~€ 650',
-      processingSpeed: 'Fast',
-      highlight: 'Excellent coverage for families',
-      hasRecommendation: false
-    },
-    {
-      id: 'tk',
-      name: 'TK',
-      logo: 'TK',
-      logoColor: 'bg-cyan-500',
-      price: '~€ 650',
-      processingSpeed: 'Faster',
-      highlight: 'Great digital services and best insurance for students',
-      hasRecommendation: true
-    },
-    {
-      id: 'dak',
-      name: 'DAK',
-      logo: 'DAK',
-      logoColor: 'bg-orange-500',
-      price: '~€ 650',
-      processingSpeed: 'Fastest',
-      highlight: 'Excellent customer support in English',
-      hasRecommendation: true
-    }
-  ];
+interface Plan {
+  id: string;
+  name: string;
+  logo: string;
+  price: string;
+}
 
+interface PlansCompareProps {
+  plans: Plan[];
+}
+
+export default function PlansCompare({ plans }: PlansCompareProps) {
   const features = [
-    { label: '24/7 medical assistance/emergency call centre', values: [true, true, true] },
-    { label: 'English support', values: [true, true, true] },
-    { label: 'Digital services', values: [true, true, true] },
-    { label: 'Transport costs to nearest suitable hospital', values: [true, true, true] },
-    { label: 'Repatriation costs up to €25,000 in the event of death', values: [true, true, true] },
-    { label: 'Medically prescribed medicines and dressings', values: [true, true, true] }
+    { 
+      label: 'Monthly Premium', 
+      values: plans.map(p => p.price)
+    },
+    { 
+      label: '24/7 Medical Assistance', 
+      values: [true, true, true] 
+    },
+    { 
+      label: 'English Support', 
+      values: [true, true, true] 
+    },
+    { 
+      label: 'Digital Services & App', 
+      values: [true, true, true] 
+    },
+    { 
+      label: 'Dental Coverage', 
+      values: [true, true, true] 
+    },
+    { 
+      label: 'Vision Coverage', 
+      values: [true, true, true] 
+    },
+    { 
+      label: 'Alternative Medicine', 
+      values: [true, true, true] 
+    },
+    { 
+      label: 'Hospital Private Room', 
+      values: [false, true, true] 
+    },
+    { 
+      label: 'Chief Physician Treatment', 
+      values: [false, true, true] 
+    },
+    { 
+      label: 'Worldwide Coverage', 
+      values: [true, true, true] 
+    },
+    { 
+      label: 'No Waiting Period', 
+      values: [true, false, false] 
+    },
+    { 
+      label: 'Prescription Medications', 
+      values: [true, true, true] 
+    }
   ];
 
   const containerVariants = {
@@ -66,163 +86,79 @@ export default function PlansCompare() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50 py-16  ">
-      <div className="w-full mx-auto">
-        <motion.div
-          initial="hidden"
-          animate="visible"
-          variants={containerVariants}
-          className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl overflow-hidden"
-        >
-          {/* Header Row */}
-          <div className="grid grid-cols-4 gap-0 border-b border-gray-200">
-            <div className="col-span-1 p-6 bg-gray-50"></div>
-            {plans.map((plan) => (
-              <div key={plan.id} className="col-span-1 p-6 flex flex-col items-center justify-center bg-white">
-                <div className={`${plan.logoColor} text-white font-bold text-sm px-4 py-2 rounded mb-2`}>
-                  {plan.logo}
-                </div>
-                <h3 className="text-lg font-bold text-gray-900">{plan.name}</h3>
-              </div>
-            ))}
+    <div className="w-full py-8">
+      <motion.div
+        initial="hidden"
+        animate="visible"
+        variants={containerVariants}
+        className="bg-white rounded-2xl shadow-xl overflow-hidden"
+      >
+        {/* Header Row */}
+        <div className="grid gap-0 border-b border-gray-200" style={{ gridTemplateColumns: `300px repeat(${plans.length}, 1fr)` }}>
+          <div className="p-6 bg-gray-50">
+            <h3 className="text-lg font-bold text-gray-900">Plan Comparison</h3>
           </div>
-
-          {/* Monthly Premiums Row */}
-          <motion.div variants={rowVariants} className="grid grid-cols-4 gap-0 border-b border-gray-200 hover:bg-gray-50/50 transition-colors">
-            <div className="col-span-1 p-6 bg-gray-50">
-              <h4 className="font-bold text-gray-900 mb-1">Monthly premiums</h4>
-              <p className="text-xs text-gray-600">Per person <span className="font-semibold">excluding USA/Canada</span></p>
+          {plans.map((plan) => (
+            <div key={plan.id} className="p-6 flex flex-col items-center justify-center bg-white">
+              <div className="w-16 h-16 mb-3 relative">
+                <img 
+                  src={plan.logo} 
+                  alt={plan.name}
+                  className="w-full h-full object-contain"
+                />
+              </div>
+              <h3 className="text-lg font-bold text-gray-900 text-center">{plan.name}</h3>
             </div>
-            {plans.map((plan) => (
-              <div key={plan.id} className="col-span-1 p-6 text-center">
-                <p className="text-2xl font-bold text-gray-900 mb-1">{plan.price}</p>
-                <p className="text-xs text-gray-500">per month</p>
-              </div>
-            ))}
-          </motion.div>
-
-          {/* Feature Rows */}
-          {features.map((feature, idx) => (
-            <motion.div
-              key={idx}
-              variants={rowVariants}
-              className="grid grid-cols-4 gap-0 border-b border-gray-200 hover:bg-gray-50/50 transition-colors"
-            >
-              <div className="col-span-1 p-6 bg-gray-50">
-                <p className="text-sm text-gray-900">{feature.label}</p>
-              </div>
-              {feature.values.map((value, planIdx) => (
-                <div key={planIdx} className="col-span-1 p-6 flex items-center justify-center">
-                  {value ? (
-                    <Check className="w-6 h-6 text-cyan-500" strokeWidth={3} />
-                  ) : (
-                    <span className="text-gray-400">–</span>
-                  )}
-                </div>
-              ))}
-            </motion.div>
           ))}
+        </div>
 
-          {/* We Recommend Row */}
-          <motion.div variants={rowVariants} className="grid grid-cols-4 gap-0 border-b border-gray-200 hover:bg-gray-50/50 transition-colors">
-            <div className="col-span-1 p-6 bg-gray-50 flex items-center gap-2">
-              <p className="text-sm font-semibold text-gray-900">We recommend:</p>
-              <p className="text-sm text-gray-600">an insurance card</p>
-              <Info className="w-4 h-4 text-gray-400" />
+        {/* Feature Rows */}
+        {features.map((feature, idx) => (
+          <motion.div
+            key={idx}
+            variants={rowVariants}
+            className="grid gap-0 border-b border-gray-200 hover:bg-gray-50/50 transition-colors"
+            style={{ gridTemplateColumns: `300px repeat(${plans.length}, 1fr)` }}
+          >
+            <div className="p-6 bg-gray-50">
+              <p className="text-sm font-medium text-gray-900">{feature.label}</p>
             </div>
-            {plans.map((plan) => (
-              <div key={plan.id} className="col-span-1 p-6 flex items-center justify-center">
-                {plan.hasRecommendation ? (
-                  <Check className="w-6 h-6 text-cyan-500" strokeWidth={3} />
+            {feature.values.map((value, planIdx) => (
+              <div key={planIdx} className="p-6 flex items-center justify-center">
+                {typeof value === 'boolean' ? (
+                  value ? (
+                    <Check className="w-6 h-6 text-green-500" strokeWidth={3} />
+                  ) : (
+                    <X className="w-6 h-6 text-gray-300" strokeWidth={3} />
+                  )
                 ) : (
-                  <span className="text-gray-900 font-bold">–</span>
+                  <p className="text-lg font-semibold text-gray-900">{value}</p>
                 )}
               </div>
             ))}
           </motion.div>
+        ))}
 
-          {/* Processing Speed Row */}
-          <motion.div variants={rowVariants} className="grid grid-cols-4 gap-0 border-b border-gray-200 hover:bg-gray-50/50 transition-colors">
-            <div className="col-span-1 p-6 bg-gray-50">
-              <p className="text-sm text-gray-900">Processing speed</p>
-            </div>
-            {plans.map((plan) => (
-              <div key={plan.id} className="col-span-1 p-6 text-center">
-                <p className="text-sm font-semibold text-gray-900">{plan.processingSpeed}</p>
-              </div>
-            ))}
-          </motion.div>
-
-          {/* Highlight Row */}
-          <motion.div variants={rowVariants} className="grid grid-cols-4 gap-0 border-b border-gray-200 hover:bg-gray-50/50 transition-colors">
-            <div className="col-span-1 p-6 bg-gray-50">
-              <p className="text-sm text-gray-900">Highlight</p>
-            </div>
-            {plans.map((plan) => (
-              <div key={plan.id} className="col-span-1 p-6">
-                <p className="text-sm text-gray-700 text-center">{plan.highlight}</p>
-              </div>
-            ))}
-          </motion.div>
-
-          {/* Policy Wording Row 1 */}
-          <motion.div variants={rowVariants} className="grid grid-cols-4 gap-0 border-b border-gray-200 hover:bg-gray-50/50 transition-colors">
-            <div className="col-span-1 p-6 bg-gray-50">
-              <p className="text-sm text-gray-900">Policy wording</p>
-            </div>
-            {plans.map((plan) => (
-              <div key={plan.id} className="col-span-1 p-6 text-center">
-                <span className="inline-block bg-gray-100 text-gray-900 text-xs font-semibold px-3 py-1 rounded">
-                  EN
-                </span>
-              </div>
-            ))}
-          </motion.div>
-
-          {/* Excess Worldwide Row */}
-          <motion.div variants={rowVariants} className="grid grid-cols-4 gap-0 border-b border-gray-200 hover:bg-gray-50/50 transition-colors">
-            <div className="col-span-1 p-6 bg-gray-50">
-              <p className="text-sm text-gray-900">Excess worldwide incl. USA/Canada</p>
-              <p className="text-xs text-gray-600">(per insurance year)</p>
-            </div>
-            {plans.map((plan) => (
-              <div key={plan.id} className="col-span-1 p-6 text-center">
-                <p className="text-sm font-semibold text-gray-900">€500</p>
-              </div>
-            ))}
-          </motion.div>
-
-          {/* Policy Wording Row 2 */}
-          <motion.div variants={rowVariants} className="grid grid-cols-4 gap-0 border-b border-gray-200 hover:bg-gray-50/50 transition-colors">
-            <div className="col-span-1 p-6 bg-gray-50">
-              <p className="text-sm text-gray-900">Policy wording</p>
-            </div>
-            {plans.map((plan) => (
-              <div key={plan.id} className="col-span-1 p-6 text-center">
-                <span className="inline-block bg-gray-100 text-gray-900 text-xs font-semibold px-3 py-1 rounded">
-                  EN
-                </span>
-              </div>
-            ))}
-          </motion.div>
-
-          {/* Sign Up Buttons Row */}
-          <motion.div variants={rowVariants} className="grid grid-cols-4 gap-0 bg-gray-50">
-            <div className="col-span-1 p-6"></div>
-            {plans.map((plan) => (
-              <div key={plan.id} className="col-span-1 p-6 flex items-center justify-center">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="w-full bg-primary hover:bg-primary/10 text-white font-semibold py-3 px-6 rounded-lg shadow-lg transition-colors"
-                >
-                  SIGN UP
-                </motion.button>
-              </div>
-            ))}
-          </motion.div>
+        {/* Best For Row */}
+        <motion.div 
+          variants={rowVariants} 
+          className="grid gap-0 bg-gradient-to-r from-primary/5 to-primary/10"
+          style={{ gridTemplateColumns: `300px repeat(${plans.length}, 1fr)` }}
+        >
+          <div className="p-6 bg-gray-50">
+            <p className="text-sm font-bold text-gray-900">Best For</p>
+          </div>
+          <div className="p-6">
+            <p className="text-sm text-gray-700 text-center font-medium">Employees</p>
+          </div>
+          <div className="p-6">
+            <p className="text-sm text-gray-700 text-center font-medium">High Earners & Self-Employed</p>
+          </div>
+          <div className="p-6">
+            <p className="text-sm text-gray-700 text-center font-medium">Premium Coverage Seekers</p>
+          </div>
         </motion.div>
-      </div>
+      </motion.div>
     </div>
   );
 }
