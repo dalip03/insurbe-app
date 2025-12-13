@@ -4,7 +4,7 @@ import Image from "next/image";
 
 export default function HandInHand() {
   return (
-    <section className="min-h-screen flex items-center justify-center py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-12">
+    <section className="min-h-screen flex items-center justify-center  md::py-24 px-4 sm:px-6 lg:px-12">
       <div className="max-w-6xl mx-auto w-full">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           {/* LEFT SIDE - Logo (Centered on all screens) */}
