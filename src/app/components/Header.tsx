@@ -89,54 +89,55 @@ const Header = () => {
                 </span>
                 
                 {/* Desktop Mega Menu */}
-                <AnimatePresence>
-                  {showProducts && (
-                    <motion.div
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.2 }}
-                      className="fixed left-0 top-[72px] w-screen z-50"
-                    >
-                      <div className="flex w-full bg-[#FCEAF8] min-h-[320px] py-8 px-0">
-                        {/* Left: Centered image */}
-                        <div className="flex flex-1 items-center justify-center">
-                          <div className="rounded-md overflow-hidden p-2 relative w-[610px] h-[280px]">
-                            <Image
-                              src="/img/menuFamily.png"
-                              alt="Mega Menu Promo"
-                              fill
-                              className="object-cover rounded-md"
-                              style={{ objectPosition: "center" }}
-                            />
-                          </div>
-                        </div>
-                        
-                        {/* Right: Centered vertical menu */}
-                        <div className="flex flex-1 items-center justify-center">
-                          <ul className="flex flex-col gap-8 w-full max-w-[230px] pr-10">
-                            {link.submenu.map((item) => (
-                              <motion.li
-                                key={item.name}
-                                whileHover={{ x: -5 }}
-                                className="text-right"
-                              >
-                                <Link
-                                  href={item.href}
-                                  className="block text-black text-lg font-normal hover:text-primary transition"
-                                  tabIndex={showProducts ? 0 : -1}
-                                  onClick={() => setShowProducts(false)}
-                                >
-                                  {item.name}
-                                </Link>
-                              </motion.li>
-                            ))}
-                          </ul>
-                        </div>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+           {/* Desktop Mega Menu - Grid Layout */}
+<AnimatePresence>
+  {showProducts && (
+    <motion.div
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.2 }}
+      className="fixed left-0 top-[72px] w-screen z-50"
+    >
+      <div className="w-full bg-white shadow-lg border-b border-gray-200">
+        <div className="max-w-6xl mx-auto px-8 py-10">
+          <h3 className="text-xl font-bold text-gray-900 mb-6">
+            Insurance Products
+          </h3>
+          <div className="grid grid-cols-4 gap-6">
+            {link.submenu.map((item, index) => (
+              <motion.div
+                key={item.name}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.05 }}
+              >
+                <Link
+                  href={item.href}
+                  className="group block p-6 rounded-lg border-2 border-gray-100 hover:border-primary hover:shadow-md transition-all cursor-pointer"
+                  tabIndex={showProducts ? 0 : -1}
+                  onClick={() => setShowProducts(false)}
+                >
+                  <div className="text-4xl mb-3">{item.icon}</div>
+                  <h4 className="font-semibold text-gray-900 mb-2 group-hover:text-primary transition">
+                    {item.name}
+                  </h4>
+                  <p className="text-sm text-gray-600">
+                    {item.name === "Working Professionals" && "Comprehensive health coverage"}
+                    {item.name === "Family" && "Protection for your loved ones"}
+                    {item.name === "Visa Seekers" && "Insurance for your visa application"}
+                    {item.name === "Students" && "Affordable student plans"}
+                  </p>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  )}
+</AnimatePresence>
+
               </div>
             ) : (
               <Link
