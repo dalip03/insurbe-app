@@ -1,10 +1,17 @@
 "use client";
-import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useMemo,
+  useCallback,
+} from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { useJourneyStore } from "@/app/stores/journeyStore";
 import { usePremiumStore } from "@/app/stores/premiumStore";
+import { useDocumentStore } from "@/app/stores/documentStore";
 
 // Types
 interface CountryAPI {
@@ -17,6 +24,17 @@ interface Country {
   name: string;
   flag: string;
   code: string;
+}
+
+interface HealthAnswer {
+  hospitalized: string | null;
+  dentalVisit: string | null;
+  dentalPreventative: string | null;
+  missingTeeth: string | null;
+  chronicDiseases: string | null;
+  psychotherapy: string | null;
+  doctorVisit: string | null;
+  doctorPreventative: string | null;
 }
 
 export default function InsuranceJourney() {
@@ -41,7 +59,8 @@ export default function InsuranceJourney() {
     setDob,
   } = useJourneyStore();
 
-  const { setPremium, setDocuments, setTKPremium } = usePremiumStore();
+  const { setPremium, setTKPremium } = usePremiumStore();
+  const { setHalleschePremiumDocs, setHallescheExpatDocs } = useDocumentStore();
 
   // Local UI States
   const [step, setStep] = useState(1);
@@ -52,6 +71,20 @@ export default function InsuranceJourney() {
   const [loading, setLoading] = useState(false);
   const [hasChildren, setHasChildren] = useState<boolean | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Health Questionnaire States
+  const [currentHealthQuestion, setCurrentHealthQuestion] = useState(0);
+  const [healthAnswers, setHealthAnswers] = useState<HealthAnswer>({
+    hospitalized: null,
+    dentalVisit: null,
+    dentalPreventative: null,
+    missingTeeth: null,
+    chronicDiseases: null,
+    psychotherapy: null,
+    doctorVisit: null,
+    doctorPreventative: null,
+  });
+  const [showAppointment, setShowAppointment] = useState(false);
 
   // Animation variants
   const containerVariants = {
@@ -89,26 +122,16 @@ export default function InsuranceJourney() {
   // Calculate TK Price based on income
   const calculateTKPrice = useCallback(
     (yearlyIncome: number, hasChildren: boolean, age: number) => {
-      const maxIncome = 5812.5 * 12; // €69,750 annually (monthly cap * 12)
+      const maxIncome = 5812.5 * 12;
       const cappedIncome = Math.min(yearlyIncome, maxIncome);
 
-      // Main premium: 14.6%
       const mainPremium = cappedIncome * 0.146;
-
-      // TK Zusatzbeitrag: 2.45%
       const zusatzbeitrag = cappedIncome * 0.0245;
-
-      // Care insurance: 3.6% (with children or age < 23) or 4.2% (without children and age >= 23)
       const careInsuranceRate = hasChildren || age < 23 ? 0.036 : 0.042;
       const careInsurance = cappedIncome * careInsuranceRate;
-
-      // Total annual premium
       const totalAnnual = mainPremium + zusatzbeitrag + careInsurance;
-
-      // Monthly premium
       const monthlyPremium = totalAnnual / 12;
 
-      // Employee portion (split)
       const employeeMainPremium = cappedIncome * 0.073;
       const employeeZusatzbeitrag = cappedIncome * 0.01225;
       const employeeCareInsurance =
@@ -190,29 +213,34 @@ export default function InsuranceJourney() {
   }, [popup]);
 
   // =============== HANDLERS ====================
-  const handleEmploymentSelect = useCallback((val: string) => {
-    setEmploymentStatus(val);
-    setStep(val === "Others" ? 99 : 2);
-  }, [setEmploymentStatus]);
+  const handleEmploymentSelect = useCallback(
+    (val: string) => {
+      setEmploymentStatus(val);
+      setStep(val === "Others" ? 99 : 2);
+    },
+    [setEmploymentStatus]
+  );
 
-  const handleIncomeSelect = useCallback((val: string) => {
-    setIncomeRange(val);
-    
-    // Set the actual income value based on range
-    let income = 50000; // Default
-    if (val === ">77400") {
-      income = 66150;
-    } else if (val === "30001-77400") {
-      income = 66150;
-    }
-    setActualIncome(income);
-    
-    if (val === "<30000") {
-      setStep(98);
-    } else if (val === ">77400" || val === "30001-77400") {
-      setStep(3);
-    }
-  }, [setIncomeRange, setActualIncome]);
+  const handleIncomeSelect = useCallback(
+    (val: string) => {
+      setIncomeRange(val);
+
+      let income = 50000;
+      if (val === ">77400") {
+        income = 66150;
+      } else if (val === "30001-77400") {
+        income = 66150;
+      }
+      setActualIncome(income);
+
+      if (val === "<30000") {
+        setStep(98);
+      } else if (val === ">77400" || val === "30001-77400") {
+        setStep(3);
+      }
+    },
+    [setIncomeRange, setActualIncome]
+  );
 
   const handleOtherSubmit = useCallback(() => {
     if (!otherEmployment || !email || !phone) {
@@ -226,7 +254,7 @@ export default function InsuranceJourney() {
       return;
     }
 
-    const phoneRegex = /^\+?[\d\s-]{10,}$/;
+    const phoneRegex = /^\\+?[\\d\\s-]{10,}$/;
     if (!phoneRegex.test(phone)) {
       setPopup("Please enter a valid phone number");
       return;
@@ -250,7 +278,7 @@ export default function InsuranceJourney() {
       return;
     }
 
-    const phoneRegex = /^\+?[\d\s-]{10,}$/;
+    const phoneRegex = /^\\+?[\\d\\s-]{10,}$/;
     if (!phoneRegex.test(phone)) {
       setPopup("Please enter a valid phone number");
       return;
@@ -275,81 +303,377 @@ export default function InsuranceJourney() {
     setStep(5);
   }, [dob]);
 
-  const handleCountrySelect = useCallback((countryName: string) => {
-    setSelectedCountry(countryName);
-    setIsDropdownOpen(false);
-    setSearchTerm("");
-  }, [setSelectedCountry]);
+  const handleCountrySelect = useCallback(
+    (countryName: string) => {
+      setSelectedCountry(countryName);
+      setIsDropdownOpen(false);
+      setSearchTerm("");
+    },
+    [setSelectedCountry]
+  );
 
-  const handleCountrySubmit = useCallback(async () => {
+  // ✅ Modified: Show health questionnaire instead of API call
+  const handleCountrySubmit = useCallback(() => {
     if (!selectedCountry) {
       setPopup("Please select a country");
       return;
     }
+    
+    // Move to health questionnaire (step 6)
+    setStep(6);
+    setCurrentHealthQuestion(0);
+  }, [selectedCountry]);
 
+  // Handle health question answers
+// Health questions configuration - NEW ORDER
+const healthQuestions = [
+  {
+    id: 0,
+    title: "Quick health check",
+    subtitle: "Have you visited a doctor in the past 3 years?",
+    helper: "This helps us recommend the right path for you.",
+    key: "doctorVisit" as keyof HealthAnswer,
+    image: "/gifs_assets/step2.gif",
+  },
+  {
+    id: 1,
+    title: "Quick health check",
+    subtitle: "Was the visit for a preventive health checkup?",
+    helper: "Preventive = routine check-up without symptoms.",
+    key: "doctorPreventative" as keyof HealthAnswer,
+    image: "/gifs_assets/step2.gif",
+  },
+  {
+    id: 2,
+    title: "Almost there",
+    subtitle: "Have you been hospitalized in the past five years?",
+    key: "hospitalized" as keyof HealthAnswer,
+    image: "/gifs_assets/step2.gif",
+  },
+  {
+    id: 3,
+    title: "Mental health matters",
+    subtitle: "Have you had psychotherapy in the past 10 years?",
+    key: "psychotherapy" as keyof HealthAnswer,
+    image: "/gifs_assets/step2.gif",
+  },
+  {
+    id: 4,
+    title: "Health status",
+    subtitle: "Do you have disabilities or chronic diseases?",
+    key: "chronicDiseases" as keyof HealthAnswer,
+    image: "/gifs_assets/step2.gif",
+  },
+  {
+    id: 5,
+    title: "Dental care",
+    subtitle: "Have you been to the dentist in the past 3 years?",
+    key: "dentalVisit" as keyof HealthAnswer,
+    image: "/gifs_assets/step2.gif",
+  },
+  {
+    id: 6,
+    title: "Dental health",
+    subtitle: "Do you have any missing teeth?",
+    helper: "Excluding wisdom teeth.",
+    key: "missingTeeth" as keyof HealthAnswer,
+    image: "/gifs_assets/step2.gif",
+  },
+];
+
+// ✅ UPDATED: Handle health question answers with NEW LOGIC
+const handleHealthAnswer = useCallback(
+  (key: keyof HealthAnswer, value: string) => {
+    const updatedAnswers = { ...healthAnswers, [key]: value };
+    setHealthAnswers(updatedAnswers);
+
+    // ==================== NEW LOGIC ====================
+    
+    if (currentHealthQuestion === 0) {
+      // Q1: Doctor visit (FIRST QUESTION)
+      if (value === "yes") {
+        // Show follow-up: Was it preventive?
+        setCurrentHealthQuestion(1);
+      } else {
+        // NO to doctor visit → Continue to Q2, but mark as risky path
+        setCurrentHealthQuestion(2);
+      }
+    } 
+    else if (currentHealthQuestion === 1) {
+      // Q2: Doctor preventive (FOLLOW-UP)
+      if (value === "no") {
+        // NO to preventive → RISKY → Continue all questions but will show appointment
+        setCurrentHealthQuestion(2);
+      } else {
+        // YES to preventive → SAFE PATH → Continue to check other questions
+        setCurrentHealthQuestion(2);
+      }
+    } 
+    else if (currentHealthQuestion === 2) {
+      // Q3: Hospitalized
+      setCurrentHealthQuestion(3);
+    } 
+    else if (currentHealthQuestion === 3) {
+      // Q4: Psychotherapy
+      setCurrentHealthQuestion(4);
+    } 
+    else if (currentHealthQuestion === 4) {
+      // Q5: Chronic diseases
+      setCurrentHealthQuestion(5);
+    } 
+    else if (currentHealthQuestion === 5) {
+      // Q6: Dental visit
+      setCurrentHealthQuestion(6);
+    } 
+    else if (currentHealthQuestion === 6) {
+      // Q7: Missing teeth (LAST QUESTION)
+      // Evaluate all answers
+      evaluateHealthAnswers({ ...updatedAnswers, missingTeeth: value });
+    }
+  },
+  [healthAnswers, currentHealthQuestion]
+);
+
+// ✅ UPDATED: Evaluate health answers with NEW LOGIC
+const evaluateHealthAnswers = useCallback(
+  async (finalAnswers: HealthAnswer) => {
+    // Check if doctor visit path was safe
+    const doctorPathSafe = 
+      finalAnswers.doctorVisit === "no" || 
+      (finalAnswers.doctorVisit === "yes" && finalAnswers.doctorPreventative === "yes");
+
+    // Check if all OTHER questions are safe (all "no")
+    const otherQuestionsSafe =
+      finalAnswers.hospitalized === "no" &&
+      finalAnswers.psychotherapy === "no" &&
+      finalAnswers.chronicDiseases === "no" &&
+      finalAnswers.dentalVisit === "no" &&
+      finalAnswers.missingTeeth === "no";
+
+    // ✅ LOGIC:
+    // Show Products ONLY if:
+    // 1. Doctor visit was NO OR (YES + Preventive YES)
+    // 2. AND all other questions are NO
+    
+    const showProducts = doctorPathSafe && otherQuestionsSafe;
+
+    if (showProducts) {
+      // Safe path → Show products
+      await fetchOffersAndNavigate();
+    } else {
+      // Risky path → Show appointment
+      setShowAppointment(true);
+      setStep(7);
+    }
+  },
+  [selectedCountry, dob, incomeRange, hasChildren]
+);
+
+
+  // API call to fetch offers
+  const fetchOffersAndNavigate = useCallback(async () => {
     setLoading(true);
 
-    const currentYear = new Date().getFullYear();
-    const age = dob ? currentYear - parseInt(dob) : 25;
+    try {
+      const EU_COUNTRIES = [
+        "Austria",
+        "Belgium",
+        "Bulgaria",
+        "Croatia",
+        "Cyprus",
+        "Czech Republic",
+        "Denmark",
+        "Estonia",
+        "Finland",
+        "France",
+        "Germany",
+        "Greece",
+        "Hungary",
+        "Ireland",
+        "Italy",
+        "Latvia",
+        "Lithuania",
+        "Luxembourg",
+        "Malta",
+        "Netherlands",
+        "Poland",
+        "Portugal",
+        "Romania",
+        "Slovakia",
+        "Slovenia",
+        "Spain",
+        "Sweden",
+        "Iceland",
+        "Liechtenstein",
+        "Norway",
+        "Switzerland",
+        "United Kingdom",
+      ];
 
-    const yearlyIncome = useJourneyStore.getState().actualIncome || 50000;
+      const isEU = EU_COUNTRIES.includes(selectedCountry);
+      const currentYear = new Date().getFullYear();
+      const age = dob ? currentYear - parseInt(dob) : 25;
+      const yearlyIncome = useJourneyStore.getState().actualIncome || 50000;
+      const tkPrice = calculateTKPrice(yearlyIncome, hasChildren ?? false, age);
+      setTKPremium(tkPrice.employeeMonthly);
 
-    const tkPrice = calculateTKPrice(yearlyIncome, hasChildren ?? false, age);
-    setTKPremium(tkPrice.employeeMonthly);
+      const products: any[] = [];
 
-    if (incomeRange === ">77400") {
-      const fullDob = `${dob}-01-01`;
-      const coverageStart = new Date().toISOString().split("T")[0];
+      // Product 1: TK (always shown)
+      products.push({
+        id: "tk",
+        name: "TK Public Insurance",
+        provider: "Techniker Krankenkasse",
+        type: "public",
+        premium: tkPrice.employeeMonthly,
+        description: "German public health insurance",
+        features: [
+          "Statutory health coverage",
+          "Income-based premium",
+          "Family insurance available",
+        ],
+      });
 
-      const payload = {
-        tarifId: "34572",
-        vorname: "User",
-        name: "Customer",
-        geburtsdatum: fullDob,
-        beginn: coverageStart,
-      };
+      // Fetch Hallesche for eligible users
+      if (incomeRange) {
+        const fullDob = `${dob}-01-01`;
+        const coverageStart = new Date().toISOString().split("T")[0];
 
-      try {
-        const res = await fetch("/api/getOfferEinzel", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
+        // Premium (always fetch for everyone with income)
+        try {
+          const premiumRes = await fetch("/api/getOfferEinzel", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              tariffIds: ["35659", "36129", "24332", "1803"],
+              vorname: "User",
+              name: "Customer",
+              geburtsdatum: fullDob,
+              beginn: coverageStart,
+            }),
+          });
 
-        if (!res.ok) {
-          const txt = await res.text();
-          throw new Error(`Server ${res.status}: ${txt}`);
+          if (premiumRes.ok) {
+            const premiumJson = await premiumRes.json();
+
+            setHalleschePremiumDocs(premiumJson.documents || []);
+            setPremium(premiumJson.premium);
+
+            products.push({
+              id: "hallesche-premium",
+              name: "Hallesche Premium",
+              provider: "Hallesche",
+              type: "premium",
+              tariffIds: ["35659", "36129", "24332", "1803"],
+              premium: premiumJson.premium,
+              documentCount: premiumJson.documents?.length || 0,
+              description: "NK.select XL Bonus + NK.select Flex",
+              features: [
+                "Comprehensive private coverage",
+                "Private hospital room",
+                "Full dental coverage",
+                "Daily hospital benefit",
+                "Care insurance included",
+              ],
+            });
+          }
+        } catch (err) {
+          console.error("Error fetching Hallesche Premium:", err);
         }
 
-        const json = await res.json();
-        setPremium(json.premium ?? null);
-        setDocuments(json.documents ?? []);
-      } catch (e: unknown) {
-        if (e instanceof Error) {
-          setPopup(`Error: ${e.message}`);
-        } else {
-          setPopup("Failed to calculate premium. Please try again.");
+        // Expat (only for non-EU)
+        if (!isEU) {
+          try {
+            const expatRes = await fetch("/api/getOfferEinzel", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                tariffIds: ["35057", "35063", "24332", "1803"],
+                vorname: "User",
+                name: "Customer",
+                geburtsdatum: fullDob,
+                beginn: coverageStart,
+              }),
+            });
+
+            if (expatRes.ok) {
+              const expatJson = await expatRes.json();
+
+              setHallescheExpatDocs(expatJson.documents || []);
+
+              products.push({
+                id: "hallesche-expat",
+                name: "Hallesche Expat",
+                provider: "Hallesche",
+                type: "expat",
+                tariffIds: ["35057", "35063", "24332", "1803"],
+                premium: expatJson.premium,
+                documentCount: expatJson.documents?.length || 0,
+                description: "Hi.Germany L + Hi.Dental L",
+                features: [
+                  "Expat-specific coverage",
+                  "English language support",
+                  "Budget-friendly option",
+                  "Essential health protection",
+                  "Care insurance included",
+                ],
+              });
+            }
+          } catch (err) {
+            console.error("Error fetching Hallesche Expat:", err);
+          }
         }
-        setLoading(false);
-        return;
       }
-    } else {
-      setPremium(null);
+
+      useJourneyStore.setState({
+        availableProducts: products,
+        selectedCountry: selectedCountry,
+      });
+
+      console.log(`User from ${selectedCountry} (${isEU ? "EU" : "Non-EU"})`);
+      console.log(`Showing ${products.length} products:`, products.map((p) => p.name));
+
+      setLoading(false);
+      router.push("/calculator");
+    } catch (error) {
+      console.error("Error:", error);
+      setPopup("An error occurred. Please try again.");
+      setLoading(false);
     }
+  }, [
+    selectedCountry,
+    dob,
+    incomeRange,
+    hasChildren,
+    calculateTKPrice,
+    setTKPremium,
+    setPremium,
+    setHalleschePremiumDocs,
+    setHallescheExpatDocs,
+    router,
+  ]);
 
-    setLoading(false);
-    router.push("/calculator");
-  }, [selectedCountry, dob, incomeRange, hasChildren, calculateTKPrice, setTKPremium, setPremium, setDocuments, router]);
+  // Handle appointment booking
+  const handleBookAppointment = () => {
+    setPopup("Thank you! We'll contact you shortly.");
+    setTimeout(() => {
+      router.push("/book-appointment");
+    }, 2000);
+  };
 
-  const stepImages: Record<number, string> = useMemo(() => ({
-    1: "/gifs_assets/step1.gif",
-    99: "/gifs_assets/step2.gif",
-    2: "/gifs_assets/step3.svg",
-    3: "/gifs_assets/step1.gif",
-    98: "/gifs_assets/step2.gif",
-    4: "/gifs_assets/step2.gif",
-    5: "/gifs_assets/step3.svg",
-  }), []);
+
+  const stepImages: Record<number, string> = useMemo(
+    () => ({
+      1: "/gifs_assets/step1.gif",
+      99: "/gifs_assets/step2.gif",
+      2: "/gifs_assets/step3.svg",
+      3: "/gifs_assets/step1.gif",
+      98: "/gifs_assets/step2.gif",
+      4: "/gifs_assets/step2.gif",
+      5: "/gifs_assets/step3.svg",
+    }),
+    []
+  );
 
   const selectedCountryData = useMemo(
     () => countries.find((c) => c.name === selectedCountry),
@@ -357,9 +681,10 @@ export default function InsuranceJourney() {
   );
 
   const filteredCountries = useMemo(
-    () => countries.filter((c) =>
-      c.name.toLowerCase().includes(searchTerm.toLowerCase())
-    ),
+    () =>
+      countries.filter((c) =>
+        c.name.toLowerCase().includes(searchTerm.toLowerCase())
+      ),
     [countries, searchTerm]
   );
 
@@ -372,6 +697,7 @@ export default function InsuranceJourney() {
   // =============== UI ====================
   return (
     <section className="bg-gradient-to-br from-[#f5f0ff] to-white py-16 px-4 md:px-10 min-h-screen">
+       {!showAppointment && (
       <motion.div
         initial={{ y: -30, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -384,7 +710,7 @@ export default function InsuranceJourney() {
         <p className="text-gray-500 text-base md:text-lg">
           No calls, no commitments — unless you want them.
         </p>
-      </motion.div>
+      </motion.div>)}
 
       <AnimatePresence mode="wait">
         {/* Step 1: Employment Status */}
@@ -398,7 +724,10 @@ export default function InsuranceJourney() {
             className="w-full max-w-6xl mx-auto"
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-              <motion.div variants={imageVariants} className="flex justify-center items-center">
+              <motion.div
+                variants={imageVariants}
+                className="flex justify-center items-center"
+              >
                 <Image
                   src={stepImages[1]}
                   alt="Employment selection"
@@ -411,21 +740,26 @@ export default function InsuranceJourney() {
               </motion.div>
 
               <motion.div variants={containerVariants} className="space-y-4">
-                <motion.h2 variants={itemVariants} className="text-xl font-semibold mb-6 text-gray-700">
+                <motion.h2
+                  variants={itemVariants}
+                  className="text-xl font-semibold mb-6 text-gray-700"
+                >
                   What&apos;s your Employment Status?
                 </motion.h2>
-                {["Self-employed/Freelancer", "Employed", "Others"].map((item, index) => (
-                  <motion.button
-                    key={item}
-                    variants={itemVariants}
-                    whileHover={{ scale: 1.02, x: 5 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => handleEmploymentSelect(item)}
-                    className="w-full p-4 cursor-pointer border-2 rounded-lg text-left hover:border-primary hover:bg-primary/5 transition focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-                  >
-                    {item}
-                  </motion.button>
-                ))}
+                {["Self-employed/Freelancer", "Employed", "Others"].map(
+                  (item) => (
+                    <motion.button
+                      key={item}
+                      variants={itemVariants}
+                      whileHover={{ scale: 1.02, x: 5 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => handleEmploymentSelect(item)}
+                      className="w-full p-4 cursor-pointer border-2 rounded-lg text-left hover:border-primary hover:bg-primary/5 transition focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                    >
+                      {item}
+                    </motion.button>
+                  )
+                )}
               </motion.div>
             </div>
           </motion.div>
@@ -442,7 +776,10 @@ export default function InsuranceJourney() {
             className="w-full max-w-6xl mx-auto"
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-              <motion.div variants={imageVariants} className="flex justify-center items-center">
+              <motion.div
+                variants={imageVariants}
+                className="flex justify-center items-center"
+              >
                 <Image
                   src={stepImages[99]}
                   alt="Contact details"
@@ -454,7 +791,10 @@ export default function InsuranceJourney() {
               </motion.div>
 
               <motion.div variants={containerVariants} className="space-y-4">
-                <motion.h2 variants={itemVariants} className="text-xl font-semibold mb-4 text-gray-700">
+                <motion.h2
+                  variants={itemVariants}
+                  className="text-xl font-semibold mb-4 text-gray-700"
+                >
                   Please provide your details
                 </motion.h2>
 
@@ -513,7 +853,10 @@ export default function InsuranceJourney() {
             className="w-full max-w-6xl mx-auto"
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-              <motion.div variants={imageVariants} className="flex justify-center items-center">
+              <motion.div
+                variants={imageVariants}
+                className="flex justify-center items-center"
+              >
                 <Image
                   src={stepImages[2]}
                   alt="Income selection"
@@ -525,7 +868,10 @@ export default function InsuranceJourney() {
               </motion.div>
 
               <motion.div variants={containerVariants} className="space-y-4">
-                <motion.h2 variants={itemVariants} className="text-xl font-semibold mb-6 text-gray-700">
+                <motion.h2
+                  variants={itemVariants}
+                  className="text-xl font-semibold mb-6 text-gray-700"
+                >
                   How much is your yearly gross (pretax) income?
                 </motion.h2>
                 <motion.button
@@ -571,7 +917,10 @@ export default function InsuranceJourney() {
             className="w-full max-w-6xl mx-auto"
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-              <motion.div variants={imageVariants} className="flex justify-center items-center">
+              <motion.div
+                variants={imageVariants}
+                className="flex justify-center items-center"
+              >
                 <Image
                   src={stepImages[3]}
                   alt="Children question"
@@ -583,13 +932,19 @@ export default function InsuranceJourney() {
               </motion.div>
 
               <motion.div variants={containerVariants} className="space-y-4">
-                <motion.h2 variants={itemVariants} className="text-xl font-semibold mb-4 text-gray-700">
+                <motion.h2
+                  variants={itemVariants}
+                  className="text-xl font-semibold mb-4 text-gray-700"
+                >
                   Do you have children?
                 </motion.h2>
-                <motion.p variants={itemVariants} className="text-sm text-gray-500 mb-6">
+                <motion.p
+                  variants={itemVariants}
+                  className="text-sm text-gray-500 mb-6"
+                >
                   This affects your care insurance rate
                 </motion.p>
-                
+
                 <motion.button
                   variants={itemVariants}
                   whileHover={{ scale: 1.02, x: 5 }}
@@ -597,14 +952,18 @@ export default function InsuranceJourney() {
                   onClick={() => handleChildrenSelection(true)}
                   className={`w-full p-4 border-2 cursor-pointer rounded-lg text-left transition focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
                     hasChildren === true
-                      ? 'border-primary bg-primary/5'
-                      : 'border-gray-300 hover:border-primary hover:bg-primary/5'
+                      ? "border-primary bg-primary/5"
+                      : "border-gray-300 hover:border-primary hover:bg-primary/5"
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                      hasChildren === true ? 'border-primary' : 'border-gray-300'
-                    }`}>
+                    <div
+                      className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                        hasChildren === true
+                          ? "border-primary"
+                          : "border-gray-300"
+                      }`}
+                    >
                       {hasChildren === true && (
                         <motion.div
                           initial={{ scale: 0 }}
@@ -624,14 +983,18 @@ export default function InsuranceJourney() {
                   onClick={() => handleChildrenSelection(false)}
                   className={`w-full p-4 border-2 cursor-pointer rounded-lg text-left transition focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
                     hasChildren === false
-                      ? 'border-primary bg-primary/5'
-                      : 'border-gray-300 hover:border-primary hover:bg-primary/5'
+                      ? "border-primary bg-primary/5"
+                      : "border-gray-300 hover:border-primary hover:bg-primary/5"
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                      hasChildren === false ? 'border-primary' : 'border-gray-300'
-                    }`}>
+                    <div
+                      className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                        hasChildren === false
+                          ? "border-primary"
+                          : "border-gray-300"
+                      }`}
+                    >
                       {hasChildren === false && (
                         <motion.div
                           initial={{ scale: 0 }}
@@ -648,7 +1011,7 @@ export default function InsuranceJourney() {
           </motion.div>
         )}
 
-        {/* Step 98: Email + Phone Step */}
+        {/* Step 98: Email + Phone */}
         {step === 98 && (
           <motion.div
             key="step98"
@@ -659,7 +1022,10 @@ export default function InsuranceJourney() {
             className="w-full max-w-6xl mx-auto"
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-              <motion.div variants={imageVariants} className="flex justify-center items-center">
+              <motion.div
+                variants={imageVariants}
+                className="flex justify-center items-center"
+              >
                 <Image
                   src={stepImages[98]}
                   alt="Contact form"
@@ -671,10 +1037,16 @@ export default function InsuranceJourney() {
               </motion.div>
 
               <motion.div variants={containerVariants} className="space-y-4">
-                <motion.h2 variants={itemVariants} className="text-xl font-semibold mb-4 text-gray-700">
+                <motion.h2
+                  variants={itemVariants}
+                  className="text-xl font-semibold mb-4 text-gray-700"
+                >
                   Enter your contact details
                 </motion.h2>
-                <motion.p variants={itemVariants} className="text-sm text-gray-500 mb-4">
+                <motion.p
+                  variants={itemVariants}
+                  className="text-sm text-gray-500 mb-4"
+                >
                   We&apos;ll help you find the best option for your income range
                 </motion.p>
                 <motion.input
@@ -720,7 +1092,10 @@ export default function InsuranceJourney() {
             className="w-full max-w-6xl mx-auto"
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-              <motion.div variants={imageVariants} className="flex justify-center items-center">
+              <motion.div
+                variants={imageVariants}
+                className="flex justify-center items-center"
+              >
                 <Image
                   src={stepImages[4]}
                   alt="Birth year selection"
@@ -732,7 +1107,10 @@ export default function InsuranceJourney() {
               </motion.div>
 
               <motion.div variants={containerVariants} className="space-y-4">
-                <motion.h2 variants={itemVariants} className="text-xl font-semibold mb-4 text-gray-700">
+                <motion.h2
+                  variants={itemVariants}
+                  className="text-xl font-semibold mb-4 text-gray-700"
+                >
                   What&apos;s your Birth Year?
                 </motion.h2>
                 <motion.select
@@ -796,7 +1174,10 @@ export default function InsuranceJourney() {
             className="w-full max-w-6xl mx-auto"
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-              <motion.div variants={imageVariants} className="flex justify-center items-center">
+              <motion.div
+                variants={imageVariants}
+                className="flex justify-center items-center"
+              >
                 <Image
                   src={stepImages[5]}
                   alt="Country selection"
@@ -808,11 +1189,18 @@ export default function InsuranceJourney() {
               </motion.div>
 
               <motion.div variants={containerVariants} className="space-y-4">
-                <motion.h2 variants={itemVariants} className="text-xl font-semibold mb-4 text-gray-700">
+                <motion.h2
+                  variants={itemVariants}
+                  className="text-xl font-semibold mb-4 text-gray-700"
+                >
                   Where are you moving from?
                 </motion.h2>
 
-                <motion.div variants={itemVariants} className="relative" ref={dropdownRef}>
+                <motion.div
+                  variants={itemVariants}
+                  className="relative"
+                  ref={dropdownRef}
+                >
                   <button
                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                     className="w-full cursor-pointer border-2 p-3 rounded-lg text-left flex items-center justify-between hover:border-primary transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
@@ -876,7 +1264,9 @@ export default function InsuranceJourney() {
                               <motion.button
                                 key={country.code}
                                 whileHover={{ backgroundColor: "#f3f4f6" }}
-                                onClick={() => handleCountrySelect(country.name)}
+                                onClick={() =>
+                                  handleCountrySelect(country.name)
+                                }
                                 className="w-full p-3 flex items-center cursor-pointer gap-3 transition text-left"
                               >
                                 <Image
@@ -902,41 +1292,254 @@ export default function InsuranceJourney() {
 
                 <motion.button
                   variants={itemVariants}
-                  whileHover={!loading && selectedCountry ? { scale: 1.02 } : {}}
-                  whileTap={!loading && selectedCountry ? { scale: 0.98 } : {}}
+                  whileHover={selectedCountry ? { scale: 1.02 } : {}}
+                  whileTap={selectedCountry ? { scale: 0.98 } : {}}
                   onClick={handleCountrySubmit}
-                  disabled={loading || !selectedCountry}
+                  disabled={!selectedCountry}
                   className={`px-6 py-3 rounded-lg w-full font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
-                    loading || !selectedCountry
+                    !selectedCountry
                       ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                       : "bg-primary text-white cursor-pointer hover:bg-primary/90"
                   }`}
                 >
-                  {loading ? (
-                    <span className="flex items-center justify-center gap-2">
-                      <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                          fill="none"
-                        />
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        />
-                      </svg>
-                      Calculating Premium...
-                    </span>
-                  ) : (
-                    "Calculate My Premium"
-                  )}
+                  Continue to Health Questions
                 </motion.button>
               </motion.div>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Step 6: Health Questionnaire */}
+        {step === 6 && !showAppointment && (
+          <motion.div
+            key={`health-q-${currentHealthQuestion}`}
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            className="w-full max-w-6xl mx-auto"
+          >
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+              {/* Left: Image */}
+              <motion.div
+                variants={imageVariants}
+                className="flex justify-center items-center"
+              >
+                <Image
+                  src={healthQuestions[currentHealthQuestion].image}
+                  alt={healthQuestions[currentHealthQuestion].title}
+                  width={400}
+                  height={300}
+                  className="w-full max-w-md"
+                  unoptimized
+                />
+              </motion.div>
+
+              {/* Right: Question */}
+              <motion.div variants={containerVariants} className="space-y-4">
+                {/* Back Button */}
+                {currentHealthQuestion === 0 && (
+                  <motion.button
+                    variants={itemVariants}
+                    onClick={() => setStep(5)}
+                    className="flex items-center gap-2 text-gray-600 hover:text-primary transition mb-4"
+                  >
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M15 19l-7-7 7-7"
+                      />
+                    </svg>
+                    Back
+                  </motion.button>
+                )}
+
+                {/* Title */}
+                <motion.h2
+                  variants={itemVariants}
+                  className="text-2xl md:text-3xl font-bold text-gray-800"
+                >
+                  {healthQuestions[currentHealthQuestion].title}
+                </motion.h2>
+
+                {/* Subtitle */}
+                <motion.p
+                  variants={itemVariants}
+                  className="text-lg text-gray-700"
+                >
+                  {healthQuestions[currentHealthQuestion].subtitle}
+                </motion.p>
+
+                {/* Helper Text */}
+                {healthQuestions[currentHealthQuestion].helper && (
+                  <motion.p
+                    variants={itemVariants}
+                    className="text-sm text-gray-500"
+                  >
+                    {healthQuestions[currentHealthQuestion].helper}
+                  </motion.p>
+                )}
+
+                {/* Answer Buttons */}
+                <div className="space-y-3 mt-6">
+                  <motion.button
+                    variants={itemVariants}
+                    whileHover={{ scale: 1.02, x: 5 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() =>
+                      handleHealthAnswer(
+                        healthQuestions[currentHealthQuestion].key,
+                        "yes"
+                      )
+                    }
+                    className="w-full p-4 border-2 cursor-pointer rounded-lg text-left hover:border-primary hover:bg-primary/5 transition focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                  >
+                    Yes
+                  </motion.button>
+
+                  <motion.button
+                    variants={itemVariants}
+                    whileHover={{ scale: 1.02, x: 5 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() =>
+                      handleHealthAnswer(
+                        healthQuestions[currentHealthQuestion].key,
+                        "no"
+                      )
+                    }
+                    className="w-full p-4 border-2 cursor-pointer rounded-lg text-left hover:border-primary hover:bg-primary/5 transition focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                  >
+                    No
+                  </motion.button>
+                </div>
+
+                {/* Progress Indicator */}
+                <motion.div
+                  variants={itemVariants}
+                  className="mt-6 flex items-center gap-2"
+                >
+                  {healthQuestions.map((_, idx) => (
+                    <div
+                      key={idx}
+                      className={`h-2 flex-1 rounded-full transition-all ${
+                        idx <= currentHealthQuestion
+                          ? "bg-primary"
+                          : "bg-gray-300"
+                      }`}
+                    />
+                  ))}
+                </motion.div>
+              </motion.div>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Step 7: Book Appointment */}
+        {step === 7 && showAppointment && (
+          <motion.div
+            key="appointment"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="w-full max-w-4xl mx-auto"
+          >
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+              {/* Image */}
+              <div className="flex justify-center items-center">
+                <Image
+                  src="/gifs_assets/appointment1.png"
+                  alt="Book appointment"
+                  width={400}
+                  height={300}
+                  className="w-full max-w-md"
+                  unoptimized
+                />
+              </div>
+
+              {/* Content */}
+              <div className="space-y-6">
+                <h2 className="text-2xl md:text-3xl font-bold text-gray-800">
+                  Let&apos;s do this the right way
+                </h2>
+
+                <p className="text-gray-700">
+                  Based on your recent health history, the best plans and
+                  pricing will need a quick expert review.
+                </p>
+
+                {/* Benefits */}
+                <div className="bg-white border-2 border-gray-200 rounded-lg p-6 space-y-4">
+                  {[
+                    "Avoid incorrect plan selection",
+                    "Get accurate premium expectations",
+                    "Faster insurer acceptance",
+                  ].map((benefit, idx) => (
+                    <div key={idx} className="flex items-start gap-3">
+                      <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <svg
+                          className="w-4 h-4 text-primary"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M5 13l4 4L19 7"
+                          />
+                        </svg>
+                      </div>
+                      <span className="text-gray-700">{benefit}</span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* CTA Buttons */}
+                <div className="space-y-3">
+                  <button
+                    onClick={handleBookAppointment}
+                    className="w-full px-6 py-4 bg-primary text-white rounded-lg hover:bg-primary/90 transition font-semibold focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                  >
+                    Book an appointment
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setShowAppointment(false);
+                      setStep(6);
+                      setCurrentHealthQuestion(0);
+                    }}
+                    className="w-full px-6 py-4 bg-white border-2 border-gray-300 text-gray-700 rounded-lg hover:border-primary hover:bg-primary/5 transition font-semibold focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                  >
+                    Back
+                  </button>
+                </div>
+
+                {/* Help Link */}
+                <button className="flex items-center gap-2 text-gray-600 hover:text-primary transition mx-auto">
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                  Why is this needed?
+                </button>
+              </div>
             </div>
           </motion.div>
         )}
@@ -957,6 +1560,37 @@ export default function InsuranceJourney() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Loading Overlay */}
+      {loading && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+        >
+          <div className="bg-white p-6 rounded-lg flex items-center gap-4">
+            <svg className="animate-spin h-8 w-8 text-primary" viewBox="0 0 24 24">
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+                fill="none"
+              />
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              />
+            </svg>
+            <span className="text-gray-700 font-semibold">
+              Calculating your premium...
+            </span>
+          </div>
+        </motion.div>
+      )}
     </section>
   );
 }

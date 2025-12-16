@@ -1,89 +1,115 @@
-// components/BookAppointmentModal.tsx
+// app/components/BookAppointment.tsx
 "use client";
-import React, { useState } from "react";
 
-interface BookAppointmentModalProps {
-  open: boolean;
-  onClose: () => void;
+import React from "react";
+import { motion } from "framer-motion";
+import Image from "next/image";
+
+interface BookAppointmentProps {
+  onBooking: () => void;
+  onBack: () => void;
 }
 
-export default function BookAppointmentModal({ open, onClose }: BookAppointmentModalProps) {
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [submitted, setSubmitted] = useState(false);
-
-  if (!open) return null;
-
-  const handleSubmit = () => {
-    if (!email || !phone) return alert("Please fill all fields");
-
-    setSubmitted(true);
-
-    // You can send this to backend later
-    // fetch("/api/bookAppointment", { method: "POST", body: JSON.stringify({email, phone}) })
-
-    setTimeout(() => {
-      onClose();
-      setSubmitted(false);
-      setEmail("");
-      setPhone("");
-    }, 2000);
-  };
-
+const BookAppointment: React.FC<BookAppointmentProps> = ({
+  onBooking,
+  onBack,
+}) => {
   return (
-    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-50">
-      <div className="bg-white w-full max-w-md rounded-xl p-6 shadow-xl">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="w-full max-w-4xl mx-auto"
+    >
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+        {/* Image */}
+        <div className="flex justify-center items-center">
+          <Image
+            src="/gifs/assets/appointment.gif"
+            alt="Book appointment"
+            width={400}
+            height={300}
+            className="w-full max-w-md"
+            unoptimized
+          />
+        </div>
 
-        {!submitted ? (
-          <>
-            <h2 className="text-xl font-semibold text-center mb-4">Book an Appointment</h2>
+        {/* Content */}
+        <div className="space-y-6">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-800">
+            Let's do this the right way
+          </h2>
 
-            {/* Email */}
-            <label className="block mb-3">
-              <span className="text-sm text-gray-600">Email</span>
-              <input
-                type="email"
-                className="w-full border rounded-lg px-3 py-2 mt-1"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email"
+          <p className="text-gray-700">
+            Based on your recent health history, the best plans and pricing
+            will need a quick expert review.
+          </p>
+
+          {/* Benefits */}
+          <div className="bg-white border-2 border-gray-200 rounded-lg p-6 space-y-4">
+            {[
+              "Avoid incorrect plan selection",
+              "Get accurate premium expectations",
+              "Faster insurer acceptance",
+            ].map((benefit, idx) => (
+              <div key={idx} className="flex items-start gap-3">
+                <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <svg
+                    className="w-4 h-4 text-primary"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+                <span className="text-gray-700">{benefit}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* CTA Buttons */}
+          <div className="space-y-3">
+            <button
+              onClick={onBooking}
+              className="w-full px-6 py-4 bg-primary text-white rounded-lg hover:bg-primary/90 transition font-semibold focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+            >
+              Book an appointment
+            </button>
+
+            <button
+              onClick={onBack}
+              className="w-full px-6 py-4 bg-white border-2 border-gray-300 text-gray-700 rounded-lg hover:border-primary hover:bg-primary/5 transition font-semibold focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+            >
+              Back
+            </button>
+          </div>
+
+          {/* Help Link */}
+          <button className="flex items-center gap-2 text-gray-600 hover:text-primary transition mx-auto">
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
               />
-            </label>
-
-            {/* Phone */}
-            <label className="block mb-4">
-              <span className="text-sm text-gray-600">Phone Number</span>
-              <input
-                type="tel"
-                className="w-full border rounded-lg px-3 py-2 mt-1"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                placeholder="Enter your phone number"
-              />
-            </label>
-
-            {/* Buttons */}
-            <div className="flex gap-3 justify-end">
-              <button
-                onClick={onClose}
-                className="px-4 py-2 rounded-lg border"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleSubmit}
-                className="px-4 py-2 rounded-lg bg-primary text-white"
-              >
-                Submit
-              </button>
-            </div>
-          </>
-        ) : (
-          <h3 className="text-center text-green-600 text-lg font-medium">
-            Thank you! We will connect you shortly.
-          </h3>
-        )}
+            </svg>
+            Why is this needed?
+          </button>
+        </div>
       </div>
-    </div>
+    </motion.div>
   );
-}
+};
+
+export default BookAppointment;

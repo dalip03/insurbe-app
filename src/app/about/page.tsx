@@ -29,7 +29,7 @@ function About() {
       {/* <Growth/> */}
       {/* <AboutPartners/> */}
       <HandInHand/>
-      <AboutJourney/>
+      {/* <AboutJourney/> */}
     </div>
   )
 }

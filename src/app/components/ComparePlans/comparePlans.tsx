@@ -10,6 +10,7 @@ import InsuranceCalculator from "../CalculatorComponents/InsuranceCalculator";
 import { usePremiumStore } from "@/app/stores/premiumStore";
 import { useJourneyStore } from "@/app/stores/journeyStore";
 
+
 export default function ComparePlans() {
   const router = useRouter();
   const { premium, tkPremium } = usePremiumStore();
@@ -22,9 +23,64 @@ export default function ComparePlans() {
   const [selectedPlanName, setSelectedPlanName] = useState("");
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
+  // ✅ Get products from Zustand store
+  const availableProducts = useJourneyStore((state) => state.availableProducts);
+
+  // ✅ Transform store products to display format
+ // In ComparePlans component
+const plans = useMemo(() => {
+  if (!availableProducts || availableProducts.length === 0) {
+    return [];
+  }
+
+  return availableProducts.map((product) => {
+    let logo = "/icons/default.svg";
+    let bgColor = "bg-white";
+    let available = false;
+
+    if (product.id === "tk") {
+      logo = "/icons/tk.svg";
+      bgColor = "bg-white";
+      available = false;
+    } else if (product.id === "hallesche-premium") {
+      logo = "/icons/H.svg";
+      bgColor = "bg-purple-50";
+      available = true;
+    } else if (product.id === "hallesche-expat") {
+      logo = "/icons/H.svg";
+      bgColor = "bg-pink-50";
+      available = true;
+    }
+
+    return {
+      id: product.id,
+      name: product.name,
+      price: typeof product.premium === 'number' 
+        ? Math.round(product.premium).toString() 
+        : product.premium?.toString() || "N/A",
+      period: "/ Month",
+      logo,
+      description: product.description,
+      features: product.features,
+      bgColor,
+      available,
+      recommended: product.type === "premium",
+      tariffIds: product.tariffIds,
+      documentCount: product.documentCount || 0, // ✅ Use count
+      provider: product.provider,
+    };
+  });
+}, [availableProducts]);
+
+
   // Determine which card should be highlighted initially
   const getRecommendedPlanId = () => {
-    return incomeRange === ">77400" ? "hallesche" : "tk";
+    // For high income, recommend Hallesche Premium
+    if (incomeRange === ">77400") {
+      return "hallesche-premium";
+    }
+    // For medium income, recommend TK
+    return "tk";
   };
 
   const recommendedPlanId = getRecommendedPlanId();
@@ -33,126 +89,6 @@ export default function ComparePlans() {
   useEffect(() => {
     setHoveredCard(recommendedPlanId);
   }, [recommendedPlanId]);
-
-  // Generate plans based on income range
-  const plans = useMemo(() => {
-    const isHighIncome = incomeRange === ">77400";
-    const tkPrice = tkPremium ? Math.round(tkPremium).toString() : "62";
-    const halleschePrice = premium
-      ? Math.round(premium).toString()
-      : isHighIncome
-      ? "520"
-      : "450";
-
-    if (isHighIncome) {
-      // For >77,400: TK, Hallesche (recommended), DAK
-      return [
-        {
-          id: "tk",
-          name: "TK (Techniker Krankenkasse)",
-          price: tkPrice,
-          period: "/ Month",
-          logo: "/icons/tk.svg",
-          description: "Germany's most popular public health insurance",
-          features: [
-            "Comprehensive coverage",
-            "Digital health services",
-            "24/7 medical hotline",
-            "Preventive care programs",
-          ],
-          bgColor: "bg-white",
-          available: false,
-        },
-        {
-          id: "hallesche",
-          name: "Hallesche",
-          price: halleschePrice,
-          period: "/ Month",
-          logo: "/icons/H.svg",
-          description:
-            "For Expats planning to stay in Germany for a longer period",
-          features: [
-            "24/7 medical assistance/emergency call centre",
-            "English support",
-            "Digital services",
-            "Great digital services and best insurance for Expats",
-          ],
-          bgColor: "bg-purple-50",
-          available: true,
-          recommended: true, // Mark as recommended
-        },
-        {
-          id: "dak",
-          name: "DAK",
-          price: "490",
-          period: "/ Month",
-          logo: "/icons/dak.svg",
-          description: "Special discount for Residents of Kazakhstan",
-          features: [
-            "24/7 medical assistance/emergency call centre",
-            "English support",
-            "Digital services",
-            "Excellent customer support in English",
-          ],
-          bgColor: "bg-pink-50",
-          available: false,
-        },
-      ];
-    } else {
-      // For 30,001-77,400: Ottonova, TK (recommended), DK
-      return [
-        {
-          id: "ottonova",
-          name: "Ottonova",
-          price: "450",
-          period: "/ Month",
-          logo: "/icons/H.svg",
-          description: "Modern digital private health insurance",
-          features: [
-            "Premium private coverage",
-            "Fast appointments with specialists",
-            "Digital first approach",
-            "Cashback on unused benefits",
-          ],
-          bgColor: "bg-blue-50",
-          available: false,
-        },
-        {
-          id: "tk",
-          name: "TK (Techniker Krankenkasse)",
-          price: tkPrice,
-          period: "/ Month",
-          logo: "/icons/tk.svg",
-          description: "Germany's most popular public health insurance",
-          features: [
-            "Comprehensive coverage",
-            "Digital health services",
-            "24/7 medical hotline",
-            "Preventive care programs",
-          ],
-          bgColor: "bg-white",
-          available: false,
-          recommended: true, // Mark as recommended
-        },
-        {
-          id: "dk",
-          name: "DK",
-          price: halleschePrice,
-          period: "/ Month",
-          logo: "/icons/dak.svg",
-          description: "Traditional private health insurance provider",
-          features: [
-            "Full private coverage",
-            "Chief physician treatment",
-            "Single room hospital stays",
-            "Alternative medicine coverage",
-          ],
-          bgColor: "bg-purple-50",
-          available: false,
-        },
-      ];
-    }
-  }, [incomeRange, premium, tkPremium]);
 
   const handlePersonalizeClick = () => {
     setViewMode("personalize");
@@ -171,6 +107,10 @@ export default function ComparePlans() {
 
   const handleChoosePlan = (plan: typeof plans[0]) => {
     if (plan.available) {
+      // Store selected plan details for next page
+      useJourneyStore.setState({
+        selectedPlan: plan.id,
+      });
       router.push("/calculator/submitApplication");
     } else {
       setSelectedPlanName(plan.name);
@@ -187,6 +127,18 @@ export default function ComparePlans() {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
   };
+
+  // ✅ Show loading state if no products yet
+  if (plans.length === 0) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading your personalized plans...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <motion.div
@@ -277,19 +229,30 @@ export default function ComparePlans() {
           )}
         </AnimatePresence>
 
+        {/* ✅ Product Count Badge */}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-6 text-center"
+        >
+          <span className="inline-block bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-semibold">
+            {plans.length} Plans Available for You
+          </span>
+        </motion.div>
+
         {/* Cards with Equal Heights */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="
-            flex md:grid 
-            md:grid-cols-3 gap-6 
+          className={`
+            flex md:grid gap-6 
             overflow-x-auto md:overflow-visible
             snap-x snap-mandatory md:snap-none
             pb-4
             scrollbar-hide
-          "
+            ${plans.length === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3'}
+          `}
         >
           {plans.map((plan, index) => {
             const isRecommended = plan.id === recommendedPlanId;
@@ -430,7 +393,7 @@ export default function ComparePlans() {
                       : "bg-white text-primary border-2 border-primary"
                   }`}
                 >
-                  Choose plan
+                  {plan.available ? "Choose plan" : "Coming Soon"}
                 </motion.button>
               </motion.div>
             );
@@ -457,7 +420,7 @@ export default function ComparePlans() {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => setExpandedCard("tk")}
+              onClick={() => setExpandedCard("compare")}
               className="px-20 py-3 rounded-lg font-semibold bg-white text-primary border-2 border-primary hover:bg-gray-50 transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
             >
               Show Details
@@ -467,7 +430,7 @@ export default function ComparePlans() {
 
         {/* Comparison Table */}
         <AnimatePresence>
-          {expandedCard === "tk" && (
+          {expandedCard === "compare" && (
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}

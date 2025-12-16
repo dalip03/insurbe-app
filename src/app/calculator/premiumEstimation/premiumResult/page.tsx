@@ -151,16 +151,14 @@ export default function PremiumResult() {
           >
             Proceed to Application
           </button>
-          <button
-            onClick={() => setShowAppointmentModal(true)}
-            className="px-6 py-3 rounded-full border font-medium"
-          >
-            Book an Appointment
-          </button>
-          <BookAppointmentModal
-            open={showAppointmentModal}
-            onClose={() => setShowAppointmentModal(false)}
-          />{" "}
+           
+      <button
+        onClick={() => router.push("/book-appointment")}
+        className="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition font-semibold"
+      >
+        Book Appointment
+      </button>
+         
         </div>
 
         {/* What happens next */}

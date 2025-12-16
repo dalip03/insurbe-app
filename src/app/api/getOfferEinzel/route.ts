@@ -18,7 +18,29 @@ function escapeXml(str = ""): string {
     .replace(/'/g, "&apos;");
 }
 
-function buildGetOfferEnvelope({ tarifId, vorname, name, geburtsdatum, beginn }: { tarifId: string; vorname: string; name: string; geburtsdatum: string; beginn: string; }) {
+function buildGetOfferEnvelope({ 
+  tariffIds, 
+  vorname, 
+  name, 
+  geburtsdatum, 
+  beginn 
+}: { 
+  tariffIds: string[]; 
+  vorname: string; 
+  name: string; 
+  geburtsdatum: string; 
+  beginn: string; 
+}) {
+  // Build multiple <tar:Elementarprodukt> blocks
+  const elementarprodukte = tariffIds
+    .map(tarifId => `
+          <tar:Elementarprodukt>
+            <tar:CT_Elementarprodukt xsi:type="kt:CT_Tarif">
+              <kt:TarifID>${escapeXml(tarifId)}</kt:TarifID>
+            </tar:CT_Elementarprodukt>
+          </tar:Elementarprodukt>`)
+    .join('');
+
   return `<?xml version="1.0" encoding="utf-8"?>
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
                   xmlns:vvg="GEWA.COMP.VVGService"
@@ -59,12 +81,7 @@ function buildGetOfferEnvelope({ tarifId, vorname, name, geburtsdatum, beginn }:
             <tar:CT_Verkaufsprodukt>
               <tar:Beginn>${escapeXml(beginn)}</tar:Beginn>
               <tar:Produkt>
-                <tar:CT_Produkt>
-                  <tar:Elementarprodukt>
-                    <tar:CT_Elementarprodukt xsi:type="kt:CT_Tarif">
-                      <kt:TarifID>${escapeXml(tarifId)}</kt:TarifID>
-                    </tar:CT_Elementarprodukt>
-                  </tar:Elementarprodukt>
+                <tar:CT_Produkt>${elementarprodukte}
                 </tar:CT_Produkt>
               </tar:Produkt>
             </tar:CT_Verkaufsprodukt>
@@ -121,7 +138,8 @@ function extractPremium(parsed: Record<string, unknown>): string | null {
 
   // Debug: log candidates (in dev only)
   if (candidates.length > 0 && process.env.NODE_ENV === 'development') {
-    console.log('premium candidates:', candidates.slice(0, 10));
+    console.log('Premium candidates found:', candidates.length);
+    console.log('First 3 candidates:', candidates.slice(0, 3));
   }
 
   // Prefer real numbers, then numeric strings, then extracts from common wrappers
@@ -267,55 +285,131 @@ function collectDocs(parsed: Record<string, unknown>): Doc[] {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { tarifId, vorname, name, geburtsdatum, beginn } = body || {};
-
-    console.log("get-offer request body:", { tarifId, vorname, name, geburtsdatum, beginn });
-    if (!tarifId || !vorname || !name || !geburtsdatum || !beginn) {
-      return NextResponse.json({ error: "missing required fields" }, { status: 400 });
+    
+    // Support both old (single tarifId) and new (tariffIds array) format
+    let tariffIds: string[];
+    
+    if (body.tariffIds && Array.isArray(body.tariffIds)) {
+      // New format: array of tariff IDs
+      tariffIds = body.tariffIds;
+    } else if (body.tarifId && typeof body.tarifId === 'string') {
+      // Old format: single tariff ID (backward compatibility)
+      tariffIds = [body.tarifId];
+      console.log('⚠️ Using deprecated single tarifId format. Please migrate to tariffIds array.');
+    } else {
+      return NextResponse.json({ 
+        error: "Either 'tariffIds' (array) or 'tarifId' (string) is required" 
+      }, { status: 400 });
     }
 
-    const xml = buildGetOfferEnvelope({ tarifId, vorname, name, geburtsdatum, beginn });
-    const call = await callHallesche(xml);
+    const { vorname, name, geburtsdatum, beginn } = body;
 
-    console.log("Hallesche response status:", call.status);
+    console.log("=== Get Offer Request ===");
+    console.log("Tariff IDs:", tariffIds);
+    console.log("Count:", tariffIds.length);
+    console.log("Personal Info:", { vorname, name, geburtsdatum, beginn });
+
+    // Validation
+    if (tariffIds.length === 0) {
+      return NextResponse.json({ 
+        error: "tariffIds array cannot be empty" 
+      }, { status: 400 });
+    }
+
+    if (!vorname || !name || !geburtsdatum || !beginn) {
+      return NextResponse.json({ 
+        error: "Missing required fields: vorname, name, geburtsdatum, beginn" 
+      }, { status: 400 });
+    }
+
+    // Build SOAP envelope with multiple tariffs
+    const xml = buildGetOfferEnvelope({ 
+      tariffIds, 
+      vorname, 
+      name, 
+      geburtsdatum, 
+      beginn 
+    });
+
+    console.log("Calling Hallesche API...");
+    const call = await callHallesche(xml);
+    console.log("✅ Hallesche response status:", call.status);
     
     const parsed = parser.parse(call.data);
-    console.log("Parsed Hallesche response (truncated):", JSON.stringify(parsed));
 
-    // Save parsed object to file so you can inspect it later
+    // Save parsed response to file for debugging
     const timestamp = Date.now();
     const rnd = Math.floor(Math.random() * 90000 + 10000);
-    const fileName = `hallesche_parsed_${timestamp}_${rnd}.json`;
-
-    // store in tmp directory reliably across Linux/macOS/Windows dev
+    const fileName = `hallesche_bundle_${tariffIds.length}tariffs_${timestamp}_${rnd}.json`;
     const dir = path.join(os.tmpdir(), "hallesche_parsed");
-    console.log("Saving parsed response to", path.join(dir, fileName));
-    await fs.mkdir(dir, { recursive: true });
-    const filePath = path.join(dir, fileName);
-
-    // stringify with 2-space indent
-    const jsonString = JSON.stringify(parsed, null, 2);
+    
     if (process.env.NODE_ENV === 'development') {
-      await fs.writeFile(filePath, jsonString, "utf8");
+      try {
+        await fs.mkdir(dir, { recursive: true });
+        const filePath = path.join(dir, fileName);
+        await fs.writeFile(filePath, JSON.stringify(parsed, null, 2), "utf8");
+        console.log("📁 Saved parsed response to:", filePath);
+      } catch (fileErr) {
+        console.warn("Could not save debug file:", fileErr);
+      }
     }
 
+    // Extract premium (should be total for all tariffs)
     const premium = extractPremium(parsed);
+    
+    // Collect all documents
     const documents = collectDocs(parsed);
 
-    return NextResponse.json({ premium, documents }, { status: 200 });
+    console.log("=== Extraction Results ===");
+    console.log("Premium:", premium);
+    console.log("Documents:", documents.length);
+
+    if (!premium) {
+      console.warn("⚠️ No premium found in response. Check saved JSON file.");
+    }
+
+    return NextResponse.json({ 
+      premium, 
+      documents,
+      meta: {
+        tariffIds,
+        tariffCount: tariffIds.length,
+        documentCount: documents.length,
+        requestedAt: new Date().toISOString(),
+      }
+    }, { status: 200 });
+
   } catch (err: unknown) {
+    console.error("=== Get Offer Error ===");
+    
     if (axios.isAxiosError(err)) {
-      console.error("get-offer error:", err.response?.data || err.message);
+      console.error("Axios error:", err.message);
+      console.error("Response status:", err.response?.status);
+      
       const serverBody = err.response?.data 
         ? (typeof err.response.data === 'string' 
             ? err.response.data.slice(0, 2000) 
             : JSON.stringify(err.response.data).slice(0, 2000)) 
         : undefined;
-      return NextResponse.json({ error: err.message, detail: serverBody }, { status: 500 });
+      
+      if (serverBody) {
+        console.error("Server response (truncated):", serverBody);
+      }
+      
+      return NextResponse.json({ 
+        error: "Failed to call Hallesche API",
+        message: err.message, 
+        detail: serverBody,
+        status: err.response?.status 
+      }, { status: 500 });
     }
     
     const message = err instanceof Error ? err.message : String(err);
-    console.error("get-offer error:", message);
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error("Unexpected error:", message);
+    
+    return NextResponse.json({ 
+      error: "Internal server error",
+      message 
+    }, { status: 500 });
   }
 }
