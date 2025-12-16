@@ -27,14 +27,13 @@ interface Country {
 }
 
 interface HealthAnswer {
-  hospitalized: string | null;
-  dentalVisit: string | null;
-  dentalPreventative: string | null;
-  missingTeeth: string | null;
-  chronicDiseases: string | null;
-  psychotherapy: string | null;
   doctorVisit: string | null;
   doctorPreventative: string | null;
+  hospitalized: string | null;
+  psychotherapy: string | null;
+  chronicDiseases: string | null;
+  dentalVisit: string | null;
+  missingTeeth: string | null;
 }
 
 export default function InsuranceJourney() {
@@ -75,14 +74,13 @@ export default function InsuranceJourney() {
   // Health Questionnaire States
   const [currentHealthQuestion, setCurrentHealthQuestion] = useState(0);
   const [healthAnswers, setHealthAnswers] = useState<HealthAnswer>({
-    hospitalized: null,
-    dentalVisit: null,
-    dentalPreventative: null,
-    missingTeeth: null,
-    chronicDiseases: null,
-    psychotherapy: null,
     doctorVisit: null,
     doctorPreventative: null,
+    hospitalized: null,
+    psychotherapy: null,
+    chronicDiseases: null,
+    dentalVisit: null,
+    missingTeeth: null,
   });
   const [showAppointment, setShowAppointment] = useState(false);
 
@@ -254,7 +252,7 @@ export default function InsuranceJourney() {
       return;
     }
 
-    const phoneRegex = /^\\+?[\\d\\s-]{10,}$/;
+    const phoneRegex = /^\+?[\d\s-]{10,}$/;
     if (!phoneRegex.test(phone)) {
       setPopup("Please enter a valid phone number");
       return;
@@ -278,7 +276,7 @@ export default function InsuranceJourney() {
       return;
     }
 
-    const phoneRegex = /^\\+?[\\d\\s-]{10,}$/;
+    const phoneRegex = /^\+?[\d\s-]{10,}$/;
     if (!phoneRegex.test(phone)) {
       setPopup("Please enter a valid phone number");
       return;
@@ -312,209 +310,119 @@ export default function InsuranceJourney() {
     [setSelectedCountry]
   );
 
-  // ✅ Modified: Show health questionnaire instead of API call
+  // Move to health questionnaire
   const handleCountrySubmit = useCallback(() => {
     if (!selectedCountry) {
       setPopup("Please select a country");
       return;
     }
     
-    // Move to health questionnaire (step 6)
     setStep(6);
     setCurrentHealthQuestion(0);
   }, [selectedCountry]);
 
   // Handle health question answers
-// Health questions configuration - NEW ORDER
-const healthQuestions = [
-  {
-    id: 0,
-    title: "Quick health check",
-    subtitle: "Have you visited a doctor in the past 3 years?",
-    helper: "This helps us recommend the right path for you.",
-    key: "doctorVisit" as keyof HealthAnswer,
-    image: "/gifs_assets/step2.gif",
-  },
-  {
-    id: 1,
-    title: "Quick health check",
-    subtitle: "Was the visit for a preventive health checkup?",
-    helper: "Preventive = routine check-up without symptoms.",
-    key: "doctorPreventative" as keyof HealthAnswer,
-    image: "/gifs_assets/step2.gif",
-  },
-  {
-    id: 2,
-    title: "Almost there",
-    subtitle: "Have you been hospitalized in the past five years?",
-    key: "hospitalized" as keyof HealthAnswer,
-    image: "/gifs_assets/step2.gif",
-  },
-  {
-    id: 3,
-    title: "Mental health matters",
-    subtitle: "Have you had psychotherapy in the past 10 years?",
-    key: "psychotherapy" as keyof HealthAnswer,
-    image: "/gifs_assets/step2.gif",
-  },
-  {
-    id: 4,
-    title: "Health status",
-    subtitle: "Do you have disabilities or chronic diseases?",
-    key: "chronicDiseases" as keyof HealthAnswer,
-    image: "/gifs_assets/step2.gif",
-  },
-  {
-    id: 5,
-    title: "Dental care",
-    subtitle: "Have you been to the dentist in the past 3 years?",
-    key: "dentalVisit" as keyof HealthAnswer,
-    image: "/gifs_assets/step2.gif",
-  },
-  {
-    id: 6,
-    title: "Dental health",
-    subtitle: "Do you have any missing teeth?",
-    helper: "Excluding wisdom teeth.",
-    key: "missingTeeth" as keyof HealthAnswer,
-    image: "/gifs_assets/step2.gif",
-  },
-];
+  const handleHealthAnswer = useCallback(
+    (key: keyof HealthAnswer, value: string) => {
+      const updatedAnswers = { ...healthAnswers, [key]: value };
+      setHealthAnswers(updatedAnswers);
 
-// ✅ UPDATED: Handle health question answers with NEW LOGIC
-const handleHealthAnswer = useCallback(
-  (key: keyof HealthAnswer, value: string) => {
-    const updatedAnswers = { ...healthAnswers, [key]: value };
-    setHealthAnswers(updatedAnswers);
-
-    // ==================== NEW LOGIC ====================
-    
-    if (currentHealthQuestion === 0) {
-      // Q1: Doctor visit (FIRST QUESTION)
-      if (value === "yes") {
-        // Show follow-up: Was it preventive?
-        setCurrentHealthQuestion(1);
-      } else {
-        // NO to doctor visit → Continue to Q2, but mark as risky path
+      if (currentHealthQuestion === 0) {
+        // Q1: Doctor visit
+        if (value === "yes") {
+          setCurrentHealthQuestion(1);
+        } else {
+          setCurrentHealthQuestion(2);
+        }
+      } 
+      else if (currentHealthQuestion === 1) {
+        // Q2: Doctor preventive
         setCurrentHealthQuestion(2);
+      } 
+      else if (currentHealthQuestion === 2) {
+        // Q3: Hospitalized
+        setCurrentHealthQuestion(3);
+      } 
+      else if (currentHealthQuestion === 3) {
+        // Q4: Psychotherapy
+        setCurrentHealthQuestion(4);
+      } 
+      else if (currentHealthQuestion === 4) {
+        // Q5: Chronic diseases
+        setCurrentHealthQuestion(5);
+      } 
+      else if (currentHealthQuestion === 5) {
+        // Q6: Dental visit
+        setCurrentHealthQuestion(6);
+      } 
+      else if (currentHealthQuestion === 6) {
+        // Q7: Missing teeth (LAST)
+        evaluateHealthAnswers({ ...updatedAnswers, missingTeeth: value });
       }
-    } 
-    else if (currentHealthQuestion === 1) {
-      // Q2: Doctor preventive (FOLLOW-UP)
-      if (value === "no") {
-        // NO to preventive → RISKY → Continue all questions but will show appointment
-        setCurrentHealthQuestion(2);
+    },
+    [healthAnswers, currentHealthQuestion]
+  );
+
+  // Evaluate health answers
+  const evaluateHealthAnswers = useCallback(
+    async (finalAnswers: HealthAnswer) => {
+      const doctorPathSafe = 
+        finalAnswers.doctorVisit === "no" || 
+        (finalAnswers.doctorVisit === "yes" && finalAnswers.doctorPreventative === "yes");
+
+      const otherQuestionsSafe =
+        finalAnswers.hospitalized === "no" &&
+        finalAnswers.psychotherapy === "no" &&
+        finalAnswers.chronicDiseases === "no" &&
+        finalAnswers.dentalVisit === "no" &&
+        finalAnswers.missingTeeth === "no";
+
+      const showProducts = doctorPathSafe && otherQuestionsSafe;
+
+      if (showProducts) {
+        await fetchOffersAndNavigate();
       } else {
-        // YES to preventive → SAFE PATH → Continue to check other questions
-        setCurrentHealthQuestion(2);
+        setShowAppointment(true);
+        setStep(7);
       }
-    } 
-    else if (currentHealthQuestion === 2) {
-      // Q3: Hospitalized
-      setCurrentHealthQuestion(3);
-    } 
-    else if (currentHealthQuestion === 3) {
-      // Q4: Psychotherapy
-      setCurrentHealthQuestion(4);
-    } 
-    else if (currentHealthQuestion === 4) {
-      // Q5: Chronic diseases
-      setCurrentHealthQuestion(5);
-    } 
-    else if (currentHealthQuestion === 5) {
-      // Q6: Dental visit
-      setCurrentHealthQuestion(6);
-    } 
-    else if (currentHealthQuestion === 6) {
-      // Q7: Missing teeth (LAST QUESTION)
-      // Evaluate all answers
-      evaluateHealthAnswers({ ...updatedAnswers, missingTeeth: value });
-    }
-  },
-  [healthAnswers, currentHealthQuestion]
-);
+    },
+    []
+  );
 
-// ✅ UPDATED: Evaluate health answers with NEW LOGIC
-const evaluateHealthAnswers = useCallback(
-  async (finalAnswers: HealthAnswer) => {
-    // Check if doctor visit path was safe
-    const doctorPathSafe = 
-      finalAnswers.doctorVisit === "no" || 
-      (finalAnswers.doctorVisit === "yes" && finalAnswers.doctorPreventative === "yes");
-
-    // Check if all OTHER questions are safe (all "no")
-    const otherQuestionsSafe =
-      finalAnswers.hospitalized === "no" &&
-      finalAnswers.psychotherapy === "no" &&
-      finalAnswers.chronicDiseases === "no" &&
-      finalAnswers.dentalVisit === "no" &&
-      finalAnswers.missingTeeth === "no";
-
-    // ✅ LOGIC:
-    // Show Products ONLY if:
-    // 1. Doctor visit was NO OR (YES + Preventive YES)
-    // 2. AND all other questions are NO
-    
-    const showProducts = doctorPathSafe && otherQuestionsSafe;
-
-    if (showProducts) {
-      // Safe path → Show products
-      await fetchOffersAndNavigate();
-    } else {
-      // Risky path → Show appointment
-      setShowAppointment(true);
-      setStep(7);
-    }
-  },
-  [selectedCountry, dob, incomeRange, hasChildren]
-);
-
-
-  // API call to fetch offers
+  // ✅ FULLY FIXED: Fetch offers with correct logic
   const fetchOffersAndNavigate = useCallback(async () => {
     setLoading(true);
 
     try {
+      // ✅ Get all values from Zustand store
+      const store = useJourneyStore.getState();
+      const currentSelectedCountry = store.selectedCountry;
+      const currentIncomeRange = store.incomeRange;
+      const currentDob = store.dob;
+      const currentActualIncome = store.actualIncome || 50000;
+      
+      if (!currentSelectedCountry) {
+        setPopup("Country not selected. Please go back.");
+        setLoading(false);
+        return;
+      }
+
       const EU_COUNTRIES = [
-        "Austria",
-        "Belgium",
-        "Bulgaria",
-        "Croatia",
-        "Cyprus",
-        "Czech Republic",
-        "Denmark",
-        "Estonia",
-        "Finland",
-        "France",
-        "Germany",
-        "Greece",
-        "Hungary",
-        "Ireland",
-        "Italy",
-        "Latvia",
-        "Lithuania",
-        "Luxembourg",
-        "Malta",
-        "Netherlands",
-        "Poland",
-        "Portugal",
-        "Romania",
-        "Slovakia",
-        "Slovenia",
-        "Spain",
-        "Sweden",
-        "Iceland",
-        "Liechtenstein",
-        "Norway",
-        "Switzerland",
-        "United Kingdom",
+        "Austria", "Belgium", "Bulgaria", "Croatia", "Cyprus",
+        "Czech Republic", "Denmark", "Estonia", "Finland", "France",
+        "Germany", "Greece", "Hungary", "Ireland", "Italy",
+        "Latvia", "Lithuania", "Luxembourg", "Malta", "Netherlands",
+        "Poland", "Portugal", "Romania", "Slovakia", "Slovenia",
+        "Spain", "Sweden", "Iceland", "Liechtenstein", "Norway",
+        "Switzerland", "United Kingdom"
       ];
 
-      const isEU = EU_COUNTRIES.includes(selectedCountry);
+      const isEU = EU_COUNTRIES.includes(currentSelectedCountry);
       const currentYear = new Date().getFullYear();
-      const age = dob ? currentYear - parseInt(dob) : 25;
-      const yearlyIncome = useJourneyStore.getState().actualIncome || 50000;
-      const tkPrice = calculateTKPrice(yearlyIncome, hasChildren ?? false, age);
+      const age = currentDob ? currentYear - parseInt(currentDob) : 25;
+      const currentHasChildren = hasChildren ?? false;
+      
+      const tkPrice = calculateTKPrice(currentActualIncome, currentHasChildren, age);
       setTKPremium(tkPrice.employeeMonthly);
 
       const products: any[] = [];
@@ -534,12 +442,12 @@ const evaluateHealthAnswers = useCallback(
         ],
       });
 
-      // Fetch Hallesche for eligible users
-      if (incomeRange) {
-        const fullDob = `${dob}-01-01`;
+      // ✅ ONLY for income > €77,400
+      if (currentIncomeRange === ">77400") {
+        const fullDob = `${currentDob}-01-01`;
         const coverageStart = new Date().toISOString().split("T")[0];
 
-        // Premium (always fetch for everyone with income)
+        // Fetch Hallesche Premium (for ALL high earners)
         try {
           const premiumRes = await fetch("/api/getOfferEinzel", {
             method: "POST",
@@ -581,7 +489,7 @@ const evaluateHealthAnswers = useCallback(
           console.error("Error fetching Hallesche Premium:", err);
         }
 
-        // Expat (only for non-EU)
+        // ✅ Fetch Expat ONLY for NON-EU countries
         if (!isEU) {
           try {
             const expatRes = await fetch("/api/getOfferEinzel", {
@@ -627,11 +535,15 @@ const evaluateHealthAnswers = useCallback(
 
       useJourneyStore.setState({
         availableProducts: products,
-        selectedCountry: selectedCountry,
+        selectedCountry: currentSelectedCountry,
       });
 
-      console.log(`User from ${selectedCountry} (${isEU ? "EU" : "Non-EU"})`);
-      console.log(`Showing ${products.length} products:`, products.map((p) => p.name));
+      console.log("==========================================");
+      console.log(`Country: ${currentSelectedCountry}`);
+      console.log(`Is EU: ${isEU}`);
+      console.log(`Income Range: ${currentIncomeRange}`);
+      console.log(`Products (${products.length}):`, products.map((p) => p.name));
+      console.log("==========================================");
 
       setLoading(false);
       router.push("/calculator");
@@ -641,9 +553,6 @@ const evaluateHealthAnswers = useCallback(
       setLoading(false);
     }
   }, [
-    selectedCountry,
-    dob,
-    incomeRange,
     hasChildren,
     calculateTKPrice,
     setTKPremium,
@@ -655,12 +564,64 @@ const evaluateHealthAnswers = useCallback(
 
   // Handle appointment booking
   const handleBookAppointment = () => {
-    setPopup("Thank you! We'll contact you shortly.");
-    setTimeout(() => {
-      router.push("/book-appointment");
-    }, 2000);
+    router.push("/book-appointment");
   };
 
+  // Health questions configuration
+  const healthQuestions = [
+    {
+      id: 0,
+      title: "Quick health check",
+      subtitle: "Have you visited a doctor in the past 3 years?",
+      helper: "This helps us recommend the right path for you.",
+      key: "doctorVisit" as keyof HealthAnswer,
+      image: "/gifs_assets/step2.gif",
+    },
+    {
+      id: 1,
+      title: "Quick health check",
+      subtitle: "Was the visit for a preventive health checkup?",
+      helper: "Preventive = routine check-up without symptoms.",
+      key: "doctorPreventative" as keyof HealthAnswer,
+      image: "/gifs_assets/step2.gif",
+    },
+    {
+      id: 2,
+      title: "Almost there",
+      subtitle: "Have you been hospitalized in the past five years?",
+      key: "hospitalized" as keyof HealthAnswer,
+      image: "/gifs_assets/step2.gif",
+    },
+    {
+      id: 3,
+      title: "Mental health matters",
+      subtitle: "Have you had psychotherapy in the past 10 years?",
+      key: "psychotherapy" as keyof HealthAnswer,
+      image: "/gifs_assets/step2.gif",
+    },
+    {
+      id: 4,
+      title: "Health status",
+      subtitle: "Do you have disabilities or chronic diseases?",
+      key: "chronicDiseases" as keyof HealthAnswer,
+      image: "/gifs_assets/step2.gif",
+    },
+    {
+      id: 5,
+      title: "Dental care",
+      subtitle: "Have you been to the dentist in the past 3 years?",
+      key: "dentalVisit" as keyof HealthAnswer,
+      image: "/gifs_assets/step2.gif",
+    },
+    {
+      id: 6,
+      title: "Dental health",
+      subtitle: "Do you have any missing teeth?",
+      helper: "Excluding wisdom teeth.",
+      key: "missingTeeth" as keyof HealthAnswer,
+      image: "/gifs_assets/step2.gif",
+    },
+  ];
 
   const stepImages: Record<number, string> = useMemo(
     () => ({
@@ -697,20 +658,22 @@ const evaluateHealthAnswers = useCallback(
   // =============== UI ====================
   return (
     <section className="bg-gradient-to-br from-[#f5f0ff] to-white py-16 px-4 md:px-10 min-h-screen">
-       {!showAppointment && (
-      <motion.div
-        initial={{ y: -30, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6 }}
-        className="max-w-3xl mx-auto text-center mb-10"
-      >
-        <h1 className="text-3xl md:text-4xl font-bold text-black mb-3">
-          Just 2 minutes to find your best-fit insurance type.
-        </h1>
-        <p className="text-gray-500 text-base md:text-lg">
-          No calls, no commitments — unless you want them.
-        </p>
-      </motion.div>)}
+      {/* Hide header for health questions and appointment */}
+      {step !== 6 && step !== 7 && (
+        <motion.div
+          initial={{ y: -30, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.6 }}
+          className="max-w-3xl mx-auto text-center mb-10"
+        >
+          <h1 className="text-3xl md:text-4xl font-bold text-black mb-3">
+            Just 2 minutes to find your best-fit insurance type.
+          </h1>
+          <p className="text-gray-500 text-base md:text-lg">
+            No calls, no commitments — unless you want them.
+          </p>
+        </motion.div>
+      )}
 
       <AnimatePresence mode="wait">
         {/* Step 1: Employment Status */}
@@ -1320,7 +1283,6 @@ const evaluateHealthAnswers = useCallback(
             className="w-full max-w-6xl mx-auto"
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-              {/* Left: Image */}
               <motion.div
                 variants={imageVariants}
                 className="flex justify-center items-center"
@@ -1335,9 +1297,7 @@ const evaluateHealthAnswers = useCallback(
                 />
               </motion.div>
 
-              {/* Right: Question */}
               <motion.div variants={containerVariants} className="space-y-4">
-                {/* Back Button */}
                 {currentHealthQuestion === 0 && (
                   <motion.button
                     variants={itemVariants}
@@ -1361,7 +1321,6 @@ const evaluateHealthAnswers = useCallback(
                   </motion.button>
                 )}
 
-                {/* Title */}
                 <motion.h2
                   variants={itemVariants}
                   className="text-2xl md:text-3xl font-bold text-gray-800"
@@ -1369,7 +1328,6 @@ const evaluateHealthAnswers = useCallback(
                   {healthQuestions[currentHealthQuestion].title}
                 </motion.h2>
 
-                {/* Subtitle */}
                 <motion.p
                   variants={itemVariants}
                   className="text-lg text-gray-700"
@@ -1377,7 +1335,6 @@ const evaluateHealthAnswers = useCallback(
                   {healthQuestions[currentHealthQuestion].subtitle}
                 </motion.p>
 
-                {/* Helper Text */}
                 {healthQuestions[currentHealthQuestion].helper && (
                   <motion.p
                     variants={itemVariants}
@@ -1387,7 +1344,6 @@ const evaluateHealthAnswers = useCallback(
                   </motion.p>
                 )}
 
-                {/* Answer Buttons */}
                 <div className="space-y-3 mt-6">
                   <motion.button
                     variants={itemVariants}
@@ -1420,7 +1376,6 @@ const evaluateHealthAnswers = useCallback(
                   </motion.button>
                 </div>
 
-                {/* Progress Indicator */}
                 <motion.div
                   variants={itemVariants}
                   className="mt-6 flex items-center gap-2"
@@ -1449,8 +1404,7 @@ const evaluateHealthAnswers = useCallback(
             animate={{ opacity: 1, y: 0 }}
             className="w-full max-w-4xl mx-auto"
           >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-              {/* Image */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
               <div className="flex justify-center items-center">
                 <Image
                   src="/gifs_assets/appointment1.png"
@@ -1462,8 +1416,16 @@ const evaluateHealthAnswers = useCallback(
                 />
               </div>
 
-              {/* Content */}
               <div className="space-y-6">
+                <div className="text-center lg:text-left mb-6">
+                  <h1 className="text-3xl md:text-4xl font-bold text-black mb-3">
+                    Just 2 minutes to find your best-fit insurance type.
+                  </h1>
+                  <p className="text-gray-600 text-base md:text-lg">
+                    No calls, no commitments — unless you want them.
+                  </p>
+                </div>
+
                 <h2 className="text-2xl md:text-3xl font-bold text-gray-800">
                   Let&apos;s do this the right way
                 </h2>
@@ -1473,7 +1435,6 @@ const evaluateHealthAnswers = useCallback(
                   pricing will need a quick expert review.
                 </p>
 
-                {/* Benefits */}
                 <div className="bg-white border-2 border-gray-200 rounded-lg p-6 space-y-4">
                   {[
                     "Avoid incorrect plan selection",
@@ -1501,7 +1462,6 @@ const evaluateHealthAnswers = useCallback(
                   ))}
                 </div>
 
-                {/* CTA Buttons */}
                 <div className="space-y-3">
                   <button
                     onClick={handleBookAppointment}
@@ -1514,31 +1474,13 @@ const evaluateHealthAnswers = useCallback(
                     onClick={() => {
                       setShowAppointment(false);
                       setStep(6);
-                      setCurrentHealthQuestion(0);
+                      setCurrentHealthQuestion(currentHealthQuestion > 0 ? currentHealthQuestion - 1 : 0);
                     }}
                     className="w-full px-6 py-4 bg-white border-2 border-gray-300 text-gray-700 rounded-lg hover:border-primary hover:bg-primary/5 transition font-semibold focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
                   >
                     Back
                   </button>
                 </div>
-
-                {/* Help Link */}
-                <button className="flex items-center gap-2 text-gray-600 hover:text-primary transition mx-auto">
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                  Why is this needed?
-                </button>
               </div>
             </div>
           </motion.div>
