@@ -1,4 +1,4 @@
-// app/api/getOrderEinzel/route.ts
+// app/api/createApplication/route.ts
 import { NextRequest } from "next/server";
 import { XMLParser } from "fast-xml-parser";
 import http from "node:http";
@@ -8,10 +8,9 @@ const HALLESCHE_URL =
   process.env.HALLESCHE_URL ||
   "https://www.kv-rechner0.de/HallescheVVG_Net/GC_KrankenService.svc";
 
-const SOAP_ACTION_ORDER =
-  'GEWA.COMP.VVGService/IGC_KrankenService_WCF/getOrder';
+// ✅ Use getOfferEinzel (same as premium calculation, but with document request)
+const SOAP_ACTION = 'GEWA.COMP.VVGService/IGC_KrankenService_WCF/getOfferEinzel';
 
-// small helpers
 function escapeXml(str = ""): string {
   return String(str)
     .replace(/&/g, "&amp;")
@@ -21,9 +20,9 @@ function escapeXml(str = ""): string {
     .replace(/'/g, "&apos;");
 }
 
-// ✅ UPDATED: Accept multiple tariff IDs
-function buildGetOrderEnvelope({
-  tariffIds,
+// ✅ Build offer envelope with APPLICATION document request
+function buildApplicationEnvelope({
+  tarifId,
   vorname,
   name,
   geburtsdatum,
@@ -31,7 +30,7 @@ function buildGetOrderEnvelope({
   anrede = "Item1",
   geschlecht = "Item1",
 }: {
-  tariffIds: string[];  // ✅ Changed from tarifId to tariffIds (array)
+  tarifId: string;
   vorname: string;
   name: string;
   geburtsdatum: string;
@@ -39,23 +38,15 @@ function buildGetOrderEnvelope({
   anrede?: string;
   geschlecht?: string;
 }) {
-  // ✅ Build multiple <ns1:Elementarprodukt> blocks
-  const elementarprodukte = tariffIds
-    .map(tarifId => `
-                  <ns1:Elementarprodukt>
-                    <ns1:CT_Elementarprodukt xmlns:ns9="http://www.bipro.net/namespace/kranken" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ns9:CT_Tarif">
-                      <ns8:TarifID xmlns:ns8="http://www.bipro.net/namespace/kranken">${escapeXml(tarifId)}</ns8:TarifID>
-                    </ns1:CT_Elementarprodukt>
-                  </ns1:Elementarprodukt>`)
-    .join('');
-
   return `<?xml version="1.0" encoding="utf-8"?>
 <soap-env:Envelope xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/">
   <soap-env:Header/>
   <soap-env:Body>
-    <ns0:getOrder xmlns:ns0="GEWA.COMP.VVGService">
+    <ns0:getOfferEinzel xmlns:ns0="GEWA.COMP.VVGService">
       <ns0:request>
-        <ns1:Antrag xmlns:ns1="http://www.bipro.net/namespace/tarifierung">
+        <ns1:Tarifierung xmlns:ns1="http://www.bipro.net/namespace/tarifierung">
+          
+          <!-- ✅ REQUEST APPLICATION DOCUMENT -->
           <ns2:Dokumentanforderung xmlns:ns2="http://www.bipro.net/namespace/allgemein">
             <ns2:CT_Dokumentanforderung>
               <ns2:ArtID>
@@ -63,7 +54,7 @@ function buildGetOrderEnvelope({
               </ns2:ArtID>
             </ns2:CT_Dokumentanforderung>
           </ns2:Dokumentanforderung>
-
+          
           <ns1:Partner>
             <ns7:CT_Partner xmlns:ns7="http://www.bipro.net/namespace/partner" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ns7:CT_Person">
               <ns7:Anrede>${escapeXml(anrede)}</ns7:Anrede>
@@ -79,20 +70,25 @@ function buildGetOrderEnvelope({
             <ns1:CT_Verkaufsprodukt>
               <ns1:Beginn>${escapeXml(beginn)}</ns1:Beginn>
               <ns1:Produkt>
-                <ns1:CT_Produkt>${elementarprodukte}
+                <ns1:CT_Produkt>
+                  <ns1:Elementarprodukt>
+                    <ns1:CT_Elementarprodukt xmlns:ns9="http://www.bipro.net/namespace/kranken" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ns9:CT_Tarif">
+                      <ns8:TarifID xmlns:ns8="http://www.bipro.net/namespace/kranken">${escapeXml(tarifId)}</ns8:TarifID>
+                    </ns1:CT_Elementarprodukt>
+                  </ns1:Elementarprodukt>
                 </ns1:CT_Produkt>
               </ns1:Produkt>
             </ns1:CT_Verkaufsprodukt>
           </ns1:Verkaufsprodukt>
 
-        </ns1:Antrag>
+        </ns1:Tarifierung>
       </ns0:request>
-    </ns0:getOrder>
+    </ns0:getOfferEinzel>
   </soap-env:Body>
 </soap-env:Envelope>`;
 }
 
-// fast-xml-parser
+// Copy all helper functions from getOrderEinzel
 const xmlParser = new XMLParser({
   ignoreAttributes: false,
   removeNSPrefix: true,
@@ -107,7 +103,6 @@ interface Doc {
   raw: Record<string, unknown>;
 }
 
-// small walker: find CT_Datei / Datei nodes and extract base64
 function collectDocs(parsed: Record<string, unknown>): Doc[] {
   const docs: unknown[] = [];
   
@@ -134,7 +129,6 @@ function collectDocs(parsed: Record<string, unknown>): Doc[] {
 
     const obj = node as Record<string, unknown>;
 
-    // try a few shapes to get base64 in Daten -> Value or node._text
     let base64: string | null = null;
     if (obj.Daten) {
       const daten = obj.Daten;
@@ -198,7 +192,6 @@ function collectDocs(parsed: Record<string, unknown>): Doc[] {
   return out;
 }
 
-// find Status.Meldung if present (null-safe)
 function extractStatusMeldung(parsed: Record<string, unknown>): string | null {
   const found: string[] = [];
   
@@ -210,10 +203,8 @@ function extractStatusMeldung(parsed: Record<string, unknown>): string | null {
       if (!local) continue;
       const v = obj[k];
       
-      // If this node looks like a "Status" container
       if (/^Status$/i.test(local) && v && typeof v === "object") {
         const statusObj = v as Record<string, unknown>;
-        // common shapes: v.Meldung, v.meldung, v.MeldungField, or nested objects
         const meldKeys = ["Meldung", "meldung", "MeldungField", "MeldungText"];
         for (const mk of meldKeys) {
           if (mk in statusObj) {
@@ -224,7 +215,6 @@ function extractStatusMeldung(parsed: Record<string, unknown>): string | null {
             }
             if (meld && typeof meld === "object") {
               const meldObj = meld as Record<string, unknown>;
-              // null-safe access to typical text properties
               const maybe = 
                 typeof meldObj._ === "string" 
                   ? meldObj._ 
@@ -242,7 +232,6 @@ function extractStatusMeldung(parsed: Record<string, unknown>): string | null {
         }
       }
 
-      // descend
       if (Array.isArray(v)) {
         for (const item of v) rec(item);
       } else if (v && typeof v === "object") {
@@ -254,7 +243,6 @@ function extractStatusMeldung(parsed: Record<string, unknown>): string | null {
   return found.length ? found[0] : null;
 }
 
-// simple PDF sniff
 function isBufferPdf(buf: Buffer) {
   return buf.length > 4 && buf.slice(0, 4).toString() === "%PDF";
 }
@@ -265,52 +253,29 @@ const httpsAgent = new https.Agent({ keepAlive: true, maxSockets: 10 });
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    
-    // ✅ Support both tariffIds (array) and tarifId (single) for backward compatibility
-    let tariffIds: string[];
-    
-    if (body.tariffIds && Array.isArray(body.tariffIds)) {
-      // New format: array of tariff IDs
-      tariffIds = body.tariffIds;
-    } else if (body.tarifId && typeof body.tarifId === 'string') {
-      // Old format: single tariff ID (backward compatibility)
-      tariffIds = [body.tarifId];
-      console.log('⚠️ Using deprecated single tarifId format. Please migrate to tariffIds array.');
-    } else {
-      return new Response(
-        JSON.stringify({ status: { meldung: "Either 'tariffIds' (array) or 'tarifId' (string) is required" } }), 
-        { status: 400, headers: { "Content-Type": "application/json" } }
-      );
-    }
+    const { tarifId, vorname, name, geburtsdatum, beginn, anrede, geschlecht } = body || {};
 
-    const { vorname, name, geburtsdatum, beginn, anrede, geschlecht } = body || {};
-
-    console.log("=== Get Order Request ===");
-    console.log("Tariff IDs:", tariffIds);
-    console.log("Count:", tariffIds.length);
-
-    // Validation
-    if (tariffIds.length === 0) {
-      return new Response(
-        JSON.stringify({ status: { meldung: "tariffIds array cannot be empty" } }), 
-        { status: 400, headers: { "Content-Type": "application/json" } }
-      );
-    }
-
-    if (!vorname || !name || !geburtsdatum || !beginn) {
+    if (!tarifId || !vorname || !name || !geburtsdatum || !beginn) {
       return new Response(
         JSON.stringify({ status: { meldung: "missing required fields" } }), 
         { status: 400, headers: { "Content-Type": "application/json" } }
       );
     }
 
-    // ✅ Build envelope with multiple tariffs
-    const xml = buildGetOrderEnvelope({ tariffIds, vorname, name, geburtsdatum, beginn, anrede, geschlecht });
+    const xml = buildApplicationEnvelope({ 
+      tarifId, 
+      vorname, 
+      name, 
+      geburtsdatum, 
+      beginn, 
+      anrede, 
+      geschlecht 
+    });
 
-    console.log("📤 Calling Hallesche API with", tariffIds.length, "tariff(s)");
+    console.log("📤 Sending SOAP request to Hallesche...");
 
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 20000);
+    const timeout = setTimeout(() => controller.abort(), 30000); // 30 seconds
 
     const isHttps = HALLESCHE_URL.startsWith("https:");
     const res = await fetch(HALLESCHE_URL, {
@@ -319,19 +284,21 @@ export async function POST(request: NextRequest) {
       signal: controller.signal,
       headers: {
         "Content-Type": "text/xml; charset=utf-8",
-        "SOAPAction": `"${SOAP_ACTION_ORDER}"`,
+        "SOAPAction": `"${SOAP_ACTION}"`,
         "Accept": "application/xml, text/xml, */*",
       },
-      // @ts-expect-error Node fetch types don't support `agent` in Next.js
+      // @ts-expect-error Node fetch types
       agent: isHttps ? httpsAgent : httpAgent,
     });
 
     clearTimeout(timeout);
 
-    console.log("📥 Hallesche response status:", res.status);
+    console.log(`📥 Hallesche response status: ${res.status}`);
 
     if (!res.ok) {
-      await res.text().catch(() => "");
+      const errorText = await res.text().catch(() => "");
+      console.error("❌ Hallesche error response:", errorText.substring(0, 500));
+      
       return new Response(
         JSON.stringify({ status: { meldung: `upstream error ${res.status}` } }), 
         { status: 502, headers: { "Content-Type": "application/json" } }
@@ -341,7 +308,6 @@ export async function POST(request: NextRequest) {
     const rawText = await res.text();
     const parsed = xmlParser.parse(rawText);
 
-    // check for Status.Meldung (error info)
     const statusMeldung = extractStatusMeldung(parsed);
     if (statusMeldung) {
       console.log("⚠️ Status message from API:", statusMeldung);
@@ -351,20 +317,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // extract docs
     const docs = collectDocs(parsed);
+    console.log(`📄 Found ${docs.length} document(s)`);
 
-    console.log("📄 Documents found:", docs.length);
-
-    // if exactly one doc, return binary PDF directly (fast path)
     if (docs.length === 1) {
       const base64 = docs[0].base64;
       const buffer = Buffer.from(base64, "base64");
       const isPdf = isBufferPdf(buffer);
       const contentType = isPdf ? "application/pdf" : "application/octet-stream";
-      const filename = (docs[0].kurz || "antrag").replace(/[^a-z0-9_\-\.]/gi, "_").slice(0, 200);
+      const filename = (docs[0].kurz || "application").replace(/[^a-z0-9_\-\.]/gi, "_").slice(0, 200);
 
-      console.log("✅ Returning single PDF document:", filename);
+      console.log("✅ Returning single PDF document");
 
       return new Response(buffer, {
         status: 200,
@@ -376,36 +339,29 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // if multiple docs, return JSON with base64 for client to download
     if (docs.length > 1) {
-      console.log("✅ Returning", docs.length, "documents as JSON");
+      console.log("✅ Returning multiple documents as JSON");
       const out = { 
         documents: docs.map((d, idx) => ({ 
           id: idx, 
           fileName: d.kurz || `doc_${idx + 1}`, 
           base64: d.base64 
-        })),
-        meta: {
-          tariffIds,
-          tariffCount: tariffIds.length,
-          documentCount: docs.length,
-        }
+        })) 
       };
-      return new Response(
-        JSON.stringify(out), 
-        { status: 200, headers: { "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify(out), { 
+        status: 200, 
+        headers: { "Content-Type": "application/json" } 
+      });
     }
 
-    // none found -> return friendly status.meldung
-    console.warn("⚠️ No documents found in response");
+    console.log("⚠️ No documents found in response");
     return new Response(
       JSON.stringify({ status: { meldung: "no documents found in response" } }), 
       { status: 400, headers: { "Content-Type": "application/json" } }
     );
     
   } catch (err: unknown) {
-    console.error("❌ getOrderEinzel error:", err);
+    console.error("❌ createApplication error:", err);
     
     const message = err instanceof Error && err.name === "AbortError" 
       ? "upstream timeout" 

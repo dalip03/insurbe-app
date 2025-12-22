@@ -9,12 +9,24 @@ import PlansCompare from "./PlanCompares";
 import InsuranceCalculator from "../CalculatorComponents/InsuranceCalculator";
 import { usePremiumStore } from "@/app/stores/premiumStore";
 import { useJourneyStore } from "@/app/stores/journeyStore";
+import { useDocumentStore } from "@/app/stores/documentStore";
 
+// ✅ Health Answer Types
+interface HealthAnswer {
+  doctorVisit: string | null;
+  doctorPreventative: string | null;
+  hospitalized: string | null;
+  psychotherapy: string | null;
+  chronicDiseases: string | null;
+  dentalVisit: string | null;
+  missingTeeth: string | null;
+}
 
 export default function ComparePlans() {
   const router = useRouter();
-  const { premium, tkPremium } = usePremiumStore();
-  const { incomeRange } = useJourneyStore();
+  const { setPremium, setTKPremium } = usePremiumStore();
+  const { setHalleschePremiumDocs, setHallescheExpatDocs } = useDocumentStore();
+  const { incomeRange, employmentStatus, dob, selectedCountry } = useJourneyStore();
 
   const [viewMode, setViewMode] = useState("default");
   const [expandedCard, setExpandedCard] = useState<string | null>(null);
@@ -23,63 +35,177 @@ export default function ComparePlans() {
   const [selectedPlanName, setSelectedPlanName] = useState("");
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
+  // ✅ Health Questions Modal State
+  const [showHealthModal, setShowHealthModal] = useState(false);
+  const [currentHealthQuestion, setCurrentHealthQuestion] = useState(0);
+  const [healthAnswers, setHealthAnswers] = useState<HealthAnswer>({
+    doctorVisit: null,
+    doctorPreventative: null,
+    hospitalized: null,
+    psychotherapy: null,
+    chronicDiseases: null,
+    dentalVisit: null,
+    missingTeeth: null,
+  });
+  const [pendingPlanId, setPendingPlanId] = useState<string | null>(null);
+
   // ✅ Get products from Zustand store
   const availableProducts = useJourneyStore((state) => state.availableProducts);
 
+  // ✅ Fetch premiums on mount for products with loading=true
+  useEffect(() => {
+    const fetchPremiums = async () => {
+      if (!availableProducts || availableProducts.length === 0) return;
+
+      const currentYear = new Date().getFullYear();
+      const age = dob ? currentYear - parseInt(dob) : 25;
+      const fullDob = dob ? `${dob}-01-01` : "2000-01-01";
+      const coverageStart = new Date().toISOString().split("T")[0];
+
+      const EU_COUNTRIES = [
+        "Austria", "Belgium", "Bulgaria", "Croatia", "Cyprus",
+        "Czech Republic", "Denmark", "Estonia", "Finland", "France",
+        "Germany", "Greece", "Hungary", "Ireland", "Italy",
+        "Latvia", "Lithuania", "Luxembourg", "Malta", "Netherlands",
+        "Poland", "Portugal", "Romania", "Slovakia", "Slovenia",
+        "Spain", "Sweden", "Iceland", "Liechtenstein", "Norway",
+        "Switzerland", "United Kingdom",
+      ];
+      const isEU = selectedCountry ? EU_COUNTRIES.includes(selectedCountry) : true;
+
+      const updatedProducts = await Promise.all(
+        availableProducts.map(async (product: any) => {
+          // Skip if already has premium
+          if (product.premium !== null && product.premium !== undefined) {
+            return { ...product, loading: false };
+          }
+
+          // Fetch Hallesche Premium
+          if (product.id === "hallesche-premium" && product.loading) {
+            try {
+              const res = await fetch("/api/getOfferEinzel", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  tariffIds: ["35659", "36129", "24332", "1803"],
+                  vorname: "User",
+                  name: "Customer",
+                  geburtsdatum: fullDob,
+                  beginn: coverageStart,
+                }),
+              });
+
+              if (res.ok) {
+                const data = await res.json();
+                setHalleschePremiumDocs(data.documents || []);
+                setPremium(data.premium);
+                return {
+                  ...product,
+                  premium: data.premium,
+                  documentCount: data.documents?.length || 0,
+                  loading: false,
+                };
+              }
+            } catch (err) {
+              console.error("Error fetching Hallesche Premium:", err);
+            }
+          }
+
+          // Fetch Hallesche Expat
+          if (product.id === "hallesche-expat" && product.loading && !isEU) {
+            try {
+              const res = await fetch("/api/getOfferEinzel", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  tariffIds: ["35057", "35063", "24332", "1803"],
+                  vorname: "User",
+                  name: "Customer",
+                  geburtsdatum: fullDob,
+                  beginn: coverageStart,
+                }),
+              });
+
+              if (res.ok) {
+                const data = await res.json();
+                setHallescheExpatDocs(data.documents || []);
+                return {
+                  ...product,
+                  premium: data.premium,
+                  documentCount: data.documents?.length || 0,
+                  loading: false,
+                };
+              }
+            } catch (err) {
+              console.error("Error fetching Hallesche Expat:", err);
+            }
+          }
+
+          return { ...product, loading: false };
+        })
+      );
+
+      // ✅ Update store with fetched premiums
+      useJourneyStore.setState({ availableProducts: updatedProducts });
+    };
+
+    fetchPremiums();
+  }, [dob, selectedCountry]);
+
   // ✅ Transform store products to display format
- // In ComparePlans component
-const plans = useMemo(() => {
-  if (!availableProducts || availableProducts.length === 0) {
-    return [];
-  }
-
-  return availableProducts.map((product) => {
-    let logo = "/icons/default.svg";
-    let bgColor = "bg-white";
-    let available = false;
-
-    if (product.id === "tk") {
-      logo = "/icons/tk.svg";
-      bgColor = "bg-white";
-      available = false;
-    } else if (product.id === "hallesche-premium") {
-      logo = "/icons/H.svg";
-      bgColor = "bg-purple-50";
-      available = true;
-    } else if (product.id === "hallesche-expat") {
-      logo = "/icons/H.svg";
-      bgColor = "bg-pink-50";
-      available = true;
+  const plans = useMemo(() => {
+    if (!availableProducts || availableProducts.length === 0) {
+      return [];
     }
 
-    return {
-      id: product.id,
-      name: product.name,
-      price: typeof product.premium === 'number' 
-        ? Math.round(product.premium).toString() 
-        : product.premium?.toString() || "N/A",
-      period: "/ Month",
-      logo,
-      description: product.description,
-      features: product.features,
-      bgColor,
-      available,
-      recommended: product.type === "premium",
-      tariffIds: product.tariffIds,
-      documentCount: product.documentCount || 0, // ✅ Use count
-      provider: product.provider,
-    };
-  });
-}, [availableProducts]);
+    return availableProducts.map((product: any) => {
+      let logo = "/icons/default.svg";
+      let bgColor = "bg-white";
+      let available = false;
 
+      if (product.id === "tk") {
+        logo = "/icons/tk.svg";
+        bgColor = "bg-white";
+        available = false; // TK coming soon
+      } else if (product.id === "hallesche-premium") {
+        logo = "/icons/H.svg";
+        bgColor = "bg-purple-50";
+        available = true;
+      } else if (product.id === "hallesche-expat") {
+        logo = "/icons/H.svg";
+        bgColor = "bg-pink-50";
+        available = true;
+      }
+
+      return {
+        id: product.id,
+        name: product.name,
+        price:
+          product.loading || product.premium === null
+            ? "..."
+            : typeof product.premium === "number"
+            ? Math.round(product.premium).toString()
+            : product.premium?.toString() || "N/A",
+        period: "/ Month",
+        logo,
+        description: product.description,
+        features: product.features || [],
+        bgColor,
+        available,
+        recommended: product.type === "premium",
+        tariffIds: product.tariffIds,
+        documentCount: product.documentCount || 0,
+        provider: product.provider,
+        loading: product.loading || false,
+      };
+    });
+  }, [availableProducts]);
 
   // Determine which card should be highlighted initially
   const getRecommendedPlanId = () => {
-    // For high income, recommend Hallesche Premium
     if (incomeRange === ">77400") {
       return "hallesche-premium";
     }
-    // For medium income, recommend TK
     return "tk";
   };
 
@@ -105,13 +231,144 @@ const plans = useMemo(() => {
     setShowCalculator(true);
   };
 
+  // ✅ Health Questions Configuration
+  const healthQuestions = [
+    {
+      id: 0,
+      title: "Quick health check",
+      subtitle: "Have you visited a doctor in the past 3 years?",
+      helper: "This helps us recommend the right path for you.",
+      key: "doctorVisit" as keyof HealthAnswer,
+    },
+    {
+      id: 1,
+      title: "Quick health check",
+      subtitle: "Was the visit for a preventive health checkup?",
+      helper: "Preventive = routine check-up without symptoms.",
+      key: "doctorPreventative" as keyof HealthAnswer,
+    },
+    {
+      id: 2,
+      title: "Almost there",
+      subtitle: "Have you been hospitalized in the past five years?",
+      key: "hospitalized" as keyof HealthAnswer,
+    },
+    {
+      id: 3,
+      title: "Mental health matters",
+      subtitle: "Have you had psychotherapy in the past 10 years?",
+      key: "psychotherapy" as keyof HealthAnswer,
+    },
+    {
+      id: 4,
+      title: "Health status",
+      subtitle: "Do you have disabilities or chronic diseases?",
+      key: "chronicDiseases" as keyof HealthAnswer,
+    },
+    {
+      id: 5,
+      title: "Dental care",
+      subtitle: "Have you been to the dentist in the past 3 years?",
+      key: "dentalVisit" as keyof HealthAnswer,
+    },
+    {
+      id: 6,
+      title: "Dental health",
+      subtitle: "Do you have any missing teeth?",
+      helper: "Excluding wisdom teeth.",
+      key: "missingTeeth" as keyof HealthAnswer,
+    },
+  ];
+
+  // ✅ Handle Health Question Answers
+  const handleHealthAnswer = (key: keyof HealthAnswer, value: string) => {
+    const updatedAnswers = { ...healthAnswers, [key]: value };
+    setHealthAnswers(updatedAnswers);
+
+    if (currentHealthQuestion === 0) {
+      if (value === "yes") {
+        setCurrentHealthQuestion(1);
+      } else {
+        setCurrentHealthQuestion(2);
+      }
+    } else if (currentHealthQuestion === 1) {
+      setCurrentHealthQuestion(2);
+    } else if (currentHealthQuestion === 2) {
+      setCurrentHealthQuestion(3);
+    } else if (currentHealthQuestion === 3) {
+      setCurrentHealthQuestion(4);
+    } else if (currentHealthQuestion === 4) {
+      setCurrentHealthQuestion(5);
+    } else if (currentHealthQuestion === 5) {
+      setCurrentHealthQuestion(6);
+    } else if (currentHealthQuestion === 6) {
+      // Last question - evaluate
+      evaluateHealthAnswers({ ...updatedAnswers, missingTeeth: value });
+    }
+  };
+
+  // ✅ Evaluate Health Answers
+const evaluateHealthAnswers = (finalAnswers: HealthAnswer) => {
+  const doctorPathSafe =
+    finalAnswers.doctorVisit === "no" ||
+    (finalAnswers.doctorVisit === "yes" &&
+      finalAnswers.doctorPreventative === "yes");
+
+  const otherQuestionsSafe =
+    finalAnswers.hospitalized === "no" &&
+    finalAnswers.psychotherapy === "no" &&
+    finalAnswers.chronicDiseases === "no" &&
+    finalAnswers.dentalVisit === "no" &&
+    finalAnswers.missingTeeth === "no";
+
+  const canProceed = doctorPathSafe && otherQuestionsSafe;
+
+  // ✅ Close modal FIRST
+  setShowHealthModal(false);
+
+  // ✅ Reset AFTER navigation is scheduled
+  requestAnimationFrame(() => {
+    if (canProceed && pendingPlanId) {
+      useJourneyStore.setState({ selectedPlan: pendingPlanId });
+      router.push("/calculator/submitApplication");
+    } else {
+      router.push("/book-appointment");
+    }
+
+    // Cleanup state safely
+    setCurrentHealthQuestion(0);
+    setHealthAnswers({
+      doctorVisit: null,
+      doctorPreventative: null,
+      hospitalized: null,
+      psychotherapy: null,
+      chronicDiseases: null,
+      dentalVisit: null,
+      missingTeeth: null,
+    });
+  });
+};
+
+
+
+  // ✅ Handle Choose Plan - Opens Health Modal for available plans
   const handleChoosePlan = (plan: typeof plans[0]) => {
     if (plan.available) {
-      // Store selected plan details for next page
-      useJourneyStore.setState({
-        selectedPlan: plan.id,
-      });
-      router.push("/calculator/submitApplication");
+      // ✅ Check if self-employed (always eligible for private)
+      const isSelfEmployed =
+        employmentStatus?.toLowerCase().includes("self") || false;
+
+      if (!isSelfEmployed && incomeRange !== ">77400") {
+        // Not eligible for private
+        setSelectedPlanName(plan.name);
+        setShowComingSoonModal(true);
+        return;
+      }
+
+      // ✅ Open health questions modal
+      setPendingPlanId(plan.id);
+      setShowHealthModal(true);
+      setCurrentHealthQuestion(0);
     } else {
       setSelectedPlanName(plan.name);
       setShowComingSoonModal(true);
@@ -167,6 +424,7 @@ const plans = useMemo(() => {
               className="flex gap-3 mt-4"
             >
               <motion.button
+              type="button"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={handleDefaultClick}
@@ -180,6 +438,7 @@ const plans = useMemo(() => {
               </motion.button>
 
               <motion.button
+              type="button"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={handlePersonalizeClick}
@@ -204,6 +463,7 @@ const plans = useMemo(() => {
               Modify charges to match your profile
             </p>
             <motion.button
+            type="button"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={handlePersonalizedCalculationClick}
@@ -229,7 +489,7 @@ const plans = useMemo(() => {
           )}
         </AnimatePresence>
 
-        {/* ✅ Product Count Badge */}
+        {/* Product Count Badge */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -251,7 +511,7 @@ const plans = useMemo(() => {
             snap-x snap-mandatory md:snap-none
             pb-4
             scrollbar-hide
-            ${plans.length === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3'}
+            ${plans.length === 2 ? "md:grid-cols-2" : "md:grid-cols-3"}
           `}
         >
           {plans.map((plan, index) => {
@@ -308,15 +568,24 @@ const plans = useMemo(() => {
                       transition={{ delay: index * 0.1 + 0.4, type: "spring" }}
                       className="flex items-baseline gap-1"
                     >
-                      <span className="text-gray-800 text-4xl sm:text-5xl font-bold">
-                        €
-                      </span>
-                      <span className="text-4xl sm:text-5xl text-gray-900 font-bold">
-                        {plan.price}
-                      </span>
-                      <span className="text-sm text-gray-500">
-                        {plan.period}
-                      </span>
+                      {plan.loading ? (
+                        <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+                          <span className="text-sm text-gray-500">Loading...</span>
+                        </div>
+                      ) : (
+                        <>
+                          <span className="text-gray-800 text-4xl sm:text-5xl font-bold">
+                            €
+                          </span>
+                          <span className="text-4xl sm:text-5xl text-gray-900 font-bold">
+                            {plan.price}
+                          </span>
+                          <span className="text-sm text-gray-500">
+                            {plan.period}
+                          </span>
+                        </>
+                      )}
                     </motion.div>
 
                     <div className="mt-2 font-semibold text-gray-900 text-lg">
@@ -355,7 +624,7 @@ const plans = useMemo(() => {
                   {plan.description}
                 </motion.p>
 
-                {/* Features - Flex grow to push button down */}
+                {/* Features */}
                 <motion.ul
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -363,7 +632,7 @@ const plans = useMemo(() => {
                   className="space-y-3 mb-6 flex-grow"
                   role="list"
                 >
-                  {plan.features.map((feature, i) => (
+                  {plan.features.map((feature: string, i: number) => (
                     <motion.li
                       key={i}
                       initial={{ x: -20, opacity: 0 }}
@@ -379,21 +648,27 @@ const plans = useMemo(() => {
                   ))}
                 </motion.ul>
 
-                {/* Button - Stays at bottom */}
+                {/* Button */}
                 <motion.button
+                type="button"
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                   initial={{ y: 20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: index * 0.1 + 0.8 }}
                   onClick={() => handleChoosePlan(plan)}
-                  className={`w-full py-3 rounded-lg font-semibold cursor-pointer transition-all mt-auto shadow-md focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
+                  disabled={plan.loading}
+                  className={`w-full py-3 rounded-lg font-semibold cursor-pointer transition-all mt-auto shadow-md focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed ${
                     isHovered
                       ? "bg-primary text-white"
                       : "bg-white text-primary border-2 border-primary"
                   }`}
                 >
-                  {plan.available ? "Choose plan" : "Coming Soon"}
+                  {plan.loading
+                    ? "Loading..."
+                    : plan.available
+                    ? "Apply Now"
+                    : "Coming Soon"}
                 </motion.button>
               </motion.div>
             );
@@ -409,6 +684,7 @@ const plans = useMemo(() => {
         >
           {expandedCard ? (
             <motion.button
+            type="button"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setExpandedCard(null)}
@@ -418,6 +694,7 @@ const plans = useMemo(() => {
             </motion.button>
           ) : (
             <motion.button
+            type="button"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setExpandedCard("compare")}
@@ -444,6 +721,133 @@ const plans = useMemo(() => {
         </AnimatePresence>
       </div>
 
+      {/* ✅ Health Questions Modal */}
+      <AnimatePresence>
+        {showHealthModal && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/60 z-40 backdrop-blur-sm"
+            />
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ type: "spring", duration: 0.5 }}
+              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-2xl shadow-2xl p-8 max-w-2xl w-full mx-4 z-50 max-h-[90vh] overflow-y-auto"
+            >
+              <button
+              type="button"
+                onClick={() => {
+                  setShowHealthModal(false);
+                  setCurrentHealthQuestion(0);
+                  setHealthAnswers({
+                    doctorVisit: null,
+                    doctorPreventative: null,
+                    hospitalized: null,
+                    psychotherapy: null,
+                    chronicDiseases: null,
+                    dentalVisit: null,
+                    missingTeeth: null,
+                  });
+                }}
+                className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition"
+              >
+                <X className="w-6 h-6" />
+              </button>
+
+              <div className="space-y-6">
+                {currentHealthQuestion > 0 && (
+                  <button
+                  type="button"
+                    onClick={() =>
+                      setCurrentHealthQuestion(Math.max(0, currentHealthQuestion - 1))
+                    }
+                    className="flex items-center gap-2 text-gray-600 hover:text-primary transition mb-4"
+                  >
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M15 19l-7-7 7-7"
+                      />
+                    </svg>
+                    Back
+                  </button>
+                )}
+
+                <h2 className="text-2xl md:text-3xl font-bold text-gray-800">
+                  {healthQuestions[currentHealthQuestion].title}
+                </h2>
+
+                <p className="text-lg text-gray-700">
+                  {healthQuestions[currentHealthQuestion].subtitle}
+                </p>
+
+                {healthQuestions[currentHealthQuestion].helper && (
+                  <p className="text-sm text-gray-500">
+                    {healthQuestions[currentHealthQuestion].helper}
+                  </p>
+                )}
+
+                <div className="space-y-3 mt-6">
+                  <motion.button
+                  type="button"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() =>
+                      handleHealthAnswer(
+                        healthQuestions[currentHealthQuestion].key,
+                        "yes"
+                      )
+                    }
+                    className="w-full p-4 border-2 cursor-pointer rounded-lg text-left hover:border-primary hover:bg-primary/5 transition"
+                  >
+                    Yes
+                  </motion.button>
+
+                  <motion.button
+                  type="button"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() =>
+                      handleHealthAnswer(
+                        healthQuestions[currentHealthQuestion].key,
+                        "no"
+                      )
+                    }
+                    className="w-full p-4 border-2 cursor-pointer rounded-lg text-left hover:border-primary hover:bg-primary/5 transition"
+                  >
+                    No
+                  </motion.button>
+                </div>
+
+                {/* Progress Indicator */}
+                <div className="mt-6 flex items-center gap-2">
+                  {healthQuestions.map((_, idx) => (
+                    <div
+                      key={idx}
+                      className={`h-2 flex-1 rounded-full transition-all ${
+                        idx <= currentHealthQuestion ? "bg-primary" : "bg-gray-300"
+                      }`}
+                    />
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
       {/* Coming Soon Modal */}
       <AnimatePresence>
         {showComingSoonModal && (
@@ -464,6 +868,7 @@ const plans = useMemo(() => {
               className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4 z-50"
             >
               <motion.button
+              type="button"
                 whileHover={{ scale: 1.1, rotate: 90 }}
                 whileTap={{ scale: 0.9 }}
                 onClick={() => setShowComingSoonModal(false)}
@@ -520,6 +925,7 @@ const plans = useMemo(() => {
                 </motion.p>
 
                 <motion.button
+                type="button"
                   initial={{ y: 20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.5 }}

@@ -12,6 +12,7 @@ interface Product {
   features: string[];
   tariffIds?: string[];
   documentCount?: number; // ✅ Store count, not actual documents
+  loading: boolean;
 }
 
 interface JourneyState {

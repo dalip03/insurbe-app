@@ -18,6 +18,10 @@ export default function SubmitApplication() {
   const { form: premiumForm } = usePremiumStore();
   const journeyData = useJourneyStore();
 
+  // ✅ Get selected plan and available products from Zustand
+  const selectedPlan = useJourneyStore((state) => state.selectedPlan);
+  const availableProducts = useJourneyStore((state) => state.availableProducts);
+
   // Form states
   const [salutation, setSalutation] = useState("Mr");
   const [firstName, setFirstName] = useState(premiumForm.firstName || "");
@@ -33,6 +37,35 @@ export default function SubmitApplication() {
   // UI states
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [selectedPlanDetails, setSelectedPlanDetails] = useState<any>(null);
+
+  // ✅ Get the selected plan details on mount
+  useEffect(() => {
+    console.log("=== SUBMIT APPLICATION PAGE LOADED ===");
+    console.log("Selected Plan:", selectedPlan);
+    console.log("Available Products:", availableProducts);
+
+    if (!selectedPlan) {
+      console.error("❌ No plan selected, redirecting to calculator");
+      router.push("/calculator");
+      return;
+    }
+
+    // Find the selected plan from available products
+    const planDetails = availableProducts?.find(
+      (p: any) => p.id === selectedPlan
+    );
+
+    console.log("Plan Details Found:", planDetails);
+    setSelectedPlanDetails(planDetails);
+
+    if (!planDetails?.tariffIds || planDetails.tariffIds.length === 0) {
+      console.error("❌ No tariff IDs found for selected plan");
+      setError(
+        "Invalid plan selected. Please go back and select a plan again."
+      );
+    }
+  }, [selectedPlan, availableProducts, router]);
 
   // Animation variants
   const containerVariants = {
@@ -54,184 +87,207 @@ export default function SubmitApplication() {
     },
   };
 
-  // Set default coverage start date on mount
-  useEffect(() => {
-    if (!coverageStart) {
-      setCoverageStart(getTwoDaysFromNow());
-    }
-  }, [coverageStart]);
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  // Validation
+  if (!firstName || !lastName || !dob || !email || !phone) {
+    setError("Please fill in all required fields");
+    return;
+  }
 
-    // Validation
-    if (!firstName || !lastName || !dob || !email || !phone) {
-      setError("Please fill in all required fields");
-      return;
-    }
+  if (!agreeTerms) {
+    setError("Please agree to the Terms and Conditions");
+    return;
+  }
 
-    if (!agreeTerms) {
-      setError("Please agree to the Terms and Conditions");
-      return;
-    }
+  if (
+    !selectedPlanDetails?.tariffIds ||
+    selectedPlanDetails.tariffIds.length === 0
+  ) {
+    setError("Invalid plan configuration. Please select a plan again.");
+    return;
+  }
 
-    setLoading(true);
-    setError(null);
+  setLoading(true);
+  setError(null);
 
-    // Map gender to API format (Item1 = Male, Item2 = Female)
-    const genderMap: Record<string, string> = {
-      Male: "Item1",
-      Female: "Item2",
-      Other: "Item1",
-    };
+  // Map gender to API format
+  const genderMap: Record<string, string> = {
+    Male: "Item1",
+    Female: "Item2",
+    Other: "Item1",
+  };
 
-    // Map salutation to API format
-    const salutationMap: Record<string, string> = {
-      Mr: "Item1",
-      Mrs: "Item2",
-      Ms: "Item2",
-      Dr: "Item1",
-    };
+  // Map salutation to API format
+  const salutationMap: Record<string, string> = {
+    Mr: "Item1",
+    Mrs: "Item2",
+    Ms: "Item2",
+    Dr: "Item1",
+  };
 
-    // Format date from YYYY-MM-DD to DD.MM.YYYY for API
-    const formatDateForAPI = (dateStr: string) => {
-      if (!dateStr) return "";
-      const [year, month, day] = dateStr.split("-");
-      return `${day}.${month}.${year}`;
-    };
+  // ✅ Build payload with CORRECT date format (YYYY-MM-DD)
+  const payload = {
+    tariffIds: selectedPlanDetails.tariffIds,
+    vorname: firstName,
+    name: lastName,
+    geburtsdatum: dob, // ✅ Keep YYYY-MM-DD format from date input
+    anrede: salutationMap[salutation] || "Item1",
+    geschlecht: genderMap[gender] || "Item1",
+    beginn: coverageStart, // ✅ Keep YYYY-MM-DD format from date input
+    email: email,
+    telefon: phone.startsWith("+49") ? phone : "+49" + phone.replace(/\D/g, ""),
+    strasse: address || "Not provided",
+    hausnummer: "",
+    plz: "",
+    ort: "",
+    land: "DE",
+  };
 
-    const payload = {
-      tarifId: "34572",
-      vorname: firstName,
-      name: lastName,
-      geburtsdatum: dob,
-      beginn: formatDateForAPI(coverageStart),
-      anrede: salutationMap[salutation] || "Item1",
-      geschlecht: genderMap[gender] || "Item1",
-    };
+  console.log("=== SUBMITTING APPLICATION ===");
+  console.log("Selected Plan:", selectedPlan);
+  console.log("Selected Plan Details:", selectedPlanDetails);
+  console.log("Tariff IDs:", selectedPlanDetails.tariffIds);
+  console.log("Full Payload:", JSON.stringify(payload, null, 2));
 
-    console.log("Submitting application:", payload);
+  try {
+    const res = await fetch("/api/getOrderEinzel", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
 
-    try {
-      const res = await fetch("/api/getOrderEinzel", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+    console.log("Response status:", res.status);
 
-      console.log("Response status:", res.status);
+    if (!res.ok) {
+      const text = await res.text();
+      console.error("Error response:", text);
 
-      if (!res.ok) {
-        const text = await res.text();
-        throw new Error(`Server returned ${res.status}: ${text}`);
-      }
-
-      const contentType = res.headers.get("Content-Type") || "";
-
-      // Check if response is PDF
-      if (contentType.includes("application/pdf")) {
-        const arrayBuffer = await res.arrayBuffer();
-        const blob = new Blob([arrayBuffer], { type: "application/pdf" });
-
-        // Convert to base64 for storage
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          const base64String = reader.result as string;
-
-          // Get filename
-          const disposition = res.headers.get("Content-Disposition") || "";
-          let filename = "application.pdf";
-          const match = /filename="?([^"]+)"?/.exec(disposition);
-          if (match && match[1]) filename = match[1];
-
-          // Store as base64 in sessionStorage
-          sessionStorage.setItem("applicationPdfBase64", base64String);
-          sessionStorage.setItem("applicationPdfFilename", filename);
-
-          // Store application details
-          sessionStorage.setItem(
-            "applicationDetails",
-            JSON.stringify({
-              name: `${salutation} ${firstName} ${lastName}`,
-              email,
-              phone,
-              dob,
-              coverageStart,
-            })
-          );
-
-          // Navigate to success page
-          router.push("/calculator/submitApplication/success");
-        };
-        reader.readAsDataURL(blob);
-        return;
-      }
-
-      // Handle JSON response
-      const json = await res.json();
-
-      if (json?.status?.meldung) {
-        setError(json.status.meldung);
-        return;
-      }
-
-      // Handle documents array
-      if (
-        json?.documents &&
-        Array.isArray(json.documents) &&
-        json.documents.length > 0
-      ) {
-        const firstDoc = json.documents[0];
-        if (firstDoc.base64) {
-          const base64Data = firstDoc.base64;
-          const filename =
-            firstDoc.fileName || firstDoc.kurz || "application.pdf";
-
-          // Store base64 directly
-          sessionStorage.setItem("applicationPdfBase64", base64Data);
-          sessionStorage.setItem("applicationPdfFilename", filename);
-
-          // Store application details
-          sessionStorage.setItem(
-            "applicationDetails",
-            JSON.stringify({
-              name: `${salutation} ${firstName} ${lastName}`,
-              email,
-              phone,
-              dob,
-              coverageStart,
-            })
-          );
-
-          // Navigate to success
-          router.push("/calculator/submitApplication/success");
+      try {
+        const json = JSON.parse(text);
+        if (json?.status?.meldung) {
+          setError(json.status.meldung);
           return;
         }
+        if (json?.error) {
+          setError(json.error);
+          return;
+        }
+      } catch (parseErr) {
+        console.error("Could not parse error JSON:", parseErr);
       }
 
-      // If we get here, navigate to success anyway
-      sessionStorage.setItem(
-        "applicationDetails",
-        JSON.stringify({
-          name: `${salutation} ${firstName} ${lastName}`,
-          email,
-          phone,
-          dob,
-          coverageStart,
-        })
-      );
-      router.push("/application/success");
-    } catch (err) {
-      console.error("Submit error:", err);
-      setError(
-        err instanceof Error
-          ? err.message
-          : "Failed to submit application. Please try again."
-      );
-    } finally {
-      setLoading(false);
+      throw new Error(`Server returned ${res.status}: ${text}`);
     }
-  };
+
+    const contentType = res.headers.get("Content-Type") || "";
+
+    // Handle PDF response
+    if (contentType.includes("application/pdf")) {
+      console.log("✅ Received PDF response");
+      const arrayBuffer = await res.arrayBuffer();
+      const blob = new Blob([arrayBuffer], { type: "application/pdf" });
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result as string;
+
+        const disposition = res.headers.get("Content-Disposition") || "";
+        let filename = "application.pdf";
+        const match = /filename="?([^"]+)"?/.exec(disposition);
+        if (match && match[1]) filename = match[1];
+
+        sessionStorage.setItem("applicationPdfBase64", base64String);
+        sessionStorage.setItem("applicationPdfFilename", filename);
+        sessionStorage.setItem(
+          "applicationDetails",
+          JSON.stringify({
+            name: `${salutation} ${firstName} ${lastName}`,
+            email,
+            phone,
+            dob,
+            coverageStart,
+            planName: selectedPlanDetails.name,
+            planId: selectedPlan,
+          })
+        );
+
+        console.log("✅ Application submitted, navigating to success page");
+        router.push("/calculator/submitApplication/success");
+      };
+      reader.readAsDataURL(blob);
+      return;
+    }
+
+    // Handle JSON response
+    const json = await res.json();
+    console.log("JSON response:", json);
+
+    if (json?.status?.meldung) {
+      setError(json.status.meldung);
+      return;
+    }
+
+    if (
+      json?.documents &&
+      Array.isArray(json.documents) &&
+      json.documents.length > 0
+    ) {
+      console.log("✅ Received documents in JSON");
+      const firstDoc = json.documents[0];
+      if (firstDoc.base64) {
+        sessionStorage.setItem("applicationPdfBase64", firstDoc.base64);
+        sessionStorage.setItem(
+          "applicationPdfFilename",
+          firstDoc.fileName || firstDoc.kurz || "application.pdf"
+        );
+        sessionStorage.setItem(
+          "applicationDetails",
+          JSON.stringify({
+            name: `${salutation} ${firstName} ${lastName}`,
+            email,
+            phone,
+            dob,
+            coverageStart,
+            planName: selectedPlanDetails.name,
+            planId: selectedPlan,
+          })
+        );
+
+        console.log("✅ Application submitted, navigating to success page");
+        router.push("/calculator/submitApplication/success");
+        return;
+      }
+    }
+
+    // Success without documents
+    sessionStorage.setItem(
+      "applicationDetails",
+      JSON.stringify({
+        name: `${salutation} ${firstName} ${lastName}`,
+        email,
+        phone,
+        dob,
+        coverageStart,
+        planName: selectedPlanDetails.name,
+        planId: selectedPlan,
+      })
+    );
+
+    console.log("✅ Application submitted, navigating to success page");
+    router.push("/calculator/submitApplication/success");
+  } catch (err) {
+    console.error("❌ Submit error:", err);
+    setError(
+      err instanceof Error
+        ? err.message
+        : "Failed to submit application. Please try again."
+    );
+  } finally {
+    setLoading(false);
+  }
+};
 
   const calculateAge = (dateString: string) => {
     if (!dateString) return "";
@@ -249,6 +305,18 @@ export default function SubmitApplication() {
 
     return age;
   };
+
+  // ✅ Show loading state while checking plan details
+  if (!selectedPlan || !selectedPlanDetails) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading application form...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 pb-12">
@@ -301,9 +369,9 @@ export default function SubmitApplication() {
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.6 }}
-            className="text-center text-sm text-gray-400 mb-6"
+            className="text-center text-sm text-white/80 mt-2"
           >
-            We need a few more details to process your application for Hallesche
+            Applying for: <strong>{selectedPlanDetails.name}</strong>
           </motion.p>
         </motion.div>
 
@@ -357,7 +425,10 @@ export default function SubmitApplication() {
           </motion.div>
 
           {/* Name Fields */}
-          <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <motion.div
+            variants={itemVariants}
+            className="grid grid-cols-1 md:grid-cols-2 gap-4"
+          >
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 First Name *
@@ -390,7 +461,10 @@ export default function SubmitApplication() {
           </motion.div>
 
           {/* DOB and Gender */}
-          <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <motion.div
+            variants={itemVariants}
+            className="grid grid-cols-1 md:grid-cols-2 gap-4"
+          >
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Date of Birth *
