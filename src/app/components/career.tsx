@@ -20,14 +20,14 @@ const positions = [
 ];
 
 const images = [
-  "/contact/contact1.png",
-  "/contact/contact2.png",
-  "/contact/contact3.png",
-  "/contact/contact4.png",
-  "/contact/contact1.png",
-  "/contact/contact5.png",
-  "/contact/contact3.png",
-  "/contact/contact2.png",
+  "/contact_assets/contact1.png",
+  "/contact_assets/contact2.png",
+  "/contact_assets/contact3.png",
+  "/contact_assets/contact4.png",
+  "/contact_assets/contact1.png",
+  "/contact_assets/contact5.png",
+  "/contact_assets/contact3.png",
+  "/contact_assets/contact2.png",
 ];
 
 const fadeInUp = {

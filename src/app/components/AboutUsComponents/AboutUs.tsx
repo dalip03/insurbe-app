@@ -37,7 +37,7 @@ const AboutUs = () => {
         {/* Right Image with Floating Card */}
         <div className="relative">
           <Image
-            src="/contact/contact1.png"
+            src="/contact_assets/contact1.png"
             alt="Teamwork"
             width={400}
             height={300}
