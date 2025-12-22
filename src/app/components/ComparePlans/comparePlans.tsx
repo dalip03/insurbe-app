@@ -292,7 +292,7 @@ export default function ComparePlans() {
         setCurrentHealthQuestion(2);
       }
     } else if (currentHealthQuestion === 1) {
-      setCurrentHealthQuestion(2);
+      setCurrentHealthQuestion(2);   
     } else if (currentHealthQuestion === 2) {
       setCurrentHealthQuestion(3);
     } else if (currentHealthQuestion === 3) {
