@@ -152,7 +152,7 @@ const handleSubmit = async (e: React.FormEvent) => {
   console.log("Full Payload:", JSON.stringify(payload, null, 2));
 
   try {
-    const res = await fetch("/api/getOrderEinzel", {
+    const res = await fetch("/api/getOfferEinzel", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
