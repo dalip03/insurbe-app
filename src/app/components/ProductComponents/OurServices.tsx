@@ -5,6 +5,7 @@ import ServiceModal from "./ServiceModal";
 import { useState } from "react";
 import PrivateHealthModal from "./PrivateHealthModal";
 import PublicHealthTabbedModal from "./PublicHealthModal";
+import { useRouter } from "next/navigation";
 
 const plans = [
   {
@@ -73,7 +74,7 @@ const itemVariants = {
 export default function OurServices() {
   const [showModal, setShowModal] = useState(false);
   const [openModal, setOpenModal] = useState<null | "public" | "private">(null);
-
+  const router = useRouter();
   return (
     <section className="py-6 px-4 md:px-16 ">
       <div className="max-w-6xl mx-auto text-center">
@@ -156,10 +157,11 @@ export default function OurServices() {
                 variants={itemVariants}
               >
                 <button
-                  onClick={() => {
-                    if (plan.key === "public") setOpenModal("public");
-                    if (plan.key === "private") setOpenModal("private");
-                  }}
+                  // onClick={() => {
+                  //   if (plan.key === "public") setOpenModal("public");
+                  //   if (plan.key === "private") setOpenModal("private");
+                  // }}
+                  onClick={() => router.push("/products/insuranceJourney")}
                   className="w-full py-2 px-4 border border-gray-300 text-black rounded-md transition-all duration-300 group-hover:bg-primary group-hover:text-white group-hover:border-[#c59eec]"
                 >
                   Get Started

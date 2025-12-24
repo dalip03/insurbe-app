@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import ServiceModal from "./ServiceModal";
+import { useRouter } from "next/navigation";
 
 const plans = [
   {
@@ -28,7 +29,7 @@ const plans = [
 
 export default function WeOffers() {
   const [showModal, setShowModal] = useState(false);
-
+  const router = useRouter();
   return (
     <div className="relative mt-6 px-4 md:px-10 lg:px-20 min-h-[520px] flex flex-col items-center bg-gradient-to-r from-[#f8f7fb] to-white">
       {/* Header */}
@@ -58,8 +59,8 @@ export default function WeOffers() {
             </h4>
             <p className="text-sm text-gray-600 mb-6">{plan.description}</p>
             <button
-              className="mt-auto bg-[#e0daf2] text-[#511e6d] text-sm font-medium px-4 py-2 rounded shadow hover:bg-[#d9c9ef] transition"
-              onClick={() => setShowModal(true)}
+              className="mt-auto bg-[#e0daf2] cursor-pointer text-[#511e6d] text-sm font-medium px-4 py-2 rounded shadow hover:bg-[#d9c9ef] transition"
+              onClick={() => router.push("/products/insuranceJourney")}
             >
               Explore
             </button>
