@@ -12,6 +12,7 @@ import AboutHistory from '../components/AboutComponent/AboutHistory'
 import AboutHeads from '../components/AboutComponent/AboutHeads'
 import AboutTeamNew from '../components/AboutComponent/AboutTeamNew'
 import HandInHand from '../components/AboutComponent/HandInHand'
+import Partners from "../components/Partners";
 
 function About() {
   return (
@@ -20,12 +21,14 @@ function About() {
       <AboutHero/>
       {/* <AboutPlatformSection/> */}
       <AboutHistory/>
+     
       {/* <MeetTheTeamSection/> */}
       <AboutHeads/>
       {/* <ExpansionSection/> */}
       <AboutTeamNew/>
       {/* <AboutGrowth/> */}
       <AboutPartners/>
+       <Partners/>
       {/* <Growth/> */}
       {/* <AboutPartners/> */}
       <HandInHand/>

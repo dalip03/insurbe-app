@@ -13,7 +13,7 @@ export default function HeroSection() {
         transition={{ duration: 1, ease: "easeOut" }}
         className="absolute inset-0 flex items-center justify-center pointer-events-none"
       >
-        <div className="relative w-full h-full max-w-[600px] sm:max-w-[700px] md:max-w-[900px]">
+        {/* <div className="relative w-full h-full max-w-[600px] sm:max-w-[700px] md:max-w-[900px]">
           <Image
             src="/images/circle-bg.png"
             alt="Background Circle"
@@ -21,7 +21,7 @@ export default function HeroSection() {
             className="object-contain opacity-10"
             priority
           />
-        </div>
+        </div> */}
       </motion.div>
 
       {/* Left Star */}

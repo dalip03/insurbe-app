@@ -25,16 +25,19 @@ export default function AboutHero() {
             </Link> */}
 
             {/* Main Heading */}
-            <h1 className="text-4xl sm:text-5xl  md:text-6xl lg:text-7xl font-black text-gray-900 leading-tight tracking-tight">
+            {/* <h1 className="text-4xl sm:text-5xl  md:text-6xl lg:text-7xl font-black text-gray-900 leading-tight tracking-tight">
               BERLIN IS
               <br />
               DIFFERENT.
-            </h1>
+            </h1> */}
+
+             <h1 className="text-4xl sm:text-5xl  md:text-5xl font-black text-gray-900 leading-tight tracking-tight">
+              Insurbe – Your Tech-Powered Insurance Partner</h1>
 
             {/* Subheading */}
-            <p className="text-base sm:text-lg text-gray-800">
+            {/* <p className="text-base sm:text-lg text-gray-800">
               Just like <span className="font-bold">Berlin Direkt</span>.
-            </p>
+            </p> */}
 
             {/* Description Paragraphs */}
             <div className="space-y-5 text-sm sm:text-base text-gray-700 leading-relaxed max-w-2xl">

@@ -1,9 +1,9 @@
 import ChooseUs from "./components/ChooseUs";
 import Expectations from "./components/Expectations";
 import FAQ from "./components/FAQ";
+import FeaturesSection from "./components/FeaturesSection";
 import HeroSection from "./components/HeroSection";
 import HeroSection1 from "./components/HeroSection1";
-import Partners from "./components/Partners";
 import ProductBanner from "./components/ProductBanner";
 
 export default function Home() {
@@ -12,7 +12,7 @@ export default function Home() {
       {/* new home page designed  */}
       {/* <HeroSection1/> */}
       <HeroSection/>
-      <Partners />
+      <FeaturesSection/>
       <ChooseUs />
       <ProductBanner />
       <Expectations />
