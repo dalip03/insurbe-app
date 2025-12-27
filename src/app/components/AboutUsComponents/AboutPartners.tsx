@@ -13,95 +13,52 @@ interface Partner {
 
 const partners: Partner[] = [
   {
-    name: "Tchibo",
-    logo: "/partners_asset/tchibo.svg",
+    name: "Allianz",
+    logo: "/partners/allianz.png",
     width: 120,
     height: 40,
   },
   {
-    name: "Fluege.de",
-    logo: "/partners_asset/fluege.webp",
+    name: "AOK",
+    logo: "/partners/aok.png",
     width: 120,
     height: 40,
   },
   {
-    name: "Ab in den Urlaub",
-    logo: "/partners_asset/abin.webp",
+    name: "Barmer",
+    logo: "/partners/barmer.png",
     width: 120,
     height: 40,
   },
   {
-    name: "EUflight",
-    logo: "/partners_asset/euflight.webp",
+    name: "Barmenia",
+    logo: "/partners/bothaer.png",
     width: 120,
     height: 40,
   },
   {
-    name: "Aerticket",
-    logo: "/partners_asset/aerticket.webp",
+    name: "DKV",
+    logo: "/partners/dkv.png",
     width: 120,
     height: 40,
   },
   {
-    name: "riefen",
-    logo: "/partners_asset/riefen.webp",
+    name: "Hallesche",
+    logo: "/partners/haliesche.png",
     width: 120,
     height: 40,
   },
   {
-    name: "swissre",
-    logo: "/partners_asset/swissre.webp",
+    name: "HanseMerkur",
+    logo: "/partners/hanse.png",
     width: 120,
     height: 40,
   },
   {
-    name: "travel24",
-    logo: "/partners_asset/travel24.webp",
+    name: "Signal Iduna",
+    logo: "/partners/signal.png",
     width: 120,
     height: 40,
-  },
-  {
-    name: "plus",
-    logo: "/partners_asset/plus.webp",
-    width: 120,
-    height: 40,
-  },
-  {
-    name: "mrmoney",
-    logo: "/partners_asset/mrmoney.webp",
-    width: 120,
-    height: 40,
-  },
-
-  {
-    name: "hansemerkur",
-    logo: "/partners_asset/hansemerkur.webp",
-    width: 120,
-    height: 40,
-  },
-  {
-    name: "fluege",
-    logo: "/partners_asset/fluege.webp",
-    width: 120,
-    height: 40,
-  },
-  {
-    name: "flipcar",
-    logo: "/partners_asset/flipcar.webp",
-    width: 120,
-    height: 40,
-  },
-  {
-    name: "klemmer",
-    logo: "/partners_asset/klemmer.webp",
-    width: 90,
-    height: 20,
-  },
-  {
-    name: "invia",
-    logo: "/partners_asset/invia.svg",
-    width: 90,
-    height: 30,
   },
 ];
 
@@ -147,7 +104,7 @@ export default function AboutPartners() {
   }, []);
 
   return (
-    <section className="bg-white pt-16 pb-4   overflow-hidden">
+    <section className="bg-white pt-16 pb-4 overflow-hidden">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-12 sm:mb-16">
@@ -181,9 +138,8 @@ export default function AboutPartners() {
               {[...partners, ...partners, ...partners].map((partner, index) => (
                 <div
                   key={`${partner.name}-${index}`}
-                  className="flex-shrink-0  transition-all duration-300 "
+                  className="flex-shrink-0 transition-all duration-300"
                 >
-                  {/* grayscale hover:grayscale-0 opacity-60 hover:opacity-100 */}
                   <Image
                     src={partner.logo}
                     alt={partner.name}
@@ -211,12 +167,12 @@ export default function AboutPartners() {
       </div>
 
       {/* Animated Text Line at Bottom */}
-      <div className="mt-16 sm:mt-20 overflow-hidden py-2">
+      {/* <div className="mt-16 sm:mt-20 overflow-hidden py-2">
         <div className="animate-scroll-text whitespace-nowrap text-4xl sm:text-5xl lg:text-6xl font-black text-primary/40 uppercase tracking-wider">
           KAMMA NICH MECKÄNI DA KAMMA NICH MECKÄNI DA KAMMA NICH MECKÄNI DA
           KAMMA NICH MECKÄNI DA
         </div>
-      </div>
+      </div> */}
 
       {/* Hide Scrollbar & Add Animation CSS */}
       <style jsx global>{`

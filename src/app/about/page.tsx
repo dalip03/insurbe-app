@@ -28,7 +28,7 @@ function About() {
       <AboutTeamNew/>
       {/* <AboutGrowth/> */}
       <AboutPartners/>
-       <Partners/>
+       {/* <Partners/> */}
       {/* <Growth/> */}
       {/* <AboutPartners/> */}
       <HandInHand/>
