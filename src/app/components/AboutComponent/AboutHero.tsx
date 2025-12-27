@@ -39,39 +39,28 @@ export default function AboutHero() {
             {/* Description Paragraphs */}
             <div className="space-y-5 text-sm sm:text-base text-gray-700 leading-relaxed max-w-2xl">
               <p>
-                We are the{" "}
+                {/* We are the{" "}
                 <span className="font-semibold">
                   digital insurance manufacturer
-                </span>{" "}
-                in the startup hub of Berlin – agile, flexible, approachable,
-                open to new ideas, and masters at developing specific solutions
-                for our partners. We understand "manufacture" to mean
-                handcrafted, creative, with attention to detail, tailor-made,
-                and precisely according to our partners' wishes. This is what
-                distinguishes our products.
+                </span>{" "} */}
+                Nestled in Berlin&apos;s vibrant startup ecosystem, Insurbe is redefining digital insurance – building innovative, partner-focused products from the ground up.
               </p>
 
               <p>
-                With our{" "}
-                <span className="font-semibold">hands-on mentality</span>, we
-                like to think outside the box and find creative solutions that
-                create added value for partners and customers.
+                {/* With our{" "}
+                <span className="font-semibold">hands-on mentality</span> */}
+                At Insurbe, we&apos;re revolutionizing insurance with cutting-edge technology. Our AI-driven platform makes it effortless to discover, customize, and secure personalized coverage directly tailored to your needs.
               </p>
 
               <p>
-                As a well-coordinated team, we pull{" "}
-                <span className="font-semibold">together</span> in everything we
-                do and achieve success through cohesion and collaboration. We
-                cultivate a modern, trust-based corporate culture: agile like an
-                InsurTech company, but also{" "}
-                <span className="font-semibold">experienced</span>
+               Our mission isTo deliver seamless protection and peace of mind through advanced tech, smart algorithms, and unbeatable value.
+                
               </p>
 
               <p>
-                like a seasoned veteran thanks to our parent company with over
-                150 years of history. This combination makes us unique.
-                Intrigued? Learn more about us.
+                Powered by the latest technology, we&apos;re making insurance simpler and more accessible for everyone. Join thousands who&apos;ve embraced smarter, modern protection.
               </p>
+              <p>Get started today – protect what matters most.</p>
             </div>
 
             {/* CTA Button */}
