@@ -13,6 +13,8 @@ import AboutHeads from '../components/AboutComponent/AboutHeads'
 import AboutTeamNew from '../components/AboutComponent/AboutTeamNew'
 import HandInHand from '../components/AboutComponent/HandInHand'
 import Partners from "../components/Partners";
+import FeaturesSection from '../components/FeaturesSection'
+import SustainableSection from '../components/AboutComponent/SustainableSection'
 
 function About() {
   return (
@@ -20,18 +22,19 @@ function About() {
       {/* <AboutHeroSection/> */}
       <AboutHero/>
       {/* <AboutPlatformSection/> */}
-      <AboutHistory/>
-     
+      {/* <AboutHistory/> */}
+         <FeaturesSection/>
       {/* <MeetTheTeamSection/> */}
       <AboutHeads/>
       {/* <ExpansionSection/> */}
       <AboutTeamNew/>
       {/* <AboutGrowth/> */}
       <AboutPartners/>
+      <SustainableSection/>
        {/* <Partners/> */}
       {/* <Growth/> */}
       {/* <AboutPartners/> */}
-      <HandInHand/>
+      {/* <HandInHand/> */}
       {/* <AboutJourney/> */}
     </div>
   )

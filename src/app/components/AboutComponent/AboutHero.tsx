@@ -69,7 +69,7 @@ export default function AboutHero() {
             {/* CTA Button */}
             <div className="pt-4">
               <Link href="/">
-                <button className="bg-primary cursor-pointer  text-white font-semibold px-8 py-3.5 sm:px-10 sm:py-4 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl text-sm sm:text-base">
+                <button className="hover:bg-primary border-2 border-primary text-primary cursor-pointer  hover:text-white font-semibold px-8 py-3.5 sm:px-10 sm:py-4 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl text-sm sm:text-base">
                   Our vision and our values
                 </button>
               </Link>
@@ -85,7 +85,7 @@ export default function AboutHero() {
               {/* Main Image Container */}
               <div className="relative  overflow-hidden shadow-2xl h-[500px] sm:h-[800px] lg:h-[900px]">
                 <Image
-                  src="/about/abouth.webp"
+                  src="/about/aboutn.jpeg"
                   alt="Berlin Skyline at Sunset"
                   width={800}
                   height={900}

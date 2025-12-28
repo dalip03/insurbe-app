@@ -10,33 +10,34 @@ interface TeamMember {
 }
 
 const teamMembers: TeamMember[] = [
-  {
-    name: "TOBIAS BLODAU",
-    role: "Board",
-    image: "/about/vorstand.webp",
-    bio: [
-      "Tobias Blodau has been with the company since 2012 and assumed the position of the Board in January 2022. He is the heart and soul of Berlin Direkt's innovative spirit. With a passion for creating 2022, Tobias led the company through innovation with his extensive knowledge, he has already shaped the company's strategic direction.",
-      "Getting to the heart of complex issues, making sound business judgments, and keeping a cool head even in heated situations – these are just a few of the qualities we value so highly about Tobias.",
-    ],
-  },
-  {
-    name: "VERA SCHEUERMANN",
-    role: "Board",
-    image: "/about/vera.webp",
-    bio: [
-      "Vera Scheuermann joined the Board of Berlin Direkt Versicherung in October 2025. With a two years perfect fit for the role she is rapidly at home in insurance topics of future Road activity. As Regional Director for International & Online at Ergo, she managed a huge portfolio with responsibility for insurance business & strategy.",
-      "With Vera on board, we are ideally positioned to further expand our other enterprises Health care and digital pay-as-you-go insurance coverage.",
-    ],
-  },
-  {
-    name: "FLORIAN MEURS",
-    role: "Managing Director",
+   {
+    name: "Marvin F",
+    role: "Founder & CEO",
     image: "/about/florian.webp",
     bio: [
-      "Florian Meurs joined Berlin Direkt Versicherung as Managing Director in July 2022. With his expertise, he is the company's further course speed and ensuring reliable operations.",
-      "With countless ideas, a keen sense for market trends, and a hands-on approach, Florian is not only making Berlin Direkt have become, but past it in also readily available to all employees as a sounding board.",
+    "Bussiness + IT - HWR Berlin CFEP - Frankfurt school of finance & management 34d Versicherungsfachmann 34f Finanzanlagenfachmann ",
+    "12+ year experience in insurance + investment consulting and Teamlead",
     ],
   },
+  {
+    name: "Abinandhanan S",
+    role: "CTO/Co-Founder",
+    image: "/about/Abhinandan.JPG",
+    bio: [
+      "Over a decade of experience in research and building scalable AI solutions for enterprises. Proven track record of working closely with global automobile companies to design and deploy advanced compliance and regulatory intelligence systems.",
+      "At Insurbe, Abi leads the technology vision and strategy, driving innovation and excellence in our AI-powered insurance solutions.",
+    ],
+  },
+  {
+    name: "Safiya R",
+    role: "Chief of staff",
+    image: "/about/safiya.JPG",
+    bio: [
+      "Experienced in operations, strategy, and collaboration with a proven ability to streamline processes, align priorities, and drive impactful results",
+      "With her exceptional organizational skills, strategic mindset, and collaborative approach, Safiya plays a pivotal role in ensuring our company's operations run smoothly and efficiently.",
+    ],
+  },
+ 
 ];
 
 export default function AboutHeads() {
@@ -49,7 +50,7 @@ export default function AboutHeads() {
           <div className="flex items-center gap-4 w-full max-w-md">
             <div className="h-[2px] flex-1 bg-white"></div>
             <h2 className="text-white text-3xl  font-bold whitespace-nowrap">
-              Our heads
+              Our Team
             </h2>
             <div className="h-[2px] flex-1 bg-white"></div>
           </div>
