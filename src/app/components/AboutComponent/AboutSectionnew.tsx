@@ -126,7 +126,7 @@ export default function AboutSectionnew() {
           >
             <div className="relative w-80 h-80 md:w-96 md:h-96 lg:w-full lg:aspect-square rounded-3xl overflow-hidden shadow-2xl mx-auto">
               <Image
-                src="/about/expert.jpeg"
+                src="/about/experts.jpeg"
                 alt="Team Member"
                 fill
                 className="object-cover"
