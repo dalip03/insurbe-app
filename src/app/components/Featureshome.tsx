@@ -1,24 +1,24 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Settings, Eye, Handshake } from "lucide-react";
+import { Award, Monitor, Headphones } from "lucide-react";
 
-export default function FeaturesSection() {
+export default function Featureshome() {
   const features = [
     {
-      icon: Settings,
-      title: "Technology driven",
-      description: "We use technology to make insurance simple and accessible.",
+      icon: Award,
+      title: "Experience",
+      description: "Built by expats for expats. Decades of combined insurance expertise.",
     },
     {
-      icon: Eye,
-      title: "Transparent pricing",
-      description: "No hidden costs, just clear and honest pricing.",
+      icon: Monitor,
+      title: "Digital",
+      description: "Seamless online platform. Paperless, instant quotes & management.",
     },
     {
-      icon: Handshake,
-      title: "Customer first",
-      description: "We put our customers at the heart of everything we do.",
+      icon: Headphones,
+      title: "Support",
+      description: "24/7 Multilingual Assistance. Real people, real solutions.",
     },
   ];
 
@@ -45,7 +45,7 @@ export default function FeaturesSection() {
   };
 
   return (
-    <section className="py-16 px-4 md:px-8 lg:px-16 ">
+    <section className="py-16 px-4 md:px-8 lg:px-16">
       <motion.div
         variants={containerVariants}
         initial="hidden"

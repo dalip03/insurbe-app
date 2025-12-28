@@ -1,0 +1,143 @@
+"use client";
+
+import { motion } from "framer-motion";
+import Image from "next/image";
+import { FileText, Shield, Lightbulb, Zap, Users } from "lucide-react";
+
+export default function AboutSectionnew() {
+  const features = [
+    {
+      icon: FileText,
+      title: "Tailor-made insurance plans",
+      description: "Customizable insurance policies",
+    },
+    {
+      icon: Shield,
+      title: "Range of reputable insurers",
+      description: "Partners with top insurance industry",
+    },
+    {
+      icon: Lightbulb,
+      title: "Specialized guidance",
+      description: "Expert advice on health products",
+    },
+    {
+      icon: Zap,
+      title: "Fast claim processing",
+      description: "Streamlined claim and renewal assistance",
+    },
+    {
+      icon: Users,
+      title: "Dependable insurance provider",
+      description: "An insurance that you trust",
+    },
+  ];
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { x: -30, opacity: 0 },
+    visible: {
+      x: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.5,
+      },
+    },
+  };
+
+  return (
+    <section className="py-12 sm:py-16 px-4 md:px-8 lg:px-16 bg-gray-50">
+      <div className="max-w-7xl mx-auto">
+        {/* Header Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          viewport={{ once: true, amount: 0.2 }}
+          className="mb-8 sm:mb-12"
+        >
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
+            We Actively Strive To Exceed Our <br className="hidden sm:block" />
+            Customers' <span className="text-primary">Expectations</span>
+          </h2>
+          <p className="text-gray-700 text-sm sm:text-base lg:text-lg">
+            Best Offers at competitive prices, never seen before
+          </p>
+        </motion.div>
+
+        {/* Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-12 items-start lg:items-center">
+          {/* Left Side - Features List */}
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            className="order-2 lg:order-1"
+          >
+            <div className="space-y-4 sm:space-y-6">
+              {features.map((feature, index) => {
+                const Icon = feature.icon;
+                return (
+                  <motion.div
+                    key={index}
+                    variants={itemVariants}
+                    whileHover={{ x: 10, transition: { duration: 0.2 } }}
+                    className="flex items-start gap-3 sm:gap-4 group"
+                  >
+                    {/* Icon */}
+                    <div className="flex-shrink-0 mt-0.5 sm:mt-1">
+                      <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-gray-200 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all duration-300">
+                        <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600 group-hover:text-white transition-colors" />
+                      </div>
+                    </div>
+
+                    {/* Text */}
+                    <div className="flex-1">
+                      <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-0.5 sm:mb-1">
+                        {feature.title}
+                      </h3>
+                      <p className="text-xs sm:text-sm text-gray-500">
+                        {feature.description}
+                      </p>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </motion.div>
+
+          {/* Right Side - Square Image */}
+          <motion.div
+            initial={{ x: 50, opacity: 0 }}
+            whileInView={{ x: 0, opacity: 1 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="relative w-full order-1 lg:order-2"
+          >
+            <div className="relative w-80 h-80 md:w-96 md:h-96 lg:w-full lg:aspect-square rounded-3xl overflow-hidden shadow-2xl mx-auto">
+              <Image
+                src="/about/expert.jpeg"
+                alt="Team Member"
+                fill
+                className="object-cover"
+              />
+            </div>
+
+            {/* Decorative Element */}
+            <div className="absolute -bottom-4 -right-4 sm:-bottom-6 sm:-right-6 w-24 h-24 sm:w-32 sm:h-32 bg-primary/20 rounded-full blur-2xl sm:blur-3xl -z-10" />
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}

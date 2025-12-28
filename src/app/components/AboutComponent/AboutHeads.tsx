@@ -58,12 +58,11 @@ export default function AboutHeads() {
 
         {/* Hero Image */}
     {/* Hero Image with Decorative Border */}
-<div className="mb-16 sm:mb-20 flex justify-center px-4">
+{/* <div className="mb-16 sm:mb-20 flex justify-center px-4">
   <div className="relative w-full max-w-md sm:max-w-2xl lg:max-w-3xl">
-    {/* Cyan decorative border */}
+  
     <div className="absolute top-3 -right-3 z-20 sm:top-5 sm:-right-5 lg:top-6 lg:-right-6 w-full h-full  z-10"></div>
     
-    {/* Main Image */}
     <Image
       src="/about/heads.webp"
       alt="Berlin Direkt Team"
@@ -73,7 +72,7 @@ export default function AboutHeads() {
       priority
     />
   </div>
-</div>
+</div> */}
 
 
         {/* Team Members */}
