@@ -12,7 +12,7 @@ const navLinks = [
   { name: "Home", href: "/" },
   { name: "About Us", href: "/about" },
   {
-    name: "Products",
+    name: "Insurance",
     submenu: [
       { name: "Working Professionals", href: "/products/privateProducts", icon: "💼" },
       { name: "Family", href: "/products/pensionProducts", icon: "👨‍👩‍👧‍👦" },
