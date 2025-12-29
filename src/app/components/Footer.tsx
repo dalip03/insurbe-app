@@ -60,7 +60,7 @@ export default function Footer() {
                       />
                     </div>
                     <span className="text-sm font-medium text-gray-300">
-                      Data Centre in EU
+                      Data Centre in Germany
                     </span>
                   </div>
 
@@ -76,7 +76,7 @@ export default function Footer() {
                       />
                     </div>
                     <span className="text-sm font-medium text-gray-300">
-                      Data Security
+                      Let's Encrypt 
                     </span>
                   </div>
                 </div>
