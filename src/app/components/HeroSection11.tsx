@@ -1,8 +1,8 @@
 "use client";
 
-import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import {
   GraduationCap,
   Briefcase,
@@ -11,61 +11,49 @@ import {
   Star,
 } from "lucide-react";
 
-export default function HeroSectionnew() {
+export default function HeroSection11() {
   return (
-    <section className="relative min-h-screen overflow-hidden">
-      {/* Background Image */}
-      <div className="absolute inset-0">
-        <Image
-          src="/hero_assets/herosection6.png"
-          alt="Hero Background"
-          fill
-          priority
-          className="object-cover object-top"
-          style={{ objectPosition: "50% 30%" }}
-        />
-
-        {/* WCAG-friendly left overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 to-transparent" />
-      </div>
-
-      {/* Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 min-h-screen flex items-center">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center w-full">
+    <section className=" bg-primary overflow-hidden">
+        
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 pt-14 sm:py-8">
+        
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          
+          {/* LEFT CONTENT */}
           <motion.div
-            initial={{ opacity: 0, x: -40 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7 }}
-            className="text-white space-y-6 max-w-xl"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-white space-y-6"
           >
-            {/* Small kicker */}
-            <span className="inline-block text-sm uppercase tracking-wide text-white/70">
+            {/* Kicker */}
+            <span className="inline-block text-xs sm:text-sm uppercase tracking-wide text-white/70">
               Easy Insurance for Germany
             </span>
 
             {/* Heading */}
-            <h1 className="text-3xl sm:text-4xl lg:text-[44px] font-bold leading-tight">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight">
               Get Insured in Minutes.
               <br />
               English-First Insurance Solutions.
             </h1>
 
-            {/* Feature bullets with icons */}
+            {/* Features */}
             <div className="space-y-3">
               <FeatureItem
                 icon={GraduationCap}
                 text="For students, professionals & families moving to Germany"
-                color="text-purple-400"
+                color="text-purple-300"
               />
               <FeatureItem
                 icon={Briefcase}
                 text="Health • Legal • Liability • Pension coverage"
-                color="text-blue-400"
+                color="text-blue-300"
               />
               <FeatureItem
                 icon={ShieldCheck}
                 text="Tailored plans for every stage of your move"
-                color="text-green-400"
+                color="text-green-300"
               />
             </div>
 
@@ -73,33 +61,25 @@ export default function HeroSectionnew() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5, duration: 0.5 }}
-              className="flex flex-col sm:flex-row gap-4 pt-4"
+              transition={{ delay: 0.3, duration: 0.5 }}
+              className="flex flex-row gap-4 pt-4"
             >
-              <Link href="/get-started">
-                <motion.button
-                  whileHover={{ scale: 1.06 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="bg-primary text-white font-semibold px-7 py-3 rounded-full shadow-xl hover:shadow-2xl transition flex items-center gap-2"
-                >
+              <Link href="/">
+                <button className="bg-white  cursor-pointer text-primary font-semibold px-7 py-3 rounded-full shadow-xl hover:scale-105 transition flex items-center justify-center gap-2">
                   Get a Quote
                   <ArrowRight className="w-5 h-5" />
-                </motion.button>
+                </button>
               </Link>
 
-              <Link href="/learn-more">
-                <motion.button
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.96 }}
-                  className="border border-white/60 text-white px-7 py-3 rounded-full hover:bg-white hover:text-primary transition"
-                >
+              <Link href="/">
+                <button className="border cursor-pointer  border-white/60 text-white px-7 py-3 rounded-full hover:bg-white hover:text-primary transition">
                   Learn More
-                </motion.button>
+                </button>
               </Link>
             </motion.div>
 
             {/* Reviews */}
-            <div className="pt-4">
+            <div className="pt-2">
               <div className="inline-block bg-white/10 backdrop-blur-md rounded-xl px-5 py-3 border border-white/20">
                 <div className="flex items-center gap-3 mb-1">
                   <span className="font-semibold text-sm">Excellent</span>
@@ -119,13 +99,33 @@ export default function HeroSectionnew() {
               </div>
             </div>
           </motion.div>
+
+          {/* RIGHT IMAGE */}
+          <motion.div
+            initial={{ opacity: 0, x: 40 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+            className="relative w-full max-w-md sm:max-w-lg mx-auto"
+          >
+            <div className="relative w-full aspect-[4/5]  overflow-hidden ">
+              <Image
+                src="/hero_assets/party.png"
+                alt="Real life insurance moments"
+                fill
+                priority
+                sizes="(max-width: 640px) 90vw, (max-width: 1024px) 60vw, 40vw"
+                className="object-contain"
+              />
+            </div>
+          </motion.div>
+
         </div>
       </div>
     </section>
   );
 }
 
-/* Helper component */
+/* Feature item helper */
 function FeatureItem({
   icon: Icon,
   text,

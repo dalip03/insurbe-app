@@ -124,14 +124,16 @@ export default function AboutSectionnew() {
             viewport={{ once: true }}
             className="relative w-full order-1 lg:order-2"
           >
-            <div className="relative w-80 h-80 md:w-96 md:h-96 lg:w-full lg:aspect-square rounded-3xl overflow-hidden shadow-2xl mx-auto">
-              <Image
-                src="/about/experts.jpeg"
-                alt="Team Member"
-                fill
-                className="object-cover"
-              />
-            </div>
+           <div className="relative w-full max-w-sm sm:max-w-md lg:max-w-lg aspect-[4/4] rounded-3xl overflow-hidden shadow-2xl mx-auto">
+  <Image
+    src="/hero_assets/insurance.jpeg"
+    alt="Team Member"
+    fill
+    className="object-cover object-top"
+    sizes="(max-width: 640px) 90vw, (max-width: 1024px) 60vw, 40vw"
+  />
+</div>
+
 
             {/* Decorative Element */}
             <div className="absolute -bottom-4 -right-4 sm:-bottom-6 sm:-right-6 w-24 h-24 sm:w-32 sm:h-32 bg-primary/20 rounded-full blur-2xl sm:blur-3xl -z-10" />

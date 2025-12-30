@@ -134,7 +134,7 @@ export default function Footer() {
               {/* Links */}
               <div>
                 <h2 className="md:text-xl text-3xl font-semibold mb-4">
-                  Links
+                  Gernal
                 </h2>
                 <ul className="space-y-4">
                   <li>
