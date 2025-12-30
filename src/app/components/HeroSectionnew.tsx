@@ -14,12 +14,13 @@ export default function HeroSectionnew() {
           src="/hero_assets/herosection6.png"
           alt="Hero Background"
           fill
-          className="object-cover"
+          className="object-cover object-top"
+          style={{ objectPosition: "50% 30%" }}
           priority
         />
 
         {/* LEFT DARK SHADOW FOR TEXT */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 to-transparent" />
       </div>
 
       {/* CENTERED CONTENT */}
@@ -70,7 +71,7 @@ export default function HeroSectionnew() {
                 <motion.button
                   whileHover={{ scale: 1.04 }}
                   whileTap={{ scale: 0.96 }}
-                  className="bg-primary text-white cursor-pointer font-semibold px-7 py-3 rounded-full shadow-lg hover:shadow-xl transition flex items-center gap-2 justify-center"
+                  className="bg-primary text-white cursor-pointer font-semibold px-6 py-3 rounded-full shadow-lg hover:shadow-xl transition flex items-center gap-2 justify-center"
                 >
                   Get Started Now
                   <ArrowRight className="w-5 h-5" />
@@ -81,7 +82,7 @@ export default function HeroSectionnew() {
                 <motion.button
                   whileHover={{ scale: 1.04 }}
                   whileTap={{ scale: 0.96 }}
-                  className="border border-gray-400 text-white cursor-pointer font-semibold px-7 py-3 rounded-full hover:bg-white hover:text-primary transition"
+                  className="border border-gray-400 text-white cursor-pointer font-semibold px-6 py-3 rounded-full hover:bg-white hover:text-primary transition"
                 >
                   Learn More
                 </motion.button>

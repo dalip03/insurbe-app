@@ -50,9 +50,9 @@ export default function Footer() {
 
                   {/* Data Centre in EU */}
                   <div className="flex items-center gap-2 border border-gray-400/20 rounded-xl p-2">
-                    <div className="w-13 h-13 rounded-full overflow-hidden flex-shrink-0">
+                    <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 ">
                       <Image
-                        src="/gifs_assets/germany1.png"
+                        src="/gifs_assets/germany2.png"
                         alt="Germany Flag"
                         width={40}
                         height={40}
