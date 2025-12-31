@@ -2,34 +2,34 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { FileText, Shield, Lightbulb, Zap, Users } from "lucide-react";
+import { Timer, ShieldCheck, UserCheck, Building2, SlidersHorizontal } from "lucide-react";
 
 export default function AboutSectionnew() {
   const features = [
     {
-      icon: FileText,
+      icon: SlidersHorizontal,
       title: "Tailor-made insurance plans",
       description: "Customizable insurance policies",
     },
     {
-      icon: Shield,
+      icon: Building2,
       title: "Range of reputable insurers",
-      description: "Partners with top insurance industry",
+      description: "Leaders and innovators in the insurance industry",
     },
     {
-      icon: Lightbulb,
-      title: "Specialized guidance",
-      description: "Expert advice on health products",
-    },
-    {
-      icon: Zap,
+      icon: Timer,
       title: "Fast claim processing",
-      description: "Streamlined claim and renewal assistance",
+      description: "Professional support for claim and renewal assistance",
     },
     {
-      icon: Users,
+      icon: UserCheck,
+      title: "Specialised guidance",
+      description: "Experts to offer pre- and post-purchase assistance",
+    },
+    {
+      icon: ShieldCheck,
       title: "Dependable insurance provider",
-      description: "An insurance that you trust",
+      description: "Insurance brand you can trust on",
     },
   ];
 
@@ -84,7 +84,7 @@ export default function AboutSectionnew() {
             viewport={{ once: true, margin: "-100px" }}
             className="order-2 lg:order-1"
           >
-            <div className="space-y-4 sm:space-y-6">
+            <div className="space-y-4 sm:space-y-10">
               {features.map((feature, index) => {
                 const Icon = feature.icon;
                 return (
@@ -96,17 +96,17 @@ export default function AboutSectionnew() {
                   >
                     {/* Icon */}
                     <div className="flex-shrink-0 mt-0.5 sm:mt-1">
-                      <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-gray-200 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all duration-300">
-                        <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600 group-hover:text-white transition-colors" />
+                      <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-primary flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all duration-300">
+                        <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-gray-100 " />
                       </div>
                     </div>
 
                     {/* Text */}
                     <div className="flex-1">
-                      <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-0.5 sm:mb-1">
+                      <h3 className="text-base sm:text-[20px] font-medium text-gray-800 mb-0.5 sm:mb-1">
                         {feature.title}
                       </h3>
-                      <p className="text-xs sm:text-sm text-gray-500">
+                      <p className="text-xs sm:text-[16px] text-gray-500">
                         {feature.description}
                       </p>
                     </div>

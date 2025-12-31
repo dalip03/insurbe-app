@@ -10,7 +10,7 @@ export default function Featureshome() {
       title: "Experience",
       description:
         "Built by expats for expats. Decades of combined insurance expertise.",
-      iconColor: "text-purple-600",
+      iconColor: "text-purple-900",
       bg: "from-purple-100 to-purple-50",
       glow: "hover:shadow-purple-300/50",
     },
@@ -19,18 +19,18 @@ export default function Featureshome() {
       title: "Digital",
       description:
         "Seamless online platform. Paperless, instant quotes & management.",
-      iconColor: "text-blue-600",
-      bg: "from-blue-100 to-blue-50",
-      glow: "hover:shadow-blue-300/50",
+      iconColor: "text-purple-900",
+      bg: "from-purple-100 to-purple-50",
+      glow: "hover:shadow-purple-300/50",
     },
     {
       icon: Headphones,
       title: "Support",
       description:
         "24/7 Multilingual Assistance. Real people, real solutions.",
-      iconColor: "text-emerald-600",
-      bg: "from-emerald-100 to-emerald-50",
-      glow: "hover:shadow-emerald-300/50",
+      iconColor: "text-purple-900",
+      bg: "from-purple-100 to-purple-50",
+      glow: "hover:shadow-purple-300/50",
     },
   ];
 

@@ -18,8 +18,8 @@ export default function Home() {
       {/* <HeroSection1/> */}
       {/* <HeroSection/> */}
       {/* <HeroSectionnew/> */}
-      <HeroSection11/>
-      {/* <HeroInsurance/> */}
+      {/* <HeroSection11/> */}
+      <HeroInsurance/>
       <Featureshome/>
       <ChooseUs />
       <ProductBanner />
