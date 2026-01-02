@@ -50,12 +50,27 @@ export default function HeroInsurance() {
       {/* Content */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 min-h-screen flex items-center">
         <div className="w-full flex justify-end">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7 }}
-            className="max-w-xl text-white space-y-6"
-          >
+         <motion.div
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.7 }}
+  className="
+    max-w-xl text-white space-y-6
+
+    /*  Mobile only */
+    bg-black/20
+    backdrop-blur-md
+    rounded-2xl
+    px-6 py-12
+
+    /* Desktop  */
+    sm:bg-transparent
+    sm:backdrop-blur-none
+    sm:rounded-none
+    sm:p-2
+  "
+>
+
             {/* Heading */}
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight">
               Get Insured in Minutes.
@@ -82,34 +97,57 @@ export default function HeroInsurance() {
               />
             </div>
 
-            {/* CTAs */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5, duration: 0.5 }}
-              className="flex flex-col sm:flex-row gap-4 pt-4"
-            >
-              <Link href="/get-started">
-                <motion.button
-                  whileHover={{ scale: 1.06 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="bg-primary text-white font-semibold px-7 py-3 rounded-full shadow-xl hover:shadow-2xl transition flex items-center gap-2"
-                >
-                  Get a Quote
-                  <ArrowRight className="w-5 h-5" />
-                </motion.button>
-              </Link>
+          {/* CTAs */}
+<motion.div
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ delay: 0.5, duration: 0.5 }}
+  className="
+    flex flex-row items-center gap-3 pt-4
+    w-full
+    max-w-md
+  "
+>
+  {/* Primary CTA */}
+  <Link href="/get-started" className="flex-1">
+    <motion.button
+      whileHover={{ scale: 1.06 }}
+      whileTap={{ scale: 0.95 }}
+      className="
+        w-full
+        bg-primary text-white font-semibold
+        text-sm sm:text-base
+        px-4 py-2 sm:px-7 sm:py-3
+        rounded-full shadow-xl hover:shadow-2xl transition
+        flex items-center justify-center gap-2
+        whitespace-nowrap
+      "
+    >
+      Get a Quote
+      <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
+    </motion.button>
+  </Link>
 
-              <Link href="/learn-more">
-                <motion.button
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.96 }}
-                  className="border border-white/60 text-white px-7 py-3 rounded-full hover:bg-white hover:text-primary transition"
-                >
-                  Learn More
-                </motion.button>
-              </Link>
-            </motion.div>
+  {/* Secondary CTA */}
+  <Link href="/learn-more" className="flex-1">
+    <motion.button
+      whileHover={{ scale: 1.03 }}
+      whileTap={{ scale: 0.96 }}
+      className="
+        w-full
+        border border-white/60 text-white font-medium
+        text-sm sm:text-base
+        px-4 py-2 sm:px-7 sm:py-3
+        rounded-full
+        hover:bg-white hover:text-primary transition
+        whitespace-nowrap
+      "
+    >
+      Learn More
+    </motion.button>
+  </Link>
+</motion.div>
+
 
             {/* Reviews */}
           <div className="pt-4">
