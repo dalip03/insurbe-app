@@ -32,7 +32,7 @@ function FeatureItem({ icon: Icon, text, color }: FeatureItemProps) {
 
 export default function HeroInsurance() {
   return (
-    <section className="relative min-h-screen overflow-hidden">
+    <section className="relative min-h-[85svh] sm:min-h-screen  overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0">
         <Image
