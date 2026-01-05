@@ -13,10 +13,19 @@ const teamMembers: TeamMember[] = [
    {
     name: "Marvin F",
     role: "Founder & CEO",
-    image: "/about/florian.webp",
+    image: "/about/marvin.jpeg",
     bio: [
     "Bussiness + IT - HWR Berlin CFEP - Frankfurt school of finance & management 34d Versicherungsfachmann 34f Finanzanlagenfachmann ",
     "12+ year experience in insurance + investment consulting and Teamlead",
+    ],
+  },
+  {
+    name: "Manjunathan B",
+    role: "CEO/Co-Founder",
+    image: "/about/ceo1.JPG",
+    bio: [
+      "Seasoned entrepreneur with over 24 years of experience in IT consultancy and business leadership. Skilled at driving strategic growth, fostering strong customer relationships, and managing key accounts to deliver sustained value and client satisfaction.",
+      // "At Insurbe, Abi leads the technology vision and strategy, driving innovation and excellence in our AI-powered insurance solutions.",
     ],
   },
   {
@@ -24,8 +33,8 @@ const teamMembers: TeamMember[] = [
     role: "CTO/Co-Founder",
     image: "/about/Abhinandan.JPG",
     bio: [
-      "Over a decade of experience in research and building scalable AI solutions for enterprises. Proven track record of working closely with global automobile companies to design and deploy advanced compliance and regulatory intelligence systems.",
-      "At Insurbe, Abi leads the technology vision and strategy, driving innovation and excellence in our AI-powered insurance solutions.",
+      "Over a decade of experience in research and building scalable AI solutions for enterprises. Proven track record of defining technology vision and strategy, driving innovation and excellence in AI-powered insurance solutions.",
+      // "At Insurbe, Abi leads the technology vision and strategy, driving innovation and excellence in our AI-powered insurance solutions.",
     ],
   },
   {
@@ -33,8 +42,8 @@ const teamMembers: TeamMember[] = [
     role: "Chief of staff",
     image: "/about/safiya.JPG",
     bio: [
-      "Experienced in operations, strategy, and collaboration with a proven ability to streamline processes, align priorities, and drive impactful results",
-      "With her exceptional organizational skills, strategic mindset, and collaborative approach, Safiya plays a pivotal role in ensuring our company's operations run smoothly and efficiently.",
+      "Experienced in operations, strategy, and collaboration with a proven ability to streamline processes, align priorities, and ensure smooth, efficient execution.",
+      // "With her exceptional organizational skills, strategic mindset, and collaborative approach, Safiya plays a pivotal role in ensuring our company's operations run smoothly and efficiently.",
     ],
   },
  
