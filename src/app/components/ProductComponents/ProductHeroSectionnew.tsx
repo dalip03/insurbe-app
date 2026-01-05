@@ -20,7 +20,6 @@ export default function ProductHeroSectionnew() {
       {/* Content */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-14 sm:py-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          
           {/* LEFT CONTENT */}
           <motion.div
             initial={{ opacity: 0, y: 24 }}
@@ -87,25 +86,26 @@ export default function ProductHeroSectionnew() {
             </p>
           </motion.div>
 
-          {/* RIGHT IMAGE */}
+          {/* RIGHT IMAGE – Gradient Frame */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             className="relative"
           >
-            <div className="relative w-full h-[320px] sm:h-[420px] lg:h-[520px] rounded-3xl overflow-hidden shadow-2xl">
-              <Image
-                src="/hero_assets/workProfessional.png" 
-                alt="Insurance coverage illustration"
-                fill
-                priority
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, 50vw"
-              />
+            <div className="relative rounded-[28px] p-[2px] bg-gradient-to-br from-primary/40 via-purple-400/30 to-transparent shadow-xl">
+              <div className="relative w-full h-[320px] sm:h-[420px] lg:h-[520px] rounded-[26px] overflow-hidden bg-white">
+                <Image
+                  src="/hero_assets/workin.jpeg"
+                  alt="Insurance coverage illustration"
+                  fill
+                  priority
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
+              </div>
             </div>
           </motion.div>
-
         </div>
       </div>
     </section>

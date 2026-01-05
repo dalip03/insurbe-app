@@ -5,6 +5,8 @@ import FAQ from "./components/FAQ";
 import Featureshome from "./components/Featureshome";
 import FeaturesSection from "./components/FeaturesSection";
 import HeroInsurance from "./components/HeroInsurance";
+import HeroInsurancenew from "./components/HeroInsurancenew";
+import HeroInsurancenew1 from "./components/HeroInsurancenew1";
 import HeroSection from "./components/HeroSection";
 import HeroSection1 from "./components/HeroSection1";
 import HeroSection11 from "./components/HeroSection11";
@@ -19,7 +21,9 @@ export default function Home() {
       {/* <HeroSection/> */}
       {/* <HeroSectionnew/> */}
       {/* <HeroSection11/> */}
-      <HeroInsurance/>
+      {/* <HeroInsurance/> */}
+      {/* <HeroInsurancenew/> */}
+      <HeroInsurancenew1/>
       <Featureshome/>
       <ChooseUs />
       <ProductBanner />
