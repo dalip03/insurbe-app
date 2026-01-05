@@ -60,7 +60,7 @@ export default function FAQ() {
 
   return (
     <>
-      <section className="pt-16 px-4 md:px-10 lg:px-20">
+      <section className="pt-16 px-4 md:px-10 lg:px-20 py-12">
         <div className="max-w-7xl mx-auto grid items-start px-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -81,7 +81,7 @@ export default function FAQ() {
             viewport={{ once: true }}
             className="text-center"
           >
-            <h2 className="text-4xl font-bold mb-4 py-2">
+            <h2 className="text-4xl font-bold mb-12 py-4">
               Frequently Asked Questions
             </h2>
           </motion.div>
@@ -98,7 +98,7 @@ export default function FAQ() {
                 onClick={() => toggleFAQ(index)}
               >
                 <div className="flex justify-between items-center">
-                  <h3 className="text-sm md:text-base font-semibold">
+                  <h3 className="text-sm md:text-[17px] font-semibold">
                     {faq.question}
                   </h3>
                   <span className="w-6 h-6 block relative">
@@ -139,7 +139,7 @@ export default function FAQ() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
             viewport={{ once: true }}
-            className="text-center pt-8"
+            className="text-center pt-14"
           >
             <button
               onClick={() => setIsModalOpen(true)}

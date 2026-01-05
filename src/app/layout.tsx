@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Jost, Lexend } from "next/font/google";
 import "./globals.css";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
+import Footernew from "./components/footernew";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -45,7 +46,8 @@ export default function RootLayout({
       >
         <Header/>
         {children}
-        <Footer/>
+        {/* <Footer/> */}
+        <Footernew/>
       </body>
     </html>
   );

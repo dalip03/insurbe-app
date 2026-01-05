@@ -5,12 +5,14 @@ import WhyPrivateInsurance from "../../components/ProductComponents/WhyPrivateIn
 import FAQ from "../../components/FAQ";
 import OurServices from "../../components/ProductComponents/OurServices";
 import WeOffers from "@/app/components/ProductComponents/WeOffers ";
+import ProductHeroSectionnew from "@/app/components/ProductComponents/ProductHeroSectionnew";
 
 function ProductPage() {
   return (
     <div>
-      <ProductHeroSection />
-      <CardsSection />
+      {/* <ProductHeroSection /> */}
+      <ProductHeroSectionnew/>
+      {/* <CardsSection /> */}
       <WeOffers />
       <WhyPrivateInsurance />
       {/* <InsuranceSteps /> */}

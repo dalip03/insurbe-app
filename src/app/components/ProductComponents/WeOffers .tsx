@@ -1,74 +1,100 @@
 "use client";
-import React, { useState } from "react";
-import ServiceModal from "./ServiceModal";
+
+import React from "react";
 import { useRouter } from "next/navigation";
+import ServiceModal from "./ServiceModal";
 
 const plans = [
   {
-    title: "Public",
+    title: "Public Health",
     description:
-      "Flexible retirement savings. Pause, increase, or withdraw as your life changes.",
+      "Government-backed coverage with broad access and long-term stability.",
     tag: "Partners",
     key: "public",
   },
   {
     title: "Expat Health",
     description:
-      "Flexible retirement savings. Pause, increase, or withdraw as your life changes.",
+      "Tailored plans for internationals moving or working in Germany.",
     tag: "Partners",
     key: "expat",
   },
   {
     title: "Private Health",
     description:
-      "Flexible retirement savings. Pause, increase, or withdraw as your life changes.",
+      "Premium care with faster access and flexible coverage options.",
     tag: "Partners",
     key: "private",
   },
 ];
 
 export default function WeOffers() {
-  const [showModal, setShowModal] = useState(false);
   const router = useRouter();
+
   return (
-    <div className="relative mt-6 px-4 md:px-10 lg:px-20 min-h-[520px] flex flex-col items-center bg-gradient-to-r from-[#f8f7fb] to-white">
+    <section className="relative bg-gradient-to-br from-[#f8f7fb] to-white py-14 sm:py-20 px-4 sm:px-8 lg:px-20">
       {/* Header */}
-      <div className="mb-2 text-center">
-        <div className="text-xs font-semibold tracking-wide text-gray-500 mb-1">
+      <div className="max-w-4xl mx-auto text-center mb-12">
+        <span className="inline-block text-xs font-medium border border-gray-200 px-6 py-3 rounded-full tracking-widest text-gray-500 uppercase mb-6">
           Seamless Synergy
-        </div>
-        <h2 className="text-4xl md:text-5xl font-extrabold text-[#1d1e25] mb-3">
+        </span>
+
+        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#1d1e25] mb-4">
           Plans We Offer
         </h2>
-        <p className="text-base text-gray-600 mb-8">
-          We partner with leading insurers in Germany to offer
+
+        <p className="text-base sm:text-lg text-gray-600">
+          We partner with leading insurers in Germany to bring you trusted
+          coverage options.
         </p>
       </div>
+
       {/* Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-4xl">
+      <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {plans.map((plan) => (
           <div
             key={plan.key}
-            className="bg-white rounded-xl border border-gray-200 shadow-sm px-6 pt-5 pb-8 flex flex-col items-start relative"
+            className="
+              relative bg-white rounded-2xl border border-gray-200
+              p-6 flex flex-col
+              shadow-sm hover:shadow-lg transition-all duration-300
+            "
           >
-            <span className="absolute top-5 right-6 bg-[#511e6d] text-white text-xs rounded-full px-4 py-1 font-semibold">
+            {/* Tag */}
+            <span className="absolute top-5 right-5 bg-[#511e6d] text-white text-xs rounded-full px-3 py-1 font-semibold">
               {plan.tag}
             </span>
-            <h4 className="text-lg font-semibold text-[#1d1e25] mb-2">
+
+            {/* Content */}
+            <h3 className="text-lg font-semibold text-[#1d1e25] mb-2">
               {plan.title}
-            </h4>
-            <p className="text-sm text-gray-600 mb-6">{plan.description}</p>
+            </h3>
+
+            <p className="text-sm text-gray-600 leading-relaxed mb-6">
+              {plan.description}
+            </p>
+
+            {/* CTA */}
             <button
-              className="mt-auto bg-[#e0daf2] cursor-pointer text-[#511e6d] text-sm font-medium px-4 py-2 rounded shadow hover:bg-[#d9c9ef] transition"
               onClick={() => router.push("/products/insuranceJourney")}
+              className="
+                mt-auto inline-flex items-center justify-center
+                bg-[#ede9fb] text-[#511e6d]
+                text-sm font-semibold
+                px-5 py-2.5 rounded-full
+                hover:bg-[#e0daf2]
+                focus:outline-none focus:ring-2 focus:ring-[#511e6d]/30
+                transition
+              "
             >
               Explore
             </button>
           </div>
         ))}
       </div>
-      {/* Modals */}
-      <ServiceModal open={showModal} onClose={() => setShowModal(false)} />
-    </div>
+
+      {/* Modal (kept for future use) */}
+      <ServiceModal open={false} onClose={() => {}} />
+    </section>
   );
 }
