@@ -34,7 +34,6 @@ export default function HeroInsurancenew1() {
     <section className="relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-14 sm:py-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          
           {/* LEFT CONTENT */}
           <motion.div
             initial={{ opacity: 0, y: 24 }}
@@ -115,9 +114,7 @@ export default function HeroInsurancenew1() {
                       />
                     ))}
                   </div>
-                  <p className="text-xs text-gray-600">
-                    4.5 • 2,310 reviews
-                  </p>
+                  <p className="text-xs text-gray-600">4.5 • 2,310 reviews</p>
                 </div>
 
                 <img
@@ -129,25 +126,84 @@ export default function HeroInsurancenew1() {
             </div>
           </motion.div>
 
-          {/* RIGHT SINGLE IMAGE */}
+          {/* RIGHT SINGLE IMAGE WITH CIRCULAR BADGE */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             className="relative w-full"
           >
-            <div className="relative aspect-[4/3] sm:aspect-[5/4] lg:aspect-[7/6] rounded-3xl overflow-hidden shadow-xl bg-white">
+            <div className=" aspect-[5/4] md:aspect-[7/6] rounded-3xl overflow-hidden shadow-xl bg-white">
               <Image
-                src="/hero_assets/family1.jpeg" 
+                src="/hero_assets/family1.jpeg"
                 alt="Insurance made easy"
                 fill
                 priority
-                className="object-cover object-top"
+                className="object-cover object-top rounded-3xl"
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
-            </div>
-          </motion.div>
 
+             
+            </div>
+             {/* CIRCULAR TEXT BADGE */}
+              <div className="absolute -top-12 -right-4 sm:-top-6 sm:-left-16 w-28 h-28 sm:w-32 sm:h-32 z-50">
+                <div className="relative w-full h-full">
+                  {/* Rotating SVG with inline style animation */}
+                  <div
+                    className="absolute inset-0 w-full h-full"
+                    style={{
+                      animation: "spin 14s linear infinite",
+                    }}
+                  >
+                    <svg
+                      viewBox="0 0 100 100"
+                      className="w-full h-full"
+                      aria-hidden="true"
+                    >
+                      <defs>
+                        <path
+                          id="circlePath"
+                          d="M 50,50 m -38,0 a 38,38 0 1,1 76,0 a 38,38 0 1,1 -76,0"
+                        />
+                      </defs>
+                      <text
+                        fill="#531d6f"
+                        fontSize="12"
+                        fontWeight="600"
+                        letterSpacing="2.2"
+                      >
+                        <textPath href="#circlePath" startOffset="0">
+                          INSURANCE EXPERTS • INSURANCE EXPERTS •
+                        </textPath>
+                      </text>
+                    </svg>
+                  </div>
+
+                  {/* CENTER ICON - Always centered */}
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
+                    <Image
+                      src="/hero_assets/expats.png"
+                      alt="Insurance Expert Badge"
+                      width={64}
+                      height={64}
+                      className="w-32 h-32 sm:w-40 sm:h-40 object-contain"
+                      priority
+                    />
+                  </div>
+                </div>
+
+                <style jsx>{`
+                  @keyframes spin {
+                    from {
+                      transform: rotate(0deg);
+                    }
+                    to {
+                      transform: rotate(360deg);
+                    }
+                  }
+                `}</style>
+              </div>
+          </motion.div>
         </div>
       </div>
     </section>

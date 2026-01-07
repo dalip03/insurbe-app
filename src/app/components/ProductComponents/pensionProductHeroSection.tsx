@@ -2,65 +2,96 @@
 
 import React from "react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 const PensionProductHeroSection = () => {
-   const scrollToForm = () => {
+  const scrollToForm = () => {
     const section = document.getElementById("questionnaire-section");
     if (section) {
       section.scrollIntoView({ behavior: "smooth" });
     }
   };
+
   return (
-    <section className="relative bg-primary bg-gradient-to-br from-primary to-primary text-white py-24 px-4 md:px-10 lg:px-20 overflow-hidden">
-      {/* Grid overlay */}
+    <section className="relative overflow-hidden">
+      {/* Background */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/90 to-[#3b1a52]" />
+        <div className="absolute inset-0 bg-[url('/img/productbg.png')] bg-cover bg-center opacity-15" />
+      </div>
 
-      <div className="relative z-10 text-center max-w-3xl mx-auto">
-        <div className="absolute inset-0 bg-[url('/img/productbg.png')] bg-cover bg-no-repeat bg-center opacity-80 z-0" />
-
-        <motion.span
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="inline-block bg-white/20 text-white px-4 py-1 rounded-full text-sm font-medium mb-4"
-        >
-          Insurbe
-        </motion.span>
-
-        <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.2 }}
-          className="text-4xl md:text-5xl font-bold leading-tight mb-6"
-        >
-          Pension Plans for Expats & Professionals in Germany{" "}
-        </motion.h1>
-
-        <motion.p
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.3 }}
-          className="text-lg md:text-xl mb-10 px-18 text-white/90"
-        >
-          Secure your future. Start building your retirement plan today — with
-          expert guidance in English.
-        </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.4 }}
-          className="flex flex-col sm:flex-row gap-4 justify-center"
-        >
-          <button className="bg-transparent border border-white text-white px-6 py-3 rounded-md hover:bg-white hover:text-primary transition font-semibold">
-            Talk to an Advisor
-          </button>
-          <button
-            onClick={scrollToForm}
-            className="bg-white text-primary px-6 py-3 rounded-md hover:opacity-90 transition font-semibold"
+      {/* Content */}
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-16 sm:py-20">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          
+          {/* LEFT CONTENT */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="space-y-6"
           >
-            Check My Eligibility
-          </button>
-        </motion.div>
+            {/* Badge */}
+            <span className="inline-flex items-center bg-white/15 text-white px-4 py-1.5 rounded-full text-sm font-semibold backdrop-blur">
+              Insurbe • Pension Solutions
+            </span>
+
+            {/* Heading */}
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-tight">
+              Pension Plans for Expats & Professionals in Germany
+            </h1>
+
+            {/* Description */}
+            <p className="text-base sm:text-lg text-white/85 max-w-xl">
+              Secure your future and build a reliable retirement plan with
+              expert guidance in English — tailored for life in Germany.
+            </p>
+
+            {/* CTAs */}
+            <div className="flex gap-4 pt-4 max-w-md">
+              <button
+                className="
+                  flex-1 border border-white/40 text-white
+                  px-5 py-3 rounded-full font-semibold
+                  hover:bg-white/10 transition
+                "
+              >
+                Talk to an Advisor
+              </button>
+
+              <button
+                onClick={scrollToForm}
+                className="
+                  flex-1 bg-white text-primary
+                  px-5 py-3 rounded-full font-semibold
+                  hover:opacity-90 transition
+                "
+              >
+                Check My Eligibility
+              </button>
+            </div>
+          </motion.div>
+
+          {/* RIGHT IMAGE */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.15 }}
+            className="relative w-full"
+          >
+            <div className="relative aspect-[4/3] sm:aspect-[5/4] lg:aspect-[7/6] rounded-3xl overflow-hidden  ">
+              <Image
+                src="/hero_assets/party.png"
+                alt="Pension planning for professionals"
+                fill
+                priority
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 50vw"
+              />
+            </div>
+          </motion.div>
+
+        </div>
       </div>
     </section>
   );
