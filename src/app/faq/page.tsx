@@ -108,7 +108,7 @@ export default function FAQPage() {
           className="mb-8"
         >
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Hi there. Welcome to the Feather help center Germany
+            Hi there. Welcome to the Insurbe help center Germany
           </h1>
 
           {/* Search */}

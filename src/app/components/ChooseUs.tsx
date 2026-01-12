@@ -37,63 +37,106 @@ export default function ChooseUs() {
     },
   ];
 
+  /* Very soft reveal */
   const container = {
     hidden: {},
     visible: {
       transition: {
-        staggerChildren: 0.15,
+        staggerChildren: 0.12,
+        delayChildren: 0.15,
       },
     },
   };
 
-  const fadeInUp = {
-    hidden: { opacity: 0, y: 30 },
+  const cardVariant = {
+    hidden: {
+      opacity: 0,
+      scaleY: 0.96,
+      transformOrigin: "top",
+    },
     visible: {
       opacity: 1,
-      y: 0,
-      transition: { duration: 0.6, ease: "easeOut" },
+      scaleY: 1,
+      transition: {
+        duration: 0.9,
+        ease: [0.22, 1, 0.36, 1], // smooth cubic-bezier
+      },
+    },
+  };
+
+  const titleVariant = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { duration: 1 },
     },
   };
 
   return (
-    <section className="py-16 px-4 md:px-10 lg:px-20  overflow-hidden">
-      <div className="max-w-7xl mx-auto w-full">
-        <h2 className="text-3xl font-bold text-center mb-10">
+    <section
+      id="choose-us"
+      className="py-20 px-4 md:px-10 lg:px-20"
+    >
+      <div className="max-w-7xl mx-auto">
+        {/* Title */}
+        <motion.h2
+          variants={titleVariant}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          className="text-3xl font-bold text-center mb-14"
+        >
           Explore our range of Insurance Products
-        </h2>
+        </motion.h2>
 
+        {/* Cards */}
         <motion.div
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-full"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
           variants={container}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
+          viewport={{ once: true, amount: 0.3 }}
         >
           {reasons.map((item, idx) => (
             <motion.div
               key={idx}
-              variants={fadeInUp}
+              variants={cardVariant}
               whileHover={{
-                backgroundColor: "#ffffff",
-                borderColor: "#A970D7",
-                transition: {
-                  backgroundColor: { duration: 1.7, ease: "easeInOut" },
-                  borderColor: { duration: 1.7, ease: "easeInOut" },
-                },
+                y: -4,
+                transition: { duration: 0.4, ease: "easeOut" },
               }}
-              className="bg-gray-100/60 px-10 lg:px-16 py-8 backdrop-blur-md cursor-pointer rounded-xl text-center border-2 border-transparent transition-all ease-in-out"
+              className="
+                bg-white/70 backdrop-blur-sm
+                px-10 py-10 rounded-2xl
+                text-center border border-gray-200
+                transition-colors duration-300
+                hover:border-primary/40
+              "
             >
-              <div className="w-12 h-12 mx-auto mb-4 flex items-center justify-center bg-white rounded-md shadow-sm">
+              {/* Floating icon */}
+              <motion.div
+                animate={{ y: [0, -6, 0] }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+                className="w-12 h-12 mx-auto mb-6 flex items-center justify-center bg-white rounded-md shadow-sm"
+              >
                 <Image
                   src={item.icon}
                   alt={item.title}
                   width={32}
                   height={32}
-                  className="object-contain"
                 />
-              </div>
-              <h3 className="text-xl text-black">{item.title}</h3>
-              <p className="text-lg text-black mt-4 leading-6">{item.desc}</p>
+              </motion.div>
+
+              <h3 className="text-xl text-black font-medium">
+                {item.title}
+              </h3>
+              <p className="text-base text-gray-700 mt-4 leading-6">
+                {item.desc}
+              </p>
             </motion.div>
           ))}
         </motion.div>

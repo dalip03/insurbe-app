@@ -25,13 +25,7 @@ const plans = [
     icon: Stethoscope,
     key: "public",
   },
-  {
-    title: "Expat Health",
-    description:
-      "Tailored plans for internationals moving or working in Germany.",
-    icon: Users,
-    key: "expat",
-  },
+ 
   {
     title: "Private Health",
     description:
@@ -66,11 +60,11 @@ const cardVariant = {
   },
 };
 
-export default function WeOffers() {
+export default function WeOffersStudent() {
   const router = useRouter();
 
   return (
-    <section className="relative py-16 sm:py-24 px-4 sm:px-8 lg:px-20  overflow-hidden">
+    <section className="relative py-16 sm:py-24 px-4 sm:px-8 lg:px-20 overflow-hidden">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0 }}
@@ -98,7 +92,7 @@ export default function WeOffers() {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.25 }}
-        className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+        className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2  gap-8"
       >
         {plans.map((plan) => {
           const Icon = plan.icon;

@@ -76,7 +76,7 @@ export default function Footer() {
                       />
                     </div>
                     <span className="text-sm font-medium text-gray-300">
-                      Let's Encrypt 
+                      Let's Encrypt
                     </span>
                   </div>
                 </div>
@@ -97,36 +97,36 @@ export default function Footer() {
                 </h2>
                 <ul className="space-y-4">
                   <li>
-                    <a
-                      href="#"
+                    <Link
+                      href="/"
                       className="hover:text-purple-300 text-xl md:text-md"
                     >
                       Home
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a
-                      href="#"
+                    <Link
+                      href="/products"
                       className="hover:text-purple-300 text-xl md:text-md"
                     >
                       Products
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a
-                      href="#"
+                    <Link
+                      href="/private-health"
                       className="hover:text-purple-300 text-xl md:text-md"
                     >
                       Private Health
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a
-                      href="#"
+                    <Link
+                      href="/contact"
                       className="hover:text-purple-300 text-xl md:text-md"
                     >
                       Contact
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </div>
@@ -134,48 +134,48 @@ export default function Footer() {
               {/* Links */}
               <div>
                 <h2 className="md:text-xl text-3xl font-semibold mb-4">
-                  Gernal
+                  General
                 </h2>
                 <ul className="space-y-4">
                   <li>
-                    <a
-                      href="#"
+                    <Link
+                      href="/imprint"
                       className="hover:text-purple-300 text-xl md:text-md"
                     >
                       Imprint
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a
-                      href="#"
+                    <Link
+                      href="/privacypolicy"
                       className="hover:text-purple-300 text-xl md:text-md"
                     >
                       Data Privacy
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a
-                      href="#"
+                    <Link
+                      href="/terms"
                       className="hover:text-purple-300 text-xl md:text-md"
                     >
                       Terms & Conditions
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a
-                      href="#"
+                    <Link
+                      href="/about"
                       className="hover:text-purple-300 text-xl md:text-md"
                     >
                       About Us
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a
-                      href="#"
+                    <Link
+                      href="/careers"
                       className="hover:text-purple-300 text-xl md:text-md"
                     >
                       Careers
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </div>

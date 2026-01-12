@@ -15,8 +15,9 @@ const teamMembers: TeamMember[] = [
     role: "Founder & CEO",
     image: "/about/marvin.jpeg",
     bio: [
-    "Bussiness + IT - HWR Berlin CFEP - Frankfurt school of finance & management 34d Versicherungsfachmann 34f Finanzanlagenfachmann ",
-    "12+ year experience in insurance + investment consulting and Teamlead",
+      "Founded by an industry expert with over a decade of experience, our company was created to simplify insurance through transparency, trust, and smart digital solutions designed for modern life.",
+    // "Bussiness + IT - HWR Berlin CFEP - Frankfurt school of finance & management 34d Versicherungsfachmann 34f Finanzanlagenfachmann ",
+    // "12+ year experience in insurance + investment consulting and Teamlead",
     ],
   },
   {
@@ -30,7 +31,7 @@ const teamMembers: TeamMember[] = [
   },
   {
     name: "Abinandhanan S",
-    role: "CTO/Co-Founder",
+    role: "Head of Technology",
     image: "/about/Abhinandan.JPG",
     bio: [
       "Over a decade of experience in research and building scalable AI solutions for enterprises. Proven track record of defining technology vision and strategy, driving innovation and excellence in AI-powered insurance solutions.",
@@ -114,7 +115,7 @@ export default function AboutHeads() {
                 <p className="text-base sm:text-lg text-white font-semibold mb-6">
                   {member.role}
                 </p>
-                <div className="space-y-4 text-sm sm:text-base text-gray-200 leading-relaxed">
+                <div className="space-y-4 text-sm sm:text-[18px] text-gray-200 leading-relaxed">
                   {member.bio.map((paragraph, idx) => (
                     <p key={idx}>{paragraph}</p>
                   ))}

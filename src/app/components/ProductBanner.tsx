@@ -12,6 +12,12 @@ const products = [
     link: "/products/privateProducts",
   },
   {
+    title: "Family",
+    desc: "Private or public plans that cover loved ones",
+    icon: "/img/family.png",
+    link: "/",
+  },
+  {
     title: "Visa Seekers",
     desc: "Get valid insurances for your visa approval",
     icon: "/img/visa.png",
@@ -23,12 +29,7 @@ const products = [
     icon: "/img/student.png",
     link: "/",
   },
-  {
-    title: "Family",
-    desc: "Private or public plans that cover loved ones",
-    icon: "/img/family.png",
-    link: "/",
-  },
+  
 ];
 
 export default function ProductBanner() {

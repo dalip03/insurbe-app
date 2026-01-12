@@ -112,7 +112,7 @@ export default function RecommendationPage() {
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="max-w-2xl mx-auto text-center"
+          className="max-w-2xl mx-auto text-center py-12"
         >
           {/* Success Icon */}
           <motion.div
@@ -229,7 +229,7 @@ export default function RecommendationPage() {
 
   // Question Flow
   return (
-    <section className="min-h-screen bg-gradient-to-br from-[#f5f0ff] to-white py-12 px-4">
+    <section className="h-full  py-20 px-4 border">
       <div className="max-w-6xl mx-auto">
         {/* Progress Bar */}
         <motion.div
