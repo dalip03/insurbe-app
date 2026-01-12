@@ -19,7 +19,7 @@ export default function Footer() {
                     src="/icons/logo_white.png"
                     alt="Logo"
                     width={160}
-                    height={30}
+                    height={20}
                   />
                 </Link>
               </div>

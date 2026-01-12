@@ -15,26 +15,26 @@ const products = [
     title: "Family",
     desc: "Private or public plans that cover loved ones",
     icon: "/img/family.png",
-    link: "/",
+    link: "/products/pensionProducts",
   },
   {
     title: "Visa Seekers",
     desc: "Get valid insurances for your visa approval",
     icon: "/img/visa.png",
-    link: "/",
+    link: "/products/visaSeakers",
   },
   {
     title: "Students",
     desc: "Affordable, government-approved student plans",
     icon: "/img/student.png",
-    link: "/",
+    link: "/products/students",
   },
   
 ];
 
 export default function ProductBanner() {
   return (
-    <section className="py-16 text-center">
+    <section  id="choose-us" className="py-16 text-center">
       <motion.p
         initial={{ opacity: 0, y: 10 }}
         whileInView={{ opacity: 1, y: 0 }}

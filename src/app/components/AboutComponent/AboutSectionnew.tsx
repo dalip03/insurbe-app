@@ -63,7 +63,7 @@ export default function AboutSectionnew() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
           viewport={{ once: true, amount: 0.2 }}
-          className="mb-8 sm:mb-12"
+          className="mb-6 sm:mb-0"
         >
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
             We Actively Strive To Exceed Our <br className="hidden sm:block" />
@@ -75,14 +75,14 @@ export default function AboutSectionnew() {
         </motion.div>
 
         {/* Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-12 items-start lg:items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-12  items-start lg:items-center">
           {/* Left Side - Features List */}
           <motion.div
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
-            className="order-2 lg:order-1"
+            className="order-2 lg:order-1 "
           >
             <div className="space-y-4 sm:space-y-10">
               {features.map((feature, index) => {

@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 export default function WhyPrivateInsurance() {
   const router = useRouter();
   return (
-    <section className="px-6 md:px-16  overflow-hidden">
+    <section id="insurance" className="px-6 md:px-16  overflow-hidden">
       <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-12 max-w-7xl mx-auto">
         {/* Left Side Content with fade + slide from left */}
         <motion.div

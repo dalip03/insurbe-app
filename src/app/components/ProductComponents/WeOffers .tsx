@@ -24,6 +24,7 @@ const plans = [
       "Government-backed coverage with broad access and long-term stability.",
     icon: Stethoscope,
     key: "public",
+    href: "/insurance/public-health",
   },
   {
     title: "Expat Health",
@@ -31,6 +32,7 @@ const plans = [
       "Tailored plans for internationals moving or working in Germany.",
     icon: Users,
     key: "expat",
+    href: "/insurance/expat-health",
   },
   {
     title: "Private Health",
@@ -38,8 +40,10 @@ const plans = [
       "Premium care with faster access and flexible coverage options.",
     icon: HeartPulse,
     key: "private",
+    href: "/insurance/private-health",
   },
 ];
+
 
 const container = {
   hidden: {},
@@ -108,6 +112,7 @@ export default function WeOffers() {
               key={plan.key}
               variants={cardVariant}
               whileHover={{ y: -6 }}
+               onClick={() => router.push(plan.href)}
               className="
                 group relative rounded-3xl p-7
                 bg-white/70 backdrop-blur-md
@@ -136,7 +141,7 @@ export default function WeOffers() {
                 className="
                   inline-flex items-center gap-2 text-sm font-semibold
                   text-[#511e6d]
-                  group-hover:gap-3 transition-all
+                  group-hover:gap-3 transition-all cursor-pointer
                 "
               >
                 Explore plan

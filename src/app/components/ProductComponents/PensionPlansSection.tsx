@@ -2,123 +2,135 @@
 
 import Image from "next/image";
 import React from "react";
+import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 
 const plans = [
   {
-    logo: "ottonova",
-    logoAlt: "ottonova",
     logoSrc: "/partners/ottonova.png",
+    logoAlt: "Ottonova",
     title: "Rürup Pension",
     description:
-      "Ideal for self-employed professionals and high-income earners. Enjoy tax advantages and lifelong income.",
-    partner: true,
+      "Ideal for self-employed professionals and high-income earners with strong tax advantages.",
   },
   {
-    logo: "barmer",
-    logoAlt: "barmer",
     logoSrc: "/partners/barmer.png",
+    logoAlt: "Barmer",
     title: "Company Pension Advisory",
-    description: "Learn how to make the most of employer contributions.",
-    partner: true,
-    highlightTitle: true,
+    description:
+      "Learn how to maximize employer contributions and long-term benefits.",
   },
   {
-    logo: "mawista",
-    logoAlt: "mawista logo",
     logoSrc: "/partners/mawista.svg",
+    logoAlt: "Mawista",
     title: "Private Pension Plans",
     description:
-      "Flexible retirement savings. Pause, increase, or withdraw as your life changes.",
-    partner: true,
+      "Flexible retirement savings you can pause, adjust, or withdraw from.",
   },
   {
-    logo: "barmer",
-    logoAlt: "barmer logo",
     logoSrc: "/partners/barmer.png",
+    logoAlt: "Barmer",
     title: "ETF-Linked Pension Options",
-    description: "Build wealth over time with low-cost, market-based plans.",
-    partner: true,
-    highlightTitle: true,
+    description:
+      "Market-based plans designed to build wealth over the long term.",
   },
 ];
 
 export default function PensionPlansSection() {
   return (
-    <section className=" px-4 sm:px-10 lg:px-24 text-center">
-      <span className="inline-block text-black/80 px-4 py-2 rounded-full text-sm font-medium mb-4 border border-gray-300">
-        Seamless Synergy
-      </span>
-      <h2 className="text-[54px] font-extrabold text-gray-900 mb-3">Plans We Offer</h2>
+    <section className="py-20 px-4 sm:px-10 lg:px-24 bg-gradient-to-b from-[#faf9ff] to-white">
+      {/* Header */}
+      <div className="text-center max-w-3xl mx-auto mb-14">
+        <span className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium text-primary bg-primary/10 mb-5">
+          Seamless Synergy
+        </span>
 
-      <p className="text-gray-500 max-w-xl mx-auto mb-12">
-        We partner with leading insurers in Germany to offer
-      </p>
-      {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-4xl mx-auto mb-10"> */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-6xl mx-auto mb-14">
-        {plans.map(({ logoSrc, logoAlt, title, description, partner }, i) => (
-          <div
-            key={i}
-            className="bg-white rounded-2xl border border-gray-200 p-6 flex flex-col justify-between shadow-sm hover:shadow-md transition"
+        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+          Pension Plans We Offer
+        </h2>
+
+        <p className="text-gray-600 text-lg">
+          Trusted retirement solutions from leading insurance partners in Germany.
+        </p>
+      </div>
+
+      {/* Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto mb-16">
+        {plans.map((plan, index) => (
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: index * 0.1, duration: 0.5 }}
+            whileHover={{ y: -6 }}
+            className="
+              group bg-white/80 backdrop-blur-md
+              border border-gray-200 rounded-2xl
+              p-6 flex flex-col
+              shadow-sm hover:shadow-xl
+              transition-all duration-300
+            "
           >
-            {/* Logo and Partner badge row */}
-            <div className="flex items-center justify-between mb-4">
-              {/* Logo only */}
-              <div className="flex items-center">
-                {logoSrc.endsWith(".svg") ? (
-                  <Image
-                    src={logoSrc}
-                    alt={logoAlt || "Logo"}
-                    width={100}
-                    height={20}
-                    className="object-contain"
-                  />
-                ) : (
-                  <Image
-                    src={logoSrc}
-                    alt={logoAlt || "Logo"}
-                    width={100}
-                    height={20}
-                    className="object-contain"
-                  />
-                )}
-              </div>
-
-              {/* Partner Badge */}
-              {partner && (
-                <div className="bg-primary text-white rounded-full px-3 py-1 text-xs font-semibold uppercase">
-                  Partners
-                </div>
-              )}
+            {/* Logo */}
+            <div className="h-12 flex items-center mb-5">
+              <Image
+                src={plan.logoSrc}
+                alt={plan.logoAlt}
+                width={110}
+                height={32}
+                className="object-contain"
+              />
             </div>
 
             {/* Title */}
-            <h3 className="text-left text-lg font-semibold text-gray-900 mb-2">{title}</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              {plan.title}
+            </h3>
 
             {/* Description */}
-            <p className="text-left text-gray-600 text-sm mb-6 flex-grow">{description}</p>
+            <p className="text-sm text-gray-600 leading-relaxed mb-6 flex-grow">
+              {plan.description}
+            </p>
 
-            {/* Explore Button */}
-            <button className="self-start bg-purple-100 text-primary px-4 py-2 rounded-md text-sm font-semibold hover:bg-purple-200 transition">
-              Explore
-            </button>
-          </div>
+            {/* CTA */}
+            {/* <button className="
+              inline-flex items-center gap-2
+              text-sm font-semibold text-primary
+              hover:gap-3 transition-all
+            ">
+              Explore plan
+              <ArrowRight className="w-4 h-4" />
+            </button> */}
+
+            {/* Hover glow */}
+            <div className="
+              absolute inset-0 rounded-2xl opacity-0
+              group-hover:opacity-100 transition
+              bg-gradient-to-br from-primary/10 to-transparent
+              pointer-events-none
+            " />
+          </motion.div>
         ))}
       </div>
 
-      {/* See All Button */}
-      <button className="inline-flex items-center bg-primary text-white rounded-md px-8 py-3 hover:bg-primary transition">
-        See all
-        <svg
-          className="ml-3 h-5 w-5"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={2}
-          viewBox="0 0 24 24"
-          aria-hidden="true"
+      {/* Footer CTA */}
+      {/* <div className="text-center">
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.96 }}
+          className="
+            inline-flex items-center gap-3
+            bg-primary text-white
+            px-8 py-3 rounded-full
+            font-semibold shadow-lg
+            hover:bg-primary/90 transition
+          "
         >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-        </svg>
-      </button>
+          See all plans
+          <ArrowRight className="w-5 h-5" />
+        </motion.button>
+      </div> */}
     </section>
   );
 }

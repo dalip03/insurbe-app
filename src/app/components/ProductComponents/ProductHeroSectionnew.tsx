@@ -9,6 +9,13 @@ import Image from "next/image";
 export default function ProductHeroSectionnew() {
   const router = useRouter();
 
+   const handleScroll = () => {
+    const el = document.getElementById("insurance");
+    if (!el) return;
+
+    const y = el.getBoundingClientRect().top + window.scrollY - 80;
+    window.scrollTo({ top: y, behavior: "smooth" });
+  };
   return (
     <section className="relative overflow-hidden">
       {/* Background */}
@@ -73,6 +80,7 @@ export default function ProductHeroSectionnew() {
               </motion.button>
 
               <motion.button
+               onClick={handleScroll}
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
                 className="flex-1 border border-white/40  cursor-pointer text-white px-4 py-3 rounded-full"

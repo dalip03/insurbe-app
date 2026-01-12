@@ -4,8 +4,11 @@ import React from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function VisaSeekers() {
+  const router = useRouter();
   return (
     <section className="relative overflow-hidden">
       {/* Background */}
@@ -57,39 +60,26 @@ export default function VisaSeekers() {
               and explained clearly in English.
             </motion.p>
 
-            {/* CTAs */}
-            <motion.div
-              variants={{ hidden: { y: 10, opacity: 0 }, visible: { y: 0, opacity: 1 } }}
-              className="flex gap-4 pt-4 max-w-md"
-            >
-              {/* Secondary CTA */}
-              <Link
-                href="/contact"
-                className="
-                  flex-1 cursor-pointer
-                  border border-white/40 text-white text-center
-                  px-5 py-3 rounded-full font-semibold
-                  hover:bg-white/10 hover:shadow-md
-                  transition-all duration-300
-                "
+              {/* CTA */}
+            <div className="flex flex-row gap-4 max-w-md">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => router.push("/products/insuranceJourney")}
+                className="flex-1 bg-white text-primary font-semibold cursor-pointer text-sm px-6 py-3 rounded-full shadow-lg flex items-center justify-center gap-2"
               >
-                Talk to an Advisor
-              </Link>
+                Take the Questionnaire
+                <ArrowRight className="w-4 h-4" />
+              </motion.button>
 
-              {/* Primary CTA */}
-              <Link
-                href="/get-started"
-                className="
-                  flex-1 cursor-pointer
-                  bg-white text-primary text-center
-                  px-5 py-3 rounded-full font-semibold
-                  hover:shadow-xl hover:-translate-y-[1px]
-                  transition-all duration-300
-                "
+              <motion.button
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                className="flex-1 border border-white/40  cursor-pointer text-white px-4 py-3 rounded-full"
               >
-                Get Visa Insurance
-              </Link>
-            </motion.div>
+                Learn More
+              </motion.button>
+            </div>
           </motion.div>
 
           {/* RIGHT IMAGE */}

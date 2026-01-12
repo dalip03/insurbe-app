@@ -32,11 +32,11 @@ export default function AboutTeamNew() {
                 Interested in joining our team?
               </p>
               
-              <Link href="/jobs">
+              {/* <Link href="/jobs">
                 <button className="border-2 border-primary cursor-pointer text-primary hover:bg-primary hover:text-white font-semibold px-8 py-3 sm:px-10 sm:py-3.5 rounded-full transition-all duration-300 text-sm sm:text-base">
                   To the jobs
                 </button>
-              </Link>
+              </Link> */}
             </div>
           </div>
 

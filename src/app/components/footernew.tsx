@@ -18,7 +18,7 @@ export default function Footernew() {
                   <Image
                     src="/icons/logo_white.png"
                     alt="Logo"
-                    width={160}
+                    width={120}
                     height={30}
                   />
                 </Link>
@@ -106,28 +106,22 @@ export default function Footernew() {
                   </li>
                   <li>
                     <a
-                      href="#"
+                      href="/about"
                       className="hover:text-purple-300 text-xl md:text-md"
                     >
-                      Products
+                      About
                     </a>
                   </li>
+                 
                   <li>
                     <a
-                      href="#"
-                      className="hover:text-purple-300 text-xl md:text-md"
-                    >
-                      Private Health
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
+                      href="/support"
                       className="hover:text-purple-300 text-xl md:text-md"
                     >
                       Contact
                     </a>
                   </li>
+
                 </ul>
               </div>
 
@@ -139,7 +133,7 @@ export default function Footernew() {
                 <ul className="space-y-4">
                   <li>
                     <a
-                      href="#"
+                      href="/privacypolicy"
                       className="hover:text-purple-300 text-xl md:text-md"
                     >
                       Imprint
@@ -147,7 +141,7 @@ export default function Footernew() {
                   </li>
                   <li>
                     <a
-                      href="#"
+                      href="/privacypolicy"
                       className="hover:text-purple-300 text-xl md:text-md"
                     >
                       Data Privacy
@@ -155,23 +149,16 @@ export default function Footernew() {
                   </li>
                   <li>
                     <a
-                      href="#"
+                      href="/termscondition"
                       className="hover:text-purple-300 text-xl md:text-md"
                     >
                       Terms & Conditions
                     </a>
                   </li>
+                 
                   <li>
                     <a
-                      href="#"
-                      className="hover:text-purple-300 text-xl md:text-md"
-                    >
-                      About Us
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
+                      href="/career"
                       className="hover:text-purple-300 text-xl md:text-md"
                     >
                       Careers

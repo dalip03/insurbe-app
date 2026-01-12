@@ -32,7 +32,7 @@ export default function AboutHero() {
             </h1> */}
 
              <h1 className="text-4xl sm:text-5xl  md:text-5xl font-black text-gray-900 leading-tight tracking-tight">
-              Insurbe – Your Tech-Powered Insurance Partner</h1>
+              InsurBe – Your Tech-Powered Insurance Partner</h1>
 
             {/* Subheading */}
             {/* <p className="text-base sm:text-lg text-gray-800">
@@ -46,13 +46,13 @@ export default function AboutHero() {
                 <span className="font-semibold">
                   digital insurance manufacturer
                 </span>{" "} */}
-                Nestled in Berlin&apos;s vibrant startup ecosystem, Insurbe is redefining digital insurance – building innovative, partner-focused products from the ground up.
+                Nestled in Berlin&apos;s vibrant startup ecosystem, InsurBe is redefining digital insurance – building innovative, partner-focused products from the ground up.
               </p>
 
               <p>
                 {/* With our{" "}
                 <span className="font-semibold">hands-on mentality</span> */}
-                At Insurbe, we&apos;re revolutionizing insurance with cutting-edge technology. Our AI-driven platform makes it effortless to discover, customize, and secure personalized coverage directly tailored to your needs.
+                At InsurBe, we&apos;re revolutionizing insurance with cutting-edge technology. Our AI-driven platform makes it effortless to discover, customize, and secure personalized coverage directly tailored to your needs.
               </p>
 
               <p>
@@ -67,13 +67,13 @@ export default function AboutHero() {
             </div>
 
             {/* CTA Button */}
-            <div className="pt-4">
+            {/* <div className="pt-4">
               <Link href="/">
                 <button className="hover:bg-primary border-2 border-primary text-primary cursor-pointer  hover:text-white font-semibold px-8 py-3.5 sm:px-10 sm:py-4 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl text-sm sm:text-base">
                   Our vision and our values
                 </button>
               </Link>
-            </div>
+            </div> */}
           </div>
 
           {/* RIGHT SIDE - Image */}

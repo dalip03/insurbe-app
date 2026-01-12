@@ -3,6 +3,8 @@
 import React from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { ArrowRight } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const PensionProductHeroSection = () => {
   const scrollToForm = () => {
@@ -12,6 +14,14 @@ const PensionProductHeroSection = () => {
     }
   };
 
+  const router = useRouter();
+   const handleScroll = () => {
+    const el = document.getElementById("family");
+    if (!el) return;
+
+    const y = el.getBoundingClientRect().top + window.scrollY - 80;
+    window.scrollTo({ top: y, behavior: "smooth" });
+  };
   return (
     <section className="relative overflow-hidden">
       {/* Background */}
@@ -47,28 +57,27 @@ const PensionProductHeroSection = () => {
               expert guidance in English — tailored for life in Germany.
             </p>
 
-            {/* CTAs */}
-            <div className="flex gap-4 pt-4 max-w-md">
-              <button
-                className="
-                  flex-1 border border-white/40 text-white
-                  px-5 py-3 rounded-full font-semibold
-                  hover:bg-white/10 transition
-                "
+          
+           {/* CTA */}
+            <div className="flex flex-row gap-4 max-w-md">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => router.push("/products/insuranceJourney")}
+                className="flex-1 bg-white text-primary font-semibold cursor-pointer text-sm px-6 py-3 rounded-full shadow-lg flex items-center justify-center gap-2"
               >
-                Talk to an Advisor
-              </button>
+                Take the Questionnaire
+                <ArrowRight className="w-4 h-4" />
+              </motion.button>
 
-              <button
-                onClick={scrollToForm}
-                className="
-                  flex-1 bg-white text-primary
-                  px-5 py-3 rounded-full font-semibold
-                  hover:opacity-90 transition
-                "
+              <motion.button
+                 onClick={handleScroll}
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                className="flex-1 border border-white/40  cursor-pointer text-white px-4 py-3 rounded-full"
               >
-                Check My Eligibility
-              </button>
+                Learn More
+              </motion.button>
             </div>
           </motion.div>
 

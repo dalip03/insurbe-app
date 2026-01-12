@@ -7,32 +7,32 @@ export default function ChooseUs() {
   const reasons = [
     {
       title: "Health Insurance",
-      desc: "Generic text to outline the benefits of Insurbe and the particular feature.",
+      desc: "Reliable health coverage that supports you through everyday care and unexpected moments—without complexity.",
       icon: "/insurance/student.svg",
     },
     {
       title: "Private Pension Scheme",
-      desc: "Generic text to outline the benefits of Insurbe and the particular feature.",
+      desc: "A smarter way to plan ahead, helping you build long-term financial security with confidence.",
       icon: "/insurance/pension1.svg",
     },
     {
       title: "Liability Insurance",
-      desc: "Generic text to outline the benefits of Insurbe and the particular feature.",
+      desc: "Thoughtful protection that shields you from personal liability and unexpected claims.",
       icon: "/insurance/liability1.svg",
     },
     {
       title: "Household Insurance",
-      desc: "Generic text to outline the benefits of Insurbe and the particular feature.",
+      desc: "Clear, dependable coverage for your home and belongings—designed for real life.",
       icon: "/insurance/house1.svg",
     },
     {
       title: "Legal Insurance",
-      desc: "Generic text to outline the benefits of Insurbe and the particular feature.",
+      desc: "Straightforward legal support when it matters most, with access to expert guidance and cost coverage.",
       icon: "/insurance/legal1.svg",
     },
     {
       title: "Travel Insurance",
-      desc: "Generic text to outline the benefits of Insurbe and the particular feature.",
+      desc: "Protection that moves with you, ensuring peace of mind wherever your journey takes you.",
       icon: "/insurance/travel1.svg",
     },
   ];
@@ -74,7 +74,7 @@ export default function ChooseUs() {
 
   return (
     <section
-      id="choose-us"
+     
       className="py-20 px-4 md:px-10 lg:px-20"
     >
       <div className="max-w-7xl mx-auto">
