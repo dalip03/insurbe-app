@@ -35,7 +35,7 @@ const reasons = [
 export default function PrivatePensionSection() {
     const router = useRouter();
   return (
-    <section id="family" className="py-20 px-4 sm:px-10 lg:px-20 bg-gradient-to-b from-[#f9f7fd] to-white">
+    <section id="family" className="py-20 px-4 sm:px-10 lg:px-20 ">
       {/* Header */}
       <div className="max-w-3xl mx-auto text-center mb-14">
         <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">

@@ -204,7 +204,7 @@ export default function HeroInsurancenew1() {
                 />
               </div>
               {/* CIRCULAR TEXT BADGE */}
-              <div className="absolute -top-12 -right-4 sm:-top-6 sm:-left-16 w-28 h-28 sm:w-32 sm:h-32 z-50">
+              <div className="absolute -top-12 -right-4 sm:-top-6 sm:-left-16 w-28 h-28 sm:w-32 sm:h-32 z-40">
                 <div className="relative w-full h-full">
                   {/* Rotating SVG with inline style animation */}
                   <div
