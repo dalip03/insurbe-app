@@ -50,13 +50,13 @@ const features = [
   },
 ];
 
-export default function StudentInsuranceComparisonLight() {
+export default function StudentInsuranceComparisonLight1() {
   return (
-    <section className="relative py-20 sm:py-28 px-4 sm:px-6 lg:px-8 overflow-hidden bg-gradient-to-br from-[#f7f7fb] via-[#fafaff] to-white">
+    <section className="relative py-12 sm:py-16 md:py-4 px-4 sm:px-6 lg:px-8 overflow-hidden ">
       {/* Soft background accents */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 -left-48 w-96 h-96 bg-purple-200/40 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 -right-48 w-96 h-96 bg-blue-200/40 rounded-full blur-3xl" />
+      <div className="absolute inset-0 overflo  w-hidden">
+        <div className="absolute top-1/4 -left-24 sm:-left-48 w-48 sm:w-96 h-48 sm:h-96 bg-purple-200/40 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 -right-24 sm:-right-48 w-48 sm:w-96 h-48 sm:h-96 bg-blue-200/40 rounded-full blur-3xl" />
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto">
@@ -66,37 +66,158 @@ export default function StudentInsuranceComparisonLight() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
-          className="text-center mb-16 sm:mb-20"
+          className="text-center mb-10 sm:mb-14 md:mb-16 lg:mb-20"
         >
           <motion.div
             initial={{ scale: 0 }}
             whileInView={{ scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, type: "spring" }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-100 border border-purple-200 mb-6"
+            className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full bg-purple-100 border border-purple-200 mb-4 sm:mb-6"
           >
-            <Stethoscope className="w-4 h-4 text-purple-600" />
-            <span className="text-sm font-medium text-purple-700">
+            <Stethoscope className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-purple-600" />
+            <span className="text-xs sm:text-sm font-medium text-purple-700">
               Student Insurance Guide
             </span>
           </motion.div>
 
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl  font-bold text-gray-900 mb-4 sm:mb-6 leading-tight px-2">
             Public{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-500">
               vs
             </span>{" "}
-            Private
+            Private  Health
             <br />
-            Health Insurance
+            Insurance
           </h2>
 
-          <p className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-4xl mx-auto px-4">
             Two systems. Very different experiences.
-            <br className="hidden sm:block" />
+          
             Understand which one fits your life in Germany.
           </p>
         </motion.div>
+
+        {/* Mobile & Tablet View - Stacked Cards */}
+        <div className="lg:hidden space-y-6 sm:space-y-8 mb-12">
+          {/* Public Insurance Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+            className="relative group"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-200/50 to-cyan-200/40 rounded-2xl sm:rounded-3xl blur-xl transition-all duration-500" />
+            <div className="relative bg-white/80 backdrop-blur-xl rounded-2xl sm:rounded-3xl p-5 sm:p-6 md:p-8 border border-gray-200">
+              <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8 pb-4 sm:pb-6 border-b border-gray-200">
+                <div className="w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-blue-100 flex items-center justify-center shrink-0">
+                  <Landmark className="w-5 h-5 sm:w-7 sm:h-7 text-blue-600" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <h3 className="text-xl sm:text-2xl font-bold text-gray-900 truncate">
+                    Public Insurance
+                  </h3>
+                  <p className="text-xs sm:text-sm text-gray-500 truncate">
+                    Gesetzliche Krankenversicherung
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-4 sm:space-y-6">
+                {features.map((f, idx) => {
+                  const Icon = f.icon;
+                  return (
+                    <motion.div
+                      key={f.label}
+                      initial={{ opacity: 0, x: -20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: idx * 0.1 }}
+                      className="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl bg-gray-50"
+                    >
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-blue-50 flex items-center justify-center shrink-0">
+                        <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-semibold text-sm sm:text-base text-gray-900 mb-1">
+                          {f.label}
+                        </h4>
+                        <p className="text-xs sm:text-sm text-gray-600">
+                          {f.public}
+                        </p>
+                      </div>
+                      {f.publicGood ? (
+                        <Check className="w-4 h-4 sm:w-5 sm:h-5 text-green-500 mt-1 shrink-0" />
+                      ) : (
+                        <X className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 mt-1 shrink-0" />
+                      )}
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Private Insurance Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className="relative group"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-200/50 to-pink-200/40 rounded-2xl sm:rounded-3xl blur-xl transition-all duration-500" />
+            <div className="relative bg-white/90 backdrop-blur-xl rounded-2xl sm:rounded-3xl p-5 sm:p-6 md:p-8 border border-purple-200">
+              <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8 pb-4 sm:pb-6 border-b border-purple-200">
+                <div className="w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-purple-100 flex items-center justify-center shrink-0">
+                  <Stethoscope className="w-5 h-5 sm:w-7 sm:h-7 text-purple-600" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <h3 className="text-xl sm:text-2xl font-bold text-gray-900 truncate">
+                    Private Insurance
+                  </h3>
+                  <p className="text-xs sm:text-sm text-gray-600 truncate">
+                    Private Krankenversicherung
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-4 sm:space-y-6">
+                {features.map((f, idx) => {
+                  const Icon = f.icon;
+                  return (
+                    <motion.div
+                      key={f.label}
+                      initial={{ opacity: 0, x: 20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: idx * 0.1 }}
+                      className="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl bg-purple-50"
+                    >
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-purple-100 flex items-center justify-center shrink-0">
+                        <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-semibold text-sm sm:text-base text-gray-900 mb-1">
+                          {f.label}
+                        </h4>
+                        <p className="text-xs sm:text-sm text-gray-600">
+                          {f.private}
+                        </p>
+                      </div>
+                      {!f.publicGood ? (
+                        <Check className="w-4 h-4 sm:w-5 sm:h-5 text-green-500 mt-1 shrink-0" />
+                      ) : (
+                        <X className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 mt-1 shrink-0" />
+                      )}
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>
+          </motion.div>
+        </div>
 
         {/* Desktop Cards */}
         <div className="hidden lg:grid lg:grid-cols-2 gap-8 mb-12">
@@ -214,10 +335,7 @@ export default function StudentInsuranceComparisonLight() {
             </div>
           </motion.div>
         </div>
-
-        {/* Mobile stays same logic, light colors automatically inherited */}
       </div>
     </section>
   );
 }
-    

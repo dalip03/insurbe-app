@@ -50,7 +50,7 @@ export default function WhyPrivateInsurance() {
         >
           <div className="relative bg-[#0f172a] rounded-xl shadow-lg w-full h-100 max-w-sm flex items-center justify-center">
             <Image
-              src="/img/whyPrivate.png"
+              src="/img/private_insurance.avif"
               alt="Card Full"
               fill
               className="object-cover rounded-xl"

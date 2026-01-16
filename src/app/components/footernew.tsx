@@ -7,7 +7,7 @@ export default function Footernew() {
   return (
  
       <footer className="bg-primary text-white py-20 px-6 ">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-full mx-auto">
           <div className="flex flex-col md:flex-row justify-between gap-12">
             
             {/* Brand Info */}
@@ -25,7 +25,7 @@ export default function Footernew() {
               </div>
 
               {/* Subtitle */}
-              <p className="md:text-xl text-2xl  text-gray-300 ">
+              <p className="md:text-lg text-2xl  text-gray-300 ">
                 The only digital solution for all your insurance needs.
               </p>
 
@@ -83,23 +83,23 @@ export default function Footernew() {
               </div>
 
               {/* Register Info */}
-              <p className="md:text-xl text-2xl text-gray-300 ">
+              <p className="md:text-lg text-2xl text-gray-300 ">
                 Insurbe is a registered insurance intermediary in Germany
               </p>
             </div>
 
             {/* Navigation + Links */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-14 text-center md:text-left mx-auto md:mx-0">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center md:text-left mx-auto md:mx-0">
               {/* Navigation */}
               <div>
-                <h2 className="md:text-xl text-3xl font-semibold mb-4">
+                <h2 className="md:text-lg text-3xl font-semibold mb-4">
                   Navigation
                 </h2>
                 <ul className="space-y-4">
                   <li>
                     <a
                       href="#"
-                      className="hover:text-purple-300 text-xl md:text-md"
+                      className="hover:text-purple-300 text-xl md:text-[18px]"
                     >
                       Home
                     </a>
@@ -107,7 +107,7 @@ export default function Footernew() {
                   <li>
                     <a
                       href="/about"
-                      className="hover:text-purple-300 text-xl md:text-md"
+                      className="hover:text-purple-300 text-xl md:text-[18px]"
                     >
                       About
                     </a>
@@ -116,7 +116,7 @@ export default function Footernew() {
                   <li>
                     <a
                       href="/support"
-                      className="hover:text-purple-300 text-xl md:text-md"
+                      className="hover:text-purple-300 text-xl md:text-[18px]"
                     >
                       Contact
                     </a>
@@ -127,14 +127,14 @@ export default function Footernew() {
 
               {/* Links */}
               <div>
-                <h2 className="md:text-xl text-3xl font-semibold mb-4">
+                <h2 className="md:text-lg text-3xl font-semibold mb-4">
                   Gernal
                 </h2>
                 <ul className="space-y-4">
                   <li>
                     <a
                       href="/privacypolicy"
-                      className="hover:text-purple-300 text-xl md:text-md"
+                      className="hover:text-purple-300 text-xl md:text-[18px]"
                     >
                       Imprint
                     </a>
@@ -142,7 +142,7 @@ export default function Footernew() {
                   <li>
                     <a
                       href="/privacypolicy"
-                      className="hover:text-purple-300 text-xl md:text-md"
+                      className="hover:text-purple-300 text-xl md:text-[18px]"
                     >
                       Data Privacy
                     </a>
@@ -150,7 +150,7 @@ export default function Footernew() {
                   <li>
                     <a
                       href="/termscondition"
-                      className="hover:text-purple-300 text-xl md:text-md"
+                      className="hover:text-purple-300 text-xl md:text-[18px]"
                     >
                       Terms & Conditions
                     </a>
@@ -159,11 +159,46 @@ export default function Footernew() {
                   <li>
                     <a
                       href="/career"
-                      className="hover:text-purple-300 text-xl md:text-md"
+                      className="hover:text-purple-300 text-xl md:text-[18px]"
                     >
                       Careers
                     </a>
                   </li>
+                </ul>
+              </div>
+
+                {/* Insurance */}
+              <div className="pl-6">
+                <h2 className="md:text-lg text-3xl font-semibold mb-4">
+                  Insurance
+                </h2>
+                <ul className="space-y-4">
+                  <li>
+                    <a
+                      href="#"
+                      className="hover:text-purple-300 text-xl md:text-[18px]"
+                    >
+                      Private 
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="/about"
+                      className="hover:text-purple-300 text-xl md:text-[18px]"
+                    >
+                      Public 
+                    </a>
+                  </li>
+                 
+                  <li>
+                    <a
+                      href="/support"
+                      className="hover:text-purple-300 text-xl md:text-[18px]"
+                    >
+                      Expat 
+                    </a>
+                  </li>
+
                 </ul>
               </div>
             </div>
