@@ -28,7 +28,7 @@ const features = [
 
 export default function FirstExpatHero() {
   return (
-    <section className="py-20 sm:py-28 px-4 sm:px-6 lg:px-8 ">
+    <section className="py-20 sm:py-20 px-4 sm:px-6 lg:px-8 ">
       <div className="max-w-7xl mx-auto">
 
         {/* Heading */}
@@ -41,7 +41,7 @@ export default function FirstExpatHero() {
         >
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900">
             First’Expat: the insurance solution for{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-400">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-primary">
               expats who expect the best
             </span>
           </h2>
@@ -66,7 +66,7 @@ export default function FirstExpatHero() {
                 className="relative bg-white border border-gray-200 rounded-2xl p-6 pt-10 hover:shadow-lg transition"
               >
                 {/* Floating Icon (gradient bg ONLY) */}
-                <div className="absolute -top-6 left-6 w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-primary flex items-center justify-center shadow-lg">
+                <div className="absolute -top-6 left-6 w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shadow-lg">
                   <Icon className="w-6 h-6 text-white" />
                 </div>
 

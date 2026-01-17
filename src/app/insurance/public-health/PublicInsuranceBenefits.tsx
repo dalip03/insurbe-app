@@ -23,7 +23,7 @@ const benefits = [
 
 export default function PublicInsuranceBenefits() {
   return (
-    <section className="py-20 sm:py-28 px-4 sm:px-6 lg:px-8 ">
+    <section className="py-20 sm:py-20 px-4 sm:px-6 lg:px-8 ">
       <div className="max-w-7xl mx-auto">
         {/* Heading */}
         <motion.div
@@ -35,7 +35,7 @@ export default function PublicInsuranceBenefits() {
         >
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900">
             Why choose{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-500">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-primary">
               public health insurance?
             </span>
           </h2>
