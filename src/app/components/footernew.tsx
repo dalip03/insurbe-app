@@ -5,214 +5,270 @@ import { Lock, Server, Shield } from "lucide-react";
 
 export default function Footernew() {
   return (
- 
-      <footer className="bg-primary text-white py-20 px-6 ">
-        <div className="max-w-full mx-auto">
-          <div className="flex flex-col md:flex-row justify-between gap-12">
+    <footer className="bg-primary text-white py-20 px-6 ">
+      <div className="max-w-full mx-auto">
+        <div className="flex flex-col md:flex-row justify-between gap-12">
+          {/* Brand Info */}
+          <div className="space-y-4 max-w-md text-center md:text-left mx-auto md:mx-0">
+            {/* Logo */}
+            <div className="flex justify-center md:justify-start py-2 gap-20">
+              <Link href="/" className="font-bold font-serif">
+                <Image
+                  src="/icons/logo_white.png"
+                  alt="Logo"
+                  width={120}
+                  height={30}
+                />
+              </Link>
+
+                 {/* Social Icons */}
+              {/* <div className="flex items-center gap-3">
+               
+                <a
+                  href="https://www.linkedin.com/company/yourcompany"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white hover:text-blue-400 transition-colors"
+                  aria-label="LinkedIn"
+                >
+                  <svg
+                    className="w-5 h-5"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                  </svg>
+                </a>
+
+               
+                <a
+                  href="https://twitter.com/yourcompany"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white hover:text-blue-400 transition-colors"
+                  aria-label="Twitter"
+                >
+                  <svg
+                    className="w-5 h-5"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                  </svg>
+                </a>
+
+              
+                <a
+                  href="https://www.facebook.com/yourcompany"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white hover:text-blue-400 transition-colors"
+                  aria-label="Facebook"
+                >
+                  <svg
+                    className="w-5 h-5"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                  </svg>
+                </a>
+              </div> */}
+            </div>
             
-            {/* Brand Info */}
-            <div className="space-y-4 max-w-md text-center md:text-left mx-auto md:mx-0">
-              {/* Logo */}
-              <div className="flex justify-center md:justify-start py-2">
-                <Link href="/" className="font-bold font-serif">
+
+            {/* Subtitle */}
+            <p className="md:text-lg text-2xl  text-gray-300 ">
+              The only digital solution for all your insurance needs.
+            </p>
+
+            {/* GDPR Icon */}
+            <div className="flex justify-center md:justify-start">
+              <div className="flex flex-col sm:flex-row gap-2 md:gap-4 py-4">
+                {/* GDPR Compliant */}
+                <div className="flex items-center gap-2 rounded-xl p-2">
+                  <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
+                    <Image
+                      src="/gifs_assets/gdprlogo.svg"
+                      alt="Germany Flag"
+                      width={40}
+                      height={40}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <span className="text-sm font-medium text-gray-300">
+                    GDPR Compliant
+                  </span>
+                </div>
+
+                {/* Data Centre in EU */}
+                <div className="flex items-center gap-3 p-2">
                   <Image
-                    src="/icons/logo_white.png"
-                    alt="Logo"
-                    width={120}
-                    height={30}
+                    src="/gifs_assets/germany2.png"
+                    alt="Germany flag"
+                    width={40}
+                    height={40}
+                    className="rounded-full object-cover flex-shrink-0"
                   />
-                </Link>
-              </div>
 
-              {/* Subtitle */}
-              <p className="md:text-lg text-2xl  text-gray-300 ">
-                The only digital solution for all your insurance needs.
-              </p>
+                  <span className="text-sm font-medium text-gray-300 leading-tight">
+                    <span className="block whitespace-nowrap">Data Centre</span>
+                    <span className="block whitespace-nowrap">in Germany</span>
+                  </span>
+                </div>
 
-              {/* GDPR Icon */}
-              <div className="flex justify-center md:justify-start">
-                <div className="flex flex-col sm:flex-row gap-2 md:gap-4 py-4">
-                  {/* GDPR Compliant */}
-                  <div className="flex items-center gap-2 border border-gray-400/20 rounded-xl p-2">
-                    <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
-                      <Image
-                        src="/gifs_assets/gdprlogo.svg"
-                        alt="Germany Flag"
-                        width={40}
-                        height={40}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <span className="text-sm font-medium text-gray-300">
-                      GDPR Compliant
+                {/* Data Security */}
+                <div className="flex items-center gap-3 p-2">
+                  <Image
+                    src="/gifs_assets/lock.png"
+                    alt="Secure SSL Encryption"
+                    width={40}
+                    height={40}
+                    className="rounded-full object-cover flex-shrink-0"
+                  />
+
+                  <span className="text-sm font-medium text-gray-300 leading-tight">
+                    SECURE
+                    <span className="block whitespace-nowrap">
+                      SSL Encryption
                     </span>
-                  </div>
-
-                  {/* Data Centre in EU */}
-                  <div className="flex items-center gap-2 border border-gray-400/20 rounded-xl p-2">
-                    <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 ">
-                      <Image
-                        src="/gifs_assets/germany2.png"
-                        alt="Germany Flag"
-                        width={40}
-                        height={40}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <span className="text-sm font-medium text-gray-300">
-                      Data Centre in Germany
-                    </span>
-                  </div>
-
-                  {/* Data Security */}
-                  <div className="flex items-center gap-2 border border-gray-400/20 rounded-xl p-2">
-                    <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
-                      <Image
-                        src="/gifs_assets/lock.png"
-                        alt="Germany Flag"
-                        width={40}
-                        height={40}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <span className="text-sm font-medium text-gray-300">
-                      Let's Encrypt 
-                    </span>
-                  </div>
+                  </span>
                 </div>
               </div>
-
-              {/* Register Info */}
-              <p className="md:text-lg text-2xl text-gray-300 ">
-                Insurbe is a registered insurance intermediary in Germany
-              </p>
             </div>
 
-            {/* Navigation + Links */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center md:text-left mx-auto md:mx-0">
-              {/* Navigation */}
-              <div>
-                <h2 className="md:text-lg text-3xl font-semibold mb-4">
-                  Navigation
-                </h2>
-                <ul className="space-y-4">
-                  <li>
-                    <a
-                      href="#"
-                      className="hover:text-purple-300 text-xl md:text-[18px]"
-                    >
-                      Home
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="/about"
-                      className="hover:text-purple-300 text-xl md:text-[18px]"
-                    >
-                      About
-                    </a>
-                  </li>
-                 
-                  <li>
-                    <a
-                      href="/support"
-                      className="hover:text-purple-300 text-xl md:text-[18px]"
-                    >
-                      Contact
-                    </a>
-                  </li>
+            {/* Register Info */}
+            <p className="md:text-lg text-2xl text-gray-300 ">
+              Insurbe is a registered insurance intermediary in Germany
+            </p>
+          </div>
 
-                </ul>
-              </div>
+          {/* Navigation + Links */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center md:text-left mx-auto md:mx-0">
+            {/* Insurance */}
+            <div className="pl-6">
+              <h2 className="md:text-lg text-3xl font-semibold mb-4">
+                Insurance
+              </h2>
+              <ul className="space-y-4">
+                <li>
+                  <a
+                    href="/insurance/private-health"
+                    className="hover:text-purple-300 text-xl md:text-[18px]"
+                  >
+                    Private
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="/insurance/public-health"
+                    className="hover:text-purple-300 text-xl md:text-[18px]"
+                  >
+                    Public
+                  </a>
+                </li>
 
-              {/* Links */}
-              <div>
-                <h2 className="md:text-lg text-3xl font-semibold mb-4">
-                  Gernal
-                </h2>
-                <ul className="space-y-4">
-                  <li>
-                    <a
-                      href="/privacypolicy"
-                      className="hover:text-purple-300 text-xl md:text-[18px]"
-                    >
-                      Imprint
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="/privacypolicy"
-                      className="hover:text-purple-300 text-xl md:text-[18px]"
-                    >
-                      Data Privacy
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="/termscondition"
-                      className="hover:text-purple-300 text-xl md:text-[18px]"
-                    >
-                      Terms & Conditions
-                    </a>
-                  </li>
-                 
-                  <li>
-                    <a
-                      href="/career"
-                      className="hover:text-purple-300 text-xl md:text-[18px]"
-                    >
-                      Careers
-                    </a>
-                  </li>
-                </ul>
-              </div>
+                <li>
+                  <a
+                    href="/insurance/expat-health"
+                    className="hover:text-purple-300 text-xl md:text-[18px]"
+                  >
+                    Expat
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="/products/students"
+                    className="hover:text-purple-300 text-xl md:text-[18px]"
+                  >
+                    Student
+                  </a>
+                </li>
+              </ul>
+            </div>
+            {/* Navigation */}
+            <div>
+              <h2 className="md:text-lg text-3xl font-semibold mb-4">
+                Navigation
+              </h2>
+              <ul className="space-y-4">
+                <li>
+                  <a
+                    href="#"
+                    className="hover:text-purple-300 text-xl md:text-[18px]"
+                  >
+                    Home
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="/about"
+                    className="hover:text-purple-300 text-xl md:text-[18px]"
+                  >
+                    About
+                  </a>
+                </li>
 
-                {/* Insurance */}
-              <div className="pl-6">
-                <h2 className="md:text-lg text-3xl font-semibold mb-4">
-                  Insurance
-                </h2>
-                <ul className="space-y-4">
-                  <li>
-                    <a
-                      href="#"
-                      className="hover:text-purple-300 text-xl md:text-[18px]"
-                    >
-                      Private 
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="/about"
-                      className="hover:text-purple-300 text-xl md:text-[18px]"
-                    >
-                      Public 
-                    </a>
-                  </li>
-                 
-                  <li>
-                    <a
-                      href="/support"
-                      className="hover:text-purple-300 text-xl md:text-[18px]"
-                    >
-                      Expat 
-                    </a>
-                  </li>
+                <li>
+                  <a
+                    href="/support"
+                    className="hover:text-purple-300 text-xl md:text-[18px]"
+                  >
+                    Contact
+                  </a>
+                </li>
+              </ul>
+            </div>
 
-                </ul>
-              </div>
+            {/* Links */}
+            <div>
+              <h2 className="md:text-lg text-3xl font-semibold mb-4">Gernal</h2>
+              <ul className="space-y-4">
+                <li>
+                  <a
+                    href="/privacypolicy"
+                    className="hover:text-purple-300 text-xl md:text-[18px]"
+                  >
+                    Imprint
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="/privacypolicy"
+                    className="hover:text-purple-300 text-xl md:text-[18px]"
+                  >
+                    Data Privacy
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="/termscondition"
+                    className="hover:text-purple-300 text-xl md:text-[18px]"
+                  >
+                    Terms & Conditions
+                  </a>
+                </li>
+
+                <li>
+                  <a
+                    href="/career"
+                    className="hover:text-purple-300 text-xl md:text-[18px]"
+                  >
+                    Careers
+                  </a>
+                </li>
+              </ul>
             </div>
           </div>
-
-          {/* Copyright */}
-          <div className="border-t border-gray-400 mt-10 pt-6 text-center md:text-left text-md md:text-sm text-white/90">
-            Copyright © 2025 Insure.
-            <br className="md:hidden" />
-            All rights reserved.
-          </div>
-
         </div>
-      </footer>
-    
+
+        {/* Copyright */}
+        <div className="border-t border-gray-400 mt-10 pt-6 text-center md:text-left text-md md:text-sm text-white/90">
+          Copyright © 2025 Insure.
+          <br className="md:hidden" />
+          All rights reserved.
+        </div>
+      </div>
+    </footer>
   );
 }

@@ -14,6 +14,7 @@ import {
   User,
   X,
   CheckCircle,
+  Clock,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -43,6 +44,8 @@ export default function HeroInsurancenew1() {
     name: "",
     email: "",
     date: "",
+    time: "",
+    comment: "",
   });
 
   const toggleFAQ = (index: number) => {
@@ -62,7 +65,7 @@ export default function HeroInsurancenew1() {
     setTimeout(() => {
       setShowSuccess(false);
       setIsModalOpen(false);
-      setFormData({ name: "", email: "", date: "" });
+      setFormData({ name: "", email: "", date: "", time: "", comment: "" });
     }, 1000);
   };
 
@@ -265,143 +268,188 @@ export default function HeroInsurancenew1() {
           </div>
         </div>
       </section>
-      {/* Appointment Modal */}
-      <AnimatePresence>
-        {isModalOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-70 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
-            onClick={() => setIsModalOpen(false)}
-          >
+     {/* Appointment Modal */}
+<AnimatePresence>
+  {isModalOpen && (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-70 flex items-center justify-center p-3 sm:p-4 md:p-6 bg-black/50 backdrop-blur-sm overflow-y-auto"
+      onClick={() => setIsModalOpen(false)}
+    >
+      <motion.div
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.9, opacity: 0 }}
+        transition={{ duration: 0.3 }}
+        onClick={(e) => e.stopPropagation()}
+        className="bg-white rounded-xl sm:rounded-2xl shadow-2xl w-full max-w-[95%] sm:max-w-lg md:max-w-xl lg:max-w-2xl relative overflow-hidden my-auto"
+      >
+        {/* Success Message */}
+        <AnimatePresence>
+          {showSuccess && (
             <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              onClick={(e) => e.stopPropagation()}
-              className="bg-white rounded-2xl shadow-2xl w-full max-w-md relative overflow-hidden"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="absolute inset-0 bg-white z-10 flex flex-col items-center justify-center p-4"
             >
-              {/* Success Message */}
-              <AnimatePresence>
-                {showSuccess && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    className="absolute inset-0 bg-white z-10 flex flex-col items-center justify-center"
-                  >
-                    <motion.div
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ delay: 0.2, type: "spring" }}
-                    >
-                      <CheckCircle className="w-20 h-20 text-green-500 mb-4" />
-                    </motion.div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                      Success!
-                    </h3>
-                    <p className="text-gray-600 text-center px-6">
-                      We will connect with you shortly
-                    </p>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              {/* Close Button */}
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="absolute top-4 right-4 cursor-pointer text-gray-400 hover:text-gray-600 transition"
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.2, type: "spring" }}
               >
-                <X className="w-6 h-6" />
-              </button>
-
-              {/* Modal Content */}
-              <div className="p-6 sm:p-8">
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                  Book an Appointment
-                </h2>
-                <p className="text-gray-600 mb-6">
-                  Fill in your details and we'll get back to you soon
-                </p>
-
-                <form onSubmit={handleSubmit} className="space-y-5">
-                  {/* Name Field */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Full Name *
-                    </label>
-                    <div className="relative">
-                      <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                      <input
-                        type="text"
-                        required
-                        value={formData.name}
-                        onChange={(e) =>
-                          setFormData({ ...formData, name: e.target.value })
-                        }
-                        className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition"
-                        placeholder="John Doe"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Email Field */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Email Address *
-                    </label>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                      <input
-                        type="email"
-                        required
-                        value={formData.email}
-                        onChange={(e) =>
-                          setFormData({ ...formData, email: e.target.value })
-                        }
-                        className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition"
-                        placeholder="john@example.com"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Date Field */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Preferred Date *
-                    </label>
-                    <div className="relative">
-                      <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                      <input
-                        type="date"
-                        required
-                        value={formData.date}
-                        onChange={(e) =>
-                          setFormData({ ...formData, date: e.target.value })
-                        }
-                        min={new Date().toISOString().split("T")[0]}
-                        className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Submit Button */}
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    type="submit"
-                    className="w-full bg-primary cursor-pointer text-white py-3 rounded-lg font-semibold hover:bg-primary/90 transition shadow-lg"
-                  >
-                    Submit Appointment
-                  </motion.button>
-                </form>
-              </div>
+                <CheckCircle className="w-16 h-16 sm:w-20 sm:h-20 text-green-500 mb-3 sm:mb-4" />
+              </motion.div>
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 text-center">
+                Success!
+              </h3>
+              <p className="text-sm sm:text-base text-gray-600 text-center px-4 sm:px-6">
+                We will connect with you shortly
+              </p>
             </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          )}
+        </AnimatePresence>
+
+        {/* Close Button */}
+        <button
+          onClick={() => setIsModalOpen(false)}
+          className="absolute top-3 right-3 sm:top-4 sm:right-4 cursor-pointer text-gray-400 hover:text-gray-600 transition z-20"
+        >
+          <X className="w-5 h-5 sm:w-6 sm:h-6" />
+        </button>
+
+        {/* Modal Content */}
+        <div className="p-4 sm:p-6 md:p-8 max-h-[90vh] overflow-y-auto">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-1 sm:mb-2 pr-8">
+            Book an Appointment
+          </h2>
+          <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">
+            Fill in your details and we'll get back to you soon
+          </p>
+
+          <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
+            {/* Name Field */}
+            <div>
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
+                Full Name *
+              </label>
+              <div className="relative">
+                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
+                <input
+                  type="text"
+                  required
+                  value={formData.name}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
+                  className="w-full pl-9 sm:pl-10 pr-3 sm:pr-4 py-2.5 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition"
+                  placeholder="John Doe"
+                />
+              </div>
+            </div>
+
+            {/* Email Field */}
+            <div>
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
+                Email Address *
+              </label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
+                <input
+                  type="email"
+                  required
+                  value={formData.email}
+                  onChange={(e) =>
+                    setFormData({ ...formData, email: e.target.value })
+                  }
+                  className="w-full pl-9 sm:pl-10 pr-3 sm:pr-4 py-2.5 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition"
+                  placeholder="john@example.com"
+                />
+              </div>
+            </div>
+
+            {/* Date and Time Fields - Side by Side on larger screens */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+              {/* Date Field */}
+              <div>
+                <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
+                  Preferred Date *
+                </label>
+                <div className="relative">
+                  <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
+                  <input
+                    type="date"
+                    required
+                    value={formData.date}
+                    onChange={(e) =>
+                      setFormData({ ...formData, date: e.target.value })
+                    }
+                    min={new Date().toISOString().split("T")[0]}
+                    className="w-full pl-9 sm:pl-10 pr-3 sm:pr-4 py-2.5 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition"
+                  />
+                </div>
+              </div>
+
+              {/* Time Field */}
+              <div>
+                <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
+                  Preferred Time *
+                </label>
+                <div className="relative">
+                  <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400 pointer-events-none" />
+                  <select
+                    required
+                    value={formData.time}
+                    onChange={(e) =>
+                      setFormData({ ...formData, time: e.target.value })
+                    }
+                    className="w-full pl-9 sm:pl-10 pr-3 sm:pr-4 py-2.5 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-primary focus:border-transparent transition appearance-none"
+                  >
+                    <option value="">Select a time</option>
+                    <option value="09:00 - 10:00">09:00 – 10:00</option>
+                    <option value="10:00 - 11:00">10:00 – 11:00</option>
+                    <option value="11:00 - 12:00">11:00 – 12:00</option>
+                    <option value="14:00 - 15:00">14:00 – 15:00</option>
+                    <option value="15:00 - 16:00">15:00 – 16:00</option>
+                    <option value="16:00 - 17:00">16:00 – 17:00</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            {/* Comment Field */}
+            <div>
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
+                Additional Comments (Optional)
+              </label>
+              <textarea
+                rows={3}
+                value={formData.comment}
+                onChange={(e) =>
+                  setFormData({ ...formData, comment: e.target.value })
+                }
+                placeholder="Tell us anything important before the call..."
+                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-primary focus:border-transparent transition"
+              />
+            </div>
+
+            {/* Submit Button */}
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              type="submit"
+              className="w-full bg-primary cursor-pointer text-white py-2.5 sm:py-3 rounded-lg text-sm sm:text-base font-semibold hover:bg-primary/90 transition shadow-lg mt-2"
+            >
+              Submit Appointment
+            </motion.button>
+          </form>
+        </div>
+      </motion.div>
+    </motion.div>
+  )}
+</AnimatePresence>
     </>
   );
 }
