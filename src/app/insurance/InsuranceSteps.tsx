@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 const steps = [
   {
@@ -29,7 +30,6 @@ export default function InsuranceSteps() {
   return (
     <section className="py-20 px-4 bg-white">
       <div className="max-w-7xl mx-auto text-center">
-
         {/* Heading */}
         <motion.h2
           initial={{ opacity: 0, y: -20 }}
@@ -91,9 +91,7 @@ export default function InsuranceSteps() {
                 <h3 className="text-base font-semibold text-gray-900">
                   {item.title}
                 </h3>
-                <p className="text-sm text-gray-600">
-                  {item.desc}
-                </p>
+                <p className="text-sm text-gray-600">{item.desc}</p>
               </div>
             </motion.div>
           ))}
@@ -106,13 +104,16 @@ export default function InsuranceSteps() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <button className="px-10 py-4 rounded-full font-semibold cursor-pointer text-white
-            bg-gradient-to-r from-purple-600 to-primary
-            hover:opacity-90 transition shadow-lg">
+          <Link
+            href="/products/insuranceJourney"
+            className="inline-flex items-center justify-center
+    px-10 py-4 rounded-full font-semibold cursor-pointer text-white
+    bg-gradient-to-r from-purple-600 to-primary
+    hover:opacity-90 transition shadow-lg"
+          >
             Sign up for First’ Expat+
-          </button>
+          </Link>
         </motion.div>
-
       </div>
     </section>
   );

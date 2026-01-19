@@ -80,9 +80,13 @@ export default function WeOffersStudent() {
           Seamless Coverage
         </span>
 
-        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#1d1e25] mb-4">
-          Plans We Offer
-        </h2>
+      <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
+  <span className="text-[#1d1e25]">Plans</span>{" "}
+  <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-primary">
+    We Offer
+  </span>
+</h2>
+
 
         <p className="text-base sm:text-lg text-gray-600">
           Carefully selected insurance plans from trusted German providers.

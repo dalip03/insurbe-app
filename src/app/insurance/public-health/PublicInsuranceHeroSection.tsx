@@ -1,10 +1,19 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 export default function PublicInsuranceHeroSection() {
+
+   const scrollToNextSection = () => {
+    const learnmore = document.getElementById("learnmore");
+    if (learnmore) {
+      learnmore.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <section className=" py-20 sm:py-28 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -38,21 +47,38 @@ export default function PublicInsuranceHeroSection() {
             <li>✔ Access to public healthcare providers</li>
           </ul>
 
-          <div className="mt-8 flex flex-wrap gap-4">
-            <Link
-              href="/get-quote"
-              className="inline-flex items-center justify-center rounded-full px-8 py-4 font-semibold text-white bg-gradient-to-r from-purple-600 to-primary hover:opacity-90 transition shadow-md"
-            >
-              Get a quote
-            </Link>
+         <div className="mt-8 flex flex-wrap gap-4">
+      {/* Get a quote */}
+      <motion.div
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.97 }}
+      >
+        <Link
+          href="/products/insuranceJourney"
+          className="inline-flex items-center gap-2 justify-center rounded-full px-8 py-4 font-semibold text-white
+            bg-gradient-to-r from-purple-600 to-primary
+            hover:opacity-90 transition shadow-md"
+        >
+          Get a quote
+          <motion.span
+            initial={{ x: 0 }}
+            whileHover={{ x: 4 }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
+            <ArrowRight className="w-5 h-5" />
+          </motion.span>
+        </Link>
+      </motion.div>
 
-            <Link
-              href="/learn-more"
-              className="inline-flex items-center justify-center rounded-full px-8 py-4 font-semibold text-gray-900 border border-gray-300 hover:border-purple-400 transition"
-            >
-              Learn more
-            </Link>
-          </div>
+      {/* Learn more (scroll only) */}
+      <button
+        onClick={scrollToNextSection}
+        className="inline-flex items-center justify-center rounded-full px-8 py-4 font-semibold
+          text-gray-900 border border-gray-300 hover:border-purple-400 transition"
+      >
+        Learn more
+      </button>
+    </div>
         </motion.div>
 
         {/* RIGHT: IMAGE */}

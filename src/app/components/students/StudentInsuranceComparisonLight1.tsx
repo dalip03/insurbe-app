@@ -81,15 +81,17 @@ export default function StudentInsuranceComparisonLight1() {
             </span>
           </motion.div>
 
-          <h2 className="text-3xl sm:text-4xl md:text-5xl  font-bold text-gray-900 mb-4 sm:mb-6 leading-tight px-2">
-            Public{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-500">
-              vs
-            </span>{" "}
-            Private  Health
-            <br />
-            Insurance
-          </h2>
+         <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight px-2 mb-4 sm:mb-6">
+  <span className="text-gray-900">Public</span>{" "}
+  <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-500">
+    vs Private Health
+  </span>
+  <br />
+  <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-primary">
+    Insurance
+  </span>
+</h2>
+
 
           <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-4xl mx-auto px-4">
             Two systems. Very different experiences.
