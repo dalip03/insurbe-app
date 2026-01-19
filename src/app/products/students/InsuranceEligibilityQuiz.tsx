@@ -1,0 +1,499 @@
+"use client";
+
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { 
+  CheckCircle, 
+  Sparkles, 
+  Shield, 
+  Clock, 
+  Award,
+  ChevronRight,
+  GraduationCap,
+  Calendar,
+  PartyPopper
+} from "lucide-react";
+import { useRouter } from "next/navigation";
+
+export default function InsuranceEligibilityQuiz() {
+  const router = useRouter();
+
+  const [step, setStep] = useState<1 | 2 | 3>(1);
+  const [degree, setDegree] = useState<string>("");
+  const [age, setAge] = useState<string>("");
+
+  const handleContinue = () => {
+    if (step === 1 && degree) {
+      setStep(2);
+    } else if (step === 2 && age) {
+      setStep(3);
+      
+      // Check if age is less than 30 and redirect
+      const numericAge = parseInt(age.split("-")[0]); // Gets first number from range
+      if (numericAge < 30) {
+        setTimeout(() => {
+          router.push("/products/public-insurance");
+        }, 3000);
+      }
+    }
+  };
+
+  const degreeOptions = [
+    { value: "bachelor", label: "Bachelor's Degree", icon: "🎓" },
+    { value: "master", label: "Master's Degree", icon: "📚" },
+    { value: "phd", label: "PhD / Doctorate", icon: "🔬" },
+    { value: "other", label: "Other Studies", icon: "📖" },
+  ];
+
+  const ageOptions = [
+    { value: "18-25", label: "18-25 years" },
+    { value: "26-30", label: "26-30 years" },
+    { value: "31-35", label: "31-35 years" },
+    { value: "36+", label: "36+ years" },
+  ];
+
+  const benefits = [
+    { icon: Shield, text: "Accepted for university & city registration", color: "text-emerald-600" },
+    { icon: Clock, text: "Access to private and public doctors nationwide", color: "text-blue-600" },
+    { icon: Award, text: "Personal support & same-day appointments", color: "text-purple-600" },
+    { icon: Sparkles, text: "Digital claims processing & 24h reimbursements", color: "text-pink-600" },
+  ];
+
+  // Determine if user is eligible for public insurance (age < 30)
+  const isEligibleForPublic = age && parseInt(age.split("-")[0]) < 30;
+
+  return (
+    <section className="relative py-32 px-4 md:px-10 overflow-hidden bg-gradient-to-br from-slate-50 via-purple-50/30 to-blue-50/40">
+      {/* Animated Background Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <motion.div
+          animate={{ 
+            scale: [1, 1.2, 1],
+            rotate: [0, 90, 0],
+            opacity: [0.03, 0.06, 0.03]
+          }}
+          transition={{ duration: 20, repeat: Infinity }}
+          className="absolute -top-1/4 -left-1/4 w-1/2 h-1/2 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full blur-3xl"
+        />
+        <motion.div
+          animate={{ 
+            scale: [1, 1.3, 1],
+            rotate: [0, -90, 0],
+            opacity: [0.03, 0.06, 0.03]
+          }}
+          transition={{ duration: 25, repeat: Infinity }}
+          className="absolute -bottom-1/4 -right-1/4 w-1/2 h-1/2 bg-gradient-to-br from-pink-500 to-purple-500 rounded-full blur-3xl"
+        />
+      </div>
+
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center relative z-10">
+
+        {/* LEFT CONTENT - Enhanced */}
+        <motion.div
+          initial={{ opacity: 0, x: -40 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
+          className="space-y-8"
+        >
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-purple-100 to-blue-100 border border-purple-200/50">
+            <Sparkles className="w-4 h-4 text-purple-600" />
+            <span className="text-sm font-semibold text-purple-700">
+              Smart Insurance Finder
+            </span>
+          </div>
+
+          <h2 className="text-4xl sm:text-5xl  font-extrabold text-gray-900 leading-[1.1]">
+            Not sure which plan
+            <span className="block mt-3 text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 animate-gradient">
+              fits your profile?
+            </span>
+          </h2>
+
+          <p className="text-lg sm:text-xl text-gray-600 leading-relaxed max-w-xl">
+            Take our intelligent 30-second quiz. We'll analyze your educational background and age to recommend the perfect health insurance plan — whether public or private.
+          </p>
+
+          {/* Trust Indicators */}
+          <div className="flex flex-wrap gap-6 pt-4">
+            {[
+              { label: "Students Protected", value: "50K+" },
+              { label: "Satisfaction Rate", value: "98%" },
+              { label: "Avg. Response Time", value: "< 2h" },
+            ].map((stat, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.1 }}
+                className="flex flex-col"
+              >
+                <span className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-600">
+                  {stat.value}
+                </span>
+                <span className="text-sm text-gray-600">{stat.label}</span>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* QUIZ CARD - Glassmorphism Style */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
+          className="relative"
+        >
+          {/* Glassmorphism Container */}
+          <div className="relative backdrop-blur-xl bg-white/70 border border-white/40 rounded-[2rem] shadow-2xl shadow-purple-500/10 p-8 sm:p-10">
+            {/* Progress Bar */}
+            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gray-200/50 rounded-t-[2rem] overflow-hidden">
+              <motion.div
+                initial={{ width: "0%" }}
+                animate={{ 
+                  width: step === 1 ? "33%" : step === 2 ? "66%" : "100%" 
+                }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+                className="h-full bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600"
+              />
+            </div>
+
+            <AnimatePresence mode="wait">
+
+              {/* STEP 1 – DEGREE */}
+              {step === 1 && (
+                <motion.div
+                  key="step1"
+                  initial={{ opacity: 0, x: 30 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -30 }}
+                  transition={{ duration: 0.4 }}
+                  className="space-y-6"
+                >
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="p-2.5 rounded-xl bg-gradient-to-br from-purple-500 to-blue-500">
+                      <GraduationCap className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-500">Question 1 of 2</p>
+                      <h3 className="text-2xl sm:text-3xl font-bold text-gray-900">
+                        What are you studying?
+                      </h3>
+                    </div>
+                  </div>
+
+                  <p className="text-gray-600">
+                    Select your current degree program to help us tailor your insurance options.
+                  </p>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {degreeOptions.map((option) => (
+                      <motion.button
+                        key={option.value}
+                        onClick={() => setDegree(option.value)}
+                        whileHover={{ scale: 1.02, y: -2 }}
+                        whileTap={{ scale: 0.98 }}
+                        className={`
+                          relative p-5 rounded-2xl border-2 text-left transition-all duration-300
+                          ${degree === option.value
+                            ? "border-purple-500 bg-gradient-to-br from-purple-50 to-blue-50 shadow-lg shadow-purple-500/20"
+                            : "border-gray-200 bg-white/50 hover:border-purple-300 hover:bg-white/80"
+                          }
+                        `}
+                      >
+                        <div className="flex items-center gap-3">
+                          <span className="text-3xl">{option.icon}</span>
+                          <span className="font-semibold text-gray-900 text-base">
+                            {option.label}
+                          </span>
+                        </div>
+                        {degree === option.value && (
+                          <motion.div
+                            layoutId="selectedDegree"
+                            className="absolute top-3 right-3"
+                          >
+                            <CheckCircle className="w-6 h-6 text-purple-600 fill-purple-100" />
+                          </motion.div>
+                        )}
+                      </motion.button>
+                    ))}
+                  </div>
+
+                  <motion.button
+                    onClick={handleContinue}
+                    disabled={!degree}
+                    whileHover={{ scale: degree ? 1.02 : 1 }}
+                    whileTap={{ scale: degree ? 0.98 : 1 }}
+                    className={`
+                      w-full py-5 rounded-2xl font-bold text-lg flex items-center justify-center gap-2 transition-all
+                      ${degree
+                        ? "bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 text-white shadow-xl shadow-purple-500/30 hover:shadow-2xl hover:shadow-purple-500/40"
+                        : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                      }
+                    `}
+                  >
+                    Continue
+                    <ChevronRight className="w-5 h-5" />
+                  </motion.button>
+                </motion.div>
+              )}
+
+              {/* STEP 2 – AGE */}
+              {step === 2 && (
+                <motion.div
+                  key="step2"
+                  initial={{ opacity: 0, x: 30 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -30 }}
+                  transition={{ duration: 0.4 }}
+                  className="space-y-6"
+                >
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="p-2.5 rounded-xl bg-gradient-to-br from-pink-500 to-purple-500">
+                      <Calendar className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-500">Question 2 of 2</p>
+                      <h3 className="text-2xl sm:text-3xl font-bold text-gray-900">
+                        What's your age range?
+                      </h3>
+                    </div>
+                  </div>
+
+                  <p className="text-gray-600">
+                    Your age helps determine which insurance plans are available to you.
+                  </p>
+
+                  <div className="grid grid-cols-1 gap-3">
+                    {ageOptions.map((option) => (
+                      <motion.button
+                        key={option.value}
+                        onClick={() => setAge(option.value)}
+                        whileHover={{ scale: 1.02, x: 4 }}
+                        whileTap={{ scale: 0.98 }}
+                        className={`
+                          relative p-5 rounded-2xl border-2 text-left transition-all duration-300
+                          ${age === option.value
+                            ? "border-pink-500 bg-gradient-to-br from-pink-50 to-purple-50 shadow-lg shadow-pink-500/20"
+                            : "border-gray-200 bg-white/50 hover:border-pink-300 hover:bg-white/80"
+                          }
+                        `}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="font-semibold text-gray-900 text-lg">
+                            {option.label}
+                          </span>
+                          {age === option.value && (
+                            <motion.div layoutId="selectedAge">
+                              <CheckCircle className="w-6 h-6 text-pink-600 fill-pink-100" />
+                            </motion.div>
+                          )}
+                        </div>
+                      </motion.button>
+                    ))}
+                  </div>
+
+                  <div className="flex gap-3">
+                    <motion.button
+                      onClick={() => setStep(1)}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="px-6 py-5 rounded-2xl font-semibold border-2 border-gray-300 text-gray-700 hover:bg-gray-50 transition-all"
+                    >
+                      Back
+                    </motion.button>
+                    <motion.button
+                      onClick={handleContinue}
+                      disabled={!age}
+                      whileHover={{ scale: age ? 1.02 : 1 }}
+                      whileTap={{ scale: age ? 0.98 : 1 }}
+                      className={`
+                        flex-1 py-5 rounded-2xl font-bold text-lg flex items-center justify-center gap-2 transition-all
+                        ${age
+                          ? "bg-gradient-to-r from-pink-600 via-purple-600 to-blue-600 text-white shadow-xl shadow-pink-500/30 hover:shadow-2xl hover:shadow-pink-500/40"
+                          : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                        }
+                      `}
+                    >
+                      See My Results
+                      <Sparkles className="w-5 h-5" />
+                    </motion.button>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* STEP 3 – RESULT */}
+              {step === 3 && (
+                <motion.div
+                  key="step3"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.5 }}
+                  className="space-y-6"
+                >
+                  {isEligibleForPublic ? (
+                    // PUBLIC INSURANCE ELIGIBILITY
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="text-center space-y-6 py-8"
+                    >
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+                        className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-green-400 to-emerald-500 shadow-2xl shadow-green-500/30"
+                      >
+                        <PartyPopper className="w-12 h-12 text-white" />
+                      </motion.div>
+
+                      <div>
+                        <h3 className="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-emerald-600 mb-3">
+                          Great News! 🎉
+                        </h3>
+                        <p className="text-xl font-bold text-gray-900 mb-2">
+                          You're eligible for Public Health Insurance
+                        </p>
+                        <p className="text-gray-600 max-w-md mx-auto">
+                          Based on your age ({age}), you qualify for comprehensive public health insurance with excellent coverage and affordable rates.
+                        </p>
+                      </div>
+
+                      <div className="bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 rounded-2xl p-6 max-w-md mx-auto">
+                        <div className="flex items-center justify-center gap-2 mb-3">
+                          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                          <span className="text-sm font-semibold text-green-700">
+                            Redirecting you now...
+                          </span>
+                        </div>
+                        <p className="text-sm text-gray-600">
+                          Please wait while we take you to the Public Health Insurance page with all the details.
+                        </p>
+                      </div>
+
+                      {/* Loading animation */}
+                      <div className="flex justify-center gap-2">
+                        {[0, 1, 2].map((i) => (
+                          <motion.div
+                            key={i}
+                            animate={{ y: [0, -10, 0] }}
+                            transition={{
+                              duration: 0.6,
+                              repeat: Infinity,
+                              delay: i * 0.2,
+                            }}
+                            className="w-2 h-2 bg-green-500 rounded-full"
+                          />
+                        ))}
+                      </div>
+                    </motion.div>
+                  ) : (
+                    // PRIVATE INSURANCE PLAN (Age 30+)
+                    <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-purple-600 via-pink-600 to-blue-600 p-[2px]">
+                      <div className="bg-white rounded-3xl p-8 space-y-6">
+                        
+                        {/* Header */}
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="flex-1">
+                            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-100 to-yellow-100 border border-amber-200 mb-3">
+                              <Sparkles className="w-4 h-4 text-amber-600" />
+                              <span className="text-xs font-bold text-amber-700 uppercase tracking-wide">
+                                Perfect Match
+                              </span>
+                            </div>
+                            <h4 className="text-3xl font-extrabold text-gray-900 mb-2">
+                              Premium Private Insurance
+                            </h4>
+                            <p className="text-gray-600 text-sm">
+                              Tailored for {degree === "bachelor" ? "Bachelor's" : degree === "master" ? "Master's" : degree === "phd" ? "PhD" : "Graduate"} students in the {age} age group
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Benefits Grid */}
+                        <div className="space-y-3">
+                          {benefits.map((benefit, idx) => {
+                            const Icon = benefit.icon;
+                            return (
+                              <motion.div
+                                key={idx}
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: idx * 0.1 }}
+                                className="flex items-start gap-4 p-4 rounded-xl bg-gradient-to-br from-gray-50 to-white border border-gray-100 hover:shadow-md transition-shadow"
+                              >
+                                <div className={`p-2 rounded-lg bg-gradient-to-br ${
+                                  idx === 0 ? "from-emerald-100 to-emerald-200" :
+                                  idx === 1 ? "from-blue-100 to-blue-200" :
+                                  idx === 2 ? "from-purple-100 to-purple-200" :
+                                  "from-pink-100 to-pink-200"
+                                }`}>
+                                  <Icon className={`w-5 h-5 ${benefit.color}`} />
+                                </div>
+                                <span className="text-gray-700 font-medium text-sm leading-relaxed flex-1">
+                                  {benefit.text}
+                                </span>
+                              </motion.div>
+                            );
+                          })}
+                        </div>
+
+                        {/* Pricing & CTA */}
+                        <div className="pt-4 border-t border-gray-200">
+                          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                            <div>
+                              <p className="text-sm text-gray-500 mb-1">Starting from</p>
+                              <p className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">
+                                €129
+                                <span className="text-lg text-gray-500 font-medium">/month</span>
+                              </p>
+                            </div>
+
+                            <motion.button
+                              onClick={() => router.push("/ottonovaSignupform")}
+                              whileHover={{ scale: 1.05, y: -2 }}
+                              whileTap={{ scale: 0.95 }}
+                              className="w-full sm:w-auto px-8 py-4 rounded-2xl font-bold text-lg text-white bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 shadow-2xl shadow-purple-500/40 hover:shadow-purple-500/60 transition-all flex items-center justify-center gap-2"
+                            >
+                              Purchase Now
+                              <ChevronRight className="w-5 h-5" />
+                            </motion.button>
+                          </div>
+
+                          <p className="text-xs text-gray-500 mt-4 text-center sm:text-left">
+                            🔒 No commitment required • Cancel anytime • Money-back guarantee
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Reset Button */}
+                  <motion.button
+                    onClick={() => {
+                      setStep(1);
+                      setDegree("");
+                      setAge("");
+                    }}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="w-full py-4 rounded-2xl font-semibold text-gray-600 border-2 border-gray-200 hover:bg-gray-50 transition-all"
+                  >
+                    Start Over
+                  </motion.button>
+                </motion.div>
+              )}
+
+            </AnimatePresence>
+          </div>
+
+          {/* Decorative Elements */}
+          <div className="absolute -z-10 top-8 -right-8 w-72 h-72 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full blur-3xl opacity-20" />
+          <div className="absolute -z-10 -bottom-8 -left-8 w-72 h-72 bg-gradient-to-br from-blue-400 to-purple-400 rounded-full blur-3xl opacity-20" />
+        </motion.div>
+      </div>
+    </section>
+  );
+}

@@ -26,14 +26,7 @@ const plans = [
     key: "public",
     href: "/insurance/public-health",
   },
-  {
-    title: "Expat Health",
-    description:
-      "Tailored plans for internationals moving or working in Germany.",
-    icon: Users,
-    key: "expat",
-    href: "/insurance/expat-health",
-  },
+ 
   {
     title: "Private Health",
     description:
@@ -41,6 +34,14 @@ const plans = [
     icon: HeartPulse,
     key: "private",
     href: "/insurance/private-health",
+  },
+   {
+    title: "Expat Health",
+    description:
+      "Tailored plans for internationals moving or working in Germany.",
+    icon: Users,
+    key: "expat",
+    href: "/insurance/expat-health",
   },
 ];
 

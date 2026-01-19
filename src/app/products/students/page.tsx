@@ -4,6 +4,7 @@ import HeroStudents from "@/app/components/students/HeroStudents";
 import WeOffersStudent from "@/app/components/ProductComponents/WeOffersStudent";
 import StudentInsuranceComparisonLight1 from "@/app/components/students/StudentInsuranceComparisonLight1";
 import PublicVsPrivateIntro from "@/app/components/students/PublicVsPrivateIntro";
+import InsuranceEligibilityQuiz from "./InsuranceEligibilityQuiz";
 
 export default function Students() {
   return (
@@ -12,6 +13,7 @@ export default function Students() {
       <WeOffersStudent />
       <StudentInsuranceComparisonLight1 />
       <PublicVsPrivateIntro/>
+      <InsuranceEligibilityQuiz/>
     </section>
   );
 }
