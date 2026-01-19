@@ -95,7 +95,7 @@ export default function HeroInsurancenew1() {
               </span>
 
               {/* Heading */}
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 leading-tight">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold  leading-tight ">
                 Get Insured in Minutes.
                 <br />
                 Insurance Made Simple.

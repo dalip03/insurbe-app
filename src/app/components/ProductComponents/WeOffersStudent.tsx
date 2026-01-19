@@ -24,6 +24,7 @@ const plans = [
       "Government-backed coverage with broad access and long-term stability.",
     icon: Stethoscope,
     key: "public",
+    href: "/insurance/public-health",
   },
  
   {
@@ -32,8 +33,10 @@ const plans = [
       "Premium care with faster access and flexible coverage options.",
     icon: HeartPulse,
     key: "private",
+    href: "/insurance/private-health",
   },
 ];
+
 
 const container = {
   hidden: {},
@@ -94,60 +97,61 @@ export default function WeOffersStudent() {
         viewport={{ once: true, amount: 0.25 }}
         className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2  gap-8"
       >
-        {plans.map((plan) => {
-          const Icon = plan.icon;
-
-          return (
-            <motion.div
-              key={plan.key}
-              variants={cardVariant}
-              whileHover={{ y: -6 }}
-              className="
-                group relative rounded-3xl p-7
-                bg-white/70 backdrop-blur-md
-                border border-gray-200
-                transition-all duration-300
-                hover:border-[#511e6d]/40
-              "
-            >
-              {/* Icon */}
-              <div className="w-12 h-12 rounded-xl bg-[#ede9fb] flex items-center justify-center mb-6 text-[#511e6d]">
-                <Icon className="w-6 h-6" />
-              </div>
-
-              {/* Content */}
-              <h3 className="text-lg font-semibold text-[#1d1e25] mb-2">
-                {plan.title}
-              </h3>
-
-              <p className="text-sm text-gray-600 leading-relaxed mb-8">
-                {plan.description}
-              </p>
-
-              {/* CTA */}
-              <button
-                onClick={() => router.push("/products/insuranceJourney")}
-                className="
-                  inline-flex items-center gap-2 text-sm font-semibold
-                  text-[#511e6d]
-                  group-hover:gap-3 transition-all
-                "
-              >
-                Explore plan
-                <ArrowRight className="w-4 h-4" />
-              </button>
-
-              {/* Hover glow */}
-              <div className="
-                absolute inset-0 rounded-3xl opacity-0
-                group-hover:opacity-100 transition
-                bg-gradient-to-br from-[#511e6d]/10 to-transparent
-                pointer-events-none
-              " />
+       {plans.map((plan) => {
+                const Icon = plan.icon;
+      
+                return (
+                  <motion.div
+                    key={plan.key}
+                    variants={cardVariant}
+                    whileHover={{ y: -6 }}
+                     onClick={() => router.push(plan.href)}
+                    className="
+                      group relative rounded-3xl p-7
+                      bg-white/70 backdrop-blur-md
+                      border border-gray-200
+                      transition-all duration-300
+                      hover:border-[#511e6d]/40
+                    "
+                  >
+                    {/* Icon */}
+                    <div className="w-12 h-12 rounded-xl bg-[#ede9fb] flex items-center justify-center mb-6 text-[#511e6d]">
+                      <Icon className="w-6 h-6" />
+                    </div>
+      
+                    {/* Content */}
+                    <h3 className="text-lg font-semibold text-[#1d1e25] mb-2">
+                      {plan.title}
+                    </h3>
+      
+                    <p className="text-sm text-gray-600 leading-relaxed mb-8">
+                      {plan.description}
+                    </p>
+      
+                    {/* CTA */}
+                    <button
+                      onClick={() => router.push("/products/insuranceJourney")}
+                      className="
+                        inline-flex items-center gap-2 text-sm font-semibold
+                        text-[#511e6d]
+                        group-hover:gap-3 transition-all cursor-pointer
+                      "
+                    >
+                      Explore plan
+                      <ArrowRight className="w-4 h-4" />
+                    </button>
+      
+                    {/* Hover glow */}
+                    <div className="
+                      absolute inset-0 rounded-3xl opacity-0
+                      group-hover:opacity-100 transition
+                      bg-gradient-to-br from-[#511e6d]/10 to-transparent
+                      pointer-events-none
+                    " />
+                  </motion.div>
+                );
+              })}
             </motion.div>
-          );
-        })}
-      </motion.div>
 
       {/* Modal (kept for future use) */}
       <ServiceModal open={false} onClose={() => {}} />
