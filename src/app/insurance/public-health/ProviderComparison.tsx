@@ -51,7 +51,7 @@ const Stars = ({ count }: { count: number }) => (
     {[1, 2, 3].map((i) => (
       <span
         key={i}
-        className={`text-base md:text-lg ${
+        className={`text-base ${
           i <= count ? "text-gray-900" : "text-gray-300"
         }`}
       >
@@ -66,7 +66,7 @@ const Speed = ({ count }: { count: number }) => (
     {[1, 2, 3].map((i) => (
       <span
         key={i}
-        className={`text-base md:text-lg ${
+        className={`text-base ${
           i <= count ? "text-gray-900" : "text-gray-300"
         }`}
       >
@@ -83,17 +83,15 @@ const Speed = ({ count }: { count: number }) => (
 export default function ProviderComparison() {
   const router = useRouter();
 
-  const handleSignup = () => {
-    router.push("/products/insuranceJourney");
+  /** PASS SELECTED PROVIDER */
+  const handleSignup = (providerId: string) => {
+    router.push(`/insuranceSignupFlow?provider=${providerId}`);
   };
 
   return (
-    <section className="py-12 sm:py-16 md:py-20 px-3 sm:px-4 md:px-6">
+    <section className="py-14 sm:py-20 px-4">
       <div className="max-w-7xl mx-auto">
-        {/* ------------------------------------------------------------------ */}
-        {/*                                HEADER                               */}
-        {/* ------------------------------------------------------------------ */}
-
+        {/* HEADER */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -101,24 +99,20 @@ export default function ProviderComparison() {
           transition={{ duration: 0.6 }}
           className="text-center mb-14"
         >
-          {" "}
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900">
             Compare{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-primary">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-600">
               public health insurance providers
             </span>
           </h1>
-          <p className="mt-6 text-gray-600 text-base  sm:text-lg max-w-6xl">
+          <p className="mt-5 text-gray-600 text-base sm:text-lg max-w-4xl mx-auto">
             Core benefits are the same — service quality makes the difference.
           </p>
         </motion.div>
 
-        {/* ------------------------------------------------------------------ */}
-        {/*                             DESKTOP VIEW                            */}
-        {/* ------------------------------------------------------------------ */}
-
+        {/* ========================== DESKTOP VIEW ========================== */}
         <div className="hidden lg:grid grid-cols-[260px_repeat(3,1fr)] border-t border-gray-200">
-          {/* Left labels */}
+          {/* LEFT LABELS */}
           <div className="py-8 space-y-10 font-medium text-gray-700">
             <div />
             <div>Your contribution</div>
@@ -135,40 +129,23 @@ export default function ProviderComparison() {
               key={p.id}
               className="border-l border-gray-200 py-8 px-6 space-y-10"
             >
-              {/* Logo + Button */}
+              {/* PROVIDER HEADER */}
               <div className="text-center">
-                <div className="flex items-center justify-center gap-1.5 sm:gap-3">
+                <div className="flex items-center justify-center gap-2">
                   <Image
                     src={p.logo}
                     alt={p.name}
-                    width={24}
-                    height={24}
-                    className="
-      object-contain flex-shrink-0
-      w-5 h-5
-      sm:w-6 sm:h-6
-      md:w-7 md:h-7
-    "
+                    width={28}
+                    height={28}
+                    className="object-contain"
                   />
-                  <h1
-                    className="
-    text-xs
-    sm:text-sm
-    md:text-base
-    font-medium
-    text-gray-900
-    whitespace-nowrap
-  "
-                  >
-                    {p.name}
-                  </h1>
+                  <span className="font-semibold text-gray-900">{p.name}</span>
                 </div>
 
                 <button
-                  type="button"
-                  onClick={handleSignup}
-                  className="mt-4 w-full rounded-lg py-2 font-semibold cursor-pointer text-white
-                    bg-gradient-to-r from-purple-600 to-primary
+                  onClick={() => handleSignup(p.id)}
+                  className="mt-4 w-full rounded-lg py-2 text-sm font-semibold text-white
+                    bg-gradient-to-r from-primary to-purple-600
                     hover:opacity-90 transition shadow-md"
                 >
                   Sign up
@@ -178,7 +155,7 @@ export default function ProviderComparison() {
               <div className="text-center font-semibold">
                 € —
                 <div>
-                  <button className="text-sm underline text-gray-600 hover:text-gray-900 transition">
+                  <button className="text-sm underline text-gray-600">
                     Calculate
                   </button>
                 </div>
@@ -198,17 +175,14 @@ export default function ProviderComparison() {
           ))}
         </div>
 
-        {/* ------------------------------------------------------------------ */}
-        {/*                             MOBILE VIEW                             */}
-        {/* ------------------------------------------------------------------ */}
-
+        {/* ========================== MOBILE VIEW ========================== */}
         <div className="grid gap-6 lg:hidden">
           {providers.map((p) => (
             <div
               key={p.id}
-              className="border border-gray-200 rounded-xl p-5 shadow-sm"
+              className="border border-gray-200 rounded-xl p-5 shadow-sm bg-white"
             >
-              <div className="flex justify-between items-center mb-4 pb-4 border-b border-gray-100">
+              <div className="flex justify-between items-center mb-4 pb-4 border-b">
                 <Image
                   src={p.logo}
                   alt={p.name}
@@ -218,11 +192,9 @@ export default function ProviderComparison() {
                 />
 
                 <button
-                  type="button"
-                  onClick={handleSignup}
+                  onClick={() => handleSignup(p.id)}
                   className="rounded-lg px-4 py-2 text-sm font-semibold text-white
-                    bg-gradient-to-r from-purple-600 to-primary
-                    hover:opacity-90 transition"
+                    bg-gradient-to-r from-primary to-purple-600"
                 >
                   Sign up
                 </button>
@@ -230,32 +202,32 @@ export default function ProviderComparison() {
 
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
-                  <span className="font-medium">English support</span>
+                  <span>English support</span>
                   <Stars count={p.english} />
                 </div>
 
                 <div className="flex justify-between">
-                  <span className="font-medium">Digital services</span>
+                  <span>Digital services</span>
                   <Stars count={p.digital} />
                 </div>
 
                 <div className="flex justify-between">
-                  <span className="font-medium">Processing speed</span>
+                  <span>Processing speed</span>
                   <Speed count={p.speed} />
                 </div>
 
                 <div className="flex justify-between">
-                  <span className="font-medium">Dependents</span>
+                  <span>Dependents</span>
                   <Check className="w-5 h-5 text-green-600" />
                 </div>
 
                 <div>
-                  <span className="font-medium block mb-1">Highlight</span>
+                  <span className="font-medium">Highlight</span>
                   <p className="text-gray-600">{p.highlight}</p>
                 </div>
 
                 <div>
-                  <span className="font-medium block mb-1">Bonus program</span>
+                  <span className="font-medium">Bonus</span>
                   <p className="text-gray-600">{p.bonus}</p>
                 </div>
               </div>

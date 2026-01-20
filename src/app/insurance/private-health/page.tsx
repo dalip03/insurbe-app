@@ -7,6 +7,7 @@ import PrivatePublicInsuranceFAQ from "./PrivatePublicFaq";
 import PrivateInsuranceSteps from "./PrivateInsuranceSteps";
 import InsuranceCalculatorPrivate from "../InsuranceCalculatorPrivate";
 import PrivatePricingComparison from "./PrivatePricingComparison";
+import PrivateInsuranceTariffs from "./PrivateInsuranceTariffs";
 
 function PrivateHealthPage() {
   return (
@@ -14,8 +15,8 @@ function PrivateHealthPage() {
       <PrivatePublicInsuranceHeroSection />
       <PrivatePublicInsuranceBenefits />
       <InsuranceCalculatorPrivate />
-
-      <PrivatePricingComparison />
+<PrivateInsuranceTariffs/>
+      {/* <PrivatePricingComparison /> */}
       <PrivateInsuranceSteps />
       <PrivatePublicInsuranceFAQ />
     </section>
