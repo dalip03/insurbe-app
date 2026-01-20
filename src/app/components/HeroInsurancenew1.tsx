@@ -95,11 +95,14 @@ export default function HeroInsurancenew1() {
               </span>
 
               {/* Heading */}
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold  leading-tight ">
-                Get Insured in Minutes.
-                <br />
-                Insurance Made Simple.
-              </h1>
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight text-gray-900">
+  Get Insured in Minutes.
+  <br />
+  <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-600">
+    Insurance Made Simple.
+  </span>
+</h1>
+
 
               {/* Features */}
               <div className="space-y-3">
@@ -126,26 +129,25 @@ export default function HeroInsurancenew1() {
     w-full max-w-md
   "
               >
-                <motion.button
-                  onClick={() => setIsModalOpen(true)}
-                  whileHover={{ scale: 1.04 }}
-                  whileTap={{ scale: 0.96 }}
-                  className="
-      w-full sm:flex-1
-      bg-primary text-white font-semibold
-      px-5 py-3 sm:py-3.5
-      rounded-full
-      flex items-center justify-center gap-2
-      shadow-lg hover:shadow-xl
-      transition
-      whitespace-nowrap cursor-pointer
-    "
-                >
-                  <span className="text-sm sm:text-base">
-                    Book an Appointment
-                  </span>
-                  {/* <ArrowRight className="w-4 h-4 flex-shrink-0" /> */}
-                </motion.button>
+               <motion.button
+  onClick={() => setIsModalOpen(true)}
+  whileHover={{ scale: 1.05 }}
+  whileTap={{ scale: 0.95 }}
+  className="
+    w-full sm:flex-1
+    px-6 py-3.5
+    rounded-full
+    bg-linear-to-r from-primary to-purple-600
+    text-white font-semibold
+    shadow-lg hover:shadow-xl
+    hover:opacity-90
+    transition
+    cursor-pointer
+  "
+>
+  Book an Appointment
+</motion.button>
+
 
                 <motion.button
                   onClick={handleScroll}

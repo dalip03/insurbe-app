@@ -11,7 +11,7 @@ interface TeamMember {
 
 const teamMembers: TeamMember[] = [
    {
-    name: "Marvin F",
+    name: "Marvin Fürst",
     role: "Founder & CEO",
     image: "/about/marvin.jpeg",
     bio: [

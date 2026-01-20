@@ -45,12 +45,10 @@ export default function InsuranceEligibilityQuiz() {
     { value: "other", label: "Other Studies", icon: "📖" },
   ];
 
-  const ageOptions = [
-    { value: "18-25", label: "18-25 years" },
-    { value: "26-30", label: "26-30 years" },
-    { value: "31-35", label: "31-35 years" },
-    { value: "36+", label: "36+ years" },
-  ];
+const ageOptions = [
+  { value: "below-30", label: "Below 30 years" },
+  { value: "above-30", label: "30 years & above" },
+];
 
   const benefits = [
     { icon: Shield, text: "Accepted for university & city registration", color: "text-emerald-600" },

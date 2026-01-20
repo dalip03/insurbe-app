@@ -7,88 +7,103 @@ import { ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 const PensionProductHeroSection = () => {
-  const scrollToForm = () => {
-    const section = document.getElementById("questionnaire-section");
-    if (section) {
-      section.scrollIntoView({ behavior: "smooth" });
-    }
-  };
-
   const router = useRouter();
-   const handleScroll = () => {
+
+  const handleScroll = () => {
     const el = document.getElementById("family");
     if (!el) return;
 
     const y = el.getBoundingClientRect().top + window.scrollY - 80;
     window.scrollTo({ top: y, behavior: "smooth" });
   };
-  return (
-    <section className="relative overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/90 to-[#3b1a52]" />
-        <div className="absolute inset-0 bg-[url('/img/productbg.png')] bg-cover bg-center opacity-15" />
-      </div>
 
-      {/* Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-16 sm:py-20">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          
+  return (
+    <section className="relative py-20 sm:py-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
           {/* LEFT CONTENT */}
           <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            initial="hidden"
+            animate="visible"
+            variants={{
+              hidden: { opacity: 0 },
+              visible: {
+                opacity: 1,
+                transition: { staggerChildren: 0.12 },
+              },
+            }}
             className="space-y-6"
           >
             {/* Badge */}
-            <span className="inline-flex items-center bg-white/15 text-white px-4 py-1.5 rounded-full text-sm font-semibold backdrop-blur">
+            <motion.span
+              variants={{
+                hidden: { y: 10, opacity: 0 },
+                visible: { y: 0, opacity: 1 },
+              }}
+              className="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-medium bg-primary/10 text-primary w-fit"
+            >
               Insurbe • Pension Solutions
-            </span>
+            </motion.span>
 
             {/* Heading */}
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-tight">
-              Pension Plans for Expats & Professionals in Germany
-            </h1>
+            <motion.h1
+              variants={{
+                hidden: { y: 16, opacity: 0 },
+                visible: { y: 0, opacity: 1 },
+              }}
+              className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight"
+            >
+              Pension Plans for
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-600">
+                Expats & Professionals in Germany
+              </span>
+            </motion.h1>
 
             {/* Description */}
-            <p className="text-base sm:text-lg text-white/85 max-w-xl">
+            <motion.p
+              variants={{
+                hidden: { y: 12, opacity: 0 },
+                visible: { y: 0, opacity: 1 },
+              }}
+              className="text-base sm:text-lg text-gray-600 max-w-xl"
+            >
               Secure your future and build a reliable retirement plan with
               expert guidance in English — tailored for life in Germany.
-            </p>
+            </motion.p>
 
-          
-           {/* CTA */}
-            <div className="flex flex-row gap-4 max-w-md">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+            {/* CTA */}
+            <motion.div
+              variants={{
+                hidden: { y: 10, opacity: 0 },
+                visible: { y: 0, opacity: 1 },
+              }}
+              className="flex flex-col sm:flex-row gap-4 max-w-md"
+            >
+              <button
                 onClick={() => router.push("/products/insuranceJourney")}
-                className="flex-1 bg-white text-primary font-semibold cursor-pointer text-sm px-6 py-3 rounded-full shadow-lg flex items-center justify-center gap-2"
+                className="flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-gradient-to-r from-primary to-purple-600 text-white font-semibold shadow-lg hover:opacity-90 transition"
               >
                 Take the Questionnaire
                 <ArrowRight className="w-4 h-4" />
-              </motion.button>
+              </button>
 
-              <motion.button
-                 onClick={handleScroll}
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
-                className="flex-1 border border-white/40  cursor-pointer text-white px-4 py-3 rounded-full"
+              <button
+                onClick={handleScroll}
+                className="px-8 py-4 rounded-full border border-gray-300 text-gray-700 font-semibold hover:border-primary hover:text-primary transition"
               >
                 Learn More
-              </motion.button>
-            </div>
+              </button>
+            </motion.div>
           </motion.div>
 
           {/* RIGHT IMAGE */}
           <motion.div
             initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.15 }}
+            transition={{ duration: 0.6, ease: "easeOut", delay: 0.15 }}
             className="relative w-full"
           >
-            <div className="relative aspect-[4/3] sm:aspect-[5/4] lg:aspect-[7/6] rounded-3xl overflow-hidden  ">
+            <div className="relative aspect-[4/3] sm:aspect-[5/4] lg:aspect-[7/6] rounded-3xl overflow-hidden ">
               <Image
                 src="/hero_assets/party.png"
                 alt="Pension planning for professionals"
@@ -99,7 +114,6 @@ const PensionProductHeroSection = () => {
               />
             </div>
           </motion.div>
-
         </div>
       </div>
     </section>

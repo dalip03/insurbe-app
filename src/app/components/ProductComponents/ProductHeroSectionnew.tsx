@@ -9,111 +9,125 @@ import Image from "next/image";
 export default function ProductHeroSectionnew() {
   const router = useRouter();
 
-   const handleScroll = () => {
+  const handleScroll = () => {
     const el = document.getElementById("insurance");
     if (!el) return;
 
     const y = el.getBoundingClientRect().top + window.scrollY - 80;
     window.scrollTo({ top: y, behavior: "smooth" });
   };
-  return (
-    <section className="relative overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/90 to-purple-900" />
-        <div className="absolute inset-0 bg-[url('/img/productbg.png')] bg-cover bg-center opacity-20" />
-      </div>
 
-      {/* Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-14 sm:py-20">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+  return (
+    <section className="relative py-20 sm:py-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
+
           {/* LEFT CONTENT */}
           <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-white"
+            initial="hidden"
+            animate="visible"
+            variants={{
+              hidden: { opacity: 0 },
+              visible: {
+                opacity: 1,
+                transition: { staggerChildren: 0.12 },
+              },
+            }}
+            className="space-y-6"
           >
             {/* Badge */}
-            <span className="inline-flex items-center gap-2 bg-white/15 backdrop-blur px-4 py-1.5 rounded-full text-sm font-medium mb-6">
-              <ShieldCheck className="w-4 h-4 text-green-300" />
+            <motion.span
+              variants={{ hidden: { y: 10, opacity: 0 }, visible: { y: 0, opacity: 1 } }}
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-medium bg-primary/10 text-primary w-fit"
+            >
+              <ShieldCheck className="w-4 h-4 text-primary" />
               Trusted Insurance Partner
-            </span>
+            </motion.span>
 
-            {/* Heading */}
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight mb-6">
+            {/* Heading (UNCHANGED TEXT) */}
+            <motion.h1
+              variants={{ hidden: { y: 16, opacity: 0 }, visible: { y: 0, opacity: 1 } }}
+              className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight"
+            >
               You work hard.
               <br />
-              <span className="text-purple-200">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-600">
                 Your health insurance should too.
               </span>
-            </h1>
+            </motion.h1>
 
-            {/* Description */}
-            <p className="text-base sm:text-lg text-white/90 max-w-xl mb-8">
+            {/* Paragraph (UNCHANGED TEXT) */}
+            <motion.p
+              variants={{ hidden: { y: 12, opacity: 0 }, visible: { y: 0, opacity: 1 } }}
+              className="text-base sm:text-lg text-gray-600 max-w-xl"
+            >
               We help professionals unlock better care, smarter coverage, and
               real savings — without paperwork or confusion.
-            </p>
+            </motion.p>
 
             {/* Highlights */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
-              <div className="flex items-center gap-3">
-                <Clock className="w-5 h-5 text-purple-300" />
-                <span className="text-sm">Takes less time</span>
+            <motion.div
+              variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}
+              className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2"
+            >
+              <div className="flex items-center gap-3 text-gray-700">
+                <Clock className="w-5 h-5 text-primary" />
+                <span className="text-sm font-medium">Takes less time</span>
               </div>
-              <div className="flex items-center gap-3">
-                <HeartPulse className="w-5 h-5 text-purple-300" />
-                <span className="text-sm">Personalized coverage</span>
+
+              <div className="flex items-center gap-3 text-gray-700">
+                <HeartPulse className="w-5 h-5 text-primary" />
+                <span className="text-sm font-medium">
+                  Personalized coverage
+                </span>
               </div>
-            </div>
+            </motion.div>
 
             {/* CTA */}
-            <div className="flex flex-row gap-4 max-w-md">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+            <motion.div
+              variants={{ hidden: { y: 10, opacity: 0 }, visible: { y: 0, opacity: 1 } }}
+              className="flex flex-col sm:flex-row gap-4 max-w-md pt-4"
+            >
+              <button
                 onClick={() => router.push("/products/insuranceJourney")}
-                className="flex-1 bg-white text-primary font-semibold cursor-pointer text-sm px-6 py-3 rounded-full shadow-lg flex items-center justify-center gap-2"
+                className="flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-gradient-to-r from-primary to-purple-600 text-white font-semibold shadow-lg hover:opacity-90 transition"
               >
                 Take the Questionnaire
                 <ArrowRight className="w-4 h-4" />
-              </motion.button>
+              </button>
 
-              <motion.button
-               onClick={handleScroll}
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
-                className="flex-1 border border-white/40  cursor-pointer text-white px-4 py-3 rounded-full"
+              <button
+                onClick={handleScroll}
+                className="px-8 py-4 rounded-full border border-gray-300 text-gray-700 font-semibold hover:border-primary hover:text-primary transition"
               >
                 Learn More
-              </motion.button>
-            </div>
+              </button>
+            </motion.div>
 
-            <p className="mt-3 text-xs text-white/60">
+            <p className="text-xs text-gray-500 pt-1">
               No paperwork • No obligations
             </p>
           </motion.div>
 
-          {/* RIGHT IMAGE – Gradient Frame */}
+          {/* RIGHT IMAGE */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
+            initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="relative"
+            transition={{ duration: 0.6, ease: "easeOut", delay: 0.15 }}
+            className="relative w-full"
           >
-            <div className="relative rounded-[28px] p-[2px] bg-gradient-to-br from-primary/40 via-purple-400/30 to-transparent shadow-xl">
-              <div className="relative w-full h-[320px] sm:h-[420px] lg:h-[520px] rounded-[26px] overflow-hidden bg-white">
-                <Image
-                  src="/hero_assets/workin.jpeg"
-                  alt="Insurance coverage illustration"
-                  fill
-                  priority
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                />
-              </div>
+            <div className="relative aspect-[4/3] sm:aspect-[5/4] lg:aspect-[7/6] rounded-3xl overflow-hidden shadow-xl">
+              <Image
+                src="/hero_assets/workin.jpeg"
+                alt="Insurance coverage illustration"
+                fill
+                priority
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 50vw"
+              />
             </div>
           </motion.div>
+
         </div>
       </div>
     </section>

@@ -4,14 +4,9 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
-  ShieldCheck,
-  Globe,
-  Sparkles,
   ArrowRight,
-  Building2,
   Users,
   HeartPulse,
-  PlaneTakeoff,
   Stethoscope,
   Landmark,
 } from "lucide-react";
@@ -26,7 +21,6 @@ const plans = [
     key: "public",
     href: "/insurance/public-health",
   },
- 
   {
     title: "Private Health",
     description:
@@ -35,7 +29,7 @@ const plans = [
     key: "private",
     href: "/insurance/private-health",
   },
-   {
+  {
     title: "Expat Health",
     description:
       "Tailored plans for internationals moving or working in Germany.",
@@ -44,7 +38,6 @@ const plans = [
     href: "/insurance/expat-health",
   },
 ];
-
 
 const container = {
   hidden: {},
@@ -57,10 +50,7 @@ const container = {
 };
 
 const cardVariant = {
-  hidden: {
-    opacity: 0,
-    y: 24,
-  },
+  hidden: { opacity: 0, y: 24 },
   visible: {
     opacity: 1,
     y: 0,
@@ -75,21 +65,25 @@ export default function WeOffers() {
   const router = useRouter();
 
   return (
-    <section className="relative py-16 sm:py-24 px-4 sm:px-8 lg:px-20  overflow-hidden">
+    <section className="relative py-16 sm:py-24 px-4 sm:px-8 lg:px-20 overflow-hidden">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
-        className="max-w-4xl mx-auto text-center mb-14"
+        className="max-w-4xl mx-auto text-center mb-16"
       >
-        <span className="inline-flex items-center gap-2 text-xs font-medium px-5 py-2 rounded-full bg-[#ede9fb] text-[#511e6d] mb-6">
-          <Landmark className="w-4 h-4" />
+        <span className="inline-flex items-center gap-2 text-xs font-medium px-5 py-2 rounded-full bg-primary/10 text-primary mb-6">
+          <Landmark className="w-4 h-4 text-primary" />
           Seamless Coverage
         </span>
 
-        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#1d1e25] mb-4">
-          Plans We Offer
+        {/* Gradient Heading */}
+        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
+          <span>Plans </span>
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-600">
+            We Offer
+          </span>
         </h2>
 
         <p className="text-base sm:text-lg text-gray-600">
@@ -113,22 +107,24 @@ export default function WeOffers() {
               key={plan.key}
               variants={cardVariant}
               whileHover={{ y: -6 }}
-               onClick={() => router.push(plan.href)}
+              onClick={() => router.push(plan.href)}
               className="
                 group relative rounded-3xl p-7
-                bg-white/70 backdrop-blur-md
+                bg-white
                 border border-gray-200
+                cursor-pointer
                 transition-all duration-300
-                hover:border-[#511e6d]/40
+                hover:border-primary/40
+                hover:shadow-xl
               "
             >
-              {/* Icon */}
-              <div className="w-12 h-12 rounded-xl bg-[#ede9fb] flex items-center justify-center mb-6 text-[#511e6d]">
+              {/* Gradient Icon */}
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-6 bg-gradient-to-r from-primary to-purple-600 text-white shadow-md">
                 <Icon className="w-6 h-6" />
               </div>
 
               {/* Content */}
-              <h3 className="text-lg font-semibold text-[#1d1e25] mb-2">
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
                 {plan.title}
               </h3>
 
@@ -137,25 +133,20 @@ export default function WeOffers() {
               </p>
 
               {/* CTA */}
-              <button
-                onClick={() => router.push("/products/insuranceJourney")}
-                className="
-                  inline-flex items-center gap-2 text-sm font-semibold
-                  text-[#511e6d]
-                  group-hover:gap-3 transition-all cursor-pointer
-                "
-              >
+              <div className="inline-flex items-center gap-2 text-sm font-semibold text-primary group-hover:gap-3 transition-all">
                 Explore plan
                 <ArrowRight className="w-4 h-4" />
-              </button>
+              </div>
 
-              {/* Hover glow */}
-              <div className="
-                absolute inset-0 rounded-3xl opacity-0
-                group-hover:opacity-100 transition
-                bg-gradient-to-br from-[#511e6d]/10 to-transparent
-                pointer-events-none
-              " />
+              {/* Hover Glow */}
+              <div
+                className="
+                  absolute inset-0 rounded-3xl opacity-0
+                  group-hover:opacity-100 transition
+                  bg-gradient-to-br from-primary/10 to-purple-600/5
+                  pointer-events-none
+                "
+              />
             </motion.div>
           );
         })}

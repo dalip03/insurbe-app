@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { CheckCircle, Calendar, ArrowLeft } from "lucide-react";
 
 export default function BookAppointmentPage() {
   const router = useRouter();
@@ -21,337 +22,215 @@ export default function BookAppointmentPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-
-    // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 1500));
-
     setIsSubmitting(false);
     setSubmitted(true);
-
-    // Redirect after 3 seconds
-    setTimeout(() => {
-      router.push("/");
-    }, 3000);
+    setTimeout(() => router.push("/"), 3000);
   };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  /* ---------------- SUCCESS STATE ---------------- */
   if (submitted) {
     return (
-      <section className="bg-gradient-to-br from-[#f5f0ff] to-white min-h-screen flex items-center justify-center px-4">
+      <section className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#f7f5ff] to-white px-4">
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
+          initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="max-w-md w-full bg-white rounded-2xl shadow-2xl p-8 text-center"
+          className="bg-white rounded-3xl shadow-xl p-10 text-center max-w-md w-full"
         >
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.2, type: "spring" }}
-            className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6"
-          >
-            <svg
-              className="w-10 h-10 text-green-600"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M5 13l4 4L19 7"
-              />
-            </svg>
-          </motion.div>
+          <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <CheckCircle className="w-10 h-10 text-green-600" />
+          </div>
 
-          <h2 className="text-2xl font-bold text-gray-800 mb-3">
-            Appointment Booked!
+          <h2 className="text-2xl font-bold text-gray-900 mb-3">
+            Appointment Request Sent 🎉
           </h2>
+
           <p className="text-gray-600 mb-6">
-            Thank you! Our expert will contact you within 24 hours to confirm
-            your appointment.
+            Our pension expert will contact you within 24 hours to confirm your
+            appointment.
           </p>
+
           <p className="text-sm text-gray-500">
-            Redirecting to homepage in 3 seconds...
+            Redirecting to homepage…
           </p>
         </motion.div>
       </section>
     );
   }
 
+  /* ---------------- MAIN PAGE ---------------- */
   return (
-    <section className="bg-gradient-to-br from-[#f5f0ff] to-white min-h-screen py-16 px-4 md:px-10">
-      <motion.div
-        initial={{ y: -30, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6 }}
-        className="max-w-5xl mx-auto"
-      >
+    <section className="min-h-screen bg-gradient-to-br from-[#f7f5ff] to-white py-20 px-4 md:px-10">
+      <div className="max-w-6xl mx-auto">
+
         {/* Header */}
-        <div className="text-center mb-10">
-          <h1 className="text-3xl md:text-4xl font-bold text-black mb-3">
-            Book Your Expert Consultation
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center mb-14"
+        >
+          <span className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
+            <Calendar className="w-4 h-4" />
+            Free Expert Consultation
+          </span>
+
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+            Book your pension consultation
           </h1>
-          <p className="text-gray-600 text-base md:text-lg">
-            Get personalized insurance advice from our experts
+
+          <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+            Get personalized advice for pension planning in Germany — tailored
+            to expats, professionals, and freelancers.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
-          {/* Left: Image & Benefits */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+
+          {/* LEFT: Info */}
           <motion.div
-            initial={{ opacity: 0, x: -20 }}
+            initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.2 }}
-            className="space-y-6"
+            className="bg-white rounded-3xl p-8 shadow-lg"
           >
-            <div className="bg-white rounded-2xl p-6 shadow-lg">
-              <Image
-                src="/gifs_assets/appointment1.png"
-                alt="Book appointment"
-                width={500}
-                height={400}
-                className="w-full rounded-lg mb-6"
-                unoptimized
-              />
+            <Image
+              src="/gifs_assets/appointment1.png"
+              alt="Expert consultation"
+              width={500}
+              height={350}
+              className="rounded-xl mb-6"
+              unoptimized
+            />
 
-              <h3 className="text-xl font-bold text-gray-800 mb-4">
-                Why Book a Consultation?
-              </h3>
+            <h3 className="text-xl font-semibold text-gray-900 mb-4">
+              Why speak with an expert?
+            </h3>
 
-              <div className="space-y-4">
-                {[
-                  {
-                    icon: "✓",
-                    text: "Avoid incorrect plan selection",
-                  },
-                  {
-                    icon: "✓",
-                    text: "Get accurate premium expectations",
-                  },
-                  {
-                    icon: "✓",
-                    text: "Faster insurer acceptance",
-                  },
-                  {
-                    icon: "✓",
-                    text: "Personalized health insurance advice",
-                  },
-                  {
-                    icon: "✓",
-                    text: "Compare multiple plans instantly",
-                  },
-                ].map((benefit, idx) => (
-                  <div key={idx} className="flex items-start gap-3">
-                    <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <span className="text-primary font-bold text-sm">
-                        {benefit.icon}
-                      </span>
-                    </div>
-                    <span className="text-gray-700">{benefit.text}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <ul className="space-y-3 text-gray-700">
+              {[
+                "Avoid choosing the wrong pension plan",
+                "Understand tax advantages clearly",
+                "Get realistic contribution & payout estimates",
+                "Compare multiple pension options",
+                "Free & no obligation consultation",
+              ].map((item) => (
+                <li key={item} className="flex items-start gap-3">
+                  <CheckCircle className="w-5 h-5 text-primary mt-0.5" />
+                  {item}
+                </li>
+              ))}
+            </ul>
           </motion.div>
 
-          {/* Right: Form */}
+          {/* RIGHT: Form */}
           <motion.div
-            initial={{ opacity: 0, x: 20 }}
+            initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.3 }}
-            className="bg-white rounded-2xl shadow-xl p-8"
+            className="bg-white rounded-3xl shadow-xl p-8"
           >
-            <h2 className="text-2xl font-bold text-gray-800 mb-6">
-              Schedule Your Appointment
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">
+              Schedule your appointment
             </h2>
 
             <form onSubmit={handleSubmit} className="space-y-5">
-              {/* Name */}
-              <div>
-                <label
-                  htmlFor="name"
-                  className="block text-sm font-semibold text-gray-700 mb-2"
-                >
-                  Full Name *
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  required
-                  value={formData.name}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-primary focus:outline-none transition"
-                  placeholder="John Doe"
-                />
+              {[
+                { label: "Full Name", name: "name", type: "text" },
+                { label: "Email Address", name: "email", type: "email" },
+                { label: "Phone Number", name: "phone", type: "tel" },
+              ].map((field) => (
+                <div key={field.name}>
+                  <label className="block text-sm font-medium mb-2">
+                    {field.label} *
+                  </label>
+                  <input
+                    required
+                    type={field.type}
+                    name={field.name}
+                    value={(formData as any)[field.name]}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none"
+                  />
+                </div>
+              ))}
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    Preferred Date *
+                  </label>
+                  <input
+                    type="date"
+                    name="preferredDate"
+                    required
+                    min={new Date().toISOString().split("T")[0]}
+                    value={formData.preferredDate}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    Preferred Time *
+                  </label>
+                  <select
+                    name="preferredTime"
+                    required
+                    value={formData.preferredTime}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary"
+                  >
+                    <option value="">Select</option>
+                    {["09:00", "10:00", "11:00", "14:00", "15:00", "16:00"].map(
+                      (t) => (
+                        <option key={t} value={t}>
+                          {t}
+                        </option>
+                      )
+                    )}
+                  </select>
+                </div>
               </div>
 
-              {/* Email */}
               <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-semibold text-gray-700 mb-2"
-                >
-                  Email Address *
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  required
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-primary focus:outline-none transition"
-                  placeholder="john@example.com"
-                />
-              </div>
-
-              {/* Phone */}
-              <div>
-                <label
-                  htmlFor="phone"
-                  className="block text-sm font-semibold text-gray-700 mb-2"
-                >
-                  Phone Number *
-                </label>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  required
-                  value={formData.phone}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-primary focus:outline-none transition"
-                  placeholder="+49 123 456 7890"
-                />
-              </div>
-
-              {/* Preferred Date */}
-              <div>
-                <label
-                  htmlFor="preferredDate"
-                  className="block text-sm font-semibold text-gray-700 mb-2"
-                >
-                  Preferred Date *
-                </label>
-                <input
-                  type="date"
-                  id="preferredDate"
-                  name="preferredDate"
-                  required
-                  value={formData.preferredDate}
-                  onChange={handleChange}
-                  min={new Date().toISOString().split("T")[0]}
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-primary focus:outline-none transition"
-                />
-              </div>
-
-              {/* Preferred Time */}
-              <div>
-                <label
-                  htmlFor="preferredTime"
-                  className="block text-sm font-semibold text-gray-700 mb-2"
-                >
-                  Preferred Time *
-                </label>
-                <select
-                  id="preferredTime"
-                  name="preferredTime"
-                  required
-                  value={formData.preferredTime}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-primary focus:outline-none transition cursor-pointer"
-                >
-                  <option value="">Select a time</option>
-                  <option value="09:00">09:00 AM</option>
-                  <option value="10:00">10:00 AM</option>
-                  <option value="11:00">11:00 AM</option>
-                  <option value="12:00">12:00 PM</option>
-                  <option value="14:00">02:00 PM</option>
-                  <option value="15:00">03:00 PM</option>
-                  <option value="16:00">04:00 PM</option>
-                  <option value="17:00">05:00 PM</option>
-                </select>
-              </div>
-
-              {/* Message */}
-              <div>
-                <label
-                  htmlFor="message"
-                  className="block text-sm font-semibold text-gray-700 mb-2"
-                >
-                  Additional Notes (Optional)
+                <label className="block text-sm font-medium mb-2">
+                  Additional notes (optional)
                 </label>
                 <textarea
-                  id="message"
-                  name="message"
                   rows={4}
+                  name="message"
                   value={formData.message}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-primary focus:outline-none transition resize-none"
-                  placeholder="Any specific questions or concerns?"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary resize-none"
                 />
               </div>
 
-              {/* Submit Button */}
-              <button
-                type="submit"
+              <motion.button
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
                 disabled={isSubmitting}
-                className={`w-full px-6 py-4 rounded-lg font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
-                  isSubmitting
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-primary text-white hover:bg-primary/90"
-                }`}
+                className="w-full py-4 rounded-full bg-gradient-to-r from-primary to-purple-600 text-white font-semibold shadow-lg"
               >
-                {isSubmitting ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <svg
-                      className="animate-spin h-5 w-5"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                        fill="none"
-                      />
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      />
-                    </svg>
-                    Booking...
-                  </span>
-                ) : (
-                  "Book Appointment"
-                )}
-              </button>
+                {isSubmitting ? "Booking…" : "Book Free Appointment"}
+              </motion.button>
 
-              {/* Back Button */}
               <button
                 type="button"
                 onClick={() => router.back()}
-                className="w-full px-6 py-3 bg-white border-2 border-gray-300 text-gray-700 rounded-lg hover:border-primary hover:bg-primary/5 transition font-semibold focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                className="w-full flex items-center justify-center gap-2 text-gray-600 font-medium"
               >
-                Go Back
+                <ArrowLeft className="w-4 h-4" />
+                Go back
               </button>
             </form>
           </motion.div>
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 }
