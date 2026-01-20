@@ -27,8 +27,12 @@ const PROVIDERS: Record<string, { name: string; desc: string }> = {
 
 export default function InsuranceSignupFlow() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const providerFromUrl = searchParams.get("provider");
+  const [providerFromUrl, setProviderFromUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    setProviderFromUrl(params.get("provider"));
+  }, []);
 
   const [step, setStep] = useState<Step>(1);
 
