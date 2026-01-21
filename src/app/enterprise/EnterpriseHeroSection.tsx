@@ -1,7 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 const categories = [
   {
@@ -55,13 +57,26 @@ export default function EnterpriseHeroSection() {
           </p>
 
           {/* CTA */}
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="bg-white text-purple-600 px-10 py-4 rounded-full font-bold text-lg shadow-2xl transition"
-          >
-            Get in touch
-          </motion.button>
+         <Link href="/book-appointment">
+  <motion.a
+    whileHover={{ scale: 1.05 }}
+    whileTap={{ scale: 0.95 }}
+    className="
+      inline-flex items-center gap-2
+      px-8 py-4
+      rounded-full
+      bg-white
+      text-primary
+      font-semibold
+      shadow-xl
+      hover:shadow-2xl
+      transition
+    "
+  >
+    Get in touch
+    <ArrowRight className="w-5 h-5" />
+  </motion.a>
+</Link>
         </motion.div>
 
         {/* Cards */}
