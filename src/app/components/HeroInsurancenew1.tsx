@@ -199,7 +199,7 @@ export default function HeroInsurancenew1() {
             >
               <div className=" aspect-[5/4] md:aspect-[7/6] rounded-3xl overflow-hidden shadow-xl bg-white">
                 <Image
-                  src="/hero_assets/phero1.jpg"
+                  src="/hero_assets/phero5.jpg"
                   alt="Insurance made easy"
                   fill
                   priority
