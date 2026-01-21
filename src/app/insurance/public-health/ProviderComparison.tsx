@@ -33,7 +33,7 @@ const providers = [
   {
     id: "aok",
     name: "AOK",
-    logo: "/partners_asset/AOk_logo.avif",
+    logo: "/partners_asset/AOK_logo.avif",
     english: 2,
     digital: 1,
     speed: 2,

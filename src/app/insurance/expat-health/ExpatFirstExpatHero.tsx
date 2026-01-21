@@ -102,10 +102,10 @@ export default function ExpatFirstExpatHero() {
           <div className="absolute -inset-8 bg-gradient-to-tr from-purple-100 to-pink-100 rounded-3xl blur-3xl opacity-70" />
 
           <Image
-            src="/hero_assets/heroin.jpg"
+            src="/hero_assets/phero7.jpg"
             alt="Expat Health Insurance"
-            width={520}
-            height={520}
+            width={620}
+            height={620}
             className="relative rounded-3xl shadow-xl"
             priority
           />
