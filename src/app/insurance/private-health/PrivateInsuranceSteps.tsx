@@ -28,7 +28,7 @@ const steps = [
 
 export default function PrivateInsuranceSteps() {
   return (
-    <section className="py-20 px-4 bg-white">
+    <section className="relative py-16 sm:py-10 px-4 sm:px-8 lg:px-18 overflow-hidden">
       <div className="max-w-7xl mx-auto text-center">
         {/* Heading */}
         <motion.h2

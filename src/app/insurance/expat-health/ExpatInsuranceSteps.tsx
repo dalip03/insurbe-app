@@ -28,7 +28,7 @@ const steps = [
 
 export default function ExpatInsuranceSteps() {
   return (
-    <section className="py-20 px-4 ">
+    <section className="relative py-16 sm:py-10 px-4 sm:px-8 lg:px-18 overflow-hidden">
       <div className="max-w-7xl mx-auto text-center">
         {/* Heading */}
         <motion.h2
@@ -45,7 +45,7 @@ export default function ExpatInsuranceSteps() {
         </motion.h2>
 
         {/* Steps (Desktop) */}
-        <div className="hidden lg:flex items-start justify-between relative mb-16">
+        <div className="hidden lg:flex items-start justify-between relative mb-8">
           {/* Connecting Line */}
           <div className="absolute top-6 left-[8%] right-[8%] h-[2px] bg-gradient-to-r from-purple-600 to-pink-500" />
 

@@ -50,7 +50,7 @@ export default function FamilyPensionPlans() {
   const router = useRouter();
 
   return (
-    <section className="relative py-24 px-4 md:px-12  overflow-hidden">
+    <section className="relative py-16 sm:py-10 px-4 sm:px-8 lg:px-18 overflow-hidden">
       {/* Decorative background */}
       <div className="absolute -top-40 -left-40 w-[500px] h-[500px]  rounded-full blur-3xl" />
 

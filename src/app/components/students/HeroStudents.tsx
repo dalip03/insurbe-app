@@ -18,8 +18,8 @@ function HeroStudents() {
   };
 
   return (
-    <section className="relative py-20 sm:py-24">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
+    <section className="relative py-16 sm:py-10 px-4 sm:px-8 lg:px-18 overflow-hidden">
+      <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
 
           {/* LEFT CONTENT */}

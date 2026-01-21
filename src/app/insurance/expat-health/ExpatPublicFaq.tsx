@@ -32,7 +32,7 @@ export default function ExpatPublicInsuranceFAQ() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   return (
-    <section className="py-20 px-4 ">
+    <section className="relative py-16 sm:py-10 px-4 sm:px-8 lg:px-18 overflow-hidden ">
       <div className="max-w-4xl mx-auto">
 
         {/* Header */}

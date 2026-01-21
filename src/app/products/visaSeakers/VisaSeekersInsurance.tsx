@@ -42,7 +42,7 @@ const plans = [
 
 export default function VisaSeekersInsurance() {
   return (
-    <section className="py-24 px-4 md:px-12 ">
+    <section className="relative py-16 sm:py-10 px-4 sm:px-8 lg:px-18 overflow-hidden ">
       <div className="max-w-7xl mx-auto">
 
         {/* Header */}

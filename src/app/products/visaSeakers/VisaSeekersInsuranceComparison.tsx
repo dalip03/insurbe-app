@@ -30,8 +30,8 @@ export default function VisaSeekersInsuranceComparison() {
   const [activeTab, setActiveTab] = useState(2);
 
   return (
-    <section className="py-24 px-4 md:px-12 ">
-      <div className="max-w-5xl mx-auto">
+    <section className="relative py-16 sm:py-10 px-4 sm:px-8 lg:px-18 overflow-hidden">
+      <div className="max-w-7xl mx-auto">
 
         {/* Header */}
         <motion.div

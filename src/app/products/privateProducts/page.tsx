@@ -9,15 +9,11 @@ import ProductHeroSectionnew from "@/app/components/ProductComponents/ProductHer
 
 function ProductPage() {
   return (
-    <div>
-      {/* <ProductHeroSection /> */}
-      <ProductHeroSectionnew/>
-      {/* <CardsSection /> */}
+    <div>   
+      <ProductHeroSectionnew/>   
       <WeOffers />
       <WhyPrivateInsurance />
-      {/* <InsuranceSteps /> */}
       <OurServices />
-
       <FAQ />
     </div>
   );

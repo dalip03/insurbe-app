@@ -65,13 +65,13 @@ export default function WeOffers() {
   const router = useRouter();
 
   return (
-    <section className="relative py-16 sm:py-24 px-4 sm:px-8 lg:px-20 overflow-hidden">
+    <section className="relative py-16 sm:py-10 px-4 sm:px-8  overflow-hidden">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
-        className="max-w-4xl mx-auto text-center mb-16"
+        className="max-w-7xl mx-auto text-center mb-16"
       >
         <span className="inline-flex items-center gap-2 text-xs font-medium px-5 py-2 rounded-full bg-primary/10 text-primary mb-6">
           <Landmark className="w-4 h-4 text-primary" />

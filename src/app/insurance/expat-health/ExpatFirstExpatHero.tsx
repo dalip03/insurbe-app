@@ -22,7 +22,7 @@ const benefits = [
 
 export default function ExpatFirstExpatHero() {
   return (
-    <section className="py-20 sm:py-20 px-4 sm:px-6 lg:px-8">
+    <section className="relative py-16 sm:py-10 px-4 sm:px-8 lg:px-18 overflow-hidden">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 
         {/* LEFT CONTENT */}
@@ -35,21 +35,19 @@ export default function ExpatFirstExpatHero() {
           {/* Heading */}
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
             German Health Insurance{" "}
-            <span className="block mt-2 text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-primary">
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-primary">
               Made Better
             </span>
           </h1>
 
           {/* Description */}
-          <p className="mt-6 text-gray-600 max-w-xl text-base sm:text-lg leading-relaxed">
-            With the digital private health insurance by ottonova you can skip
-            all the paperwork! Manage your health in a single app, with real-time
-            English-speaking support. Save money compared to public insurance
+          <p className="mt-2 text-gray-600 max-w-xl text-base sm:text-lg leading-relaxed">
+             Save money compared to public insurance
             while enjoying superior coverage.
           </p>
 
           {/* Benefits */}
-          <ul className="mt-10 space-y-6">
+          <ul className="mt-4 space-y-4">
             {benefits.map((item, idx) => (
               <motion.li
                 key={idx}
@@ -59,7 +57,7 @@ export default function ExpatFirstExpatHero() {
                 transition={{ delay: idx * 0.1 }}
                 className="flex items-start gap-4"
               >
-                <CheckCircle className="w-6 h-6 text-purple-600 mt-1 flex-shrink-0" />
+                <CheckCircle className="w-4 h-4 text-purple-600 mt-1 flex-shrink-0" />
                 <div>
                   <p className="font-semibold text-gray-900">
                     {item.title}
@@ -78,7 +76,7 @@ export default function ExpatFirstExpatHero() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="mt-12"
+            className="mt-8"
           >
             <Link
               href="/products/insuranceJourney"

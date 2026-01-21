@@ -15,7 +15,7 @@ export default function PublicInsuranceHeroSection() {
   };
 
   return (
-    <section className=" py-20 sm:py-28 px-4 sm:px-6 lg:px-8">
+    <section className="relative py-16 sm:py-10 px-4 sm:px-8 lg:px-18 overflow-hidden">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         
         {/* LEFT: TEXT */}

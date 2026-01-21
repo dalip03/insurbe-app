@@ -53,7 +53,7 @@ export default function FamilyRetirementPlan() {
   const router = useRouter();
 
   return (
-    <section className="relative py-24 px-4 md:px-12 bg-gradient-to-br from-[#f7f5ff] to-white overflow-hidden">
+    <section className="relative py-16 sm:py-10 px-4 sm:px-8 lg:px-18 overflow-hidden">
       {/* Decorative blur */}
       <div className="absolute -top-32 -right-32 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
 

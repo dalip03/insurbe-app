@@ -7,14 +7,14 @@ import Link from "next/link";
 
 export default function PrivatePublicInsuranceHeroSection() {
   const scrollToNextSection = () => {
-    const learnmore = document.getElementById("learnmore");
+    const learnmore = document.getElementById("teriffs");
     if (learnmore) {
       learnmore.scrollIntoView({ behavior: "smooth" });
     }
   };
 
   return (
-    <section className="py-20 sm:py-20 px-4 sm:px-6 lg:px-8">
+    <section className="relative py-16 sm:py-10 px-4 sm:px-8 lg:px-18 overflow-hidden">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
 
         {/* LEFT CONTENT */}
@@ -41,7 +41,7 @@ export default function PrivatePublicInsuranceHeroSection() {
           </h1>
 
           {/* Description */}
-          <p className="mt-6 text-gray-600 text-base sm:text-lg max-w-xl">
+          <p className="mt-4 text-gray-600 text-base sm:text-lg max-w-xl">
             Private health insurance offers excellent benefits, stable premiums,
             and top-rated healthcare — perfectly suited for employees in Germany.
           </p>
@@ -79,8 +79,8 @@ export default function PrivatePublicInsuranceHeroSection() {
           {/* CTA */}
           <div className="mt-8 flex flex-wrap gap-4">
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
-              <Link
-                href="/products/insuranceJourney"
+               <button
+              onClick={scrollToNextSection}
                 className="inline-flex items-center gap-2 justify-center rounded-full px-8 py-4 font-semibold text-white
                   bg-gradient-to-r from-purple-600 to-primary
                   hover:opacity-90 transition shadow-md"
@@ -93,16 +93,10 @@ export default function PrivatePublicInsuranceHeroSection() {
                 >
                   <ArrowRight className="w-5 h-5" />
                 </motion.span>
-              </Link>
+              </button>
             </motion.div>
 
-            <button
-              onClick={scrollToNextSection}
-              className="inline-flex items-center justify-center rounded-full px-8 py-4 font-semibold
-                text-gray-900 border border-gray-300 hover:border-purple-400 transition"
-            >
-              Free & non-binding consultation
-            </button>
+          
           </div>
         </motion.div>
 

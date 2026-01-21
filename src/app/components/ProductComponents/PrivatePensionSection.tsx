@@ -43,7 +43,7 @@ export default function PrivatePensionSection() {
   return (
     <section
       id="family"
-      className="relative py-24 px-4 sm:px-10 lg:px-20 overflow-hidden"
+      className="relative py-16 sm:py-10 px-4 sm:px-8 lg:px-18 overflow-hidden"
     >
       {/* Soft background blur */}
       <div className="absolute -top-32 -right-32 w-96 h-96  rounded-full blur-3xl" />

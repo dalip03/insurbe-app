@@ -27,7 +27,7 @@ export default function PrivateInsuranceTariffs() {
   };
 
   return (
-    <section className="py-20 px-4 md:px-12  relative overflow-hidden">
+    <section id="teriffs" className="relative py-16 sm:py-10 px-4 sm:px-8 lg:px-18 overflow-hidden">
       {/* Background Decoration */}
       {/* <div className="absolute top-0 right-0 w-96 h-96 bg-purple-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-pink-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div> */}
@@ -125,7 +125,7 @@ export default function PrivateInsuranceTariffs() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.5 }}
-          className="text-center mb-16"
+          className="text-center mb-4"
         >
           <motion.button
             whileHover={{ scale: 1.05 }}
@@ -260,7 +260,7 @@ function TariffCard({
         <motion.button
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
-          className={`w-full py-3 rounded-full font-semibold transition-all
+          className={`w-full py-3 rounded-full font-semibold transition-all 
             ${highlighted
               ? "bg-white text-purple-600 hover:bg-purple-50 shadow-lg"
               : "bg-gradient-to-r from-purple-600 to-primary text-white hover:opacity-90 shadow-md"}

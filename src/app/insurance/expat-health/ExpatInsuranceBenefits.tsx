@@ -33,7 +33,7 @@ const benefits = [
 
 export default function ExpatInsuranceBenefits() {
   return (
-    <section className=" py-24 px-4">
+    <section className="relative py-16 sm:py-10 px-4 sm:px-8 lg:px-18 overflow-hidden">
       <div className="max-w-7xl mx-auto">
 
         {/* HEADER */}

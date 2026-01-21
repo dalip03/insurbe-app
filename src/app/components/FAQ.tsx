@@ -62,7 +62,7 @@ export default function FAQ() {
 
   return (
     <>
-      <section className="pt-16 px-4 md:px-10 lg:px-20 py-12">
+      <section className="py-16 sm:py-10 px-4 sm:px-8 lg:px-18 overflow-hidden">
         <div className="max-w-7xl mx-auto grid items-start px-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}

@@ -52,8 +52,8 @@ const teamMembers: TeamMember[] = [
 
 export default function AboutHeads() {
   return (
-    <section className="bg-primary py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-6xl mx-auto">
+    <section className="relative py-16 sm:py-10 px-4 sm:px-8 lg:px-18 overflow-hidden">
+      <div className="max-w-7xl mx-auto">
         
         {/* Section Header */}
         <div className="flex items-center justify-center mb-12 sm:mb-16">

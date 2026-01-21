@@ -9,38 +9,47 @@ import {
   Gavel,
   Plane,
 } from "lucide-react";
+import Link from "next/link";
 
 export default function ChooseUs() {
   const reasons = [
     {
-      title: "Health Insurance",
-      desc: "Reliable health coverage that supports you through everyday care and unexpected moments—without complexity.",
+      title: "Public Health Insurance",
+      desc: "Essential, legally compliant coverage that meets all residency requirements in Germany.",
       icon: ShieldCheck,
+      href: "/insurance/public-health",
+    },
+
+    {
+      title: "Private Health Insurance",
+      desc: "Tailored, comprehensive plans offering enhanced benefits and personalized coverage options.",
+      icon: Home,
+      href: "/insurance/private-health",
     },
     {
       title: "Private Pension Scheme",
       desc: "A smarter way to plan ahead, helping you build long-term financial security with confidence.",
       icon: PiggyBank,
+      href: "/products/pensionProducts",
     },
     {
       title: "Liability Insurance",
       desc: "Thoughtful protection that shields you from personal liability and unexpected claims.",
       icon: Scale,
+      href: "/products/privateProducts",
     },
-    {
-      title: "Household Insurance",
-      desc: "Clear, dependable coverage for your home and belongings—designed for real life.",
-      icon: Home,
-    },
+
     {
       title: "Legal Insurance",
       desc: "Straightforward legal support when it matters most, with access to expert guidance and cost coverage.",
       icon: Gavel,
+      href: "/products/privateProducts",
     },
     {
       title: "Travel Insurance",
       desc: "Protection that moves with you, ensuring peace of mind wherever your journey takes you.",
       icon: Plane,
+      href: "/products/visaSeakers",
     },
   ];
 
@@ -63,7 +72,6 @@ export default function ChooseUs() {
   return (
     <section className="py-24 px-4 md:px-10 lg:px-20">
       <div className="max-w-7xl mx-auto">
-
         {/* Heading */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
@@ -80,7 +88,8 @@ export default function ChooseUs() {
           </h2>
 
           <p className="mt-4 text-gray-600 max-w-2xl mx-auto text-lg">
-            Simple, transparent insurance solutions designed for life in Germany.
+            Simple, transparent insurance solutions designed for life in
+            Germany.
           </p>
         </motion.div>
 
@@ -96,38 +105,44 @@ export default function ChooseUs() {
             const Icon = item.icon;
 
             return (
-              <motion.div
-                key={idx}
-                variants={cardVariant}
-                whileHover={{ y: -6 }}
-                className="
-                  group bg-white
-                  p-8 rounded-2xl
-                  border border-gray-200
-                  hover:border-primary/40
-                  hover:shadow-xl
-                  transition-all duration-300
-                "
-              >
-                {/* Gradient Icon */}
-                <div className="mb-6">
-                  <div className="
-                    w-14 h-14 rounded-xl
-                    bg-gradient-to-br from-primary to-purple-600
-                    flex items-center justify-center
-                    shadow-md
-                  ">
-                    <Icon className="w-7 h-7 text-white" />
-                  </div>
-                </div>
+              <motion.div key={idx} variants={cardVariant}>
+                <Link href={item.href} className="block h-full">
+                  <motion.div
+                    whileHover={{ y: -6 }}
+                    className="
+            group bg-white
+            p-8 rounded-2xl
+            border border-gray-200
+            hover:border-primary/40
+            hover:shadow-xl
+            transition-all duration-300
+            cursor-pointer
+            h-full
+          "
+                  >
+                    {/* Icon */}
+                    <div className="mb-6">
+                      <div
+                        className="
+                w-14 h-14 rounded-xl
+                bg-gradient-to-br from-primary to-purple-600
+                flex items-center justify-center
+                shadow-md
+              "
+                      >
+                        <Icon className="w-7 h-7 text-white" />
+                      </div>
+                    </div>
 
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                  {item.title}
-                </h3>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                      {item.title}
+                    </h3>
 
-                <p className="text-sm text-gray-600 leading-relaxed">
-                  {item.desc}
-                </p>
+                    <p className="text-sm text-gray-600 leading-relaxed">
+                      {item.desc}
+                    </p>
+                  </motion.div>
+                </Link>
               </motion.div>
             );
           })}

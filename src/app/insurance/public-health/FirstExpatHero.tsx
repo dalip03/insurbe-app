@@ -28,7 +28,7 @@ const features = [
 
 export default function FirstExpatHero() {
   return (
-    <section className="py-20 sm:py-20 px-4 sm:px-6 lg:px-8 ">
+    <section className="relative py-16 sm:py-10 px-4 sm:px-8 lg:px-18 overflow-hidden">
       <div className="max-w-7xl mx-auto">
 
         {/* Heading */}

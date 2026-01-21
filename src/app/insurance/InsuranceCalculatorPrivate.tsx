@@ -100,7 +100,7 @@ export default function InsuranceCalculatorPrivate() {
   };
 
   return (
-    <section className="py-20 px-4 relative overflow-hidden">
+    <section className="relative py-16 sm:py-10 px-4 sm:px-8 lg:px-18 overflow-hidden">
       {/* Background decoration */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
         <motion.div

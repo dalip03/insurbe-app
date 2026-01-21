@@ -52,7 +52,7 @@ const features = [
 
 export default function StudentInsuranceComparisonLight1() {
   return (
-    <section className="relative py-12 sm:py-16 md:py-4 px-4 sm:px-6 lg:px-8 overflow-hidden ">
+    <section className="relative py-16 sm:py-10 px-4 sm:px-8 lg:px-18 overflow-hidden ">
       {/* Soft background accents */}
       <div className="absolute inset-0 overflo  w-hidden">
         <div className="absolute top-1/4 -left-24 sm:-left-48 w-48 sm:w-96 h-48 sm:h-96 bg-purple-200/40 rounded-full blur-3xl" />

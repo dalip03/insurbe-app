@@ -49,7 +49,7 @@ export default function FeaturesSection() {
   };
 
   return (
-    <section className="py-16 px-4 md:px-8 lg:px-16">
+    <section className="relative py-16 sm:py-10 px-4 sm:px-8 lg:px-18 overflow-hidden">
       <motion.div
         variants={containerVariants}
         initial="hidden"

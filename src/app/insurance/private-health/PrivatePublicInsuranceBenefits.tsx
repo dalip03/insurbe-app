@@ -26,7 +26,7 @@ const benefits = [
 
 export default function PrivatePublicInsuranceBenefits() {
   return (
-    <section id="learnmore" className="py-20 px-4 sm:px-6 lg:px-8">
+    <section id="learnmore" className="relative py-16 sm:py-10 px-4 sm:px-8 lg:px-18 overflow-hidden">
       <div className="max-w-7xl mx-auto">
         {/* Heading */}
         <motion.div

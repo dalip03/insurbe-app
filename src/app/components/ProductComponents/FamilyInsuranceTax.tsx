@@ -5,7 +5,7 @@ import Image from "next/image";
 
 export default function FamilyInsuranceTax() {
   return (
-    <section className="relative py-20 px-4 md:px-12 overflow-hidden">
+    <section className="relative py-16 sm:py-10 px-4 sm:px-8 lg:px-18 overflow-hidden">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 
         {/* Image Section */}
