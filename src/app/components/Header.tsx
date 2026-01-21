@@ -12,14 +12,22 @@ import {
   Users,
   Globe,
   GraduationCap,
+  Info,
+  UserCheck,
 } from "lucide-react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 
-// Update with actual route slugs as needed:
+// Updated navLinks with About Us dropdown
 const navLinks = [
   { name: "Home", href: "/" },
-  { name: "About Us", href: "/about" },
+  {
+    name: "About Us",
+    submenu: [
+      { name: "About", href: "/about", icon: "ℹ️" },
+      { name: "Careers", href: "/career", icon: "💼" },
+    ],
+  },
   {
     name: "Insurances",
     submenu: [
@@ -33,7 +41,7 @@ const navLinks = [
       { name: "Students", href: "/products/students", icon: "🎓" },
     ],
   },
-  { name: "Careers", href: "/career" },
+  { name: "Enterprise", href: "/enterprise" },
   { name: "Support", href: "/support" },
 ];
 
@@ -117,13 +125,17 @@ const productTagsConfig: Record<
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [showProducts, setShowProducts] = useState(false);
+  const [showAbout, setShowAbout] = useState(false);
   const [mobileProductsOpen, setMobileProductsOpen] = useState(false);
-  const hoverTimeout = useRef<NodeJS.Timeout | null>(null);
+  const [mobileAboutOpen, setMobileAboutOpen] = useState(false);
+  const productHoverTimeout = useRef<NodeJS.Timeout | null>(null);
+  const aboutHoverTimeout = useRef<NodeJS.Timeout | null>(null);
   const pathname = usePathname();
 
   const toggleDrawer = () => {
     setIsOpen(!isOpen);
     setMobileProductsOpen(false);
+    setMobileAboutOpen(false);
     // Prevent body scroll when drawer is open
     if (!isOpen) {
       document.body.style.overflow = "hidden";
@@ -132,14 +144,27 @@ const Header = () => {
     }
   };
 
-  const handleMouseEnter = () => {
-    if (hoverTimeout.current) clearTimeout(hoverTimeout.current);
+  const handleProductMouseEnter = () => {
+    if (productHoverTimeout.current) clearTimeout(productHoverTimeout.current);
     setShowProducts(true);
+    setShowAbout(false);
   };
 
-  const handleMouseLeave = () => {
-    hoverTimeout.current = setTimeout(() => {
+  const handleProductMouseLeave = () => {
+    productHoverTimeout.current = setTimeout(() => {
       setShowProducts(false);
+    }, 120);
+  };
+
+  const handleAboutMouseEnter = () => {
+    if (aboutHoverTimeout.current) clearTimeout(aboutHoverTimeout.current);
+    setShowAbout(true);
+    setShowProducts(false);
+  };
+
+  const handleAboutMouseLeave = () => {
+    aboutHoverTimeout.current = setTimeout(() => {
+      setShowAbout(false);
     }, 120);
   };
 
@@ -164,12 +189,23 @@ const Header = () => {
               <div
                 key={link.name}
                 className="relative"
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
+                onMouseEnter={
+                  link.name === "Insurances"
+                    ? handleProductMouseEnter
+                    : handleAboutMouseEnter
+                }
+                onMouseLeave={
+                  link.name === "Insurances"
+                    ? handleProductMouseLeave
+                    : handleAboutMouseLeave
+                }
               >
                 <span
                   className={`cursor-pointer h-7 px-1 flex items-center gap-1 ${
-                    pathname.includes("/products")
+                    (link.name === "Insurances" &&
+                      pathname.includes("/products")) ||
+                    (link.name === "About Us" &&
+                      (pathname === "/about" || pathname === "/career"))
                       ? "text-primary border-b-2 border-primary font-semibold pb-1"
                       : "text-black hover:text-primary transition"
                   }`}
@@ -178,161 +214,193 @@ const Header = () => {
                   <ChevronDown size={16} />
                 </span>
 
-                {/* Desktop Mega Menu - Grid Layout */}
-                <AnimatePresence>
-                  {showProducts && (
-                    <motion.div
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.2 }}
-                      className="fixed left-0 top-[72px] w-screen z-50"
-                    >
-                      <div className="w-full bg-white shadow-xl border-b border-gray-200">
-                        <div className="max-w-6xl mx-auto px-8 py-10">
-                          <h3 className="text-xl font-bold text-gray-900 mb-6">
-                            Insurance Products
-                          </h3>
+                {/* About Us Dropdown */}
+                {link.name === "About Us" && (
+                  <AnimatePresence>
+                    {showAbout && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.2 }}
+                        className="absolute left-0 top-full mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden z-50"
+                      >
+                        {link.submenu.map((item) => (
+                          <Link
+                            key={item.name}
+                            href={item.href}
+                            onClick={() => setShowAbout(false)}
+                            className={`flex items-center gap-3 px-4 py-3 text-sm font-medium transition hover:bg-gray-50 ${
+                              pathname === item.href
+                                ? "bg-primary/10 text-primary"
+                                : "text-gray-700"
+                            }`}
+                          >
+                            <span className="text-lg">{item.icon}</span>
+                            {item.name}
+                          </Link>
+                        ))}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                )}
 
-                          <div className="grid grid-cols-4 gap-6">
-                            {link.submenu.map((item, index) => {
-                              const getIcon = (name: string) => {
-                                switch (name) {
-                                  case "Working Professionals":
-                                    return (
-                                      <Briefcase className="w-7 h-7 text-indigo-600" />
-                                    );
-                                  case "Family":
-                                    return (
-                                      <Users className="w-7 h-7 text-rose-600" />
-                                    );
-                                  case "Visa Seekers":
-                                    return (
-                                      <Globe className="w-7 h-7 text-emerald-600" />
-                                    );
-                                  case "Students":
-                                    return (
-                                      <GraduationCap className="w-7 h-7 text-sky-600" />
-                                    );
-                                  default:
-                                    return null;
-                                }
-                              };
+                {/* Insurance Products Mega Menu */}
+                {link.name === "Insurances" && (
+                  <AnimatePresence>
+                    {showProducts && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.2 }}
+                        className="fixed left-0 top-[72px] w-screen z-50"
+                      >
+                        <div className="w-full bg-white shadow-xl border-b border-gray-200">
+                          <div className="max-w-6xl mx-auto px-8 py-10">
+                            <h3 className="text-xl font-bold text-gray-900 mb-6">
+                              Insurance Products
+                            </h3>
 
-                              const getBg = (name: string) => {
-                                switch (name) {
-                                  case "Working Professionals":
-                                    return "bg-indigo-50";
-                                  case "Family":
-                                    return "bg-rose-50";
-                                  case "Visa Seekers":
-                                    return "bg-emerald-50";
-                                  case "Students":
-                                    return "bg-sky-50";
-                                  default:
-                                    return "bg-gray-50";
-                                }
-                              };
+                            <div className="grid grid-cols-4 gap-6">
+                              {link.submenu.map((item, index) => {
+                                const getIcon = (name: string) => {
+                                  switch (name) {
+                                    case "Working Professionals":
+                                      return (
+                                        <Briefcase className="w-7 h-7 text-indigo-600" />
+                                      );
+                                    case "Family":
+                                      return (
+                                        <Users className="w-7 h-7 text-rose-600" />
+                                      );
+                                    case "Visa Seekers":
+                                      return (
+                                        <Globe className="w-7 h-7 text-emerald-600" />
+                                      );
+                                    case "Students":
+                                      return (
+                                        <GraduationCap className="w-7 h-7 text-sky-600" />
+                                      );
+                                    default:
+                                      return null;
+                                  }
+                                };
 
-                              return (
-                                <motion.div
-                                  key={item.name}
-                                  className="h-full"
-                                  initial={{ opacity: 0, y: 12 }}
-                                  animate={{ opacity: 1, y: 0 }}
-                                  transition={{ delay: index * 0.05 }}
-                                >
-                                  <Link
-                                    href={item.href}
-                                    tabIndex={showProducts ? 0 : -1}
-                                    onClick={() => setShowProducts(false)}
-                                    className="
-                      group
-                      block
-                      h-[210px]
-                      p-6
-                      rounded-2xl
-                      border border-gray-200
-                      hover:border-primary
-                      hover:shadow-xl
-                      transition-all
-                      bg-white
-                    "
+                                const getBg = (name: string) => {
+                                  switch (name) {
+                                    case "Working Professionals":
+                                      return "bg-indigo-50";
+                                    case "Family":
+                                      return "bg-rose-50";
+                                    case "Visa Seekers":
+                                      return "bg-emerald-50";
+                                    case "Students":
+                                      return "bg-sky-50";
+                                    default:
+                                      return "bg-gray-50";
+                                  }
+                                };
+
+                                return (
+                                  <motion.div
+                                    key={item.name}
+                                    className="h-full"
+                                    initial={{ opacity: 0, y: 12 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: index * 0.05 }}
                                   >
-                                    <div className="flex flex-col h-full">
-                                      {/* ICON */}
-                                      <div
-                                        className={`
-                          w-12 h-12 rounded-xl flex items-center justify-center
-                          ${getBg(item.name)}
-                          group-hover:scale-110
-                          transition-transform
-                         
-                        `}
-                                      >
-                                        {getIcon(item.name)}
-                                      </div>
+                                    <Link
+                                      href={item.href}
+                                      tabIndex={showProducts ? 0 : -1}
+                                      onClick={() => setShowProducts(false)}
+                                      className="
+                        group
+                        block
+                        h-[210px]
+                        p-6
+                        rounded-2xl
+                        border border-gray-200
+                        hover:border-primary
+                        hover:shadow-xl
+                        transition-all
+                        bg-white
+                      "
+                                    >
+                                      <div className="flex flex-col h-full">
+                                        {/* ICON */}
+                                        <div
+                                          className={`
+                            w-12 h-12 rounded-xl flex items-center justify-center
+                            ${getBg(item.name)}
+                            group-hover:scale-110
+                            transition-transform
+                          `}
+                                        >
+                                          {getIcon(item.name)}
+                                        </div>
 
-                                      {/* TITLE */}
-                                      <h4 className="font-semibold text-gray-900 mb-2 group-hover:text-primary transition">
-                                        {item.name}
-                                      </h4>
-                                      {/* PRODUCT TAGS */}
-                                      <div className="flex flex-wrap gap-2 mb-3">
-                                        {productTagsConfig[item.name]?.map(
-                                          (tag) => (
-                                            <Link
-                                              key={tag.label}
-                                              href={tag.href}
-                                              onClick={(e) => {
-                                                e.stopPropagation(); // ⛔ prevent card click
-                                                setShowProducts(false);
-                                              }}
-                                              className={`
-        flex items-center gap-1.5
-        text-[11px]
-        px-2.5 py-1
-        rounded-full
-        font-semibold
-        ${tag.color}
-        transition-all duration-200
-        hover:-translate-y-0.5
-        hover:scale-[1.03]
-        hover:shadow-sm
-      `}
-                                            >
-                                              <span className="text-xs">
-                                                {tag.icon}
-                                              </span>
-                                              {tag.label}
-                                            </Link>
-                                          ),
-                                        )}
-                                      </div>
+                                        {/* TITLE */}
+                                        <h4 className="font-semibold text-gray-900 mb-2 group-hover:text-primary transition">
+                                          {item.name}
+                                        </h4>
+                                        {/* PRODUCT TAGS */}
+                                        <div className="flex flex-wrap gap-2 mb-3">
+                                          {productTagsConfig[item.name]?.map(
+                                            (tag) => (
+                                              <Link
+                                                key={tag.label}
+                                                href={tag.href}
+                                                onClick={(e) => {
+                                                  e.stopPropagation();
+                                                  setShowProducts(false);
+                                                }}
+                                                className={`
+          flex items-center gap-1.5
+          text-[11px]
+          px-2.5 py-1
+          rounded-full
+          font-semibold
+          ${tag.color}
+          transition-all duration-200
+          hover:-translate-y-0.5
+          hover:scale-[1.03]
+          hover:shadow-sm
+        `}
+                                              >
+                                                <span className="text-xs">
+                                                  {tag.icon}
+                                                </span>
+                                                {tag.label}
+                                              </Link>
+                                            ),
+                                          )}
+                                        </div>
 
-                                      {/* DESCRIPTION */}
-                                      <p className="text-sm text-gray-600 mt-auto leading-relaxed ">
-                                        {item.name ===
-                                          "Working Professionals" &&
-                                          "Comprehensive health coverage for working individuals"}
-                                        {item.name === "Family" &&
-                                          "Reliable protection plans for your entire family"}
-                                        {item.name === "Visa Seekers" &&
-                                          "Insurance solutions for visa and relocation needs"}
-                                        {item.name === "Students" &&
-                                          "Affordable and flexible insurance plans for students"}
-                                      </p>
-                                    </div>
-                                  </Link>
-                                </motion.div>
-                              );
-                            })}
+                                        {/* DESCRIPTION */}
+                                        <p className="text-sm text-gray-600 mt-auto leading-relaxed">
+                                          {item.name ===
+                                            "Working Professionals" &&
+                                            "Comprehensive health coverage for working individuals"}
+                                          {item.name === "Family" &&
+                                            "Reliable protection plans for your entire family"}
+                                          {item.name === "Visa Seekers" &&
+                                            "Insurance solutions for visa and relocation needs"}
+                                          {item.name === "Students" &&
+                                            "Affordable and flexible insurance plans for students"}
+                                        </p>
+                                      </div>
+                                    </Link>
+                                  </motion.div>
+                                );
+                              })}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                )}
               </div>
             ) : (
               <Link
@@ -410,21 +478,40 @@ const Header = () => {
                       link.submenu ? (
                         <div key={link.name}>
                           <button
-                            onClick={() =>
-                              setMobileProductsOpen(!mobileProductsOpen)
-                            }
+                            onClick={() => {
+                              if (link.name === "Insurances") {
+                                setMobileProductsOpen(!mobileProductsOpen);
+                                setMobileAboutOpen(false);
+                              } else if (link.name === "About Us") {
+                                setMobileAboutOpen(!mobileAboutOpen);
+                                setMobileProductsOpen(false);
+                              }
+                            }}
                             className={`w-full flex items-center justify-between px-4 py-3.5 text-base font-semibold rounded-lg transition cursor-pointer ${
-                              pathname.includes("/products")
+                              (link.name === "Insurances" &&
+                                pathname.includes("/products")) ||
+                              (link.name === "About Us" &&
+                                (pathname === "/about" ||
+                                  pathname === "/career"))
                                 ? "bg-primary/10 text-primary"
                                 : "text-gray-800 hover:bg-gray-100"
                             }`}
                           >
                             <span className="flex items-center gap-3">
-                              <span className="text-xl">📦</span>
+                              <span className="text-xl">
+                                {link.name === "Insurances" ? "📦" : "ℹ️"}
+                              </span>
                               {link.name}
                             </span>
                             <motion.div
-                              animate={{ rotate: mobileProductsOpen ? 180 : 0 }}
+                              animate={{
+                                rotate:
+                                  (link.name === "Insurances" &&
+                                    mobileProductsOpen) ||
+                                  (link.name === "About Us" && mobileAboutOpen)
+                                    ? 180
+                                    : 0,
+                              }}
                               transition={{ duration: 0.3 }}
                             >
                               <ChevronDown size={20} />
@@ -432,7 +519,9 @@ const Header = () => {
                           </button>
 
                           <AnimatePresence>
-                            {mobileProductsOpen && (
+                            {((link.name === "Insurances" &&
+                              mobileProductsOpen) ||
+                              (link.name === "About Us" && mobileAboutOpen)) && (
                               <motion.div
                                 initial={{ height: 0, opacity: 0 }}
                                 animate={{ height: "auto", opacity: 1 }}
@@ -487,8 +576,6 @@ const Header = () => {
                           <span className="flex items-center gap-3">
                             <span className="text-xl">
                               {link.name === "Home" && "🏠"}
-                              {link.name === "About Us" && "ℹ️"}
-                              {link.name === "Careers" && "💼"}
                               {link.name === "Support" && "🆘"}
                             </span>
                             {link.name}
