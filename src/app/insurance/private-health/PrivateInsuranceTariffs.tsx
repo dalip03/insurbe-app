@@ -120,38 +120,32 @@ export default function PrivateInsuranceTariffs() {
         </motion.div>
 
         {/* Compare Button */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.5 }}
-          className="text-center mb-4"
-        >
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setShowCompare(!showCompare)}
-            className="
-              px-10 py-4 rounded-full
-              bg-gradient-to-r from-primary to-purple-600
-              text-white font-semibold
-              shadow-lg hover:shadow-xl
-              transition inline-flex items-center gap-2
-            "
-          >
-            {showCompare ? (
-              <>
-                Hide comparison
-                <ChevronUp className="w-5 h-5" />
-              </>
-            ) : (
-              <>
-                Compare tariffs
-                <ChevronDown className="w-5 h-5" />
-              </>
-            )}
-          </motion.button>
-        </motion.div>
+       {!showCompare && (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{ delay: 0.5 }}
+    className="text-center mb-4"
+  >
+    <motion.button
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      onClick={() => setShowCompare(true)}
+      className="
+        px-10 py-4 rounded-full
+        bg-gradient-to-r from-primary to-purple-600
+        text-white font-semibold
+        shadow-lg hover:shadow-xl
+        transition inline-flex items-center gap-2
+      "
+    >
+      Compare tariffs
+      <ChevronDown className="w-5 h-5" />
+    </motion.button>
+  </motion.div>
+)}
+
 
         {/* Comparison Table */}
         <AnimatePresence>

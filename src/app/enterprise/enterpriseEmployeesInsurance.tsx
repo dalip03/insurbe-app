@@ -137,7 +137,7 @@ export default function EnterpriseEmployeesInsurance() {
             className="inline-block mb-4 sm:mb-6"
           >
             <span className="bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 px-4 sm:px-5 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-bold inline-flex items-center gap-2 shadow-lg">
-              <Sparkles className="w-3 h-3 sm:w-4 sm:h-4" />
+              {/* <Sparkles className="w-3 h-3 sm:w-4 sm:h-4" /> */}
               Enterprise Solutions
             </span>
           </motion.div>

@@ -63,7 +63,7 @@ export default function FAQ() {
   return (
     <>
       <section className="py-16 sm:py-10 px-4 sm:px-8 lg:px-18 overflow-hidden">
-        <div className="max-w-7xl mx-auto grid items-start px-10">
+        <div className="max-w-4xl mx-auto grid items-start px-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -83,12 +83,15 @@ export default function FAQ() {
             viewport={{ once: true }}
             className="text-center"
           >
-            <h2 className="text-4xl font-bold mb-12 py-4">
-              Frequently Asked Questions
-            </h2>
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 ">
+            Frequently asked{" "}
+            <span className="text-transparent bg-clip-text bg-linear-to-r from-purple-600 to-primary">
+              questions
+            </span>
+          </h2>
           </motion.div>
 
-          <div className="space-y-4">
+          <div className="space-y-4 mt-10">
             {faqs.map((faq, index) => (
               <motion.div
                 key={index}

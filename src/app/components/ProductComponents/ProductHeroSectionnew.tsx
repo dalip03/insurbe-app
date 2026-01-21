@@ -118,7 +118,7 @@ export default function ProductHeroSectionnew() {
           >
             <div className="relative aspect-[4/3] sm:aspect-[5/4] lg:aspect-[7/6] rounded-3xl overflow-hidden shadow-xl">
               <Image
-                src="/hero_assets/workin.jpeg"
+                src="/hero_assets/phero2.jpg"
                 alt="Insurance coverage illustration"
                 fill
                 priority

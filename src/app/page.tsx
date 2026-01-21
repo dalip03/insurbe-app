@@ -16,19 +16,12 @@ import ProductBanner from "./components/ProductBanner";
 export default function Home() {
   return (
     <main className="">
-      {/* new home page designed  */}
-      {/* <HeroSection1/> */}
-      {/* <HeroSection/> */}
-      {/* <HeroSectionnew/> */}
-      {/* <HeroSection11/> */}
-      {/* <HeroInsurance/> */}
-      {/* <HeroInsurancenew/> */}
       <HeroInsurancenew1/>
       <Featureshome/>
       <ChooseUs />
       <ProductBanner />
       <AboutSectionnew />
-      {/* <Expectations /> */}
+  
       <FAQ />
     </main>
   );

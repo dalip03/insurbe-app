@@ -121,7 +121,6 @@ export default function HeroInsurancenew1() {
               </div>
 
               {/* CTAs */}
-              {/* CTAs */}
               <div
                 className="
     flex flex-col sm:flex-row
@@ -200,7 +199,7 @@ export default function HeroInsurancenew1() {
             >
               <div className=" aspect-[5/4] md:aspect-[7/6] rounded-3xl overflow-hidden shadow-xl bg-white">
                 <Image
-                  src="/hero_assets/family1.jpeg"
+                  src="/hero_assets/phero1.jpg"
                   alt="Insurance made easy"
                   fill
                   priority

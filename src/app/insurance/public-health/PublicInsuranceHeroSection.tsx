@@ -87,13 +87,13 @@ export default function PublicInsuranceHeroSection() {
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
-          className="relative w-full h-[280px] sm:h-[360px] lg:h-[460px]"
+          className="relative w-full h-[280px] sm:h-[360px] lg:h-[460px] rounded-2xl"
         >
           <Image
-            src="/hero_assets/herosection7.jpeg" 
+            src="/hero_assets/phero.jpg" 
             alt="Public Health Insurance in Germany"
             fill
-            className="object-contain"
+            className="object-cover rounded-2xl"
             priority
           />
         </motion.div>
