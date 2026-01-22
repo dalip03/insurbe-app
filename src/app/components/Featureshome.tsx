@@ -1,100 +1,98 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Award, Monitor, Headphones } from "lucide-react";
+import { Wallet, FileText, Zap } from "lucide-react";
+
+const advantages = [
+  {
+    title: "In Your Own Way",
+    desc: "Choose coverage options that truly fit your needs and your budget — no unnecessary extras.",
+    icon: Wallet,
+  },
+  {
+    title: "No Hidden Fees",
+    desc: "What you see is what you pay. Full pricing transparency with no surprises later.",
+    icon: FileText,
+  },
+  {
+    title: "Simple & Fast",
+    desc: "Simulate, customise, and activate your insurance in minutes — zero paperwork.",
+    icon: Zap,
+  },
+];
 
 export default function Featureshome() {
-  const features = [
-    {
-      icon: Award,
-      title: "Experience",
-      description:
-        "Built by expats for expats. Decades of combined insurance expertise.",
-      iconColor: "text-purple-900",
-      bg: "from-purple-100 to-purple-50",
-      glow: "hover:shadow-purple-300/50",
-    },
-    {
-      icon: Monitor,
-      title: "Digital",
-      description:
-        "Seamless online platform. Paperless, instant quotes & management.",
-      iconColor: "text-purple-900",
-      bg: "from-purple-100 to-purple-50",
-      glow: "hover:shadow-purple-300/50",
-    },
-    {
-      icon: Headphones,
-      title: "Support",
-      description:
-        "24/7 Multilingual Assistance. Real people, real solutions.",
-      iconColor: "text-purple-900",
-      bg: "from-purple-100 to-purple-50",
-      glow: "hover:shadow-purple-300/50",
-    },
-  ];
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.2 },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { y: 30, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: { duration: 0.6, ease: "easeOut" },
-    },
-  };
-
   return (
-    <section className="py-16 px-4 md:px-8 lg:px-16">
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-100px" }}
-        className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-14"
-      >
-        {features.map((feature, index) => {
-          const Icon = feature.icon;
+    <section className="relative py-16 sm:py-10 px-4 sm:px-8 lg:px-18 overflow-hidden">
+      {/* Background */}
+      <div className="absolute inset-0" />
 
-          return (
+      <div className="relative max-w-7xl mx-auto">
+        {/* Heading */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
+        >
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900">
+            Discover the{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-600">
+              InsurBe Advantage
+            </span>
+          </h2>
+
+          <p className="mt-4 text-gray-600 max-w-2xl mx-auto">
+            Smart, transparent, and flexible insurance solutions designed for
+            modern businesses and individuals.
+          </p>
+        </motion.div>
+
+        {/* Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {advantages.map((item, index) => (
             <motion.div
-              key={index}
-              variants={itemVariants}
+              key={item.title}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.15 }}
               whileHover={{ y: -10 }}
-              className="flex flex-col items-center text-center transition-all"
+              className="
+                bg-white
+                rounded-3xl
+                p-8
+                shadow-xl
+                border border-gray-100
+                hover:shadow-2xl
+                transition
+                relative
+                overflow-hidden
+              "
             >
-              {/* Icon */}
-              <motion.div
-                whileHover={{ rotate: 360, scale: 1.1 }}
-                transition={{ duration: 0.6 }}
-                className={`mb-6 p-5 rounded-2xl bg-gradient-to-br ${feature.bg} shadow-md ${feature.glow} hover:shadow-xl`}
-              >
-                <Icon
-                  className={`w-12 h-12 ${feature.iconColor}`}
-                  strokeWidth={1.5}
-                />
-              </motion.div>
+              {/* Glow */}
+              <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-500">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-purple-100 blur-xl" />
+              </div>
 
-              {/* Title */}
-              <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-3">
-                {feature.title}
+              {/* Icon */}
+              <div className="relative z-10 w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center mb-6 shadow-lg">
+                <item.icon className="w-7 h-7 text-white" />
+              </div>
+
+              {/* Content */}
+              <h3 className="relative z-10 text-xl font-bold text-gray-900 mb-3">
+                {item.title}
               </h3>
 
-              {/* Description */}
-              <p className="text-gray-600 text-sm md:text-base leading-relaxed max-w-xs">
-                {feature.description}
+              <p className="relative z-10 text-sm text-gray-600 leading-relaxed">
+                {item.desc}
               </p>
             </motion.div>
-          );
-        })}
-      </motion.div>
+          ))}
+        </div>
+      </div>
     </section>
   );
 }

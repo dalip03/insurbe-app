@@ -34,7 +34,7 @@ const products = [
 
 export default function ProductBanner() {
   return (
-    <section  id="choose-us" className="py-16 text-center">
+    <section  id="choose-us" className="relative py-16 sm:py-10 px-4 sm:px-8 lg:px-18 overflow-hidden text-center">
       <motion.p
         initial={{ opacity: 0, y: 10 }}
         whileInView={{ opacity: 1, y: 0 }}

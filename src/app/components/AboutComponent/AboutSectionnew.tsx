@@ -55,7 +55,7 @@ export default function AboutSectionnew() {
   };
 
   return (
-    <section className="py-12 sm:py-16 px-4 md:px-8 lg:px-16 bg-gray-50">
+    <section className="relative py-16 sm:py-10 px-4 sm:px-8 lg:px-18 overflow-hidden">
       <div className="max-w-7xl mx-auto">
         {/* Header Section */}
         <motion.div

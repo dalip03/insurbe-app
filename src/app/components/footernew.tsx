@@ -167,7 +167,7 @@ export default function Footernew() {
 
             {/* Links */}
             <div>
-              <h2 className="md:text-lg text-3xl font-semibold mb-4">Gernal</h2>
+              <h2 className="md:text-lg text-3xl font-semibold mb-4">General</h2>
               <ul className="space-y-4">
                 <li>
                   <a
