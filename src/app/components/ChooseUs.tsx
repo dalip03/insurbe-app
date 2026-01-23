@@ -8,6 +8,8 @@ import {
   Home,
   Gavel,
   Plane,
+  Banknote,
+  HeartPulse,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -29,7 +31,7 @@ export default function ChooseUs() {
     {
       title: "Private Pension Scheme",
       desc: "A smarter way to plan ahead, helping you build long-term financial security with confidence.",
-      icon: PiggyBank,
+      icon: HeartPulse,
       href: "/products/pensionProducts",
     },
     {

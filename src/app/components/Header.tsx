@@ -175,7 +175,16 @@ const Header = () => {
   };
 
   return (
-    <header className="sticky top-0 w-full z-50 bg-white shadow-sm">
+    <header
+      className="
+    sticky top-0 w-full z-50
+    backdrop-blur-xl
+    bg-white/70
+    supports-backdrop-filter:bg-white/60
+    border-b border-white/20
+    shadow-[0_8px_30px_rgba(0,0,0,0.06)]
+  "
+    >
       <nav className="flex justify-between items-center px-6 md:px-10 xl:px-20 py-4 w-full">
         {/* Logo */}
         <Link href="/" className="font-bold font-serif flex items-center gap-2">
@@ -521,7 +530,8 @@ const Header = () => {
                           <AnimatePresence>
                             {((link.name === "Insurances" &&
                               mobileProductsOpen) ||
-                              (link.name === "About Us" && mobileAboutOpen)) && (
+                              (link.name === "About Us" &&
+                                mobileAboutOpen)) && (
                               <motion.div
                                 initial={{ height: 0, opacity: 0 }}
                                 animate={{ height: "auto", opacity: 1 }}

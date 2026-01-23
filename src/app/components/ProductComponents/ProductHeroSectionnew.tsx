@@ -116,9 +116,9 @@ export default function ProductHeroSectionnew() {
             transition={{ duration: 0.6, ease: "easeOut", delay: 0.15 }}
             className="relative w-full"
           >
-            <div className="relative aspect-[4/3] sm:aspect-[5/4] lg:aspect-[7/6] rounded-3xl overflow-hidden shadow-xl">
+            <div className="relative aspect-4/3 sm:aspect-5/4 lg:aspect-7/6 rounded-3xl overflow-hidden shadow-xl">
               <Image
-                src="/hero_assets/phero2.jpg"
+                src="/hero_assets/working_professionals.avif"
                 alt="Insurance coverage illustration"
                 fill
                 priority

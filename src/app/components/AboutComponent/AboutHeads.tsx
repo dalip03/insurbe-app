@@ -22,7 +22,7 @@ const teamMembers: TeamMember[] = [
   },
   {
     name: "Manjunathan B",
-    role: "CEO/Co-Founder",
+    role: "Deirector",
     image: "/about/ceo1.JPG",
     bio: [
       "Seasoned entrepreneur with over 24 years of experience in IT consultancy and business leadership. Skilled at driving strategic growth, fostering strong customer relationships, and managing key accounts to deliver sustained value and client satisfaction.",

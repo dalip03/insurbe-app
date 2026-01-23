@@ -79,8 +79,8 @@ export default function HeroInsurancenew1() {
 
   return (
     <>
-      <section className="relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-14 sm:py-20">
+      <section className="relative overflow-hidden bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-18 py-14 sm:py-20 relative">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* LEFT CONTENT */}
             <motion.div
@@ -96,16 +96,16 @@ export default function HeroInsurancenew1() {
              
               {/* Heading */}
              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
-                  Get Insured in{" "}
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-primary">
-                    Minutes
-                  </span>
-                </h1>
+  Get Insured in{" "}
+  <span className="text-transparent bg-clip-text bg-linear-to-r from-purple-600 to-primary">
+    Minutes
+  </span>
+</h1>
 
               {/* Sub text */}
-              <p className="text-gray-600 text-sm sm:text-base leading-relaxed max-w-md mx-auto lg:mx-0">
-             Insurance Made Simple for You
-              </p>
+   <p className="text-gray-500 text-sm sm:text-base leading-relaxed max-w-md mx-auto lg:mx-0">
+  Insurance Made Simple for You
+</p>
 
               {/* CTAs */}
               <div className="flex flex-col sm:flex-row gap-3 pt-2 max-w-md mx-auto lg:mx-0">
@@ -115,9 +115,9 @@ export default function HeroInsurancenew1() {
                   whileTap={{ scale: 0.96 }}
                   className="
         w-full sm:flex-1
-        px-6 py-3.5
+       
         rounded-full
-        bg-gradient-to-r from-primary to-purple-600
+        bg-linear-to-r from-primary to-purple-600
         text-white font-semibold
         shadow-lg hover:shadow-xl
         transition
@@ -146,7 +146,7 @@ export default function HeroInsurancenew1() {
 
               {/* Reviews */}
               <div className="pt-3 flex justify-center lg:justify-start">
-                <div className="inline-flex items-center gap-3 rounded-xl border bg-white px-4 py-2 shadow-sm">
+<div className="inline-flex items-center gap-3 rounded-xl border border-gray-200 bg-white px-4 py-2 shadow-sm">
                   <div className="flex gap-1">
                     {[...Array(5)].map((_, i) => (
                       <Star
