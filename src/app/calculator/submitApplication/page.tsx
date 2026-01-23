@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePremiumStore } from "@/app/stores/premiumStore";
 import { useJourneyStore } from "@/app/stores/journeyStore";
+import { Shield } from "lucide-react";
 
 /* ---------------- Helpers ---------------- */
 
@@ -226,269 +227,311 @@ export default function SubmitApplication() {
   /* ---------- UI ---------- */
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-12">
-      {/* HEADER */}
-      <motion.div className="w-full h-40 bg-primary flex items-center justify-center">
-        <h1 className="text-3xl font-bold text-white">
-          Complete Your Application
-        </h1>
-      </motion.div>
+    <div className="min-h-screen pb-12">
+      {/* ========== HEADER - Like the image ========== */}
+      <div className="w-full bg-gradient-to-br from-gray-50 to-purple-50/20 py-16 px-4">
+        <div className="max-w-4xl mx-auto text-center">
+          {/* Badge */}
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-purple-100 border border-purple-200 mb-6"
+          >
+            <Shield className="w-5 h-5 text-purple-600" />
+            <span className="text-purple-700 font-bold text-sm tracking-wide ">
+              InsurBe 
+            </span>
+          </motion.div>
+
+          {/* Main Heading */}
+          <motion.h1
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="text-5xl md:text-6xl font-extrabold text-gray-900 mb-4"
+          >
+            InsurBe Application
+          </motion.h1>
+
+          {/* Subheading */}
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto"
+          >
+            You can only apply for this insurance, if you provide an address in Germany.
+          </motion.p>
+        </div>
+      </div>
 
       {/* FORM */}
-      <motion.div className="max-w-3xl mx-auto bg-white rounded-lg shadow-lg p-8 mt-6">
+      <motion.div className="max-w-3xl mx-auto bg-white/80 backdrop-blur-sm rounded-2xl shadow-2xl p-8 mt-8 border border-white/40">
         <motion.form
           variants={containerVariants}
           initial="hidden"
           animate="visible"
           onSubmit={handleSubmit}
-          className="space-y-6"
+          className="space-y-8"
         >
           <motion.div
             initial={{ y: 50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="space-y-6"
+            className="space-y-8"
           >
-            {/* Salutation */}
-            <motion.div variants={itemVariants}>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Salutation *
-              </label>
-              <motion.select
-                whileFocus={{ scale: 1.01 }}
-                value={salutation}
-                onChange={(e) => setSalutation(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent"
-                required
-              >
-                <option value="Mr">Mr</option>
-                <option value="Mrs">Mrs</option>
-                <option value="Ms">Ms</option>
-                <option value="Dr">Dr</option>
-              </motion.select>
-            </motion.div>
-
-            {/* Name Fields */}
-            <motion.div
-              variants={itemVariants}
-              className="grid grid-cols-1 md:grid-cols-2 gap-4"
-            >
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  First Name *
-                </label>
-                <motion.input
-                  whileFocus={{ scale: 1.01 }}
-                  type="text"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent"
-                  placeholder="Max"
-                  required
-                />
+            {/* ========== SECTION 1: PERSONAL DETAILS - Single Blue Theme ========== */}
+            <div className="space-y-6">
+              <div className="bg-gradient-to-r from-orange-400 to-pink-600 rounded-xl p-5 shadow-lg border-2 border-blue-200">
+                <h2 className="text-2xl font-bold text-white">Personal Details</h2>
               </div>
 
-              <div>
+              {/* Salutation */}
+              <motion.div variants={itemVariants} className="space-y-3">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Last Name *
-                </label>
-                <motion.input
-                  whileFocus={{ scale: 1.01 }}
-                  type="text"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent"
-                  placeholder="Mustermann"
-                  required
-                />
-              </div>
-            </motion.div>
-
-            {/* DOB and Gender */}
-            <motion.div
-              variants={itemVariants}
-              className="grid grid-cols-1 md:grid-cols-2 gap-4"
-            >
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Date of Birth *
-                </label>
-                <motion.input
-                  whileFocus={{ scale: 1.01 }}
-                  type="date"
-                  value={dob}
-                  onChange={(e) => setDob(e.target.value)}
-                  max={new Date().toISOString().split("T")[0]}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent"
-                  required
-                />
-                <AnimatePresence>
-                  {dob && (
-                    <motion.p
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: "auto" }}
-                      exit={{ opacity: 0, height: 0 }}
-                      className="text-xs text-gray-500 mt-1"
-                    >
-                      Age: {calculateAge(dob)} years
-                    </motion.p>
-                  )}
-                </AnimatePresence>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Gender *
+                  Salutation *
                 </label>
                 <motion.select
                   whileFocus={{ scale: 1.01 }}
-                  value={gender}
-                  onChange={(e) => setGender(e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent"
+                  value={salutation}
+                  onChange={(e) => setSalutation(e.target.value)}
+                  className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                   required
                 >
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                  <option value="Other">Other</option>
+                  <option value="Mr">Mr</option>
+                  <option value="Mrs">Mrs</option>
+                  <option value="Ms">Ms</option>
+                  <option value="Dr">Dr</option>
                 </motion.select>
-              </div>
-            </motion.div>
+              </motion.div>
 
-            {/* Coverage Start */}
-            <motion.div variants={itemVariants}>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Coverage Start Date (Auto-calculated)
-              </label>
+              {/* Name Fields */}
+              <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    First Name *
+                  </label>
+                  <motion.input
+                    whileFocus={{ scale: 1.01 }}
+                    type="text"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                    placeholder="Max"
+                    required
+                  />
+                </div>
 
-              <motion.input
-                type="text"
-                value={coverageStart}
-                readOnly
-                className="w-full border border-gray-300 rounded-lg px-4 py-3 bg-gray-100 cursor-not-allowed"
-              />
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Last Name *
+                  </label>
+                  <motion.input
+                    whileFocus={{ scale: 1.01 }}
+                    type="text"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                    placeholder="Mustermann"
+                    required
+                  />
+                </div>
+              </motion.div>
 
-              <p className="text-xs text-gray-500 mt-1">
-                Based on your cancellation month or default 2-day rule.
-              </p>
-            </motion.div>
+              {/* DOB, Gender & Coverage Start */}
+              <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Date of Birth *
+                  </label>
+                  <motion.input
+                    whileFocus={{ scale: 1.01 }}
+                    type="date"
+                    value={dob}
+                    onChange={(e) => setDob(e.target.value)}
+                    max={new Date().toISOString().split("T")[0]}
+                    className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                    required
+                  />
+                  <AnimatePresence>
+                    {dob && (
+                      <motion.p
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="text-xs text-gray-500 mt-1"
+                      >
+                        Age: {calculateAge(dob)} years
+                      </motion.p>
+                    )}
+                  </AnimatePresence>
+                </div>
 
-            {/* Email Address */}
-            <motion.div variants={itemVariants}>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Email Address *
-              </label>
-              <motion.input
-                whileFocus={{ scale: 1.01 }}
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent"
-                placeholder="max.mustermann@example.com"
-                required
-              />
-              <p className="text-xs text-gray-500 mt-1">
-                We&apos;ll send your policy documents to this email
-              </p>
-            </motion.div>
-
-            {/* Mobile Number */}
-            <motion.div variants={itemVariants}>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Mobile Number *
-              </label>
-              <motion.input
-                whileFocus={{ scale: 1.01 }}
-                type="tel"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent"
-                placeholder="+49 123 456 7890"
-                required
-              />
-              <p className="text-xs text-gray-500 mt-1">
-                For important updates about your policy
-              </p>
-            </motion.div>
-
-            {/* Address (Optional) */}
-            <motion.div variants={itemVariants}>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Address (Optional)
-              </label>
-              <motion.textarea
-                whileFocus={{ scale: 1.01 }}
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                rows={3}
-                className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent"
-                placeholder="Enter your full address"
-              />
-              <p className="text-xs text-gray-500 mt-1">
-                This helps us process your application faster
-              </p>
-            </motion.div>
-
-            {/* ✅ Important Information + Note about documents */}
-            <motion.div
-              variants={itemVariants}
-              whileHover={{ scale: 1.01 }}
-              className="bg-purple-50 border border-purple-200 rounded-lg p-6"
-            >
-              <h3 className="font-semibold text-gray-900 mb-3">
-                Important Information
-              </h3>
-              <ul className="space-y-2 text-sm text-gray-700">
-                {[
-                  "Your application will be processed within 24-48 hours",
-                  "You'll receive a confirmation email with your policy number",
-                  "Coverage begins on your selected start date",
-                  "You can cancel within 14 days for a full refund",
-                ].map((item, index) => (
-                  <motion.li
-                    key={index}
-                    initial={{ x: -20, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    transition={{ delay: 0.8 + index * 0.1 }}
-                    className="flex items-start"
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Gender *
+                  </label>
+                  <motion.select
+                    whileFocus={{ scale: 1.01 }}
+                    value={gender}
+                    onChange={(e) => setGender(e.target.value)}
+                    className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                    required
                   >
-                    <span className="mr-2">•</span>
-                    <span>{item}</span>
-                  </motion.li>
-                ))}
-              </ul>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                  </motion.select>
+                </div>
 
-              {/* ✅ Note about documents */}
-              <div className="mt-4 pt-4 border-t border-purple-300">
-                <p className="text-sm text-gray-600 italic">
-                  <strong>Note:</strong> Some documents may not be automatically
-                  generated because multiple tariff IDs are being processed. Our
-                  team is working on this, and we'll share any missing documents
-                  with you as soon as they're available.
-                </p>
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Coverage Start Date (Auto-calculated)
+                  </label>
+                  <motion.input
+                    type="text"
+                    value={coverageStart}
+                    readOnly
+                    className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 bg-gray-100 cursor-not-allowed"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Based on your cancellation month or default 2-day rule.
+                  </p>
+                </div>
+              </motion.div>
+            </div>
+
+            {/* ========== SECTION 2: Contact Information & Address - Blue to Indigo ========== */}
+            <div className="space-y-4">
+              <div className="bg-gradient-to-r from-primary via-indigo-600 to-purple-700 rounded-xl p-4 shadow-lg">
+                <h2 className="text-xl font-bold text-white">Contact Information & Address</h2>
               </div>
-            </motion.div>
 
-            {/* Terms and Conditions */}
-            <motion.div variants={itemVariants} className="flex items-start">
-              <input
-                type="checkbox"
-                id="terms"
-                checked={agreeTerms}
-                onChange={(e) => setAgreeTerms(e.target.checked)}
-                className="mt-1 h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
-                required
-              />
-              <label htmlFor="terms" className="ml-3 text-sm text-gray-700">
-                I agree to the{" "}
-                <a href="/terms" className="text-primary hover:underline">
-                  Terms and Conditions
-                </a>{" "}
-                and{" "}
-                <a href="/privacy" className="text-primary hover:underline">
-                  Privacy Policy
-                </a>
-              </label>
-            </motion.div>
+              <motion.div variants={itemVariants} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Email Address *
+                  </label>
+                  <motion.input
+                    whileFocus={{ scale: 1.01 }}
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                    placeholder="max.mustermann@example.com"
+                    required
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    We'll send your policy documents to this email
+                  </p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Mobile Number *
+                  </label>
+                  <motion.input
+                    whileFocus={{ scale: 1.01 }}
+                    type="tel"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                    placeholder="+49 123 456 7890"
+                    required
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    For important updates about your policy
+                  </p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Address (Optional)
+                  </label>
+                  <motion.textarea
+                    whileFocus={{ scale: 1.01 }}
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                    rows={3}
+                    className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                    placeholder="Enter your full address"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    This helps us process your application faster
+                  </p>
+                </div>
+              </motion.div>
+            </div>
+
+            {/* ========== SECTION 3: Important Notice & Legal Agreement - Pink to Amber ========== */}
+            <div className="space-y-4">
+              <div className="bg-gradient-to-r from-pink-500 via-rose-500 to-amber-500 rounded-xl p-4 shadow-lg">
+                <h2 className="text-xl font-bold text-white">Important Notice & Agreement</h2>
+              </div>
+
+              {/* Important Info Box */}
+              <motion.div
+                variants={itemVariants}
+                whileHover={{ scale: 1.01 }}
+                className="bg-gradient-to-br from-pink-50 to-rose-50 border-2 border-pink-200 rounded-xl p-6 shadow-sm"
+              >
+                <h3 className="font-semibold text-gray-900 mb-3">
+                  Important Information
+                </h3>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  {[
+                    "Your application will be processed within 24-48 hours",
+                    "You'll receive a confirmation email with your policy number",
+                    "Coverage begins on your selected start date",
+                    "You can cancel within 14 days for a full refund",
+                  ].map((item, index) => (
+                    <motion.li
+                      key={index}
+                      initial={{ x: -20, opacity: 0 }}
+                      animate={{ x: 0, opacity: 1 }}
+                      transition={{ delay: 0.8 + index * 0.1 }}
+                      className="flex items-start"
+                    >
+                      <span className="mr-2 text-pink-600 font-bold">•</span>
+                      <span>{item}</span>
+                    </motion.li>
+                  ))}
+                </ul>
+
+                {/* Note about documents */}
+                <div className="mt-4 pt-4 border-t border-pink-300">
+                  <p className="text-sm text-gray-600 italic">
+                    <strong>Note:</strong> Some documents may not be automatically
+                    generated because multiple tariff IDs are being processed. Our
+                    team is working on this, and we'll share any missing documents
+                    with you as soon as they're available.
+                  </p>
+                </div>
+              </motion.div>
+
+              {/* Terms Checkbox */}
+              <motion.div variants={itemVariants} className="flex items-start bg-amber-50 border-2 border-amber-200 rounded-xl p-4">
+                <input
+                  type="checkbox"
+                  id="terms"
+                  checked={agreeTerms}
+                  onChange={(e) => setAgreeTerms(e.target.checked)}
+                  className="mt-1 h-5 w-5 text-amber-600 focus:ring-amber-500 border-gray-300 rounded"
+                  required
+                />
+                <label htmlFor="terms" className="ml-3 text-sm text-gray-700">
+                  I agree to the{" "}
+                  <a href="/terms" className="text-amber-600 font-semibold hover:underline">
+                    Terms and Conditions
+                  </a>{" "}
+                  and{" "}
+                  <a href="/privacy" className="text-amber-600 font-semibold hover:underline">
+                    Privacy Policy
+                  </a>
+                </label>
+              </motion.div>
+            </div>
 
             {/* Error Display */}
             <AnimatePresence>
@@ -497,27 +540,27 @@ export default function SubmitApplication() {
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg"
+                  className="bg-red-50 border-2 border-red-300 text-red-700 px-4 py-3 rounded-lg font-medium"
                 >
-                  {error}
+                  ⚠️ {error}
                 </motion.div>
               )}
             </AnimatePresence>
           </motion.div>
 
-          {/* Submit */}
+          {/* Submit Button - Multi-color Gradient */}
           <motion.button
             type="submit"
             disabled={loading}
-            whileHover={!loading ? { scale: 1.02 } : {}}
+            whileHover={!loading ? { scale: 1.02, y: -2 } : {}}
             whileTap={!loading ? { scale: 0.98 } : {}}
-            className={`w-full py-4 rounded-lg font-semibold text-white transition-all ${
+            className={`w-full py-4 rounded-xl font-bold text-lg text-white transition-all shadow-xl ${
               loading
                 ? "bg-gray-400 cursor-not-allowed"
-                : "bg-primary hover:bg-primary/90"
+                : "bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 hover:from-purple-700 hover:via-pink-700 hover:to-red-700 shadow-purple-500/50"
             }`}
           >
-            {loading ? "Submitting..." : "Submit Application"}
+            {loading ? "Submitting..." : "Submit Application ✨"}
           </motion.button>
         </motion.form>
       </motion.div>
