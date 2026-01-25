@@ -4,55 +4,62 @@ import { motion } from "framer-motion";
 
 export default function SustainableSection() {
   return (
-    <section className="relative py-16 px-4 md:px-8 lg:px-16 overflow-hidden">
-      {/* Decorative Blobs */}
+    <section className="relative py-24 px-4 sm:px-6 lg:px-12 overflow-hidden bg-linear-to-br from-slate-50 via-purple-50/40 to-blue-50/40">
+      
+      
+      
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
-        whileInView={{ opacity: 0.6, scale: 1 }}
-        transition={{ duration: 1 }}
-        className="absolute -top-20 -left-20 w-64 h-64  rounded-full blur-3xl"
-      />
-      <motion.div
-        initial={{ opacity: 0, scale: 0.8 }}
-        whileInView={{ opacity: 0.4, scale: 1 }}
+        whileInView={{ opacity: 0.3, scale: 1 }}
         transition={{ duration: 1, delay: 0.2 }}
-        className="absolute top-40 right-10 w-48 h-48  rounded-full blur-3xl"
+        viewport={{ once: true }}
+        className="absolute top-40 right-10 w-60 h-60 bg-blue-400 rounded-full blur-3xl"
       />
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
-        whileInView={{ opacity: 0.5, scale: 1 }}
+        whileInView={{ opacity: 0.25, scale: 1 }}
         transition={{ duration: 1, delay: 0.4 }}
-        className="absolute -bottom-20 right-20 w-72 h-72  rounded-full blur-3xl"
+        viewport={{ once: true }}
+        className="absolute -bottom-24 right-24 w-80 h-80 bg-pink-400 rounded-full blur-3xl"
       />
 
       <div className="max-w-5xl mx-auto relative z-10">
-        {/* Title */}
+        
+        {/* Heading */}
         <motion.h2
           initial={{ y: 30, opacity: 0 }}
           whileInView={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 mb-12"
+          className="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-10"
         >
-          Building a <span className="text-primary">sustainable</span> company
+          Building a{" "}
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600">
+            responsible and future-ready
+          </span>{" "}
+          insurance platform
         </motion.h2>
 
         {/* Content */}
         <motion.div
           initial={{ y: 30, opacity: 0 }}
           whileInView={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
+          transition={{ duration: 0.6, delay: 0.15 }}
           viewport={{ once: true }}
-          className="text-gray-700 text-base md:text-lg leading-relaxed space-y-6"
+          className="text-gray-700 text-base sm:text-lg leading-relaxed space-y-6 backdrop-blur-xl bg-white/70 border border-white/40 rounded-3xl p-8 shadow-xl shadow-purple-500/10"
         >
           <p>
-            Insurbe is proactively undertaking corporate social responsibility
-            activities. We believe that, as a insurance company, CSR deserves
-            our special attention. Protecting the health and well-being of our
-            customers, employees and communities is our main mission. By
-            continuing our ongoing efforts and taking more and more social,
-            environmental and governance initiatives, we can achieve a positive
-            impact for our people and the world.
+            At InsurBe, responsibility goes beyond insurance coverage. We focus on
+            building secure, transparent, and technology-driven solutions that
+            protect people while respecting long-term social and environmental
+            impact.
+          </p>
+
+          <p>
+            By combining advanced technology, strong security standards, and
+            smart operational practices, we aim to create sustainable value for
+            our customers, partners, and the communities we serve—today and in
+            the future.
           </p>
         </motion.div>
       </div>

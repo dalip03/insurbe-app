@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { Check } from "lucide-react";
+import { Check, Gift, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 
@@ -99,13 +99,26 @@ export default function ProviderComparison() {
           transition={{ duration: 0.6 }}
           className="text-center mb-14"
         >
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900">
+          {/* New Badge */}
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.3, type: "spring" }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-purple-100 to-blue-100 border-2 border-purple-200 mb-6 shadow-lg"
+          >
+            
+            <span className="text-sm font-bold text-purple-700 uppercase tracking-wide">
+              Provider Comparison
+            </span>
+          </motion.div>
+
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 leading-tight sm:px-20">
             Compare{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-600">
+            <span className="text-transparent bg-clip-text bg-linear-to-r from-purple-600  to-pink-500">
               public health insurance providers
             </span>
           </h1>
-          <p className="mt-5 text-gray-600 text-base sm:text-lg max-w-4xl mx-auto">
+          <p className="mt-5 text-gray-600 text-base sm:text-lg max-w-4xl mx-auto font-medium">
             Core benefits are the same — service quality makes the difference.
           </p>
         </motion.div>
@@ -113,7 +126,7 @@ export default function ProviderComparison() {
         {/* ========================== DESKTOP VIEW ========================== */}
         <div className="hidden lg:grid grid-cols-[260px_repeat(3,1fr)] border-t border-gray-200">
           {/* LEFT LABELS */}
-          <div className="py-8 space-y-10 font-medium text-gray-700">
+          <div className="py-8 space-y-10 font-semibold text-gray-700">
             <div />
             <div>Your contribution</div>
             <div>English support</div>
@@ -121,7 +134,11 @@ export default function ProviderComparison() {
             <div>Processing speed</div>
             <div>Dependents coverage</div>
             <div>Highlight</div>
-            <div>Bonus program</div>
+            {/* Updated Bonus Label */}
+            <div className="flex items-center gap-2">
+              <Gift className="w-4 h-4 text-purple-600" />
+              <span>Bonus program</span>
+            </div>
           </div>
 
           {providers.map((p) => (
@@ -139,23 +156,29 @@ export default function ProviderComparison() {
                     height={28}
                     className="object-contain"
                   />
-                  <span className="font-semibold text-gray-900">{p.name}</span>
+                  <span className="font-bold text-gray-900">{p.name}</span>
                 </div>
 
-                <button
+                {/* Enhanced Button */}
+                <motion.button
+                  type="button"
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={() => handleSignup(p.id)}
-                  className="mt-4 w-full rounded-lg py-2 text-sm font-semibold text-white
-                    bg-gradient-to-r from-primary to-purple-600
-                    hover:opacity-90 transition shadow-md"
+                  className="mt-4 w-full rounded-xl py-3 text-sm font-bold text-white
+                    bg-gradient-to-r from-purple-600 via-primary to-blue-600
+                    hover:from-purple-700 hover:via-primary/90 hover:to-blue-700
+                    transition-all shadow-lg hover:shadow-xl shadow-purple-500/30
+                    focus:outline-none focus:ring-4 focus:ring-purple-300"
                 >
-                  Sign up
-                </button>
+                  Sign up →
+                </motion.button>
               </div>
 
               <div className="text-center font-semibold">
                 € —
                 <div>
-                  <button className="text-sm underline text-gray-600">
+                  <button type="button" className="text-sm underline text-gray-600 hover:text-primary transition">
                     Calculate
                   </button>
                 </div>
@@ -170,7 +193,15 @@ export default function ProviderComparison() {
               </div>
 
               <p className="text-sm text-center text-gray-700">{p.highlight}</p>
-              <p className="text-sm text-center text-gray-700">{p.bonus}</p>
+              
+              {/* Enhanced Bonus Display */}
+              <div className="flex flex-col items-center gap-2">
+                <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-200 rounded-lg px-4 py-2 shadow-sm">
+                  <p className="text-sm font-bold text-center bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
+                    {p.bonus}
+                  </p>
+                </div>
+              </div>
             </div>
           ))}
         </div>
@@ -191,13 +222,20 @@ export default function ProviderComparison() {
                   className="object-contain"
                 />
 
-                <button
+                {/* Enhanced Mobile Button */}
+                <motion.button
+                  type="button"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={() => handleSignup(p.id)}
-                  className="rounded-lg px-4 py-2 text-sm font-semibold text-white
-                    bg-gradient-to-r from-primary to-purple-600"
+                  className="rounded-xl px-5 py-2.5 text-sm font-bold text-white
+                    bg-gradient-to-r from-purple-600 via-primary to-blue-600
+                    hover:from-purple-700 hover:via-primary/90 hover:to-blue-700
+                    transition-all shadow-lg shadow-purple-500/30
+                    focus:outline-none focus:ring-4 focus:ring-purple-300"
                 >
-                  Sign up
-                </button>
+                  Sign up →
+                </motion.button>
               </div>
 
               <div className="space-y-3 text-sm">
@@ -226,9 +264,17 @@ export default function ProviderComparison() {
                   <p className="text-gray-600">{p.highlight}</p>
                 </div>
 
+                {/* Enhanced Mobile Bonus */}
                 <div>
-                  <span className="font-medium">Bonus</span>
-                  <p className="text-gray-600">{p.bonus}</p>
+                  <div className="flex items-center gap-2 mb-2">
+                    <Gift className="w-4 h-4 text-purple-600" />
+                    <span className="font-bold text-gray-900">Bonus Program</span>
+                  </div>
+                  <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-200 rounded-lg px-4 py-2.5 shadow-sm">
+                    <p className="text-sm font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
+                      {p.bonus}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>

@@ -32,7 +32,7 @@ export default function AboutHero() {
             </h1> */}
 
              <h1 className="text-4xl sm:text-5xl  md:text-5xl font-black text-gray-900 leading-tight tracking-tight">
-              InsurBe – Your Tech-Powered Insurance Partner</h1>
+              InsurBe – Your Tech- <span className="text-transparent bg-clip-text bg-linear-to-r from-purple-600 to-pink-500">Powered Insurance Partner</span> </h1>
 
             {/* Subheading */}
             {/* <p className="text-base sm:text-lg text-gray-800">
@@ -56,12 +56,12 @@ export default function AboutHero() {
               </p>
 
               <p>
-               Our mission isTo deliver seamless protection and peace of mind through advanced tech, smart algorithms, and unbeatable value.
+              We deliver seamless protection and peace of mind through advanced technology, intelligent systems, exceptional value, and uncompromising security.
                 
               </p>
 
               <p>
-                Powered by the latest technology, we&apos;re making insurance simpler and more accessible for everyone. Join thousands who&apos;ve embraced smarter, modern protection.
+                Powered by the latest technology, we&apos;re making insurance simpler and more accessible for expats. Join thousands who&apos;ve embraced smarter, modern protection.
               </p>
               <p>Get started today – protect what matters most.</p>
             </div>

@@ -387,7 +387,7 @@ export default function SubmitApplication() {
 
                 <div className="md:col-span-2">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Coverage Start Date (Auto-calculated)
+                    Coverage Start Date 
                   </label>
                   <motion.input
                     type="text"

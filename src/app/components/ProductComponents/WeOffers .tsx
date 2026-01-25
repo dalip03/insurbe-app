@@ -81,7 +81,7 @@ export default function WeOffers() {
         {/* Gradient Heading */}
         <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
           <span>Plans </span>
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-600">
+          <span className="text-transparent bg-clip-text bg-linear-to-r from-purple-600 via-pink-600 to-blue-600">
             We Offer
           </span>
         </h2>

@@ -29,7 +29,7 @@ export default function AboutSectionnew() {
     {
       icon: ShieldCheck,
       title: "Dependable insurance provider",
-      description: "Insurance brand you can trust on",
+      description: "Choose from insurance brands you can trust on",
     },
   ];
 
@@ -67,7 +67,7 @@ export default function AboutSectionnew() {
         >
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
             We Actively Strive To Exceed Our <br className="hidden sm:block" />
-            Customers' <span className="text-primary">Expectations</span>
+            <span className="text-transparent bg-clip-text bg-linear-to-r from-purple-600 to-pink-500"> Customers' Expectations</span>
           </h2>
           <p className="text-gray-700 text-sm sm:text-base lg:text-lg">
             Best Offers at competitive prices, never seen before
@@ -95,8 +95,8 @@ export default function AboutSectionnew() {
                     className="flex items-start gap-3 sm:gap-4 group"
                   >
                     {/* Icon */}
-                    <div className="flex-shrink-0 mt-0.5 sm:mt-1">
-                      <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-primary flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all duration-300">
+                    <div className="shrink-0 mt-0.5 sm:mt-1">
+                      <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-linear-to-br from-primary to-purple-600 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all duration-300">
                         <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-gray-100 " />
                       </div>
                     </div>
@@ -124,7 +124,7 @@ export default function AboutSectionnew() {
             viewport={{ once: true }}
             className="relative w-full order-1 lg:order-2"
           >
-           <div className="relative w-full max-w-sm sm:max-w-md lg:max-w-lg aspect-[4/4] rounded-3xl overflow-hidden shadow-2xl mx-auto">
+           <div className="relative w-full max-w-sm sm:max-w-md lg:max-w-lg aspect-4/4 rounded-3xl overflow-hidden shadow-2xl mx-auto">
   <Image
     src="/hero_assets/insurance.jpeg"
     alt="Team Member"

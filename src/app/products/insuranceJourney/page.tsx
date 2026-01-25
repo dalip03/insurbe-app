@@ -7,6 +7,15 @@ import React, {
   useMemo,
   useCallback,
 } from "react";
+import {
+  Briefcase,
+  UserCheck,
+  Euro,
+  Baby,
+  CalendarDays,
+  Globe,
+} from "lucide-react";
+
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
@@ -31,7 +40,7 @@ interface Country {
 type NormalizedEmployment = "self-employed" | "employed" | "other";
 
 const getNormalizedEmployment = (
-  status: string | null
+  status: string | null,
 ): NormalizedEmployment => {
   if (!status) return "other";
   const lower = status.toLowerCase();
@@ -119,7 +128,7 @@ export default function InsuranceJourney() {
         annual: Math.round(totalAnnual * 100) / 100,
       };
     },
-    []
+    [],
   );
 
   // Fetch countries
@@ -136,7 +145,7 @@ export default function InsuranceJourney() {
         }
 
         const res = await fetch(
-          "https://restcountries.com/v3.1/all?fields=name,flags,cca2"
+          "https://restcountries.com/v3.1/all?fields=name,flags,cca2",
         );
         const data: CountryAPI[] = await res.json();
 
@@ -153,7 +162,7 @@ export default function InsuranceJourney() {
 
         localStorage.setItem(
           "countries_cache",
-          JSON.stringify({ data: list, timestamp: Date.now() })
+          JSON.stringify({ data: list, timestamp: Date.now() }),
         );
       } catch (e) {
         console.error("Error loading countries", e);
@@ -192,7 +201,7 @@ export default function InsuranceJourney() {
       setEmploymentStatus(val);
       setStep(val === "Others" ? 99 : 2);
     },
-    [setEmploymentStatus]
+    [setEmploymentStatus],
   );
 
   const handleIncomeSelect = useCallback(
@@ -206,7 +215,7 @@ export default function InsuranceJourney() {
       if (val === "<30000") setStep(98);
       else setStep(3);
     },
-    [setIncomeRange, setActualIncome]
+    [setIncomeRange, setActualIncome],
   );
 
   const handleOtherSubmit = useCallback(() => {
@@ -272,7 +281,7 @@ export default function InsuranceJourney() {
       setIsDropdownOpen(false);
       setSearchTerm("");
     },
-    [setSelectedCountry]
+    [setSelectedCountry],
   );
 
   const handleCountrySubmit = useCallback(async () => {
@@ -334,13 +343,13 @@ export default function InsuranceJourney() {
       const currentYear = new Date().getFullYear();
       const age = currentDob ? currentYear - parseInt(currentDob) : 25;
       const normalizedEmployment = getNormalizedEmployment(
-        currentEmploymentStatus
+        currentEmploymentStatus,
       );
 
       const tkPrice = calculateTKPrice(
         currentActualIncome,
         currentHasChildren,
-        age
+        age,
       );
       let adjustedTkEmployeeMonthly = tkPrice.employeeMonthly;
       if (normalizedEmployment === "self-employed")
@@ -419,21 +428,21 @@ export default function InsuranceJourney() {
 
   const selectedCountryData = useMemo(
     () => countries.find((c) => c.name === selectedCountry),
-    [countries, selectedCountry]
+    [countries, selectedCountry],
   );
 
   const filteredCountries = useMemo(
     () =>
       countries.filter((c) =>
-        c.name.toLowerCase().includes(searchTerm.toLowerCase())
+        c.name.toLowerCase().includes(searchTerm.toLowerCase()),
       ),
-    [countries, searchTerm]
+    [countries, searchTerm],
   );
 
   const currentYear = new Date().getFullYear();
   const birthYears = useMemo(
     () => Array.from({ length: 100 }, (_, i) => currentYear - 18 - i),
-    [currentYear]
+    [currentYear],
   );
 
   const stepImages: Record<number, string> = useMemo(
@@ -446,12 +455,12 @@ export default function InsuranceJourney() {
       4: "/gifs_assets/step2.gif",
       5: "/gifs_assets/step3.svg",
     }),
-    []
+    [],
   );
 
   // ================= UI ===================
   return (
-    <section className="bg-gradient-to-br from-[#f5f0ff] to-white py-16 px-4 md:px-10 min-h-screen">
+    <section className="relative min-h-screen py-20 px-4 md:px-10">
       {/* Header */}
       <motion.div
         initial={{ y: -30, opacity: 0 }}
@@ -459,9 +468,14 @@ export default function InsuranceJourney() {
         transition={{ duration: 0.6 }}
         className="max-w-3xl mx-auto text-center mb-10"
       >
-        <h1 className="text-3xl md:text-4xl font-bold text-black mb-3">
-          Just 2 minutes to find your best-fit insurance type.
+        <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-3">
+          Just{" "}
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-primary">
+            2 minutes
+          </span>{" "}
+          to find your best-fit insurance
         </h1>
+
         <p className="text-gray-500 text-base md:text-lg">
           No calls, no commitments — unless you want them.
         </p>
@@ -492,7 +506,11 @@ export default function InsuranceJourney() {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="w-full max-w-6xl mx-auto"
+            className="w-full max-w-6xl mx-auto
+bg-white/70 backdrop-blur-xl
+border border-white/40
+rounded-3xl shadow-xl shadow-purple-500/10
+p-6 md:p-10"
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
               <motion.div
@@ -511,11 +529,9 @@ export default function InsuranceJourney() {
               </motion.div>
 
               <motion.div variants={containerVariants} className="space-y-4">
-                <motion.h2
-                  variants={itemVariants}
-                  className="text-xl font-semibold mb-6 text-gray-700"
-                >
-                  What&apos;s your Employment Status?
+                <motion.h2 className="text-xl font-semibold text-gray-800 flex items-center gap-3">
+                  <Briefcase className="w-5 h-5 text-primary" />
+                  What’s your employment status?
                 </motion.h2>
                 {["Self-employed/Freelancer", "Employed", "Others"].map(
                   (item) => (
@@ -525,11 +541,14 @@ export default function InsuranceJourney() {
                       whileHover={{ scale: 1.02, x: 5 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={() => handleEmploymentSelect(item)}
-                      className="w-full p-4 cursor-pointer border-2 rounded-lg text-left hover:border-primary hover:bg-primary/5 transition focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                      className="w-full p-4 rounded-xl border-2
+bg-white hover:bg-primary/5
+hover:border-primary transition
+font-medium text-gray-800"
                     >
                       {item}
                     </motion.button>
-                  )
+                  ),
                 )}
               </motion.div>
             </div>
@@ -639,11 +658,9 @@ export default function InsuranceJourney() {
               </motion.div>
 
               <motion.div variants={containerVariants} className="space-y-4">
-                <motion.h2
-                  variants={itemVariants}
-                  className="text-xl font-semibold mb-6 text-gray-700"
-                >
-                  How much is your yearly gross (pretax) income?
+                <motion.h2 className="text-xl font-semibold text-gray-800 flex items-center gap-3">
+                  <Euro className="w-5 h-5 text-primary" />
+                  Your yearly gross income
                 </motion.h2>
                 <motion.button
                   variants={itemVariants}

@@ -84,7 +84,7 @@ export default function ChooseUs() {
         >
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">
             Explore our range of{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-600">
+            <span className="text-transparent bg-clip-text bg-linear-to-r from-purple-600 to-pink-500">
               Insurance Products
             </span>
           </h2>

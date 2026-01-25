@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 interface TeamMember {
   name: string;
@@ -10,23 +11,20 @@ interface TeamMember {
 }
 
 const teamMembers: TeamMember[] = [
-   {
+  {
     name: "Marvin Fürst",
     role: "Founder & CEO",
     image: "/about/marvin.jpeg",
     bio: [
       "Founded by an industry expert with over a decade of experience, our company was created to simplify insurance through transparency, trust, and smart digital solutions designed for modern life.",
-    // "Bussiness + IT - HWR Berlin CFEP - Frankfurt school of finance & management 34d Versicherungsfachmann 34f Finanzanlagenfachmann ",
-    // "12+ year experience in insurance + investment consulting and Teamlead",
     ],
   },
   {
     name: "Manjunathan B",
-    role: "Deirector",
+    role: "Director",
     image: "/about/ceo1.JPG",
     bio: [
       "Seasoned entrepreneur with over 24 years of experience in IT consultancy and business leadership. Skilled at driving strategic growth, fostering strong customer relationships, and managing key accounts to deliver sustained value and client satisfaction.",
-      // "At Insurbe, Abi leads the technology vision and strategy, driving innovation and excellence in our AI-powered insurance solutions.",
     ],
   },
   {
@@ -35,93 +33,88 @@ const teamMembers: TeamMember[] = [
     image: "/about/Abhinandan.JPG",
     bio: [
       "Over a decade of experience in research and building scalable AI solutions for enterprises. Proven track record of defining technology vision and strategy, driving innovation and excellence in AI-powered insurance solutions.",
-      // "At Insurbe, Abi leads the technology vision and strategy, driving innovation and excellence in our AI-powered insurance solutions.",
     ],
   },
   {
     name: "Safiya R",
-    role: "Chief of staff",
+    role: "Chief of Staff",
     image: "/about/safiya.JPG",
     bio: [
       "Experienced in operations, strategy, and collaboration with a proven ability to streamline processes, align priorities, and ensure smooth, efficient execution.",
-      // "With her exceptional organizational skills, strategic mindset, and collaborative approach, Safiya plays a pivotal role in ensuring our company's operations run smoothly and efficiently.",
     ],
   },
- 
 ];
 
 export default function AboutHeads() {
   return (
-    <section className="relative py-16 sm:py-10 px-4 sm:px-8 lg:px-18 overflow-hidden bg-primary">
+    <section className="relative py-24 px-4 sm:px-6 lg:px-18 bg-linear-to-br from-slate-50 via-purple-50/40 to-blue-50/40 overflow-hidden">
+     
       <div className="max-w-7xl mx-auto">
-        
+
         {/* Section Header */}
-        <div className="flex items-center justify-center mb-12 sm:mb-16">
-          <div className="flex items-center gap-4 w-full max-w-md">
-            <div className="h-[2px] flex-1 bg-white"></div>
-            <h2 className="text-white text-3xl  font-bold whitespace-nowrap">
-              Our Team
-            </h2>
-            <div className="h-[2px] flex-1 bg-white"></div>
-          </div>
+        <div className="text-center mb-20">
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-3xl sm:text-4xl font-extrabold"
+          >
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600">
+              Meet the people
+            </span>{" "}
+            behind InsurBe
+          </motion.h2>
+
+          <p className="mt-4 text-gray-600 text-base sm:text-lg max-w-2xl mx-auto">
+            A team combining insurance expertise, technology leadership, and
+            operational excellence to deliver secure and reliable solutions.
+          </p>
         </div>
 
-        {/* Hero Image */}
-    {/* Hero Image with Decorative Border */}
-{/* <div className="mb-16 sm:mb-20 flex justify-center px-4">
-  <div className="relative w-full max-w-md sm:max-w-2xl lg:max-w-3xl">
-  
-    <div className="absolute top-3 -right-3 z-20 sm:top-5 sm:-right-5 lg:top-6 lg:-right-6 w-full h-full  z-10"></div>
-    
-    <Image
-      src="/about/heads.webp"
-      alt="Berlin Direkt Team"
-      width={800}
-      height={500}
-      className="w-full h-auto shadow-2xl relative z-21"
-      priority
-    />
-  </div>
-</div> */}
-
-
         {/* Team Members */}
-        <div className="space-y-16 sm:space-y-20 lg:space-y-24">
+        <div className="space-y-16 sm:space-y-20">
           {teamMembers.map((member, index) => (
-            <div
+            <motion.div
               key={member.name}
-              className={`flex flex-col ${
-                 "sm:flex-row"
-              } items-center gap-8 sm:gap-12 lg:gap-16`}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: index * 0.1 }}
+              viewport={{ once: true }}
+              className="flex flex-col sm:flex-row items-center gap-10 sm:gap-14"
             >
               {/* Profile Image */}
-              <div className="flex-shrink-0">
-                <div className="relative w-40 h-40 sm:w-48 sm:h-48 lg:w-56 lg:h-56">
-                  <Image
-                    src={member.image}
-                    alt={member.name}
-                    width={224}
-                    height={224}
-                    className="rounded-full object-cover w-full h-full border-4 border-gray-700"
-                  />
+              <div className="relative">
+                <div className="w-40 h-40 sm:w-48 sm:h-48 lg:w-56 lg:h-56 rounded-full p-1 bg-gradient-to-br from-purple-600 via-pink-600 to-blue-600">
+                  <div className="w-full h-full rounded-full overflow-hidden bg-white">
+                    <Image
+                      src={member.image}
+                      alt={member.name}
+                      width={224}
+                      height={224}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
                 </div>
               </div>
 
-              {/* Bio Content */}
+              {/* Bio */}
               <div className="flex-1 text-center sm:text-left">
-                <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white b-2">
+                <h3 className="text-2xl sm:text-3xl font-bold text-gray-900">
                   {member.name}
                 </h3>
-                <p className="text-base sm:text-lg text-white font-semibold mb-6">
+
+                <p className="text-primary font-semibold text-base sm:text-lg mb-4">
                   {member.role}
                 </p>
-                <div className="space-y-4 text-sm sm:text-[18px] text-gray-200 leading-relaxed">
+
+                <div className="space-y-4 text-gray-700 text-sm sm:text-base leading-relaxed">
                   {member.bio.map((paragraph, idx) => (
                     <p key={idx}>{paragraph}</p>
                   ))}
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

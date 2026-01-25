@@ -36,9 +36,9 @@ export default function Featureshome() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900">
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900">
             Discover the{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-600">
+            <span className="text-transparent bg-clip-text bg-linear-to-r from-purple-600 to-pink-500">
               InsurBe Advantage
             </span>
           </h2>

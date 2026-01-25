@@ -1,54 +1,70 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 
 export default function AboutTeamNew() {
   return (
-    <section className="bg-white py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-12">
+    <section className="relative py-20 px-4 sm:px-6 lg:px-12 overflow-hidden">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          
-          {/* LEFT SIDE - Content */}
-          <div className="space-y-6 lg:space-y-8">
-            {/* Section Label */}
-            <h3 className="text-primary text-base sm:text-lg font-bold uppercase tracking-wide">
-              OUR TEAM
-            </h3>
 
-            {/* Main Heading */}
-            <h2 className="text-3xl font-bold text-gray-900 leading-tight">
-              Our colleagues are as diverse and surprising as this city – 13 nationalities from all corners of Berlin.
+          {/* LEFT CONTENT */}
+          <div className="space-y-6 lg:space-y-8">
+            {/* Label */}
+            <span className="inline-block text-sm font-semibold tracking-wide text-primary uppercase">
+              Our Team
+            </span>
+
+            {/* Heading */}
+            <h2 className="text-3xl sm:text-4xl font-extrabold leading-tight">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600">
+                Built by people
+              </span>{" "}
+              who understand insurance, technology, and trust
             </h2>
 
             {/* Description */}
             <p className="text-base sm:text-lg text-gray-700 leading-relaxed">
-              The mix is what makes it work: interpreters, lawyers, mathematicians, businesswomen and men, biologists, architects, electronics engineers, makeup artists, IT systems electronics engineers, designers, scientists and many other talents are looking every day for new solutions and improvements that suit Berliners.
+              At InsurBe, our team brings together expertise in insurance,
+              technology, compliance, and customer experience. From product
+              specialists and engineers to legal and operations experts, we
+              work together to simplify insurance and make it accessible,
+              transparent, and reliable.
             </p>
 
-            {/* Call to Action */}
-            <div className="space-y-4">
+            <p className="text-base sm:text-lg text-gray-700 leading-relaxed">
+              Every solution we build is backed by strong security standards,
+              advanced technology, and a deep understanding of regulatory
+              requirements—so our customers can focus on their journey with
+              confidence.
+            </p>
+
+            {/* CTA (Optional / Ready for future use) */}
+            <div className="pt-2">
               <p className="text-base sm:text-lg text-gray-700">
-                Interested in joining our team?
+                Want to be part of a team shaping the future of insurance?
               </p>
-              
-              {/* <Link href="/jobs">
-                <button className="border-2 border-primary cursor-pointer text-primary hover:bg-primary hover:text-white font-semibold px-8 py-3 sm:px-10 sm:py-3.5 rounded-full transition-all duration-300 text-sm sm:text-base">
-                  To the jobs
+
+              {/* Uncomment when careers page is ready */}
+              {/*
+              <Link href="/careers">
+                <button className="mt-4 inline-flex items-center gap-2 px-8 py-3 rounded-full font-semibold text-white bg-gradient-to-r from-primary to-purple-600 shadow-lg hover:shadow-xl transition">
+                  View Open Roles
                 </button>
-              </Link> */}
+              </Link>
+              */}
             </div>
           </div>
 
-          {/* RIGHT SIDE - Image */}
-          <div className="relative lg:mt-0 mt-8 ">
-            <div className="relative overflow-hidden shadow-xl">
+          {/* RIGHT IMAGE */}
+          <div className="relative">
+            <div className="relative rounded-3xl overflow-hidden backdrop-blur-xl bg-white/70 border border-white/40 shadow-2xl shadow-purple-500/10">
               <Image
                 src="/about/colorTshirt.webp"
-                alt="Colorful shirts on hangers representing team diversity"
+                alt="InsurBe team representing diversity and collaboration"
                 width={800}
                 height={600}
-                className="w-full h-auto object-cover"
+                className="w-full h-auto object-contain"
                 priority
               />
             </div>

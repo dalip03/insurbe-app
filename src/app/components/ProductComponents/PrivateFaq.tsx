@@ -4,34 +4,35 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Calendar, Mail, User, CheckCircle, Clock } from "lucide-react";
 
-export default function FAQ() {
-  const faqs = [
+export default function PrivateFAQ() {
+ const faqs = [
   {
-    question: "Who is InsurBe and what do you do?",
+    question: "Who should consider private health insurance in Germany?",
     answer:
-      "InsurBe is a Germany-focused insurance platform helping students, professionals, families, and expats find the right health insurance plans that meet legal and visa requirements. We simplify the entire process—from choosing a plan to getting insured.",
+      "Private health insurance (PKV) is ideal for employed professionals earning above the compulsory insurance threshold, as well as self-employed individuals and freelancers. It offers flexible coverage options, faster access to care, and premium medical services.",
   },
   {
-    question: "Is InsurBe a licensed insurance provider?",
+    question: "How does InsurBe help with choosing the right private health insurance?",
     answer:
-      "InsurBe works with licensed and regulated German insurance partners. All plans offered through our platform comply with German regulations and are accepted by authorities, universities, and employers.",
+      "InsurBe compares leading private health insurance providers and helps you select a plan based on your income, age, health profile, and long-term goals. Our platform simplifies complex policy details so you can make an informed decision with confidence.",
   },
   {
-    question: "How long does it take to get insured through InsurBe?",
+    question: "Am I eligible to switch from public to private health insurance?",
     answer:
-      "In most cases, applications are processed within 24–48 hours after document submission. Some plans can be activated even faster, depending on eligibility and insurer approval.",
+      "If your annual income exceeds the legal threshold or you are self-employed, you may be eligible to switch to private health insurance. InsurBe guides you through eligibility checks and ensures a smooth transition.",
   },
   {
-    question: "Can InsurBe help with visa and residence permit requirements?",
+    question: "How quickly can private health insurance be activated?",
     answer:
-      "Yes. We offer insurance plans that are fully compliant with German visa and residence permit requirements. Our team ensures you receive valid documentation accepted by embassies and immigration offices.",
+      "Most private health insurance applications are processed within 24–48 hours once all documents are submitted. In some cases, coverage can begin even sooner, depending on the insurer and health assessment.",
   },
   {
-    question: "Do I get support after purchasing a plan?",
+    question: "Does InsurBe provide support after I switch to private insurance?",
     answer:
-      "Absolutely. InsurBe provides ongoing support even after you are insured. From policy questions to changes in personal circumstances, our team is available to assist you whenever needed.",
+      "Yes. InsurBe offers continued support even after your policy is active. From plan upgrades and family coverage to questions about benefits or future changes, our team is here to assist you throughout your insurance journey.",
   },
 ];
+
 
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);

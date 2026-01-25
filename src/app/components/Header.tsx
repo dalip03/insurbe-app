@@ -52,19 +52,19 @@ const productTagsConfig: Record<
   "Working Professionals": [
     {
       label: "Private",
-      href: "/products/privateProducts",
+      href: "/insurance/private-health",
       icon: "💼",
       color: "bg-indigo-100 text-indigo-700",
     },
     {
       label: "Public",
-      href: "/products/privateProducts",
+      href: "/insurance/public-health",
       icon: "🏥",
       color: "bg-indigo-100 text-indigo-700",
     },
     {
       label: "Expat",
-      href: "/products/privateProducts",
+      href: "/insurance/expat-health",
       icon: "🌍",
       color: "bg-indigo-100 text-indigo-700",
     },
@@ -109,13 +109,13 @@ const productTagsConfig: Record<
   Students: [
     {
       label: "Public",
-      href: "/products/students",
+      href: "/insurance/public-health",
       icon: "🏛️",
       color: "bg-sky-100 text-sky-700",
     },
     {
       label: "Private",
-      href: "/products/students",
+      href: "/insurance/private-health",
       icon: "🔒",
       color: "bg-sky-100 text-sky-700",
     },

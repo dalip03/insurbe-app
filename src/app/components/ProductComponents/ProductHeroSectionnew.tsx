@@ -51,7 +51,7 @@ export default function ProductHeroSectionnew() {
             >
               You work hard.
               <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-600">
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-purple-600 via-pink-600 to-blue-600">
                 Your health insurance should too.
               </span>
             </motion.h1>
@@ -92,7 +92,7 @@ export default function ProductHeroSectionnew() {
                 onClick={() => router.push("/products/insuranceJourney")}
                 className="flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-gradient-to-r from-primary to-purple-600 text-white font-semibold shadow-lg hover:opacity-90 transition"
               >
-                Take the Questionnaire
+                Get a Quote
                 <ArrowRight className="w-4 h-4" />
               </button>
 
