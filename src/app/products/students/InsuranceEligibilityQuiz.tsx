@@ -2,17 +2,17 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  CheckCircle, 
-  Sparkles, 
-  Shield, 
-  Clock, 
+import {
+  CheckCircle,
+  Sparkles,
+  Shield,
+  Clock,
   Award,
   ChevronRight,
   GraduationCap,
   Calendar,
   PartyPopper,
-  StarIcon
+  StarIcon,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -29,7 +29,7 @@ export default function InsuranceEligibilityQuiz() {
       setStep(2);
     } else if (step === 2 && age) {
       setStep(3);
-      
+
       // Check if age is less than 30 and redirect
       const numericAge = parseInt(age.split("-")[0]); // Gets first number from range
       if (numericAge < 30) {
@@ -47,44 +47,43 @@ export default function InsuranceEligibilityQuiz() {
     { value: "other", label: "Other Studies", icon: "📖" },
   ];
 
-const ageOptions = [
-  { value: "below-30", label: "Below 30 years" },
-  { value: "above-30", label: "30 years & above" },
-];
+  const ageOptions = [
+    { value: "below-30", label: "Below 30 years" },
+    { value: "above-30", label: "30 years & above" },
+  ];
 
   const benefits = [
-  {
-    icon: Shield,
-    text: "Accepted for university enrollment & city registration in Germany",
-    color: "text-emerald-600",
-  },
-  {
-    icon: Clock,
-    text: "Access to private & public doctors including extensive dental care",
-    color: "text-blue-600",
-  },
-  {
-    icon: Award,
-    text: "Dedicated personal support to find doctors & schedule appointments",
-    color: "text-purple-600",
-  },
-  {
-    icon: Sparkles,
-    text: "Fast digital reimbursement process for medical bills",
-    color: "text-pink-600",
-  },
-  {
-    icon: Award,
-    text: "Awarded 1st place for service & customer satisfaction",
-    color: "text-yellow-600",
-  },
-  {
-    icon: Shield,
-    text: "Option to switch to Public Health Insurance after graduation",
-    color: "text-indigo-600",
-  },
-];
-
+    {
+      icon: Shield,
+      text: "Accepted for university enrollment & city registration in Germany",
+      color: "text-emerald-600",
+    },
+    {
+      icon: Clock,
+      text: "Access to private & public doctors including extensive dental care",
+      color: "text-blue-600",
+    },
+    {
+      icon: Award,
+      text: "Dedicated personal support to find doctors & schedule appointments",
+      color: "text-purple-600",
+    },
+    {
+      icon: Sparkles,
+      text: "Fast digital reimbursement process for medical bills",
+      color: "text-pink-600",
+    },
+    {
+      icon: Award,
+      text: "Awarded 1st place for service & customer satisfaction",
+      color: "text-yellow-600",
+    },
+    {
+      icon: Shield,
+      text: "Option to switch to Public Health Insurance after graduation",
+      color: "text-indigo-600",
+    },
+  ];
 
   // Determine if user is eligible for public insurance (age < 30)
   const isEligibleForPublic = age && parseInt(age.split("-")[0]) < 30;
@@ -94,19 +93,19 @@ const ageOptions = [
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
-          animate={{ 
+          animate={{
             scale: [1, 1.2, 1],
             rotate: [0, 90, 0],
-            opacity: [0.03, 0.06, 0.03]
+            opacity: [0.03, 0.06, 0.03],
           }}
           transition={{ duration: 20, repeat: Infinity }}
           className="absolute -top-1/4 -left-1/4 w-1/2 h-1/2 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full blur-3xl"
         />
         <motion.div
-          animate={{ 
+          animate={{
             scale: [1, 1.3, 1],
             rotate: [0, -90, 0],
-            opacity: [0.03, 0.06, 0.03]
+            opacity: [0.03, 0.06, 0.03],
           }}
           transition={{ duration: 25, repeat: Infinity }}
           className="absolute -bottom-1/4 -right-1/4 w-1/2 h-1/2 bg-linear-to-r from-primary to-purple-600 rounded-full blur-3xl"
@@ -114,7 +113,6 @@ const ageOptions = [
       </div>
 
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center relative z-10">
-
         {/* LEFT CONTENT - Enhanced */}
         <motion.div
           initial={{ opacity: 0, x: -40 }}
@@ -138,7 +136,9 @@ const ageOptions = [
           </h2>
 
           <p className="text-lg sm:text-xl text-gray-600 leading-relaxed max-w-xl">
-            Take our intelligent 30-second quiz. We'll analyze your educational background and age to recommend the perfect health insurance plan — whether public or private.
+            Take our intelligent 30-second quiz. We'll analyze your educational
+            background and age to recommend the perfect health insurance plan —
+            whether public or private.
           </p>
 
           {/* Trust Indicators */}
@@ -179,8 +179,8 @@ const ageOptions = [
             <div className="absolute top-0 left-0 right-0 h-1.5 bg-gray-200/50 rounded-t-[2rem] overflow-hidden">
               <motion.div
                 initial={{ width: "0%" }}
-                animate={{ 
-                  width: step === 1 ? "33%" : step === 2 ? "66%" : "100%" 
+                animate={{
+                  width: step === 1 ? "33%" : step === 2 ? "66%" : "100%",
                 }}
                 transition={{ duration: 0.5, ease: "easeOut" }}
                 className="h-full bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600"
@@ -188,7 +188,6 @@ const ageOptions = [
             </div>
 
             <AnimatePresence mode="wait">
-
               {/* STEP 1 – DEGREE */}
               {step === 1 && (
                 <motion.div
@@ -204,7 +203,9 @@ const ageOptions = [
                       <GraduationCap className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-gray-500">Question 1 of 2</p>
+                      <p className="text-sm font-medium text-gray-500">
+                        Question 1 of 2
+                      </p>
                       <h3 className="text-2xl sm:text-3xl font-bold text-gray-900">
                         What are you studying?
                       </h3>
@@ -212,7 +213,8 @@ const ageOptions = [
                   </div>
 
                   <p className="text-gray-600">
-                    Select your current degree program to help us tailor your insurance options.
+                    Select your current degree program to help us tailor your
+                    insurance options.
                   </p>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -224,9 +226,10 @@ const ageOptions = [
                         whileTap={{ scale: 0.98 }}
                         className={`
                           relative p-5 rounded-2xl border-2 text-left transition-all duration-300
-                          ${degree === option.value
-                            ? "border-purple-500 bg-gradient-to-br from-purple-50 to-blue-50 shadow-lg shadow-purple-500/20"
-                            : "border-gray-200 bg-white/50 hover:border-purple-300 hover:bg-white/80"
+                          ${
+                            degree === option.value
+                              ? "border-purple-500 bg-gradient-to-br from-purple-50 to-blue-50 shadow-lg shadow-purple-500/20"
+                              : "border-gray-200 bg-white/50 hover:border-purple-300 hover:bg-white/80"
                           }
                         `}
                       >
@@ -255,9 +258,10 @@ const ageOptions = [
                     whileTap={{ scale: degree ? 0.98 : 1 }}
                     className={`
                       w-full py-5 rounded-2xl font-bold text-lg flex items-center justify-center gap-2 transition-all
-                      ${degree
-                        ? "bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 text-white shadow-xl shadow-purple-500/30 hover:shadow-2xl hover:shadow-purple-500/40"
-                        : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                      ${
+                        degree
+                          ? "bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 text-white shadow-xl shadow-purple-500/30 hover:shadow-2xl hover:shadow-purple-500/40"
+                          : "bg-gray-200 text-gray-400 cursor-not-allowed"
                       }
                     `}
                   >
@@ -282,7 +286,9 @@ const ageOptions = [
                       <Calendar className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-gray-500">Question 2 of 2</p>
+                      <p className="text-sm font-medium text-gray-500">
+                        Question 2 of 2
+                      </p>
                       <h3 className="text-2xl sm:text-3xl font-bold text-gray-900">
                         What's your age range?
                       </h3>
@@ -290,7 +296,8 @@ const ageOptions = [
                   </div>
 
                   <p className="text-gray-600">
-                    Your age helps determine which insurance plans are available to you.
+                    Your age helps determine which insurance plans are available
+                    to you.
                   </p>
 
                   <div className="grid grid-cols-1 gap-3">
@@ -302,9 +309,10 @@ const ageOptions = [
                         whileTap={{ scale: 0.98 }}
                         className={`
                           relative p-5 rounded-2xl border-2 text-left transition-all duration-300
-                          ${age === option.value
-                            ? "border-pink-500 bg-gradient-to-br from-pink-50 to-purple-50 shadow-lg shadow-pink-500/20"
-                            : "border-gray-200 bg-white/50 hover:border-pink-300 hover:bg-white/80"
+                          ${
+                            age === option.value
+                              ? "border-pink-500 bg-gradient-to-br from-pink-50 to-purple-50 shadow-lg shadow-pink-500/20"
+                              : "border-gray-200 bg-white/50 hover:border-pink-300 hover:bg-white/80"
                           }
                         `}
                       >
@@ -338,9 +346,10 @@ const ageOptions = [
                       whileTap={{ scale: age ? 0.98 : 1 }}
                       className={`
                         flex-1 py-5 rounded-2xl font-bold text-lg flex items-center justify-center gap-2 transition-all
-                        ${age
-                          ? "bg-gradient-to-r from-pink-600 via-purple-600 to-blue-600 text-white shadow-xl shadow-pink-500/30 hover:shadow-2xl hover:shadow-pink-500/40"
-                          : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                        ${
+                          age
+                            ? "bg-gradient-to-r from-pink-600 via-purple-600 to-blue-600 text-white shadow-xl shadow-pink-500/30 hover:shadow-2xl hover:shadow-pink-500/40"
+                            : "bg-gray-200 text-gray-400 cursor-not-allowed"
                         }
                       `}
                     >
@@ -370,7 +379,11 @@ const ageOptions = [
                       <motion.div
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
-                        transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+                        transition={{
+                          delay: 0.2,
+                          type: "spring",
+                          stiffness: 200,
+                        }}
                         className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-green-400 to-emerald-500 shadow-2xl shadow-green-500/30"
                       >
                         <PartyPopper className="w-12 h-12 text-white" />
@@ -384,7 +397,9 @@ const ageOptions = [
                           You're eligible for Public Health Insurance
                         </p>
                         <p className="text-gray-600 max-w-md mx-auto">
-                          Based on your age ({age}), you qualify for comprehensive public health insurance with excellent coverage and affordable rates.
+                          Based on your age ({age}), you qualify for
+                          comprehensive public health insurance with excellent
+                          coverage and affordable rates.
                         </p>
                       </div>
 
@@ -396,7 +411,8 @@ const ageOptions = [
                           </span>
                         </div>
                         <p className="text-sm text-gray-600">
-                          Please wait while we take you to the Public Health Insurance page with all the details.
+                          Please wait while we take you to the Public Health
+                          Insurance page with all the details.
                         </p>
                       </div>
 
@@ -420,12 +436,10 @@ const ageOptions = [
                     // PRIVATE INSURANCE PLAN (Age 30+)
                     <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-purple-600 via-pink-600 to-blue-600 p-[2px]">
                       <div className="bg-white rounded-3xl p-8 space-y-6">
-                        
                         {/* Header */}
                         <div className="flex items-start justify-between gap-4">
                           <div className="flex-1">
                             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-100 to-yellow-100 border border-amber-200 mb-3">
-                             
                               <StarIcon className="w-4 h-4 text-amber-600" />
                               <span className="text-xs font-bold text-amber-700 uppercase tracking-wide">
                                 Perfect Match
@@ -435,18 +449,26 @@ const ageOptions = [
                               Premium Private Insurance
                             </h4>
                             <p className="text-gray-600 text-sm">
-                              Tailored for {degree === "bachelor" ? "Bachelor's" : degree === "master" ? "Master's" : degree === "phd" ? "PhD" : "Graduate"} students in the {age} age group
+                              Tailored for{" "}
+                              {degree === "bachelor"
+                                ? "Bachelor's"
+                                : degree === "master"
+                                  ? "Master's"
+                                  : degree === "phd"
+                                    ? "PhD"
+                                    : "Graduate"}{" "}
+                              students in the {age} age group
                             </p>
                           </div>
                           <div className="flex items-center">
-  <Image
-    src="/partners_asset/ottonova.png"   
-    alt="Logo"
-    width={120}        
-    height={24}
-    className="object-contain"
-  />
-</div>
+                            <Image
+                              src="/partners_asset/ottonova.png"
+                              alt="Logo"
+                              width={120}
+                              height={24}
+                              className="object-contain"
+                            />
+                          </div>
                         </div>
 
                         {/* Benefits Grid */}
@@ -461,13 +483,20 @@ const ageOptions = [
                                 transition={{ delay: idx * 0.1 }}
                                 className="flex items-start gap-4 px-4 py-1 rounded-xl bg-linear-to-br from-gray-50 to-white border border-gray-100 hover:shadow-md transition-shadow"
                               >
-                                <div className={`p-2 rounded-lg bg-linear-to-br ${
-                                  idx === 0 ? "from-emerald-100 to-emerald-200" :
-                                  idx === 1 ? "from-blue-100 to-blue-200" :
-                                  idx === 2 ? "from-purple-100 to-purple-200" :
-                                  "from-pink-100 to-pink-200"
-                                }`}>
-                                  <Icon className={`w-5 h-5 ${benefit.color}`} />
+                                <div
+                                  className={`p-2 rounded-lg bg-linear-to-br ${
+                                    idx === 0
+                                      ? "from-emerald-100 to-emerald-200"
+                                      : idx === 1
+                                        ? "from-blue-100 to-blue-200"
+                                        : idx === 2
+                                          ? "from-purple-100 to-purple-200"
+                                          : "from-pink-100 to-pink-200"
+                                  }`}
+                                >
+                                  <Icon
+                                    className={`w-5 h-5 ${benefit.color}`}
+                                  />
                                 </div>
                                 <span className="text-gray-700 font-medium text-sm leading-relaxed flex-1">
                                   {benefit.text}
@@ -481,10 +510,14 @@ const ageOptions = [
                         <div className="pt-4 border-t border-gray-200">
                           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                             <div>
-                              <p className="text-sm text-gray-500 mb-1">Starting from</p>
+                              <p className="text-sm text-gray-500 mb-1">
+                                Starting from
+                              </p>
                               <p className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">
                                 €129
-                                <span className="text-lg text-gray-500 font-medium">/month</span>
+                                <span className="text-lg text-gray-500 font-medium">
+                                  /month
+                                </span>
                               </p>
                             </div>
 
@@ -500,7 +533,8 @@ const ageOptions = [
                           </div>
 
                           <p className="text-xs text-gray-500 mt-4 text-center sm:text-left">
-                            🔒 No commitment required • Cancel anytime • Money-back guarantee
+                            🔒 No commitment required • Cancel anytime •
+                            Money-back guarantee
                           </p>
                         </div>
                       </div>
@@ -522,7 +556,6 @@ const ageOptions = [
                   </motion.button>
                 </motion.div>
               )}
-
             </AnimatePresence>
           </div>
 

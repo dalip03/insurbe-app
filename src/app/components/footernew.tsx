@@ -252,7 +252,7 @@ export default function Footernew() {
               </a>
 
               <a
-                href="https://www.linkedin.com/company/insurbe-gmbh/"
+                href="https://www.facebook.com/share/1CFrgoW6TV/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-blue-400 transition-colors"
