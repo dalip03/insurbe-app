@@ -42,7 +42,7 @@ const PensionProductHeroSection = () => {
               }}
               className="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-medium bg-primary/10 text-primary w-fit"
             >
-              Insurbe • Pension Solutions
+              InsurBe • Pension Solutions
             </motion.span>
 
             {/* Heading */}

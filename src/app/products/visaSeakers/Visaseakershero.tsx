@@ -31,7 +31,7 @@ export default function VisaSeekersHero() {
               variants={{ hidden: { y: 10, opacity: 0 }, visible: { y: 0, opacity: 1 } }}
               className="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-medium bg-primary/10 text-primary w-fit"
             >
-              Insurbe • Visa Seekers
+              InsurBe • Visa Seekers
             </motion.span>
 
             {/* Heading */}

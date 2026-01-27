@@ -19,7 +19,7 @@ const ProductHeroSection = () => {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="inline-block bg-white/20 text-white px-4 py-1 rounded-full text-sm font-medium mb-4"
         >
-          Insurbe
+          InsurBe
         </motion.span>
 
         <motion.h1

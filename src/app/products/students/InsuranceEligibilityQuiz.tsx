@@ -11,9 +11,11 @@ import {
   ChevronRight,
   GraduationCap,
   Calendar,
-  PartyPopper
+  PartyPopper,
+  StarIcon
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function InsuranceEligibilityQuiz() {
   const router = useRouter();
@@ -51,11 +53,38 @@ const ageOptions = [
 ];
 
   const benefits = [
-    { icon: Shield, text: "Accepted for university & city registration", color: "text-emerald-600" },
-    { icon: Clock, text: "Access to private and public doctors nationwide", color: "text-blue-600" },
-    { icon: Award, text: "Personal support & same-day appointments", color: "text-purple-600" },
-    { icon: Sparkles, text: "Digital claims processing & 24h reimbursements", color: "text-pink-600" },
-  ];
+  {
+    icon: Shield,
+    text: "Accepted for university enrollment & city registration in Germany",
+    color: "text-emerald-600",
+  },
+  {
+    icon: Clock,
+    text: "Access to private & public doctors including extensive dental care",
+    color: "text-blue-600",
+  },
+  {
+    icon: Award,
+    text: "Dedicated personal support to find doctors & schedule appointments",
+    color: "text-purple-600",
+  },
+  {
+    icon: Sparkles,
+    text: "Fast digital reimbursement process for medical bills",
+    color: "text-pink-600",
+  },
+  {
+    icon: Award,
+    text: "Awarded 1st place for service & customer satisfaction",
+    color: "text-yellow-600",
+  },
+  {
+    icon: Shield,
+    text: "Option to switch to Public Health Insurance after graduation",
+    color: "text-indigo-600",
+  },
+];
+
 
   // Determine if user is eligible for public insurance (age < 30)
   const isEligibleForPublic = age && parseInt(age.split("-")[0]) < 30;
@@ -396,7 +425,8 @@ const ageOptions = [
                         <div className="flex items-start justify-between gap-4">
                           <div className="flex-1">
                             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-100 to-yellow-100 border border-amber-200 mb-3">
-                              <Sparkles className="w-4 h-4 text-amber-600" />
+                             
+                              <StarIcon className="w-4 h-4 text-amber-600" />
                               <span className="text-xs font-bold text-amber-700 uppercase tracking-wide">
                                 Perfect Match
                               </span>
@@ -408,10 +438,19 @@ const ageOptions = [
                               Tailored for {degree === "bachelor" ? "Bachelor's" : degree === "master" ? "Master's" : degree === "phd" ? "PhD" : "Graduate"} students in the {age} age group
                             </p>
                           </div>
+                          <div className="flex items-center">
+  <Image
+    src="/partners_asset/ottonova.png"   
+    alt="Logo"
+    width={120}        
+    height={24}
+    className="object-contain"
+  />
+</div>
                         </div>
 
                         {/* Benefits Grid */}
-                        <div className="space-y-3">
+                        <div className="space-y-1">
                           {benefits.map((benefit, idx) => {
                             const Icon = benefit.icon;
                             return (
@@ -420,9 +459,9 @@ const ageOptions = [
                                 initial={{ opacity: 0, x: -20 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ delay: idx * 0.1 }}
-                                className="flex items-start gap-4 p-4 rounded-xl bg-gradient-to-br from-gray-50 to-white border border-gray-100 hover:shadow-md transition-shadow"
+                                className="flex items-start gap-4 px-4 py-1 rounded-xl bg-linear-to-br from-gray-50 to-white border border-gray-100 hover:shadow-md transition-shadow"
                               >
-                                <div className={`p-2 rounded-lg bg-gradient-to-br ${
+                                <div className={`p-2 rounded-lg bg-linear-to-br ${
                                   idx === 0 ? "from-emerald-100 to-emerald-200" :
                                   idx === 1 ? "from-blue-100 to-blue-200" :
                                   idx === 2 ? "from-purple-100 to-purple-200" :

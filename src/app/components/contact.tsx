@@ -55,7 +55,7 @@ const ContactSection = () => {
               <label className="text-sm text-gray-500 mb-1 block">Email</label>
               <input
                 type="email"
-                placeholder="hello@insurbe.com"
+                placeholder="hello@insurBe.com"
                 className="w-full border border-gray-300 text-black rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#8224E3]"
               />
             </div>

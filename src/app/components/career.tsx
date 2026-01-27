@@ -122,7 +122,7 @@ const CareerSection = () => {
         className="max-w-3xl mx-auto px-4 md:px-10 lg:px-20"
       >
         <h3 className="text-2xl font-semibold mb-6 text-center">
-          Open positions at Insurbe
+          Open positions at InsurBe
         </h3>
 
         {positions.map((group, index) => (

@@ -17,7 +17,7 @@ export default function ChatWidget({ onClose }: ChatWidgetProps) {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
-      text: "Welcome to Insurbe! 👋 I'm here to help you with your insurance questions.",
+      text: "Welcome to InsurBe! 👋 I'm here to help you with your insurance questions.",
       sender: "bot",
       timestamp: new Date(),
     },

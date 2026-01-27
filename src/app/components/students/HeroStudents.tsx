@@ -43,7 +43,7 @@ function HeroStudents() {
               }}
               className="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-medium bg-primary/10 text-primary w-fit"
             >
-              Insurbe • Student Insurance
+              InsurBe • Student Insurance
             </motion.span>
 
             {/* Heading */}

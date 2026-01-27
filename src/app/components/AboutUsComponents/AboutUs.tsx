@@ -8,7 +8,7 @@ const AboutUs = () => {
     <section className="bg-gradient-to-br from-white via-[#fbefff] to-white py-20 px-4 md:px-16">
       {/* Section Title */}
       <h2 className="text-4xl md:text-5xl font-bold text-center mb-16">
-        Insurbe’s Journey
+        InsurBe’s Journey
       </h2>
 
       {/* 2020 Card */}
@@ -22,7 +22,7 @@ const AboutUs = () => {
             2020: Foundation and Vision
           </h3>
           <p className="text-gray-600 mb-6">
-            Insurbe was founded with a vision to simplify the insurance process for individuals and families.
+            InsurBe was founded with a vision to simplify the insurance process for individuals and families.
           </p>
           <div className="flex gap-4">
             <button className="bg-primary text-white px-6 py-2 rounded-md shadow-sm">

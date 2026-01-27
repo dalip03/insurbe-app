@@ -12,7 +12,7 @@ const tabs = [
 
 const plans = [
   {
-    title: "Insurbe World Education",
+    title: "InsurBe World Education",
     description:
       "Travel health insurance for studies, language courses, and school years abroad.",
     features: [

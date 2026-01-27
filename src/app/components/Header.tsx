@@ -113,8 +113,8 @@ const productTagsConfig: Record<
     },
     {
       label: "Private",
-      href: "/insurance/private-health",
-      icon: "🔒",
+      href: "/ottonovaSignupform",
+      icon: "💼",
       color: "bg-sky-100 text-sky-700",
     },
   ],

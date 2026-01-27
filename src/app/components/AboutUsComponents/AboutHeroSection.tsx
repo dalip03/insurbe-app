@@ -7,7 +7,7 @@ export default function FoundationSection() {
       <div className="max-w-7xl mx-auto w-full">
         {/* Heading */}
         <h2 className="text-center text-3xl md:text-5xl font-bold mb-16">
-          Insurbe’s Journey
+          InsurBe’s Journey
         </h2>
 
         {/* Grid Content */}
@@ -21,7 +21,7 @@ export default function FoundationSection() {
               2020: Foundation and Vision
             </h3>
             <p className="text-gray-600 text-base sm:text-lg max-w-xl mx-auto lg:mx-0">
-              Insurbe was founded with a vision to simplify the insurance
+              InsurBe was founded with a vision to simplify the insurance
               process for individuals and families.
             </p>
 

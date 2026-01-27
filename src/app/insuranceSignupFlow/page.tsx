@@ -370,8 +370,8 @@ export default function InsuranceSignupFlow() {
                 {/* Heading */}
                 <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3">
                   Thank you for choosing{" "}
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-600">
-                    Insurbe
+                  <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-purple-600">
+                    InsurBe
                   </span>
                   !
                 </h2>

@@ -6,7 +6,7 @@ import { Clock, Globe, GraduationCap, Briefcase } from "lucide-react";
 
 const plans = [
   {
-    title: "Insurbe World Education",
+    title: "InsurBe World Education",
     subtitle: "For students & educational stays abroad",
     icon: GraduationCap,
     points: [
@@ -17,7 +17,7 @@ const plans = [
     image: "/hero_assets/groupStudent.jpg",
   },
   {
-    title: "Insurbe German Traveler",
+    title: "InsurBe German Traveler",
     subtitle: "For residents of Germany",
     icon: Briefcase,
     points: [
@@ -28,7 +28,7 @@ const plans = [
     image: "/hero_assets/travel4.jpg",
   },
   {
-    title: "Insurbe World Traveler",
+    title: "InsurBe World Traveler",
     subtitle: "For travelers worldwide",
     icon: Globe,
     points: [

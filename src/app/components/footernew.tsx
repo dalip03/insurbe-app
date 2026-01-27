@@ -84,7 +84,7 @@ export default function Footernew() {
 
             {/* Register Info */}
             <p className="md:text-lg text-2xl text-gray-300 ">
-              Insurbe is a registered insurance intermediary in Germany
+              InsurBe is a registered insurance intermediary in Germany
             </p>
           </div>
 
