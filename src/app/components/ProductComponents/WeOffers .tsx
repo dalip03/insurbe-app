@@ -34,7 +34,7 @@ const plans = [
     href: "/insurance/private-health",
     gradient: "from-purple-500 to-pink-500",
     bgGradient: "from-purple-50 to-pink-50",
-    badge: "Premium",
+    badge: "Expat Choice",
   },
   {
     title: "Expat Health",

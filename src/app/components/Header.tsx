@@ -12,8 +12,6 @@ import {
   Users,
   Globe,
   GraduationCap,
-  Info,
-  UserCheck,
 } from "lucide-react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -171,20 +169,13 @@ const Header = () => {
   // Close drawer when clicking a link
   const handleLinkClick = () => {
     setIsOpen(false);
+    setMobileProductsOpen(false);
+    setMobileAboutOpen(false);
     document.body.style.overflow = "unset";
   };
 
   return (
-    <header
-      className="
-    sticky top-0 w-full z-50
-    backdrop-blur-xl
-    bg-white/70
-    supports-backdrop-filter:bg-white/60
-    border-b border-white/20
-    shadow-[0_8px_30px_rgba(0,0,0,0.06)]
-  "
-    >
+    <header className="sticky top-0 w-full z-50 backdrop-blur-xl bg-white/70 supports-backdrop-filter:bg-white/60 border-b border-white/20 shadow-[0_8px_30px_rgba(0,0,0,0.06)]">
       <nav className="flex justify-between items-center px-6 md:px-10 xl:px-20 py-4 w-full">
         {/* Logo */}
         <Link href="/" className="font-bold font-serif flex items-center gap-2">
@@ -323,34 +314,20 @@ const Header = () => {
                                       href={item.href}
                                       tabIndex={showProducts ? 0 : -1}
                                       onClick={() => setShowProducts(false)}
-                                      className="
-                        group
-                        block
-                        h-[210px]
-                        p-6
-                        rounded-2xl
-                        border border-gray-200
-                        hover:border-primary
-                        hover:shadow-xl
-                        transition-all
-                        bg-white
-                      "
+                                      className="group block h-[210px] p-6 rounded-2xl border border-gray-200 hover:border-primary hover:shadow-xl transition-all bg-white"
                                     >
                                       <div className="flex flex-col h-full">
                                         {/* ICON */}
                                         <div
-                                          className={`
-                            w-12 h-12 rounded-xl flex items-center justify-center
-                            ${getBg(item.name)}
-                            group-hover:scale-110
-                            transition-transform
-                          `}
+                                          className={`w-12 h-12 rounded-xl flex items-center justify-center ${getBg(
+                                            item.name
+                                          )} group-hover:scale-110 transition-transform`}
                                         >
                                           {getIcon(item.name)}
                                         </div>
 
                                         {/* TITLE */}
-                                        <h4 className="font-semibold text-gray-900 mb-2 group-hover:text-primary transition">
+                                        <h4 className="font-semibold text-gray-900 mb-2 group-hover:text-primary transition mt-3">
                                           {item.name}
                                         </h4>
                                         {/* PRODUCT TAGS */}
@@ -364,25 +341,14 @@ const Header = () => {
                                                   e.stopPropagation();
                                                   setShowProducts(false);
                                                 }}
-                                                className={`
-          flex items-center gap-1.5
-          text-[11px]
-          px-2.5 py-1
-          rounded-full
-          font-semibold
-          ${tag.color}
-          transition-all duration-200
-          hover:-translate-y-0.5
-          hover:scale-[1.03]
-          hover:shadow-sm
-        `}
+                                                className={`flex items-center gap-1.5 text-[11px] px-2.5 py-1 rounded-full font-semibold ${tag.color} transition-all duration-200 hover:-translate-y-0.5 hover:scale-[1.03] hover:shadow-sm`}
                                               >
                                                 <span className="text-xs">
                                                   {tag.icon}
                                                 </span>
                                                 {tag.label}
                                               </Link>
-                                            ),
+                                            )
                                           )}
                                         </div>
 
@@ -423,7 +389,7 @@ const Header = () => {
               >
                 {link.name}
               </Link>
-            ),
+            )
           )}
         </div>
 
@@ -431,7 +397,7 @@ const Header = () => {
         <motion.button
           whileTap={{ scale: 0.95 }}
           onClick={toggleDrawer}
-          className="md:hidden text-black p-2 hover:bg-gray-100 rounded-lg transition cursor-pointer"
+          className="md:hidden text-black p-2 hover:bg-gray-100 rounded-lg transition"
           aria-label="Toggle menu"
         >
           <Menu size={28} />
@@ -458,7 +424,7 @@ const Header = () => {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-              className="fixed right-0 top-0 bottom-0 w-[90%] max-w-sm z-50 bg-white shadow-2xl md:hidden"
+              className="fixed right-0 top-0 h-screen w-[85%] max-w-sm z-50 bg-white shadow-2xl md:hidden"
             >
               <div className="h-full flex flex-col">
                 {/* Header */}
@@ -473,17 +439,17 @@ const Header = () => {
                   <motion.button
                     whileTap={{ scale: 0.9 }}
                     onClick={toggleDrawer}
-                    className="p-2 hover:bg-white/80 rounded-full transition cursor-pointer"
+                    className="p-2 hover:bg-white/80 rounded-full transition"
                     aria-label="Close menu"
                   >
                     <X size={24} className="text-primary" />
                   </motion.button>
                 </div>
 
-                {/* Navigation Links */}
-                <div className="flex-1 overflow-y-auto p-4">
+                {/* Navigation Links - THIS IS THE KEY FIX */}
+                <div className="flex-1 min-h-0 overflow-y-auto p-4">
                   <div className="space-y-1">
-                    {navLinks.map((link, index) =>
+                    {navLinks.map((link) =>
                       link.submenu ? (
                         <div key={link.name}>
                           <button
@@ -496,7 +462,7 @@ const Header = () => {
                                 setMobileProductsOpen(false);
                               }
                             }}
-                            className={`w-full flex items-center justify-between px-4 py-3.5 text-base font-semibold rounded-lg transition cursor-pointer ${
+                            className={`w-full flex items-center justify-between px-4 py-3.5 text-base font-semibold rounded-lg transition ${
                               (link.name === "Insurances" &&
                                 pathname.includes("/products")) ||
                               (link.name === "About Us" &&
@@ -527,7 +493,7 @@ const Header = () => {
                             </motion.div>
                           </button>
 
-                          <AnimatePresence>
+                          <AnimatePresence initial={false}>
                             {((link.name === "Insurances" &&
                               mobileProductsOpen) ||
                               (link.name === "About Us" &&
@@ -545,7 +511,7 @@ const Header = () => {
                                       key={sublink.name}
                                       href={sublink.href}
                                       onClick={handleLinkClick}
-                                      className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition group cursor-pointer ${
+                                      className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition group ${
                                         pathname === sublink.href
                                           ? "bg-primary text-white"
                                           : "text-gray-700 hover:bg-gray-100"
@@ -577,7 +543,7 @@ const Header = () => {
                           key={link.name}
                           href={link.href}
                           onClick={handleLinkClick}
-                          className={`flex items-center justify-between px-4 py-3.5 text-base font-semibold rounded-lg transition cursor-pointer ${
+                          className={`flex items-center justify-between px-4 py-3.5 text-base font-semibold rounded-lg transition ${
                             pathname === link.href
                               ? "bg-primary/10 text-primary"
                               : "text-gray-800 hover:bg-gray-100"
@@ -586,6 +552,7 @@ const Header = () => {
                           <span className="flex items-center gap-3">
                             <span className="text-xl">
                               {link.name === "Home" && "🏠"}
+                              {link.name === "Enterprise" && "🏢"}
                               {link.name === "Support" && "🆘"}
                             </span>
                             {link.name}
@@ -598,7 +565,7 @@ const Header = () => {
                             />
                           )}
                         </Link>
-                      ),
+                      )
                     )}
                   </div>
                 </div>
@@ -610,7 +577,7 @@ const Header = () => {
                     <Link
                       href="/support"
                       onClick={handleLinkClick}
-                      className="inline-block px-6 py-2.5 bg-primary text-white rounded-lg font-semibold hover:bg-primary/90 transition cursor-pointer text-sm"
+                      className="inline-block px-6 py-2.5 bg-primary text-white rounded-lg font-semibold hover:bg-primary/90 transition text-sm"
                     >
                       Contact Support
                     </Link>

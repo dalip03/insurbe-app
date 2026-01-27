@@ -34,7 +34,7 @@ export default function ExpatFirstExpatHero() {
         >
           {/* Heading */}
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
-            German Health Insurance{" "}
+            German Expat Health Insurance{" "}
             <span className="block text-transparent bg-clip-text bg-linear-to-r from-purple-600 to-pink-500">
               Made Better
             </span>

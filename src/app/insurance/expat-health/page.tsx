@@ -6,13 +6,15 @@ import ExpatPublicInsuranceFAQ from './ExpatPublicFaq'
 import FirstExpatHero from '../public-health/FirstExpatHero'
 import Expatteriffcomparision from './Expatteriffcomparision'
 import WhyExpatinsurance from './WhyExpatinsurance'
+import WhyExpatInsuranceNew from './WhyExpatInsurancenew'
 
 function ExpatHealthPage() {
   return (
    <section>
     <ExpatFirstExpatHero/>
     <WhyExpatinsurance/>
-    <ExpatInsuranceBenefits/>
+    <WhyExpatInsuranceNew/>
+    {/* <ExpatInsuranceBenefits/> */}
     <FirstExpatHero/>
     <Expatteriffcomparision/>
     <ExpatInsuranceSteps/>

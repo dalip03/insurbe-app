@@ -106,7 +106,7 @@ export default function HeroInsurancenew1() {
 
               {/* Sub text */}
               <p className="text-gray-500 text-sm sm:text-base lg:text-lg leading-relaxed max-w-md mx-auto lg:mx-0 px-2 sm:px-4">
-                Insurance Made Simple for You
+                Insurance Made Simple for You, Fully digital and compliant.
               </p>
 
               {/* CTAs */}
@@ -148,7 +148,7 @@ export default function HeroInsurancenew1() {
                     ))}
                   </div>
                   <span className="text-xs sm:text-sm text-gray-600 font-medium hidden sm:inline">
-                    Rated excellent
+                    Rated Excellent
                   </span>
                   <img
                     src="/gifs_assets/google.png"

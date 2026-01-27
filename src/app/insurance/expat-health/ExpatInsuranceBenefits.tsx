@@ -17,7 +17,7 @@ const benefits = [
   {
     icon: PiggyBank,
     title: "Your savings potential",
-    desc: `In contrast to public health insurance, your premium with ottonova is calculated independently of your income. This means that you could save up to €4,371 per year – with a higher scope of benefits at the same time.`,
+    desc: `In contrast to public health insurance, your premium with InsurBe is calculated independently of your income. This means that you could save up to €4,371 per year – with a higher scope of benefits at the same time.`,
   },
   {
     icon: Stethoscope,
@@ -45,11 +45,12 @@ export default function ExpatInsuranceBenefits() {
           className="text-center max-w-3xl mx-auto"
         >
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-primary">
-              Up to €4,371 annual savings potential
-            </span>{" "}
-            while getting much more benefits for your health
-          </h2>
+  <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-primary">
+    Comprehensive health insurance
+  </span>{" "}
+  designed to support your long-term well-being
+</h2>
+
 
           <p className="mt-6 text-gray-600 text-base sm:text-lg">
             Find out why private insurance is worthwhile for you:
