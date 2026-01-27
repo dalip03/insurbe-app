@@ -22,7 +22,7 @@ const products = [
     link: "/products/privateProducts",
     gradient: "from-blue-500 to-cyan-500",
     bgGradient: "from-blue-50 to-cyan-50",
-    badge: "Premium",
+    // badge: "Premium",
   },
   {
     title: "Family",
@@ -31,7 +31,7 @@ const products = [
     link: "/products/pensionProducts",
     gradient: "from-purple-500 to-pink-500",
     bgGradient: "from-purple-50 to-pink-50",
-    badge: "Popular",
+    // badge: "Popular",
   },
   {
     title: "Visa Seekers",
@@ -40,7 +40,7 @@ const products = [
     link: "/products/visaSeakers",
     gradient: "from-green-500 to-emerald-500",
     bgGradient: "from-green-50 to-emerald-50",
-    badge: "Essential",
+    // badge: "Essential",
   },
   {
     title: "Students",
@@ -49,7 +49,7 @@ const products = [
     link: "/products/students",
     gradient: "from-orange-500 to-red-500",
     bgGradient: "from-orange-50 to-red-50",
-    badge: "Affordable",
+    // badge: "Affordable",
   },
 ];
 
@@ -210,7 +210,7 @@ export default function ProductBanner() {
                   />
 
                   {/* Badge */}
-                  <motion.div
+                  {/* <motion.div
                     initial={{ opacity: 0, scale: 0.8 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }}
@@ -219,7 +219,7 @@ export default function ProductBanner() {
                   >
                     <Star className="w-2 h-2 fill-current" />
                     {product.badge}
-                  </motion.div>
+                  </motion.div> */}
 
                   {/* Content */}
                   <div className="relative p-6 sm:p-8 flex flex-col h-full">

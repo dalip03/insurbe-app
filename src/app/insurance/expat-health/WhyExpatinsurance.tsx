@@ -59,7 +59,7 @@ export default function WhyExpatinsurance() {
 
           <h2 className="text-3xl sm:text-4xl text-center lg:text-5xl font-bold text-gray-900 md:px-20">
             Who can benefit from{" "}
-            <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-purple-600">
+            <span className="text-transparent bg-clip-text bg-linear-to-r from-purple-600 to-pink-500">
               expat health insurance?
             </span>
           </h2>

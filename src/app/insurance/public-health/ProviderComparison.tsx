@@ -1,12 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { Check, Gift, Sparkles } from "lucide-react";
+import { Check, Gift } from "lucide-react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 
 /* -------------------------------------------------------------------------- */
-/*                                  DATA                                      */
+/* DATA */
 /* -------------------------------------------------------------------------- */
 
 const providers = [
@@ -43,17 +43,15 @@ const providers = [
 ];
 
 /* -------------------------------------------------------------------------- */
-/*                               UI HELPERS                                   */
+/* HELPERS */
 /* -------------------------------------------------------------------------- */
 
 const Stars = ({ count }: { count: number }) => (
-  <div className="flex gap-1 justify-center">
+  <div className="flex justify-center gap-1">
     {[1, 2, 3].map((i) => (
       <span
         key={i}
-        className={`text-base ${
-          i <= count ? "text-gray-900" : "text-gray-300"
-        }`}
+        className={i <= count ? "text-gray-900" : "text-gray-300"}
       >
         ★
       </span>
@@ -62,13 +60,11 @@ const Stars = ({ count }: { count: number }) => (
 );
 
 const Speed = ({ count }: { count: number }) => (
-  <div className="flex gap-1 justify-center">
+  <div className="flex justify-center gap-1">
     {[1, 2, 3].map((i) => (
       <span
         key={i}
-        className={`text-base ${
-          i <= count ? "text-gray-900" : "text-gray-300"
-        }`}
+        className={i <= count ? "text-gray-900" : "text-gray-300"}
       >
         ⚡
       </span>
@@ -76,21 +72,25 @@ const Speed = ({ count }: { count: number }) => (
   </div>
 );
 
+/* shared grid row structure */
+const ROWS =
+  "grid grid-rows-[96px_repeat(7,64px)]";
+
 /* -------------------------------------------------------------------------- */
-/*                              MAIN COMPONENT                                */
+/* MAIN */
 /* -------------------------------------------------------------------------- */
 
 export default function ProviderComparison() {
   const router = useRouter();
 
-  /** PASS SELECTED PROVIDER */
   const handleSignup = (providerId: string) => {
     router.push(`/insuranceSignupFlow?provider=${providerId}`);
   };
 
   return (
-    <section className="relative py-16 sm:py-10 px-4 sm:px-8 lg:px-18 overflow-hidden">
+    <section className="relative py-16 px-4 sm:px-8">
       <div className="max-w-7xl mx-auto">
+
         {/* HEADER */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -99,34 +99,22 @@ export default function ProviderComparison() {
           transition={{ duration: 0.6 }}
           className="text-center mb-14"
         >
-          {/* New Badge */}
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.3, type: "spring" }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-purple-100 to-blue-100 border-2 border-purple-200 mb-6 shadow-lg"
-          >
-            
-            <span className="text-sm font-bold text-purple-700 uppercase tracking-wide">
-              Provider Comparison
-            </span>
-          </motion.div>
-
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 leading-tight sm:px-20">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold">
             Compare{" "}
-            <span className="text-transparent bg-clip-text bg-linear-to-r from-purple-600  to-pink-500">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-primary">
               public health insurance providers
             </span>
           </h1>
-          <p className="mt-5 text-gray-600 text-base sm:text-lg max-w-4xl mx-auto font-medium">
+          <p className="mt-4 text-gray-600 max-w-3xl mx-auto">
             Core benefits are the same — service quality makes the difference.
           </p>
         </motion.div>
 
-        {/* ========================== DESKTOP VIEW ========================== */}
+        {/* ================= DESKTOP ================= */}
         <div className="hidden lg:grid grid-cols-[260px_repeat(3,1fr)] border-t border-gray-200">
+
           {/* LEFT LABELS */}
-          <div className="py-8 space-y-10 font-semibold text-gray-700">
+          <div className={`py-8 font-semibold text-gray-700 ${ROWS}`}>
             <div />
             <div>Your contribution</div>
             <div>English support</div>
@@ -134,70 +122,66 @@ export default function ProviderComparison() {
             <div>Processing speed</div>
             <div>Dependents coverage</div>
             <div>Highlight</div>
-            {/* Updated Bonus Label */}
             <div className="flex items-center gap-2">
               <Gift className="w-4 h-4 text-purple-600" />
-              <span>Bonus program</span>
+              Bonus program
             </div>
           </div>
 
+          {/* PROVIDERS */}
           {providers.map((p) => (
             <div
               key={p.id}
-              className="border-l border-gray-200 py-8 px-6 space-y-10"
+              className={`border-l border-gray-200 py-8 px-6 ${ROWS}`}
             >
-              {/* PROVIDER HEADER */}
+              {/* ROW 1 – HEADER */}
               <div className="text-center">
-                <div className="flex items-center justify-center gap-2">
-                  <Image
-                    src={p.logo}
-                    alt={p.name}
-                    width={28}
-                    height={28}
-                    className="object-contain"
-                  />
-                  <span className="font-bold text-gray-900">{p.name}</span>
+                <div className="flex justify-center items-center gap-2">
+                  <Image src={p.logo} alt={p.name} width={28} height={28} />
+                  <span className="font-bold">{p.name}</span>
                 </div>
-
-                {/* Enhanced Button */}
-                <motion.button
-                  type="button"
-                  whileHover={{ scale: 1.05, y: -2 }}
-                  whileTap={{ scale: 0.95 }}
+                <button
                   onClick={() => handleSignup(p.id)}
-                  className="mt-4 w-full rounded-xl py-3 text-sm font-bold text-white
-                    bg-gradient-to-r from-purple-600 via-primary to-blue-600
-                    hover:from-purple-700 hover:via-primary/90 hover:to-blue-700
-                    transition-all shadow-lg hover:shadow-xl shadow-purple-500/30
-                    focus:outline-none focus:ring-4 focus:ring-purple-300"
+                  className="mt-4 w-full rounded-xl py-2 text-sm font-bold text-white
+                    bg-gradient-to-r from-purple-600 to-primary shadow"
                 >
                   Sign up →
-                </motion.button>
+                </button>
               </div>
 
+              {/* ROW 2 – CONTRIBUTION */}
               <div className="text-center font-semibold">
                 € —
                 <div>
-                  <button type="button" className="text-sm underline text-gray-600 hover:text-primary transition">
+                  <button className="text-sm underline text-gray-600">
                     Calculate
                   </button>
                 </div>
               </div>
 
+              {/* ROW 3 */}
               <Stars count={p.english} />
+
+              {/* ROW 4 */}
               <Stars count={p.digital} />
+
+              {/* ROW 5 */}
               <Speed count={p.speed} />
 
+              {/* ROW 6 */}
               <div className="flex justify-center">
                 <Check className="w-5 h-5 text-green-600" />
               </div>
 
-              <p className="text-sm text-center text-gray-700">{p.highlight}</p>
-              
-              {/* Enhanced Bonus Display */}
-              <div className="flex flex-col items-center gap-2">
-                <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-200 rounded-lg px-4 py-2 shadow-sm">
-                  <p className="text-sm font-bold text-center bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
+              {/* ROW 7 */}
+              <p className="text-sm text-center text-gray-700">
+                {p.highlight}
+              </p>
+
+              {/* ROW 8 */}
+              <div className="flex justify-center">
+                <div className=" px-4 py-2">
+                  <p className="text-sm font-bold text-amber-700">
                     {p.bonus}
                   </p>
                 </div>
@@ -206,36 +190,22 @@ export default function ProviderComparison() {
           ))}
         </div>
 
-        {/* ========================== MOBILE VIEW ========================== */}
+        {/* ================= MOBILE (unchanged logic) ================= */}
         <div className="grid gap-6 lg:hidden">
           {providers.map((p) => (
             <div
               key={p.id}
-              className="border border-gray-200 rounded-xl p-5 shadow-sm bg-white"
+              className="border border-gray-200 rounded-xl p-5 bg-white shadow"
             >
-              <div className="flex justify-between items-center mb-4 pb-4 border-b">
-                <Image
-                  src={p.logo}
-                  alt={p.name}
-                  width={80}
-                  height={32}
-                  className="object-contain"
-                />
-
-                {/* Enhanced Mobile Button */}
-                <motion.button
-                  type="button"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+              <div className="flex justify-between items-center mb-4 border-b pb-4">
+                <Image src={p.logo} alt={p.name} width={80} height={32} />
+                <button
                   onClick={() => handleSignup(p.id)}
-                  className="rounded-xl px-5 py-2.5 text-sm font-bold text-white
-                    bg-gradient-to-r from-purple-600 via-primary to-blue-600
-                    hover:from-purple-700 hover:via-primary/90 hover:to-blue-700
-                    transition-all shadow-lg shadow-purple-500/30
-                    focus:outline-none focus:ring-4 focus:ring-purple-300"
+                  className="rounded-lg px-4 py-2 text-sm font-bold text-white
+                    bg-gradient-to-r from-purple-600 to-primary"
                 >
                   Sign up →
-                </motion.button>
+                </button>
               </div>
 
               <div className="space-y-3 text-sm">
@@ -243,43 +213,31 @@ export default function ProviderComparison() {
                   <span>English support</span>
                   <Stars count={p.english} />
                 </div>
-
                 <div className="flex justify-between">
                   <span>Digital services</span>
                   <Stars count={p.digital} />
                 </div>
-
                 <div className="flex justify-between">
                   <span>Processing speed</span>
                   <Speed count={p.speed} />
                 </div>
-
                 <div className="flex justify-between">
                   <span>Dependents</span>
                   <Check className="w-5 h-5 text-green-600" />
                 </div>
-
                 <div>
-                  <span className="font-medium">Highlight</span>
-                  <p className="text-gray-600">{p.highlight}</p>
+                  <strong>Highlight</strong>
+                  <p>{p.highlight}</p>
                 </div>
-
-                {/* Enhanced Mobile Bonus */}
                 <div>
-                  <div className="flex items-center gap-2 mb-2">
-                    <Gift className="w-4 h-4 text-purple-600" />
-                    <span className="font-bold text-gray-900">Bonus Program</span>
-                  </div>
-                  <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-200 rounded-lg px-4 py-2.5 shadow-sm">
-                    <p className="text-sm font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
-                      {p.bonus}
-                    </p>
-                  </div>
+                  <strong>Bonus</strong>
+                  <p>{p.bonus}</p>
                 </div>
               </div>
             </div>
           ))}
         </div>
+
       </div>
     </section>
   );
