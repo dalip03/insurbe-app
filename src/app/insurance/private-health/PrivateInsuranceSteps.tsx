@@ -111,7 +111,7 @@ export default function PrivateInsuranceSteps() {
     bg-gradient-to-r from-purple-600 to-primary
     hover:opacity-90 transition shadow-lg"
           >
-            Sign up for First’ Expat+
+            Sign up for Private Insurance
           </Link>
         </motion.div>
       </div>

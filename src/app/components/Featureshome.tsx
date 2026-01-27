@@ -38,7 +38,7 @@ export default function Featureshome() {
         >
           <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900">
             Discover the{" "}
-            <span className="text-transparent bg-clip-text bg-linear-to-r from-purple-600 to-pink-500">
+            <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-purple-600">
               InsurBe Advantage
             </span>
           </h2>

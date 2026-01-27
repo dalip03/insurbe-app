@@ -80,7 +80,7 @@ const ageOptions = [
             opacity: [0.03, 0.06, 0.03]
           }}
           transition={{ duration: 25, repeat: Infinity }}
-          className="absolute -bottom-1/4 -right-1/4 w-1/2 h-1/2 bg-gradient-to-br from-pink-500 to-purple-500 rounded-full blur-3xl"
+          className="absolute -bottom-1/4 -right-1/4 w-1/2 h-1/2 bg-linear-to-r from-primary to-purple-600 rounded-full blur-3xl"
         />
       </div>
 
@@ -103,7 +103,7 @@ const ageOptions = [
 
           <h2 className="text-4xl sm:text-5xl  font-extrabold text-gray-900 leading-[1.1]">
             Not sure which plan
-            <span className="block mt-3 text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 animate-gradient">
+            <span className="block mt-3 text-transparent bg-clip-text bg-linear-to-r from-primary to-purple-600 animate-gradient">
               fits your profile?
             </span>
           </h2>
@@ -127,7 +127,7 @@ const ageOptions = [
                 transition={{ delay: idx * 0.1 }}
                 className="flex flex-col"
               >
-                <span className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-600">
+                <span className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-600">
                   {stat.value}
                 </span>
                 <span className="text-sm text-gray-600">{stat.label}</span>

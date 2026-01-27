@@ -32,7 +32,7 @@ export default function AboutHero() {
             </h1> */}
 
              <h1 className="text-4xl sm:text-5xl  md:text-5xl font-black text-gray-900 leading-tight tracking-tight">
-              InsurBe – Your Tech- <span className="text-transparent bg-clip-text bg-linear-to-r from-purple-600 to-pink-500">Powered Insurance Partner</span> </h1>
+              InsurBe – Your Tech- <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-purple-600">Powered Insurance Partner</span> </h1>
 
             {/* Subheading */}
             {/* <p className="text-base sm:text-lg text-gray-800">

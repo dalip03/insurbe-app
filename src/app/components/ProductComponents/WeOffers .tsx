@@ -10,6 +10,7 @@ import {
   Stethoscope,
   Sparkles,
   Star,
+  StarIcon,
 } from "lucide-react";
 import ServiceModal from "./ServiceModal";
 
@@ -43,7 +44,7 @@ const plans = [
     icon: Users,
     key: "expat",
     href: "/insurance/expat-health",
-    gradient: "from-orange-500 to-red-500",
+    gradient: "from-primary to-purple-600",
     bgGradient: "from-orange-50 to-red-50",
     badge: "Flexible",
   },
@@ -122,14 +123,14 @@ export default function WeOffers() {
           className="inline-block mb-6"
         >
           <span className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 font-bold text-sm shadow-lg">
-            <Sparkles className="w-4 h-4" />
+            <StarIcon className="w-4 h-4" />
             Seamless Coverage
           </span>
         </motion.div>
 
         <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6">
           <span className="text-gray-900">Plans </span>
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-primary to-pink-600">
+          <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-purple-600">
             We Offer
           </span>
         </h2>

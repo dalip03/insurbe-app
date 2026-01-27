@@ -17,7 +17,7 @@ export default function AboutTeamNew() {
 
             {/* Heading */}
             <h2 className="text-3xl sm:text-4xl font-extrabold leading-tight">
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600">
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-purple-600">
                 Built by people
               </span>{" "}
               who understand insurance, technology, and trust

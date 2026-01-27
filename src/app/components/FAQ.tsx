@@ -90,7 +90,7 @@ export default function FAQ() {
           >
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 ">
             Frequently {" "}
-            <span className="text-transparent bg-clip-text bg-linear-to-r from-purple-600 to-pink-500">
+            <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-purple-600">
              asked questions
             </span>
           </h2>

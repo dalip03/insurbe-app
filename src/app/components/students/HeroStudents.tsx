@@ -55,7 +55,7 @@ function HeroStudents() {
               className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight"
             >
               Health Insurance for
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-600">
+              <span className="block text-transparent bg-clip-text bg-linear-to-r from-primary to-purple-600">
                 Students in Germany
               </span>
             </motion.h1>

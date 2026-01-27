@@ -27,7 +27,7 @@ export default function PublicInsuranceHeroSection() {
         >
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
             Public{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-primary">
+            <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-purple-600">
               Health Insurance
             </span>
             <br className="hidden sm:block" />

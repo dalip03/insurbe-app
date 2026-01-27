@@ -67,7 +67,7 @@ export default function AboutSectionnew() {
         >
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
             We Actively Strive To Exceed Our <br className="hidden sm:block" />
-            <span className="text-transparent bg-clip-text bg-linear-to-r from-purple-600 to-pink-500"> Customers' Expectations</span>
+            <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-purple-600"> Customers' Expectations</span>
           </h2>
           <p className="text-gray-700 text-sm sm:text-base lg:text-lg">
             Best Offers at competitive prices, never seen before

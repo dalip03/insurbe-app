@@ -34,7 +34,7 @@ export default function SustainableSection() {
           className="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-10"
         >
           Building a{" "}
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600">
+          <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-purple-600">
             responsible and future-ready
           </span>{" "}
           insurance platform

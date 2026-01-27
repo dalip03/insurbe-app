@@ -99,7 +99,7 @@ export default function HeroInsurancenew1() {
               {/* Heading */}
               <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl  font-extrabold text-gray-900 leading-tight px-2 sm:px-4">
                 Get Insured in{" "}
-                <span className="text-transparent bg-clip-text bg-linear-to-r from-purple-600 via-pink-500 to-blue-600">
+                <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-purple-600">
                   Minutes
                 </span>
               </h1>
@@ -115,7 +115,7 @@ export default function HeroInsurancenew1() {
                   onClick={() => setIsModalOpen(true)}
                   whileHover={{ scale: 1.04 }}
                   whileTap={{ scale: 0.96 }}
-                  className="w-full xs:flex-1 rounded-2xl lg:rounded-3xl bg-gradient-to-r from-purple-600 via-pink-500 to-blue-600 text-white text-sm sm:text-base font-bold py-3 sm:py-4 px-6 shadow-xl hover:shadow-2xl transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-purple-300/50"
+                  className="w-full xs:flex-1 rounded-2xl lg:rounded-3xl bg-linear-to-r from-primary to-purple-600 text-white text-sm sm:text-base font-bold py-3 sm:py-4 px-6 shadow-xl hover:shadow-2xl transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-purple-300/50"
                 >
                   Take the questionnaire
                 </motion.button>

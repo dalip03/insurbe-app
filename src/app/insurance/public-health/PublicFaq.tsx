@@ -49,7 +49,7 @@ export default function PublicInsuranceFAQ() {
         <div className="mb-12">
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">
             Frequently asked{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-primary">
+            <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-purple-600">
               questions
             </span>
           </h2>

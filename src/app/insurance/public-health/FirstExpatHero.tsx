@@ -41,7 +41,7 @@ export default function FirstExpatHero() {
 >
   <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900">
     Public Health Insurance in{" "}
-    <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-primary">
+    <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-purple-600">
       Germany
     </span>
   </h2>

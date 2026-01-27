@@ -38,7 +38,7 @@ const products = [
     desc: "Get valid insurances for your visa approval",
     icon: Stamp,
     link: "/products/visaSeakers",
-    gradient: "from-green-500 to-emerald-500",
+    gradient: "from-blue-400 to-pink-600",
     bgGradient: "from-green-50 to-emerald-50",
     badge: "Essential",
   },
@@ -47,7 +47,7 @@ const products = [
     desc: "Affordable, government-approved student plans",
     icon: GraduationCap,
     link: "/products/students",
-    gradient: "from-orange-500 to-red-500",
+    gradient: "from-primary to-purple-600",
     bgGradient: "from-orange-50 to-red-50",
     badge: "Affordable",
   },
@@ -135,7 +135,7 @@ export default function ProductBanner() {
         </motion.div> */}
 
         <h2 className="text-3xl sm:text-4xl font-bold mb-4 px-4">
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-500">
+          <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-purple-600">
             Our Curated Products
           </span>
           <br />

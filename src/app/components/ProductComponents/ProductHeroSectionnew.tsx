@@ -51,9 +51,9 @@ export default function ProductHeroSectionnew() {
             >
               You work hard.
               <br />
-              <span className="text-transparent bg-clip-text bg-linear-to-r from-purple-600 via-pink-600 to-blue-600">
-                Your health insurance should too.
-              </span>
+         <span className="block text-transparent bg-clip-text bg-linear-to-r from-primary to-purple-600">
+  Your health insurance should too.
+</span>
             </motion.h1>
 
             {/* Paragraph (UNCHANGED TEXT) */}

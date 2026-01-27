@@ -60,7 +60,7 @@ export default function AboutHeads() {
             viewport={{ once: true }}
             className="text-3xl sm:text-4xl font-extrabold"
           >
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600">
+            <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-purple-600">
               Meet the people
             </span>{" "}
             behind InsurBe

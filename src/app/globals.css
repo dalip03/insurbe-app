@@ -7,7 +7,7 @@
   --foreground: #171717;
   --primary: #531D6F;
   --secondary: #ffffff;
-
+   --heading: linear-gradient(to right, #531D6F, #8B5CF6);
   --font-jost: "Jost", sans-serif;
   --font-lexend: "Lexend", sans-serif;
 }
@@ -25,6 +25,7 @@ html {
   --font-mono: var(--font-geist-mono);
   --font-jost: var(--font-jost);
   --font-lexend: var(--font-lexend);
+  --color-heading: var(--heading);
 }
 
 body {
@@ -49,6 +50,10 @@ body {
 
   .group:hover .custom-border-animate::before {
     transform: scaleX(1) scaleY(1);
+  }
+
+    .bg-heading-gradient {
+    background: var(--heading);
   }
 }
 

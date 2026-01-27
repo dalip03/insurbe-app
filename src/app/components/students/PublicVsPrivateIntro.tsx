@@ -32,14 +32,14 @@ export default function PublicVsPrivateIntro() {
 
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
             Public or Private,{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-primary">
+            <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-purple-600">
               what's right for me?
             </span>
           </h2>
 
           <div className="space-y-4 text-gray-600 text-sm sm:text-base leading-relaxed">
             <p className="flex items-start gap-3">
-              <CheckCircle2 className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" />
+              <CheckCircle2 className="w-5 h-5 text-purple-600 shrink-0 mt-0.5" />
               <span>
                 In Germany, health insurance is a <strong className="text-gray-900">legal requirement</strong> for everyone.
                 You must have health insurance to get your visa, enroll at a
