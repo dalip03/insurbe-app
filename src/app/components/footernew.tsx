@@ -171,7 +171,7 @@ export default function Footernew() {
               <ul className="space-y-4">
                 <li>
                   <a
-                    href="/privacypolicy"
+                    href="/imprint"
                     className="hover:text-purple-300 text-xl md:text-[18px]"
                   >
                     Imprint
