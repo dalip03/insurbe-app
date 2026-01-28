@@ -16,7 +16,7 @@ const teamMembers: TeamMember[] = [
     role: "Founder & CEO",
     image: "/about/marvin.jpeg",
     bio: [
-      "Founded by an industry expert with over a decade of experience, our company was created to simplify insurance through transparency, trust, and smart digital solutions designed for modern life.",
+      "Founder and industry expert with over a decade of experience in financial services and leadership. Holds degrees in Business Informatics and Management from Frankfurt School of Finance & Management and Berlin School of Economics and Law. Driven to simplify insurance through transparency, trust, and smart digital solutions for modern life.",
     ],
   },
   {
@@ -24,7 +24,7 @@ const teamMembers: TeamMember[] = [
     role: "Director",
     image: "/about/ceo1.JPG",
     bio: [
-      "Seasoned entrepreneur with over 24 years of experience in IT consultancy and business leadership. Skilled at driving strategic growth, fostering strong customer relationships, and managing key accounts to deliver sustained value and client satisfaction.",
+      "Seasoned business leader with over 24 years of experience in IT consultancy and enterprise growth. Holds a strong academic foundation in engineering and management, enabling a strategic, technology-driven approach to long-term business success and client value creation.",
     ],
   },
   {
@@ -32,7 +32,7 @@ const teamMembers: TeamMember[] = [
     role: "Head of Technology",
     image: "/about/Abhinandan.JPG",
     bio: [
-      "Over a decade of experience in research and building scalable AI solutions for enterprises. Proven track record of defining technology vision and strategy, driving innovation and excellence in AI-powered insurance solutions.",
+      "Technology leader with advanced academic training in computer science and artificial intelligence. Brings over a decade of experience in research and building scalable, enterprise-grade AI systems that power innovation in modern insurance platforms.",
     ],
   },
   {
@@ -40,10 +40,11 @@ const teamMembers: TeamMember[] = [
     role: "Chief of Staff",
     image: "/about/safiya.JPG",
     bio: [
-      "Experienced in operations, strategy, and collaboration with a proven ability to streamline processes, align priorities, and ensure smooth, efficient execution.",
+      "Professionally trained in business operations and organizational strategy. Combines academic insight with hands-on execution to streamline processes, align leadership priorities, and ensure operational excellence across the organization.",
     ],
   },
 ];
+
 
 export default function AboutHeads() {
   return (

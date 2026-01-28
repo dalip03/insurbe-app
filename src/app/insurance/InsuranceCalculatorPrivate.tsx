@@ -151,12 +151,12 @@ export default function InsuranceCalculatorPrivate() {
           
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">
             Health Insurance{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-primary">
+            <span className="text-transparent bg-clip-text bg-linear-to-r from-purple-600 to-primary">
               Premium Calculator
             </span>
           </h2>
           <p className="mt-3 text-gray-600">
-            Estimate your monthly TK health insurance contribution
+            Estimate your monthly health insurance contribution
           </p>
         </motion.div>
 
@@ -194,7 +194,7 @@ export default function InsuranceCalculatorPrivate() {
                     className={`px-5 py-2.5 rounded-full border text-sm font-medium transition-all
                       ${
                         status === opt
-                          ? "bg-gradient-to-r from-purple-600 to-primary text-white border-transparent shadow-lg"
+                          ? "bg-linear-to-r from-purple-600 to-primary text-white border-transparent shadow-lg"
                           : "bg-white border-gray-300 text-gray-700 hover:border-purple-400 hover:shadow-md"
                       }`}
                   >
@@ -251,7 +251,7 @@ export default function InsuranceCalculatorPrivate() {
                     className={`px-8 py-2.5 rounded-full border text-sm font-medium transition-all
                       ${
                         hasKids === (opt === "Yes")
-                          ? "bg-gradient-to-r from-purple-600 to-primary text-white border-transparent shadow-lg"
+                          ? "bg-linear-to-r from-purple-600 to-primary text-white border-transparent shadow-lg"
                           : "bg-white border-gray-300 text-gray-700 hover:border-purple-400 hover:shadow-md"
                       }`}
                   >
@@ -270,7 +270,7 @@ export default function InsuranceCalculatorPrivate() {
               whileTap="tap"
               disabled={isCalculating}
               className="w-full py-4 rounded-xl font-semibold text-white
-                bg-gradient-to-r from-purple-600 to-primary
+                bg-linear-to-r from-purple-600 to-primary
                 hover:opacity-90 transition-all shadow-lg cursor-pointer
                 disabled:opacity-50 disabled:cursor-not-allowed
                 relative overflow-hidden"
@@ -298,7 +298,7 @@ export default function InsuranceCalculatorPrivate() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="flex flex-col justify-center items-center text-center bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-6 border border-purple-100"
+            className="flex flex-col justify-center items-center text-center bg-linear-to-br from-purple-50 to-pink-50 rounded-xl p-6 border border-purple-100"
           >
             <p className="text-sm font-medium text-gray-600 mb-2">
               Estimated Monthly Premium
@@ -311,7 +311,7 @@ export default function InsuranceCalculatorPrivate() {
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.8, opacity: 0 }}
                 transition={{ type: "spring", duration: 0.5 }}
-                className="text-5xl font-bold bg-gradient-to-r from-purple-600 to-primary bg-clip-text text-transparent mb-2"
+                className="text-5xl font-bold bg-linear-to-r from-purple-600 to-primary bg-clip-text text-transparent mb-2"
               >
                 € {premium ?? "--"}
               </motion.div>

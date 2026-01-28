@@ -263,18 +263,7 @@ function TariffColumn({
                 </motion.div>
               ))}
 
-              {/* Download Brochure */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: comparisonData.length * 0.05 }}
-                className="pt-4"
-              >
-                <button className="w-full py-3 rounded-full border-2 border-purple-600 text-purple-600 font-semibold hover:bg-purple-600 hover:text-white transition inline-flex items-center justify-center gap-2">
-                  <Download className="w-4 h-4" />
-                  Download Brochure
-                </button>
-              </motion.div>
+              
             </div>
           </motion.div>
         )}

@@ -56,12 +56,11 @@ interface FormData {
 
   // Declaration
   acceptTerms: boolean;
-  acceptDisclosure: boolean;
   acceptMarketing: boolean;
   needsConsultation: string;
 }
 
-export default function OttonovaSignupForm() {
+export default function InsurBeSignupForm() {
   const [formData, setFormData] = useState<FormData>({
     title: "",
     firstName: "",
@@ -87,7 +86,7 @@ export default function OttonovaSignupForm() {
     medicalQuestion2: "",
     countryOfOrigin: "Germany",
     acceptTerms: false,
-    acceptDisclosure: false,
+   
     acceptMarketing: false,
     needsConsultation: "no",
   });
@@ -148,7 +147,7 @@ export default function OttonovaSignupForm() {
 
     // Declaration
     if (!formData.acceptTerms) newErrors.acceptTerms = "You must accept the terms";
-    if (!formData.acceptDisclosure) newErrors.acceptDisclosure = "You must accept the disclosure";
+   
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -159,7 +158,7 @@ export default function OttonovaSignupForm() {
 
     if (validateForm()) {
       // Store form data in localStorage for persistence
-      localStorage.setItem("ottonovaFormData", JSON.stringify(formData));
+      localStorage.setItem("InsurBeFormData", JSON.stringify(formData));
       setIsSubmitted(true);
       window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
@@ -172,7 +171,7 @@ export default function OttonovaSignupForm() {
 
   if (isSubmitted) {
     return (
-      <section className="min-h-screen py-20 px-4 bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
+      <section className="min-h-screen py-20 px-4 ">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -184,7 +183,7 @@ export default function OttonovaSignupForm() {
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
-              className="inline-flex items-center justify-center w-32 h-32 rounded-full bg-gradient-to-br from-green-400 to-emerald-500 shadow-2xl shadow-green-500/30 mb-8"
+              className="inline-flex items-center justify-center w-32 h-32 rounded-full bg-linear-to-br from-green-400 to-emerald-500 shadow-2xl shadow-green-500/30 mb-8"
             >
               <CheckCircle className="w-16 h-16 text-white" />
             </motion.div>
@@ -197,7 +196,7 @@ export default function OttonovaSignupForm() {
               Thank you, <span className="font-bold text-green-600">{formData.firstName}</span>! Your insurance application has been received.
             </p>
 
-            <div className="bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 rounded-2xl p-6 mb-8">
+            <div className="bg-linear-to-br from-green-50 to-emerald-50 border-2 border-green-200 rounded-2xl p-6 mb-8">
               <h3 className="font-bold text-gray-900 mb-3 flex items-center justify-center gap-2">
                 <FileText className="w-5 h-5 text-green-600" />
                 What happens next?
@@ -228,15 +227,15 @@ export default function OttonovaSignupForm() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => window.location.href = "/"}
-                className="px-8 py-4 rounded-2xl font-bold text-white bg-gradient-to-r from-green-600 to-emerald-600 shadow-xl shadow-green-500/30 hover:shadow-green-500/50 transition-all"
+                className="px-8 py-4 rounded-2xl font-bold text-white bg-linear-to-r from-green-600 to-emerald-600 shadow-xl shadow-green-500/30 hover:shadow-green-500/50 transition-all"
               >
                 Return to Homepage
               </motion.button>
 
               <p className="text-sm text-gray-500">
                 Need help? Contact us at{" "}
-                <a href="mailto:info@ottonova.com" className="text-green-600 font-semibold hover:underline">
-                  info@ottonova.com
+                <a href="mailto:info@Insurbe.com" className="text-green-600 font-semibold hover:underline">
+                  info@Insurbe.com
                 </a>{" "}
                 or call{" "}
                 <a href="tel:+4970244695100" className="text-green-600 font-semibold hover:underline">
@@ -251,7 +250,7 @@ export default function OttonovaSignupForm() {
   }
 
   return (
-    <section className="min-h-screen py-20 px-4 bg-gradient-to-br from-slate-50 via-purple-50/30 to-blue-50/40">
+    <section className="min-h-screen py-20 px-4 bg-linear-to-br from-slate-50 via-purple-50/30 to-blue-50/40">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <motion.div
@@ -259,9 +258,9 @@ export default function OttonovaSignupForm() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-12"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-purple-100 to-blue-100 border border-purple-200/50 mb-4">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-linear-to-r from-purple-100 to-blue-100 border border-purple-200/50 mb-4">
             <Shield className="w-4 h-4 text-purple-600" />
-            <span className="text-sm font-semibold text-purple-700">OTTONOVA STUDENT</span>
+            <span className="text-sm font-semibold text-purple-700">InsurBe STUDENT</span>
           </div>
           <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-4">
             Online Application
@@ -523,7 +522,7 @@ export default function OttonovaSignupForm() {
               </div>
 
               <RadioGroup
-                label="Has the insured person had a health insurance (still at the commencement of the new OTTONOVA Student insurance or within a period of 6 months before)?"
+                label="Has the insured person had a health insurance (still at the commencement of the new InsurBe Student insurance or within a period of 6 months before)?"
                 name="hadPreviousInsurance"
                 value={formData.hadPreviousInsurance}
                 onChange={handleInputChange}
@@ -536,50 +535,34 @@ export default function OttonovaSignupForm() {
             </div>
           </FormSection>
 
-          {/* Health Insurance */}
-          <FormSection title="Health Insurance" icon={Shield} color="emerald">
-            <div className="space-y-4">
-              {[
-                {
-                  value: "classic",
-                  title: "OTTONOVA Student Classic",
-                  description: "Excluding liability and accident insurance",
-                },
-                {
-                  value: "classicPlus",
-                  title: "OTTONOVA Student Classic Plus",
-                  description: "Including liability and accident insurance",
-                },
-                {
-                  value: "comfort",
-                  title: "OTTONOVA Student Comfort",
-                  description: "Excluding liability and accident insurance",
-                },
-              ].map((option) => (
-                <label
-                  key={option.value}
-                  className={`flex items-start gap-4 p-5 rounded-2xl border-2 cursor-pointer transition-all ${
-                    formData.insuranceType === option.value
-                      ? "border-emerald-500 bg-gradient-to-br from-emerald-50 to-green-50 shadow-lg"
-                      : "border-gray-200 bg-white/50 hover:border-emerald-300"
-                  }`}
-                >
-                  <input
-                    type="radio"
-                    name="insuranceType"
-                    value={option.value}
-                    checked={formData.insuranceType === option.value}
-                    onChange={handleInputChange}
-                    className="mt-1 w-5 h-5 text-emerald-600 focus:ring-emerald-500"
-                  />
-                  <div>
-                    <div className="font-bold text-gray-900">{option.title}</div>
-                    <div className="text-sm text-gray-600">{option.description}</div>
-                  </div>
-                </label>
-              ))}
-            </div>
-          </FormSection>
+        
+         {/* Health Insurance */}
+<FormSection title="Health Insurance" icon={Shield} color="emerald">
+  <label
+    className={`flex items-start gap-4 p-5 rounded-2xl border-2 cursor-pointer transition-all border-emerald-500 bg-linear-to-br from-emerald-50 to-green-50 shadow-lg`}
+  >
+    <input
+      type="radio"
+      name="insuranceType"
+      value="classic"
+      checked={true}
+      readOnly
+      className="mt-1 w-5 h-5 text-emerald-600 focus:ring-emerald-500"
+    />
+
+    <div className="flex-1">
+      <div className="flex items-center justify-between">
+        <div className="font-bold text-gray-900 text-lg">
+          InsurBe Student Classic
+        </div>
+        <div className="font-extrabold text-emerald-600 text-lg">
+          116 €
+        </div>
+      </div>
+    </div>
+  </label>
+</FormSection>
+
 
           {/* Medical Questions */}
           <FormSection title="Medical Questions" icon={FileText} color="red">
@@ -650,31 +633,20 @@ export default function OttonovaSignupForm() {
                 .
               </CheckboxField>
 
-              <CheckboxField
-                name="acceptDisclosure"
-                checked={formData.acceptDisclosure}
-                onChange={handleInputChange}
-                error={errors.acceptDisclosure}
-              >
-                Yes, I have read the{" "}
-                <a href="#" className="text-purple-600 font-semibold hover:underline">
-                  notification for the disclosure obligation and the consequences of false statements
-                </a>
-                . My statements are in all truthfulness complete and true.
-              </CheckboxField>
+
 
               <CheckboxField
                 name="acceptMarketing"
                 checked={formData.acceptMarketing}
                 onChange={handleInputChange}
               >
-                I consent to OTTONOVA GmbH sending me information and offers on other products for advertising purposes by email. I can object to the{" "}
+                I consent to InsurBe GmbH sending me information and offers on other products for advertising purposes by email. I can object to the{" "}
                 <a href="#" className="text-purple-600 font-semibold hover:underline">
                   use of my data
                 </a>{" "}
                 for advertising purposes at any time, for example by email to{" "}
-                <a href="mailto:info@ottonova.com" className="text-purple-600 font-semibold hover:underline">
-                  info@ottonova.com
+                <a href="mailto:info@insurbe.com" className="text-purple-600 font-semibold hover:underline">
+                  info@insurbe.com
                 </a>
               </CheckboxField>
 
@@ -696,13 +668,7 @@ export default function OttonovaSignupForm() {
                   ]}
                 />
 
-                {formData.needsConsultation === "no" && (
-                  <div className="mt-4 bg-amber-50 border-l-4 border-amber-500 p-4 rounded-lg">
-                    <p className="text-sm text-amber-800">
-                      We are legally obligated to inform you that waiving the right to consultation may adversely affect the ability to assert a claim against us due to a breach of obligation of consultation.
-                    </p>
-                  </div>
-                )}
+             
 
                 {formData.needsConsultation === "yes" && (
                   <div className="mt-4 bg-blue-50 border-l-4 border-blue-500 p-4 rounded-lg">
@@ -724,7 +690,7 @@ export default function OttonovaSignupForm() {
             type="submit"
             whileHover={{ scale: 1.02, y: -2 }}
             whileTap={{ scale: 0.98 }}
-            className="w-full py-5 rounded-2xl font-bold text-xl text-white bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 shadow-2xl shadow-purple-500/40 hover:shadow-purple-500/60 transition-all flex items-center justify-center gap-3"
+            className="w-full py-5 rounded-2xl font-bold text-xl text-white bg-linear-to-r from-purple-600 via-pink-600 to-blue-600 shadow-2xl shadow-purple-500/40 hover:shadow-purple-500/60 transition-all flex items-center justify-center gap-3"
           >
             <Sparkles className="w-6 h-6" />
             Submit Application
@@ -761,7 +727,7 @@ function FormSection({ title, icon: Icon, color, children }: FormSectionProps) {
 
   return (
     <div className="space-y-6">
-      <div className={`flex items-center gap-3 px-6 py-4 rounded-2xl bg-gradient-to-r ${colorMap[color]} text-white shadow-lg`}>
+      <div className={`flex items-center gap-3 px-6 py-4 rounded-2xl bg-linear-to-r ${colorMap[color]} text-white shadow-lg`}>
         <Icon className="w-6 h-6" />
         <h2 className="text-xl font-bold">{title}</h2>
       </div>
