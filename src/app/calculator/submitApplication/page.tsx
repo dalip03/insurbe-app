@@ -249,7 +249,7 @@ export default function SubmitApplication() {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-5xl md:text-6xl font-extrabold text-gray-900 mb-4"
+            className="text-3xl md:text-5xl font-extrabold bg-linear-to-r from-primary to-purple-600 bg-clip-text text-transparent leading-snug"
           >
             InsurBe Application
           </motion.h1>
@@ -259,7 +259,7 @@ export default function SubmitApplication() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.7, delay: 0.2 }}
-            className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto"
+            className="text-md md:text-lg text-gray-600 max-w-2xl mx-auto"
           >
             You can only apply for this insurance, if you provide an address in Germany.
           </motion.p>
@@ -267,7 +267,7 @@ export default function SubmitApplication() {
       </div>
 
       {/* FORM */}
-      <motion.div className="max-w-3xl mx-auto bg-white/80 backdrop-blur-sm rounded-2xl shadow-2xl p-8 mt-8 border border-white/40">
+      <motion.div className="max-w-4xl mx-auto bg-white/80 backdrop-blur-sm rounded-2xl shadow-2xl p-8 border border-white/40">
         <motion.form
           variants={containerVariants}
           initial="hidden"
