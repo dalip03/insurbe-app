@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { Check, Gift } from "lucide-react";
+import { Check, Gift, Star } from "lucide-react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 
@@ -10,16 +10,7 @@ import { useRouter } from "next/navigation";
 /* -------------------------------------------------------------------------- */
 
 const providers = [
-  {
-    id: "tk",
-    name: "TK",
-    logo: "/partners_asset/TK_logo.avif",
-    english: 3,
-    digital: 3,
-    speed: 3,
-    highlight: "Best digital services for students",
-    bonus: "Up to €400",
-  },
+  
   {
     id: "dak",
     name: "DAK",
@@ -29,6 +20,17 @@ const providers = [
     speed: 3,
     highlight: "Excellent coverage for families",
     bonus: "Up to €500",
+  },
+  {
+    id: "tk",
+    name: "TK",
+    logo: "/partners_asset/TK_logo.avif",
+    english: 3,
+    digital: 3,
+    speed: 3,
+    highlight: "Best digital services for students",
+    bonus: "Up to €400",
+    featured: true,
   },
   {
     id: "aok",
@@ -47,11 +49,11 @@ const providers = [
 /* -------------------------------------------------------------------------- */
 
 const Stars = ({ count }: { count: number }) => (
-  <div className="flex justify-center gap-1">
+  <div className="flex gap-1">
     {[1, 2, 3].map((i) => (
       <span
         key={i}
-        className={i <= count ? "text-gray-900" : "text-gray-300"}
+        className={i <= count ? "text-pink-500" : "text-gray-300"}
       >
         ★
       </span>
@@ -60,21 +62,17 @@ const Stars = ({ count }: { count: number }) => (
 );
 
 const Speed = ({ count }: { count: number }) => (
-  <div className="flex justify-center gap-1">
+  <div className="flex gap-1">
     {[1, 2, 3].map((i) => (
       <span
         key={i}
-        className={i <= count ? "text-gray-900" : "text-gray-300"}
+        className={i <= count ? "text-purple-600" : "text-gray-300"}
       >
         ⚡
       </span>
     ))}
   </div>
 );
-
-/* shared grid row structure */
-const ROWS =
-  "grid grid-rows-[96px_repeat(7,64px)]";
 
 /* -------------------------------------------------------------------------- */
 /* MAIN */
@@ -83,158 +81,111 @@ const ROWS =
 export default function ProviderComparison() {
   const router = useRouter();
 
-  const handleSignup = (providerId: string) => {
-    router.push(`/insuranceSignupFlow?provider=${providerId}`);
-  };
-
   return (
-    <section className="relative py-16 px-4 sm:px-8">
+    <section className="py-16 px-4">
       <div className="max-w-7xl mx-auto">
 
         {/* HEADER */}
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
           className="text-center mb-14"
         >
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold">
             Compare{" "}
-            <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-purple-600">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-600">
               public health insurance providers
             </span>
-          </h1>
+          </h2>
           <p className="mt-4 text-gray-600 max-w-3xl mx-auto">
             Core benefits are the same — service quality makes the difference.
           </p>
         </motion.div>
 
-        {/* ================= DESKTOP ================= */}
-        <div className="hidden lg:grid grid-cols-[260px_repeat(3,1fr)] border-t border-gray-200">
-
-          {/* LEFT LABELS */}
-          <div className={`py-8 font-semibold text-gray-700 ${ROWS}`}>
-            <div />
-            <div>Your contribution</div>
-            <div>English support</div>
-            <div>Digital services</div>
-            <div>Processing speed</div>
-            <div>Dependents coverage</div>
-            <div>Highlight</div>
-            <div className="flex items-center gap-2">
-              <Gift className="w-4 h-4 text-purple-600" />
-              Bonus program
-            </div>
-          </div>
-
-          {/* PROVIDERS */}
-          {providers.map((p) => (
-            <div
+        {/* PROVIDER CARDS (SAME DESIGN AS TARIFFS) */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          {providers.map((p, index) => (
+            <motion.div
               key={p.id}
-              className={`border-l border-gray-200 py-8 px-6 ${ROWS}`}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1 }}
+              whileHover={{ y: -10 }}
+              className={`relative rounded-3xl p-8 shadow-xl flex flex-col
+                ${
+                  p.featured
+                    ? "bg-gradient-to-br from-purple-600 to-purple-700 text-white shadow-2xl"
+                    : "bg-white border-2 border-gray-200"
+                }`}
             >
-              {/* ROW 1 – HEADER */}
-              <div className="text-center">
-                <div className="flex justify-center items-center gap-2">
-                  <Image src={p.logo} alt={p.name} width={28} height={28} />
-                  <span className="font-bold">{p.name}</span>
+              {/* BADGE */}
+              {p.featured && (
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2
+                  bg-gradient-to-r from-yellow-400 to-orange-400
+                  text-gray-900 text-xs font-bold px-4 py-2 rounded-full shadow">
+                  ⭐ Most Popular
                 </div>
-                <button
-                  onClick={() => handleSignup(p.id)}
-                  className="mt-4 w-full rounded-xl py-2 text-sm font-bold text-white
-                    bg-gradient-to-r from-purple-600 to-primary shadow"
-                >
-                  Sign up →
-                </button>
+              )}
+
+              {/* HEADER */}
+              <div className="flex items-center gap-3 mb-6">
+                <Image src={p.logo} alt={p.name} width={36} height={36} />
+                <h3 className="text-2xl font-bold">{p.name}</h3>
               </div>
 
-              {/* ROW 2 – CONTRIBUTION */}
-              <div className="text-center font-semibold">
-                € —
-                <div>
-                  <button className="text-sm underline text-gray-600">
-                    Calculate
-                  </button>
-                </div>
-              </div>
-
-              {/* ROW 3 */}
-              <Stars count={p.english} />
-
-              {/* ROW 4 */}
-              <Stars count={p.digital} />
-
-              {/* ROW 5 */}
-              <Speed count={p.speed} />
-
-              {/* ROW 6 */}
-              <div className="flex justify-center">
-                <Check className="w-5 h-5 text-green-600" />
-              </div>
-
-              {/* ROW 7 */}
-              <p className="text-sm text-center text-gray-700">
-                {p.highlight}
-              </p>
-
-              {/* ROW 8 */}
-              <div className="flex justify-center">
-                <div className=" px-4 py-2">
-                  <p className="text-sm font-bold text-amber-700">
-                    {p.bonus}
-                  </p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* ================= MOBILE (unchanged logic) ================= */}
-        <div className="grid gap-6 lg:hidden">
-          {providers.map((p) => (
-            <div
-              key={p.id}
-              className="border border-gray-200 rounded-xl p-5 bg-white shadow"
-            >
-              <div className="flex justify-between items-center mb-4 border-b pb-4">
-                <Image src={p.logo} alt={p.name} width={80} height={32} />
-                <button
-                  onClick={() => handleSignup(p.id)}
-                  className="rounded-lg px-4 py-2 text-sm font-bold text-white
-                    bg-gradient-to-r from-purple-600 to-primary"
-                >
-                  Sign up →
-                </button>
-              </div>
-
-              <div className="space-y-3 text-sm">
-                <div className="flex justify-between">
+              {/* FEATURES */}
+              <div className="space-y-4 mb-6 text-sm">
+                <div className="flex justify-between items-center">
                   <span>English support</span>
                   <Stars count={p.english} />
                 </div>
-                <div className="flex justify-between">
+
+                <div className="flex justify-between items-center">
                   <span>Digital services</span>
                   <Stars count={p.digital} />
                 </div>
-                <div className="flex justify-between">
+
+                <div className="flex justify-between items-center">
                   <span>Processing speed</span>
                   <Speed count={p.speed} />
                 </div>
-                <div className="flex justify-between">
+
+                <div className="flex justify-between items-center">
                   <span>Dependents</span>
-                  <Check className="w-5 h-5 text-green-600" />
-                </div>
-                <div>
-                  <strong>Highlight</strong>
-                  <p>{p.highlight}</p>
-                </div>
-                <div>
-                  <strong>Bonus</strong>
-                  <p>{p.bonus}</p>
+                  <Check className="w-5 h-5 text-green-500" />
                 </div>
               </div>
-            </div>
+
+              {/* HIGHLIGHT */}
+              <p className="text-sm mb-6 opacity-90">
+                {p.highlight}
+              </p>
+
+              {/* BONUS */}
+              <div className="flex items-center gap-2 mb-8">
+                <Gift className="w-5 h-5 text-amber-500" />
+                <span className="font-bold text-amber-600">
+                  {p.bonus}
+                </span>
+              </div>
+
+              {/* CTA */}
+              <button
+                onClick={() =>
+                  router.push(`/insuranceSignupFlow?provider=${p.id}`)
+                }
+                className={`mt-auto w-full py-4 rounded-xl font-bold transition-all
+                  ${
+                    p.featured
+                      ? "bg-white text-purple-600 hover:bg-purple-50"
+                      : "bg-gradient-to-r from-purple-600 to-primary text-white"
+                  }`}
+              >
+                Sign up →
+              </button>
+            </motion.div>
           ))}
         </div>
 

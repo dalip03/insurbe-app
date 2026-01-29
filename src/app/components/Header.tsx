@@ -314,7 +314,7 @@ const Header = () => {
                                       href={item.href}
                                       tabIndex={showProducts ? 0 : -1}
                                       onClick={() => setShowProducts(false)}
-                                      className="group block h-[210px] p-6 rounded-2xl border border-gray-200 hover:border-primary hover:shadow-xl transition-all bg-white"
+                                      className="group block h-60 p-6 rounded-2xl border border-gray-200 hover:border-primary hover:shadow-xl transition-all bg-white"
                                     >
                                       <div className="flex flex-col h-full">
                                         {/* ICON */}
@@ -428,7 +428,7 @@ const Header = () => {
             >
               <div className="h-full flex flex-col">
                 {/* Header */}
-                <div className="flex items-center justify-between px-5 py-4 border-b border-gray-200 bg-gradient-to-r from-primary/5 to-purple-50">
+                <div className="flex items-center justify-between px-5 py-4 border-b border-gray-200 bg-linear-to-r from-primary/5 to-purple-50">
                   <Link
                     href="/"
                     onClick={handleLinkClick}

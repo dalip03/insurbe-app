@@ -18,6 +18,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { useState } from "react";
+import AppointmentModal from "./modals/AppointmentModal";
 
 /* ---------------- Feature Item ---------------- */
 
@@ -73,7 +74,7 @@ export default function HeroInsurancenew1() {
 
   return (
     <>
-      <section className="relative overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50/50 to-purple-50/30 py-8 sm:py-12 lg:py-16 xl:py-20">
+      <section className="relative overflow-hidden bg-linear-to-br from-slate-50 via-blue-50/50 to-purple-50/30 py-8 sm:py-12 lg:py-16 xl:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 xl:gap-16 items-stretch">
             {/* LEFT CONTENT */}
@@ -88,7 +89,7 @@ export default function HeroInsurancenew1() {
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ delay: 0.3, duration: 0.5 }}
-                className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-gradient-to-r from-purple-100 to-blue-100 border-2 border-purple-200 shadow-lg mx-auto lg:mx-0 w-fit"
+                className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-linear-to-r from-purple-100 to-blue-100 border-2 border-purple-200 shadow-lg mx-auto lg:mx-0 w-fit"
               >
                 <Star className="w-3 h-3 text-purple-600" />
                 <span className="text-[10px] font-bold text-purple-700 uppercase tracking-wide">
@@ -117,7 +118,7 @@ export default function HeroInsurancenew1() {
                   whileTap={{ scale: 0.96 }}
                   className="w-full xs:flex-1 rounded-2xl lg:rounded-3xl bg-linear-to-r from-primary to-purple-600 text-white text-sm sm:text-base font-bold py-3 sm:py-4 px-6 shadow-xl hover:shadow-2xl transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-purple-300/50"
                 >
-                  Take the questionnaire
+                  Get a free Appointment
                 </motion.button>
 
                 <motion.button
@@ -183,176 +184,11 @@ export default function HeroInsurancenew1() {
         </div>
       </section>
 
-      {/* Responsive Appointment Modal - UNCHANGED */}
-      <AnimatePresence>
-        {isModalOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 md:p-6 lg:p-8 bg-black/60 backdrop-blur-sm overflow-y-auto"
-            onClick={() => setIsModalOpen(false)}
-          >
-            <motion.div
-              initial={{ scale: 0.85, opacity: 0, y: 20 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.85, opacity: 0, y: 20 }}
-              transition={{ duration: 0.3, type: "spring" }}
-              onClick={(e) => e.stopPropagation()}
-              className="bg-white/95 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-2xl border border-white/50 w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl max-h-[90vh] overflow-y-auto mx-2 sm:mx-4"
-            >
-              {/* Success Message */}
-              <AnimatePresence>
-                {showSuccess && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    className="absolute inset-0 bg-gradient-to-br from-green-50 to-emerald-50 z-10 flex flex-col items-center justify-center p-6 sm:p-8 md:p-10 rounded-2xl"
-                  >
-                    <motion.div
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ delay: 0.2, type: "spring" }}
-                    >
-                      <CheckCircle className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 text-green-500 mb-4 sm:mb-6" />
-                    </motion.div>
-                    <h3 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 mb-2 sm:mb-3 text-center px-4">
-                      Success!
-                    </h3>
-                    <p className="text-sm sm:text-base md:text-lg text-gray-600 text-center px-4 sm:px-6 leading-relaxed">
-                      We will connect with you shortly
-                    </p>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              {/* Close Button */}
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="absolute top-4 right-4 sm:top-5 sm:right-5 z-20 p-1.5 sm:p-2 rounded-full bg-white/80 hover:bg-white shadow-lg transition-all text-gray-500 hover:text-gray-700"
-              >
-                <X className="w-5 h-5 sm:w-6 sm:h-6" />
-              </button>
-
-              {/* Modal Content */}
-              <div className="relative z-10 p-5 sm:p-6 md:p-8 lg:p-10 max-h-[90vh] overflow-y-auto">
-                <div className="mb-6 sm:mb-8 md:mb-10 pr-12 sm:pr-14">
-                  <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-2 sm:mb-3 leading-tight">
-                    Book an Appointment
-                  </h2>
-                  <p className="text-sm sm:text-base md:text-lg text-gray-600 leading-relaxed">
-                    Fill in your details and we'll get back to you soon
-                  </p>
-                </div>
-
-                <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5 md:space-y-6">
-                  {/* Name Field */}
-                  <div>
-                    <label className="block text-xs sm:text-sm md:text-base font-semibold text-gray-700 mb-2 sm:mb-3">
-                      Full Name *
-                    </label>
-                    <div className="relative">
-                      <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-gray-400" />
-                      <input
-                        type="text"
-                        required
-                        value={formData.name}
-                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        className="w-full pl-11 sm:pl-12 md:pl-14 pr-4 py-3 sm:py-3.5 md:py-4 text-sm sm:text-base md:text-lg border-2 border-gray-200 rounded-xl focus:ring-3 focus:ring-primary/50 focus:border-primary transition-all duration-300 bg-white/50 backdrop-blur-sm"
-                        placeholder="John Doe"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Email Field */}
-                  <div>
-                    <label className="block text-xs sm:text-sm md:text-base font-semibold text-gray-700 mb-2 sm:mb-3">
-                      Email Address *
-                    </label>
-                    <div className="relative">
-                      <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-gray-400" />
-                      <input
-                        type="email"
-                        required
-                        value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        className="w-full pl-11 sm:pl-12 md:pl-14 pr-4 py-3 sm:py-3.5 md:py-4 text-sm sm:text-base md:text-lg border-2 border-gray-200 rounded-xl focus:ring-3 focus:ring-primary/50 focus:border-primary transition-all duration-300 bg-white/50 backdrop-blur-sm"
-                        placeholder="john@example.com"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Date and Time Fields */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 md:gap-5">
-                    <div>
-                      <label className="block text-xs sm:text-sm md:text-base font-semibold text-gray-700 mb-2 sm:mb-3">
-                        Preferred Date *
-                      </label>
-                      <div className="relative">
-                        <Calendar className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-gray-400" />
-                        <input
-                          type="date"
-                          required
-                          value={formData.date}
-                          onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                          min={new Date().toISOString().split("T")[0]}
-                          className="w-full pl-11 sm:pl-12 md:pl-14 pr-4 py-3 sm:py-3.5 md:py-4 text-sm sm:text-base md:text-lg border-2 border-gray-200 rounded-xl focus:ring-3 focus:ring-primary/50 focus:border-primary transition-all duration-300 bg-white/50 backdrop-blur-sm"
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs sm:text-sm md:text-base font-semibold text-gray-700 mb-2 sm:mb-3">
-                        Preferred Time *
-                      </label>
-                      <div className="relative">
-                        <Clock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-gray-400" />
-                        <select
-                          required
-                          value={formData.time}
-                          onChange={(e) => setFormData({ ...formData, time: e.target.value })}
-                          className="w-full pl-11 sm:pl-12 md:pl-14 pr-4 py-3 sm:py-3.5 md:py-4 text-sm sm:text-base md:text-lg border-2 border-gray-200 rounded-xl focus:ring-3 focus:ring-primary/50 focus:border-primary transition-all duration-300 bg-white/50 backdrop-blur-sm appearance-none"
-                        >
-                          <option value="">Select a time</option>
-                          <option value="09:00 - 10:00">09:00 – 10:00</option>
-                          <option value="10:00 - 11:00">10:00 – 11:00</option>
-                          <option value="11:00 - 12:00">11:00 – 12:00</option>
-                          <option value="14:00 - 15:00">14:00 – 15:00</option>
-                          <option value="15:00 - 16:00">16:00 – 16:00</option>
-                          <option value="16:00 - 17:00">16:00 – 17:00</option>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs sm:text-sm md:text-base font-semibold text-gray-700 mb-2 sm:mb-3">
-                      Additional Comments (Optional)
-                    </label>
-                    <textarea
-                      rows={3}
-                      value={formData.comment}
-                      onChange={(e) => setFormData({ ...formData, comment: e.target.value })}
-                      placeholder="Tell us anything important before the call..."
-                      className="w-full px-4 sm:px-5 md:px-6 py-3 sm:py-3.5 md:py-4 text-sm sm:text-base md:text-lg border-2 border-gray-200 rounded-xl resize-vertical focus:ring-3 focus:ring-primary/50 focus:border-primary transition-all duration-300 bg-white/50 backdrop-blur-sm min-h-[100px]"
-                    />
-                  </div>
-
-                  <motion.button
-                    whileHover={{ scale: 1.02, y: -1 }}
-                    whileTap={{ scale: 0.98 }}
-                    type="submit"
-                    className="w-full bg-gradient-to-r from-purple-600 via-pink-500 to-blue-600 hover:from-purple-700 hover:via-pink-600 hover:to-blue-700 cursor-pointer text-white py-3.5 sm:py-4 md:py-4.5 rounded-2xl text-sm sm:text-base md:text-lg font-bold shadow-xl hover:shadow-2xl transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-purple-300/50"
-                  >
-                    Submit Appointment →
-                  </motion.button>
-                </form>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+ <AppointmentModal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
+  
     </>
   );
 }

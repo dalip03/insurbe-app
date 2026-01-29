@@ -290,7 +290,17 @@ function TariffColumn({
   comparisonKey,
   showCompare,
   onSelect,
-}: any) {
+}: {
+  title: string;
+  price: string;
+  period: string;
+  badge: string;
+  points: string[];
+  highlighted?: boolean;
+  comparisonKey: ComparisonKey;
+  showCompare: boolean;
+  onSelect: () => void;
+}) {
   return (
     <div className="flex flex-col">
       <div
@@ -348,7 +358,7 @@ function TariffColumn({
               <div key={item.label} className="mb-3">
                 <p className="text-xs font-semibold text-gray-500">{item.label}</p>
                 <p className="text-sm font-medium text-gray-900">
-                item[comparisonKey]
+                {item[comparisonKey]}
                 </p>
               </div>
             ))}
