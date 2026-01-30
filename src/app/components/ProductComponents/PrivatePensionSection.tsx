@@ -6,6 +6,10 @@ import {
   PiggyBank,
   Globe2,
   TrendingUp,
+  DollarSign,
+  DollarSignIcon,
+  CarTaxiFront,
+  Briefcase,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
@@ -21,7 +25,7 @@ const reasons = [
     title: "Tax Benefits While You Save",
     description:
       "Private pension contributions can be tax-deductible, especially valuable for high earners and freelancers.",
-    icon: PiggyBank,
+    icon: Briefcase,
   },
   {
     title: "Portable Plans for Expats",

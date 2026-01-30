@@ -2,11 +2,7 @@
 
 import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  Check,
-  X,
-  ArrowRight,
-} from "lucide-react";
+import { Check, X, ArrowRight } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import PlansCompare from "./PlanCompares";
@@ -437,38 +433,37 @@ export default function ComparePlans() {
       className="min-h-screen py-10 px-4 sm:px-6 md:px-16 "
     >
       <div className="max-w-7xl mx-auto">
-       {/* Header */}
-<div className="flex justify-center mb-10">
-  <motion.div
-    initial={{ y: 30, opacity: 0 }}
-    animate={{ y: 0, opacity: 1 }}
-    transition={{ duration: 0.6, delay: 0.2 }}
-    className="text-center max-w-2xl"
-  >
-    {/* Badge */}
-   
-    {/* Heading */}
-    <h1 className="text-3xl md:text-4xl font-extrabold leading-snug">
-      Best Plans suggested 
-      based{" "}
-      <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-purple-600">
-        on your personal  Profile
-      </span>
-    </h1>
+        {/* Header */}
+        <div className="flex justify-center mb-10">
+          <motion.div
+            initial={{ y: 30, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-center max-w-2xl"
+          >
+            {/* Badge */}
 
-    {/* Buttons */}
-    <motion.div
-      initial={{ y: 20, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.5, delay: 0.4 }}
-      className="flex flex-wrap justify-center gap-4 mt-8"
-    >
-      <motion.button
-        type="button"
-        whileHover={{ scale: 1.03 }}
-        whileTap={{ scale: 0.97 }}
-        onClick={handleDefaultClick}
-        className="
+            {/* Heading */}
+            <h1 className="text-3xl md:text-4xl font-extrabold leading-snug">
+              Best Plans suggested based{" "}
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-purple-600">
+                on your personal Profile
+              </span>
+            </h1>
+
+            {/* Buttons */}
+            <motion.div
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              className="flex flex-wrap justify-center gap-4 mt-8"
+            >
+              <motion.button
+                type="button"
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                onClick={handleDefaultClick}
+                className="
           inline-flex items-center gap-2
           px-8 py-3
           rounded-full
@@ -479,17 +474,17 @@ export default function ComparePlans() {
           transition
           focus:outline-none focus:ring-2 focus:ring-purple-300
         "
-      >
-        Default
-        <ArrowRight className="w-4 h-4" />
-      </motion.button>
+              >
+                Default
+                <ArrowRight className="w-4 h-4" />
+              </motion.button>
 
-      <motion.button
-        type="button"
-        whileHover={{ scale: 1.03 }}
-        whileTap={{ scale: 0.97 }}
-        onClick={handlePersonalizedCalculationClick}
-        className="
+              <motion.button
+                type="button"
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                onClick={handlePersonalizedCalculationClick}
+                className="
           inline-flex items-center gap-2
           px-8 py-3
           rounded-full
@@ -501,13 +496,12 @@ export default function ComparePlans() {
           transition
           focus:outline-none focus:ring-2 focus:ring-purple-300
         "
-      >
-        Personalized Calculation
-      </motion.button>
-    </motion.div>
-  </motion.div>
-</div>
-
+              >
+                Personalized Calculation
+              </motion.button>
+            </motion.div>
+          </motion.div>
+        </div>
 
         {/* Insurance Calculator */}
         <AnimatePresence>
@@ -531,7 +525,10 @@ export default function ComparePlans() {
           className="mb-8 text-center"
         >
           <span className="inline-block bg-linear-to-r from-purple-100 to-blue-100 text-primary px-6 py-3 rounded-full text-sm font-bold shadow-lg border-2 border-purple-200">
-            🎯 {plans.length} Plans Available for You
+            🎯{" "}
+            {plans.length === 1
+              ? "1 Plan Available for You"
+              : `${plans.length} Plans Available for You`}
           </span>
         </motion.div>
 

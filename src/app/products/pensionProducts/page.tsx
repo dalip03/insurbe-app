@@ -1,6 +1,5 @@
 import PensionProductHeroSection from "@/app/components/ProductComponents/pensionProductHeroSection";
 import PrivatePensionSection from "@/app/components/ProductComponents/PrivatePensionSection";
-import PensionFormSection from "@/app/components/ProductComponents/PensionFormSection";
 import FamilyInsuranceTax from "@/app/components/ProductComponents/FamilyInsuranceTax";
 import FamilyPensionPlans from "@/app/components/ProductComponents/FamilyPensionPlans";
 import FamilyFaq from "@/app/components/ProductComponents/FamilyFaq";
