@@ -2,55 +2,55 @@
 
 export default function ImprintPage() {
   return (
-    <section className="min-h-screen  py-20 px-4">
-      <div className="max-w-4xl mx-auto p-8 sm:p-12 space-y-8">
-
-        <header>
-          <header className="text-center mb-16">
+    <section className="min-h-screen py-20 px-4">
+      <div className="max-w-4xl mx-auto p-8 sm:p-12 space-y-10">
+        {/* Header */}
+        <header className="text-center mb-16">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900">
             Imprint
           </h1>
-        </header>
-          <p className="text-gray-600">
-            Information according to § 5 TMG and § 18 para. 1 MStV
+          <p className="text-gray-600 mt-4">
+            Information in accordance with § 5 German Telemedia Act (TMG) and § 18
+            para. 1 German State Media Treaty (MStV)
           </p>
         </header>
 
-        {/* Company Info */}
+        {/* Company */}
         <section>
-          <h2 className="text-xl font-bold text-gray-900 mb-2">
-            Company
-          </h2>
+          <h2 className="text-xl font-bold text-gray-900 mb-2">Company</h2>
           <p className="text-gray-700">
-            Vetter Consulting GmbH<br />
-            Hermann-Hollerith-Straße 1<br />
-            68163 Mannheim
+            InsurBe GmbH <br />
+            Großgörschener Straße 15 <br />
+            06686 Lützen <br />
+            Germany
           </p>
         </section>
 
         {/* Contact */}
         <section>
-          <h2 className="text-xl font-bold text-gray-900 mb-2">
-            Contact
-          </h2>
+          <h2 className="text-xl font-bold text-gray-900 mb-2">Contact</h2>
           <p className="text-gray-700">
-            Phone: +49 621 49 09 24 46<br />
             Email:{" "}
             <a
-              href="mailto:info@vetter-consulting.de"
+              href="mailto:enquiries@insurbe.com"
               className="text-purple-600 font-semibold hover:underline"
             >
-              info@vetter-consulting.de
+              enquiries@insurbe.com
             </a>
           </p>
         </section>
 
-        {/* Managing Director */}
+        {/* Authorized Managing Director */}
         <section>
           <h2 className="text-xl font-bold text-gray-900 mb-2">
             Authorized Managing Director
           </h2>
-          <p className="text-gray-700">Tobias Vetter</p>
+          <p className="text-gray-700">
+            Marvin Fürst <br />
+            <span className="text-gray-600">
+              (Responsible Managing Director for insurance mediation activities)
+            </span>
+          </p>
         </section>
 
         {/* Commercial Register */}
@@ -59,7 +59,8 @@ export default function ImprintPage() {
             Commercial Register Entry
           </h2>
           <p className="text-gray-700">
-            Mannheim Local Court: HRB 744884
+            Registered at: Stendal Local Court <br />
+            Commercial Register No.: HRB 35151
           </p>
         </section>
 
@@ -69,9 +70,11 @@ export default function ImprintPage() {
             Supervisory Authority
           </h2>
           <p className="text-gray-700">
-            Rhine-Neckar Chamber of Industry and Commerce<br />
-            L1, 2<br />
-            68161 Mannheim
+            Industry and Commerce Chamber Halle-Dessau (IHK Halle-Dessau) <br />
+            Franckestraße 5 <br />
+            06110 Halle (Saale) <br />
+            Saxony-Anhalt <br />
+            Germany
           </p>
         </section>
 
@@ -81,20 +84,28 @@ export default function ImprintPage() {
             VAT Identification Number
           </h2>
           <p className="text-gray-700">
-            VAT ID No.: DE356381946
+            VAT ID No.: <em>DE[VAT number to be added]</em> <br />
+            <span className="text-gray-600">
+              (in accordance with § 27a of the German VAT Act)
+            </span>
           </p>
         </section>
 
         {/* Professional Information */}
         <section>
           <h2 className="text-xl font-bold text-gray-900 mb-2">
-            Professional Information
+            Professional Information (Insurance Intermediation)
           </h2>
-          <p className="text-gray-700 mb-3">
-            Permission pursuant to Section 34d Paragraph 1 of the German Trade Regulation Act (insurance broker)
+
+          <p className="text-gray-700 mb-4">
+            <strong>Professional Status:</strong> <br />
+            Insurance broker with permission pursuant to Section 34d paragraph 1
+            of the German Trade Regulation Act (GewO)
           </p>
-          <p className="text-gray-700">
-            Intermediary Register:{" "}
+
+          <p className="text-gray-700 mb-4">
+            <strong>Intermediary Register:</strong> <br />
+            Register:{" "}
             <a
               href="https://www.vermittlerregister.info"
               target="_blank"
@@ -103,7 +114,15 @@ export default function ImprintPage() {
               www.vermittlerregister.info
             </a>
             <br />
-            Registration No.: D-NNQN-4HJA8-10
+            Registration Number: D-6ATG-SW8HB-44
+          </p>
+
+          <p className="text-gray-700">
+            <strong>Register Authority:</strong> <br />
+            Industry and Commerce Chamber Halle-Dessau <br />
+            Franckestraße 5 <br />
+            06110 Halle (Saale) <br />
+            Germany
           </p>
         </section>
 
@@ -113,14 +132,14 @@ export default function ImprintPage() {
             Professional Regulations
           </h2>
           <ul className="list-disc list-inside text-gray-700 space-y-1">
-            <li>Section 34d of the Trade Regulation Act (GewO)</li>
-            <li>Sections 59–68 of the Insurance Contract Act (VVG)</li>
+            <li>Section 34d of the German Trade Regulation Act (GewO)</li>
+            <li>Sections 59–68 of the German Insurance Contract Act (VVG)</li>
             <li>
-              Section 48b of the Insurance Supervision Act (VAG) – Ordinance on Insurance Mediation and Consulting (VersVermV)
+              Ordinance on Insurance Mediation and Consulting (VersVermV)
             </li>
           </ul>
           <p className="text-gray-600 mt-3">
-            Available at{" "}
+            Regulations available at{" "}
             <a
               href="https://www.gesetze-im-internet.de"
               target="_blank"
@@ -133,14 +152,14 @@ export default function ImprintPage() {
 
         {/* Ombudsman */}
         <section>
-          <h2 className="text-xl font-bold text-gray-900 mb-2">
-            Ombudsman
-          </h2>
+          <h2 className="text-xl font-bold text-gray-900 mb-2">Ombudsman</h2>
           <p className="text-gray-700 mb-4">
-            Insurance Ombudsman e.V.<br />
-            P.O. Box 08 06 32, 10006 Berlin<br />
-            Tel: 01802 22 44 24<br />
-            Internet:{" "}
+            Insurance Ombudsman e.V. <br />
+            P.O. Box 08 06 32 <br />
+            10006 Berlin <br />
+            Germany <br />
+            Phone: +49 (0)1802 22 44 24 <br />
+            Website:{" "}
             <a
               href="https://www.versicherungsombudsmann.de"
               target="_blank"
@@ -151,8 +170,8 @@ export default function ImprintPage() {
           </p>
 
           <p className="text-gray-700">
-            Ombudsman for Private Health and Long-Term Care Insurance<br />
-            Internet:{" "}
+            Ombudsman for Private Health and Long-Term Care Insurance <br />
+            Website:{" "}
             <a
               href="https://www.pkv-ombudsmann.de"
               target="_blank"
@@ -163,13 +182,14 @@ export default function ImprintPage() {
           </p>
         </section>
 
-        {/* ODR */}
+        {/* Online Dispute Resolution */}
         <section>
           <h2 className="text-xl font-bold text-gray-900 mb-2">
             Online Dispute Resolution
           </h2>
           <p className="text-gray-700">
-            The EU Commission provides a platform for online dispute resolution (ODR):{" "}
+            The European Commission provides a platform for online dispute
+            resolution (ODR):{" "}
             <a
               href="http://ec.europa.eu/consumers/odr/"
               target="_blank"
@@ -179,18 +199,6 @@ export default function ImprintPage() {
             </a>
           </p>
         </section>
-
-        {/* Liability */}
-        <section>
-          <h2 className="text-xl font-bold text-gray-900 mb-2">
-            Liability for Links
-          </h2>
-          <p className="text-gray-700">
-            Our website contains links to external websites. We assume no liability
-            for the content of external links. The operators of the linked pages_toggle are solely responsible for their content.
-          </p>
-        </section>
-
       </div>
     </section>
   );

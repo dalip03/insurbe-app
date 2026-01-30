@@ -86,16 +86,18 @@ export default function InsurBeSignupForm() {
     medicalQuestion2: "",
     countryOfOrigin: "Germany",
     acceptTerms: false,
-   
+
     acceptMarketing: false,
     needsConsultation: "no",
   });
 
-  const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({});
+  const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>(
+    {},
+  );
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value, type } = e.target;
     const checked = (e.target as HTMLInputElement).checked;
@@ -125,29 +127,37 @@ export default function InsurBeSignupForm() {
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = "Invalid email address";
     }
-    if (!formData.dateOfBirth) newErrors.dateOfBirth = "Date of birth is required";
+    if (!formData.dateOfBirth)
+      newErrors.dateOfBirth = "Date of birth is required";
     if (!formData.passportId) newErrors.passportId = "Passport ID is required";
 
     // Period of Insurance
     if (!formData.startMonth) newErrors.startMonth = "Start month is required";
     if (!formData.startYear) newErrors.startYear = "Start year is required";
-    if (!formData.periodOfInsurance) newErrors.periodOfInsurance = "Period is required";
+    if (!formData.periodOfInsurance)
+      newErrors.periodOfInsurance = "Period is required";
 
     // Study Details
-    if (!formData.hasInsuredPartner) newErrors.hasInsuredPartner = "Please select an option";
+    if (!formData.hasInsuredPartner)
+      newErrors.hasInsuredPartner = "Please select an option";
     if (!formData.studyType) newErrors.studyType = "Study type is required";
-    if (!formData.nameOfInstitution) newErrors.nameOfInstitution = "Institution name is required";
-    if (!formData.beginOfStudy) newErrors.beginOfStudy = "Begin date is required";
+    if (!formData.nameOfInstitution)
+      newErrors.nameOfInstitution = "Institution name is required";
+    if (!formData.beginOfStudy)
+      newErrors.beginOfStudy = "Begin date is required";
     if (!formData.endOfStudy) newErrors.endOfStudy = "End date is required";
-    if (!formData.hadPreviousInsurance) newErrors.hadPreviousInsurance = "Please select an option";
+    if (!formData.hadPreviousInsurance)
+      newErrors.hadPreviousInsurance = "Please select an option";
 
     // Medical Questions
-    if (!formData.medicalQuestion1) newErrors.medicalQuestion1 = "Please answer this question";
-    if (!formData.medicalQuestion2) newErrors.medicalQuestion2 = "Please answer this question";
+    if (!formData.medicalQuestion1)
+      newErrors.medicalQuestion1 = "Please answer this question";
+    if (!formData.medicalQuestion2)
+      newErrors.medicalQuestion2 = "Please answer this question";
 
     // Declaration
-    if (!formData.acceptTerms) newErrors.acceptTerms = "You must accept the terms";
-   
+    if (!formData.acceptTerms)
+      newErrors.acceptTerms = "You must accept the terms";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -193,7 +203,11 @@ export default function InsurBeSignupForm() {
             </h1>
 
             <p className="text-xl text-gray-600 mb-8">
-              Thank you, <span className="font-bold text-green-600">{formData.firstName}</span>! Your insurance application has been received.
+              Thank you,{" "}
+              <span className="font-bold text-green-600">
+                {formData.firstName}
+              </span>
+              ! Your insurance application has been received.
             </p>
 
             <div className="bg-linear-to-br from-green-50 to-emerald-50 border-2 border-green-200 rounded-2xl p-6 mb-8">
@@ -226,7 +240,7 @@ export default function InsurBeSignupForm() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => window.location.href = "/"}
+                onClick={() => (window.location.href = "/")}
                 className="px-8 py-4 rounded-2xl font-bold text-white bg-linear-to-r from-green-600 to-emerald-600 shadow-xl shadow-green-500/30 hover:shadow-green-500/50 transition-all"
               >
                 Return to Homepage
@@ -234,11 +248,17 @@ export default function InsurBeSignupForm() {
 
               <p className="text-sm text-gray-500">
                 Need help? Contact us at{" "}
-                <a href="mailto:info@Insurbe.com" className="text-green-600 font-semibold hover:underline">
+                <a
+                  href="mailto:info@Insurbe.com"
+                  className="text-green-600 font-semibold hover:underline"
+                >
                   info@Insurbe.com
                 </a>{" "}
                 or call{" "}
-                <a href="tel:+4970244695100" className="text-green-600 font-semibold hover:underline">
+                <a
+                  href="tel:+4970244695100"
+                  className="text-green-600 font-semibold hover:underline"
+                >
                   +49 7024 469 51-0
                 </a>
               </p>
@@ -256,17 +276,110 @@ export default function InsurBeSignupForm() {
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
+          className="relative text-center mb-6"
         >
+          {/* 🎁 Offer Badge */}
+          <div className="absolute top-0 right-0 translate-x-1/4 -translate-y-1/4 z-20">
+            {/* Glow layer */}
+            <motion.div
+              aria-hidden
+              initial={{ opacity: 0 }}
+              animate={{
+                opacity: [0.4, 0.8, 0.4],
+                scale: [1, 1.08, 1],
+              }}
+              transition={{
+                duration: 2.8,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+              className="
+      absolute inset-0
+      rounded-full
+      bg-linear-to-br from-pink-300 to-pink-400
+      blur-xl
+    "
+            />
+
+            {/* Badge */}
+            <motion.div
+              initial={{ scale: 0.6, opacity: 0, rotate: -20 }}
+              animate={{
+                scale: 1,
+                opacity: 1,
+                rotate: 0,
+                y: [0, -6, 0],
+              }}
+              transition={{
+                scale: { duration: 0.4, ease: "easeOut" },
+                opacity: { duration: 0.3 },
+                rotate: { duration: 0.4 },
+                y: {
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                },
+              }}
+              whileHover={{ scale: 1.08 }}
+              className="
+    relative
+    w-24 h-24
+    rounded-full
+    bg-linear-to-br from-primary via-purple-400 to-pink-500
+    text-white
+    flex items-center justify-center
+    shadow-2xl
+    border border-white
+    cursor-default
+  "
+            >
+              {/* TEXT WRAPPER WITH TILT */}
+              <motion.div
+                initial={{ rotate: -6 }}
+                animate={{ rotate: [-6, -4, -6] }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+                className="text-center font-extrabold"
+              >
+                <span className="block text-xl leading-none tracking-tight">
+                  €15
+                </span>
+
+                <span className="block text-[11px] font-semibold leading-tight opacity-95 mt-0.5">
+                  Amazon
+                </span>
+
+                <span className="block text-[10px] font-medium leading-tight opacity-90">
+                  Gutschein
+                </span>
+              </motion.div>
+            </motion.div>
+          </div>
+
+          {/* Existing Content */}
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-linear-to-r from-purple-100 to-blue-100 border border-purple-200/50 mb-4">
             <Shield className="w-4 h-4 text-purple-600" />
-            <span className="text-sm font-semibold text-purple-700">InsurBe STUDENT</span>
+            <span className="text-sm font-semibold text-purple-700">
+              InsurBe STUDENT
+            </span>
           </div>
+
           <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-4">
             Online Application
           </h1>
+
           <p className="text-lg text-gray-600">
-            You can only apply for this insurance, if you provide an address in Germany.
+            You can only apply for this insurance, if you provide an address in
+            Germany.
+          </p>
+
+          {/* Optional inline offer text */}
+          <p className="mt-4 text-sm font-semibold text-primary border border-primary/20 inline-block px-6 py-3 rounded-full ">
+            🎉 Including a <span className="font-bold">€15 Amazon voucher</span>{" "}
+            on successful signup
           </p>
         </motion.div>
 
@@ -285,7 +398,12 @@ export default function InsurBeSignupForm() {
             color="purple"
           >
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <FormField label="Title" name="title" required error={errors.title}>
+              <FormField
+                label="Title"
+                name="title"
+                required
+                error={errors.title}
+              >
                 <select
                   name="title"
                   value={formData.title}
@@ -300,7 +418,12 @@ export default function InsurBeSignupForm() {
                 </select>
               </FormField>
 
-              <FormField label="First Name" name="firstName" required error={errors.firstName}>
+              <FormField
+                label="First Name"
+                name="firstName"
+                required
+                error={errors.firstName}
+              >
                 <input
                   type="text"
                   name="firstName"
@@ -311,7 +434,12 @@ export default function InsurBeSignupForm() {
                 />
               </FormField>
 
-              <FormField label="Surname" name="surname" required error={errors.surname}>
+              <FormField
+                label="Surname"
+                name="surname"
+                required
+                error={errors.surname}
+              >
                 <input
                   type="text"
                   name="surname"
@@ -322,7 +450,10 @@ export default function InsurBeSignupForm() {
                 />
               </FormField>
 
-              <FormField label="Additional Address Information" name="additionalAddress">
+              <FormField
+                label="Additional Address Information"
+                name="additionalAddress"
+              >
                 <input
                   type="text"
                   name="additionalAddress"
@@ -331,7 +462,12 @@ export default function InsurBeSignupForm() {
                 />
               </FormField>
 
-              <FormField label="Street" name="street" required error={errors.street}>
+              <FormField
+                label="Street"
+                name="street"
+                required
+                error={errors.street}
+              >
                 <input
                   type="text"
                   name="street"
@@ -342,7 +478,12 @@ export default function InsurBeSignupForm() {
                 />
               </FormField>
 
-              <FormField label="Postal Code" name="postalCode" required error={errors.postalCode}>
+              <FormField
+                label="Postal Code"
+                name="postalCode"
+                required
+                error={errors.postalCode}
+              >
                 <input
                   type="text"
                   name="postalCode"
@@ -353,7 +494,12 @@ export default function InsurBeSignupForm() {
                 />
               </FormField>
 
-              <FormField label="Town/City" name="townCity" required error={errors.townCity}>
+              <FormField
+                label="Town/City"
+                name="townCity"
+                required
+                error={errors.townCity}
+              >
                 <input
                   type="text"
                   name="townCity"
@@ -375,7 +521,12 @@ export default function InsurBeSignupForm() {
                 />
               </FormField>
 
-              <FormField label="E-Mail" name="email" required error={errors.email}>
+              <FormField
+                label="E-Mail"
+                name="email"
+                required
+                error={errors.email}
+              >
                 <input
                   type="email"
                   name="email"
@@ -386,7 +537,12 @@ export default function InsurBeSignupForm() {
                 />
               </FormField>
 
-              <FormField label="Passport ID No." name="passportId" required error={errors.passportId}>
+              <FormField
+                label="Passport ID No."
+                name="passportId"
+                required
+                error={errors.passportId}
+              >
                 <input
                   type="text"
                   name="passportId"
@@ -397,7 +553,12 @@ export default function InsurBeSignupForm() {
                 />
               </FormField>
 
-              <FormField label="Date of Birth" name="dateOfBirth" required error={errors.dateOfBirth}>
+              <FormField
+                label="Date of Birth"
+                name="dateOfBirth"
+                required
+                error={errors.dateOfBirth}
+              >
                 <input
                   type="date"
                   name="dateOfBirth"
@@ -412,7 +573,12 @@ export default function InsurBeSignupForm() {
           {/* Period of Insurance */}
           <FormSection title="Period of Insurance" icon={Calendar} color="pink">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-              <FormField label="Start Month" name="startMonth" required error={errors.startMonth}>
+              <FormField
+                label="Start Month"
+                name="startMonth"
+                required
+                error={errors.startMonth}
+              >
                 <select
                   name="startMonth"
                   value={formData.startMonth}
@@ -420,13 +586,33 @@ export default function InsurBeSignupForm() {
                   className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-pink-500 focus:outline-none transition-colors"
                 >
                   <option value="">Select</option>
-                  {["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"].map((month, idx) => (
-                    <option key={idx} value={month}>{month}</option>
+                  {[
+                    "January",
+                    "February",
+                    "March",
+                    "April",
+                    "May",
+                    "June",
+                    "July",
+                    "August",
+                    "September",
+                    "October",
+                    "November",
+                    "December",
+                  ].map((month, idx) => (
+                    <option key={idx} value={month}>
+                      {month}
+                    </option>
                   ))}
                 </select>
               </FormField>
 
-              <FormField label="Start Year" name="startYear" required error={errors.startYear}>
+              <FormField
+                label="Start Year"
+                name="startYear"
+                required
+                error={errors.startYear}
+              >
                 <select
                   name="startYear"
                   value={formData.startYear}
@@ -435,12 +621,19 @@ export default function InsurBeSignupForm() {
                 >
                   <option value="">Select</option>
                   {[2026, 2027, 2028].map((year) => (
-                    <option key={year} value={year}>{year}</option>
+                    <option key={year} value={year}>
+                      {year}
+                    </option>
                   ))}
                 </select>
               </FormField>
 
-              <FormField label="Period of Insurance" name="periodOfInsurance" required error={errors.periodOfInsurance}>
+              <FormField
+                label="Period of Insurance"
+                name="periodOfInsurance"
+                required
+                error={errors.periodOfInsurance}
+              >
                 <select
                   name="periodOfInsurance"
                   value={formData.periodOfInsurance}
@@ -458,7 +651,11 @@ export default function InsurBeSignupForm() {
           </FormSection>
 
           {/* Study Details */}
-          <FormSection title="Study details (insured person)" icon={GraduationCap} color="blue">
+          <FormSection
+            title="Study details (insured person)"
+            icon={GraduationCap}
+            color="blue"
+          >
             <div className="space-y-6">
               <RadioGroup
                 label="Has the insured person a limited residency permit in Germany?"
@@ -473,7 +670,12 @@ export default function InsurBeSignupForm() {
               />
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <FormField label="Study Type" name="studyType" required error={errors.studyType}>
+                <FormField
+                  label="Study Type"
+                  name="studyType"
+                  required
+                  error={errors.studyType}
+                >
                   <select
                     name="studyType"
                     value={formData.studyType}
@@ -489,7 +691,12 @@ export default function InsurBeSignupForm() {
                   </select>
                 </FormField>
 
-                <FormField label="Name of Institution" name="nameOfInstitution" required error={errors.nameOfInstitution}>
+                <FormField
+                  label="Name of Institution"
+                  name="nameOfInstitution"
+                  required
+                  error={errors.nameOfInstitution}
+                >
                   <input
                     type="text"
                     name="nameOfInstitution"
@@ -500,7 +707,12 @@ export default function InsurBeSignupForm() {
                   />
                 </FormField>
 
-                <FormField label="Begin of Study" name="beginOfStudy" required error={errors.beginOfStudy}>
+                <FormField
+                  label="Begin of Study"
+                  name="beginOfStudy"
+                  required
+                  error={errors.beginOfStudy}
+                >
                   <input
                     type="date"
                     name="beginOfStudy"
@@ -510,7 +722,12 @@ export default function InsurBeSignupForm() {
                   />
                 </FormField>
 
-                <FormField label="End of Study" name="endOfStudy" required error={errors.endOfStudy}>
+                <FormField
+                  label="End of Study"
+                  name="endOfStudy"
+                  required
+                  error={errors.endOfStudy}
+                >
                   <input
                     type="date"
                     name="endOfStudy"
@@ -535,34 +752,32 @@ export default function InsurBeSignupForm() {
             </div>
           </FormSection>
 
-        
-         {/* Health Insurance */}
-<FormSection title="Health Insurance" icon={Shield} color="emerald">
-  <label
-    className={`flex items-start gap-4 p-5 rounded-2xl border-2 cursor-pointer transition-all border-emerald-500 bg-linear-to-br from-emerald-50 to-green-50 shadow-lg`}
-  >
-    <input
-      type="radio"
-      name="insuranceType"
-      value="classic"
-      checked={true}
-      readOnly
-      className="mt-1 w-5 h-5 text-emerald-600 focus:ring-emerald-500"
-    />
+          {/* Health Insurance */}
+          <FormSection title="Health Insurance" icon={Shield} color="emerald">
+            <label
+              className={`flex items-start gap-4 p-5 rounded-2xl border-2 cursor-pointer transition-all border-emerald-500 bg-linear-to-br from-emerald-50 to-green-50 shadow-lg`}
+            >
+              <input
+                type="radio"
+                name="insuranceType"
+                value="classic"
+                checked={true}
+                readOnly
+                className="mt-1 w-5 h-5 text-emerald-600 focus:ring-emerald-500"
+              />
 
-    <div className="flex-1">
-      <div className="flex items-center justify-between">
-        <div className="font-bold text-gray-900 text-lg">
-          InsurBe Student Classic
-        </div>
-        <div className="font-extrabold text-emerald-600 text-lg">
-          116 €
-        </div>
-      </div>
-    </div>
-  </label>
-</FormSection>
-
+              <div className="flex-1">
+                <div className="flex items-center justify-between">
+                  <div className="font-bold text-gray-900 text-lg">
+                    InsurBe Student Classic
+                  </div>
+                  <div className="font-extrabold text-emerald-600 text-lg">
+                    116 €
+                  </div>
+                </div>
+              </div>
+            </label>
+          </FormSection>
 
           {/* Medical Questions */}
           <FormSection title="Medical Questions" icon={FileText} color="red">
@@ -594,10 +809,15 @@ export default function InsurBeSignupForm() {
           </FormSection>
 
           {/* Country of Origin */}
-          <FormSection title="Country of origin (land domicile) ℹ️" icon={MapPin} color="indigo">
+          <FormSection
+            title="Country of origin (land domicile) ℹ️"
+            icon={MapPin}
+            color="indigo"
+          >
             <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-lg mb-4">
               <p className="text-sm text-blue-800">
-                The country of the permanent or usual place of residence prior to start of the temporary foreign residence.
+                The country of the permanent or usual place of residence prior
+                to start of the temporary foreign residence.
               </p>
             </div>
             <FormField label="Country of Domicile" name="countryOfOrigin">
@@ -618,7 +838,11 @@ export default function InsurBeSignupForm() {
           </FormSection>
 
           {/* Declaration of Agreement */}
-          <FormSection title="Declaration of Agreement" icon={FileText} color="purple">
+          <FormSection
+            title="Declaration of Agreement"
+            icon={FileText}
+            color="purple"
+          >
             <div className="space-y-4">
               <CheckboxField
                 name="acceptTerms"
@@ -627,25 +851,35 @@ export default function InsurBeSignupForm() {
                 error={errors.acceptTerms}
               >
                 I have read and hereby accept the{" "}
-                <a href="#" className="text-purple-600 font-semibold hover:underline">
-                  Consumer and Product Information Sheet and the Terms and Conditions of Insurance
+                <a
+                  href="#"
+                  className="text-purple-600 font-semibold hover:underline"
+                >
+                  Consumer and Product Information Sheet and the Terms and
+                  Conditions of Insurance
                 </a>
                 .
               </CheckboxField>
-
-
 
               <CheckboxField
                 name="acceptMarketing"
                 checked={formData.acceptMarketing}
                 onChange={handleInputChange}
               >
-                I consent to InsurBe GmbH sending me information and offers on other products for advertising purposes by email. I can object to the{" "}
-                <a href="#" className="text-purple-600 font-semibold hover:underline">
+                I consent to InsurBe GmbH sending me information and offers on
+                other products for advertising purposes by email. I can object
+                to the{" "}
+                <a
+                  href="#"
+                  className="text-purple-600 font-semibold hover:underline"
+                >
                   use of my data
                 </a>{" "}
                 for advertising purposes at any time, for example by email to{" "}
-                <a href="mailto:info@insurbe.com" className="text-purple-600 font-semibold hover:underline">
+                <a
+                  href="mailto:info@insurbe.com"
+                  className="text-purple-600 font-semibold hover:underline"
+                >
                   info@insurbe.com
                 </a>
               </CheckboxField>
@@ -659,7 +893,8 @@ export default function InsurBeSignupForm() {
                   options={[
                     {
                       value: "no",
-                      label: "Yes, I sufficiently informed myself about the product and I would like to continue without further consultation.",
+                      label:
+                        "Yes, I sufficiently informed myself about the product and I would like to continue without further consultation.",
                     },
                     {
                       value: "yes",
@@ -668,14 +903,15 @@ export default function InsurBeSignupForm() {
                   ]}
                 />
 
-             
-
                 {formData.needsConsultation === "yes" && (
                   <div className="mt-4 bg-blue-50 border-l-4 border-blue-500 p-4 rounded-lg">
                     <p className="text-sm text-blue-800 flex items-center gap-2">
                       <Phone className="w-4 h-4" />
                       We would be happy to advise you by phone:{" "}
-                      <a href="tel:+4970244695100" className="font-bold hover:underline">
+                      <a
+                        href="tel:+4970244695100"
+                        className="font-bold hover:underline"
+                      >
                         +49 7024 469 51-0
                       </a>
                     </p>
@@ -727,7 +963,9 @@ function FormSection({ title, icon: Icon, color, children }: FormSectionProps) {
 
   return (
     <div className="space-y-6">
-      <div className={`flex items-center gap-3 px-6 py-4 rounded-2xl bg-linear-to-r ${colorMap[color]} text-white shadow-lg`}>
+      <div
+        className={`flex items-center gap-3 px-6 py-4 rounded-2xl bg-linear-to-r ${colorMap[color]} text-white shadow-lg`}
+      >
         <Icon className="w-6 h-6" />
         <h2 className="text-xl font-bold">{title}</h2>
       </div>
@@ -747,7 +985,10 @@ interface FormFieldProps {
 function FormField({ label, name, required, error, children }: FormFieldProps) {
   return (
     <div>
-      <label htmlFor={name} className="block text-sm font-semibold text-gray-700 mb-2">
+      <label
+        htmlFor={name}
+        className="block text-sm font-semibold text-gray-700 mb-2"
+      >
         {label}
         {required && <span className="text-red-500 ml-1">*</span>}
       </label>
@@ -775,13 +1016,23 @@ interface RadioGroupProps {
   options: Array<{ value: string; label: string }>;
 }
 
-function RadioGroup({ label, name, value, onChange, error, options }: RadioGroupProps) {
+function RadioGroup({
+  label,
+  name,
+  value,
+  onChange,
+  error,
+  options,
+}: RadioGroupProps) {
   return (
     <div>
       <p className="text-sm font-semibold text-gray-700 mb-3">{label}</p>
       <div className="flex gap-6">
         {options.map((option) => (
-          <label key={option.value} className="flex items-center gap-2 cursor-pointer">
+          <label
+            key={option.value}
+            className="flex items-center gap-2 cursor-pointer"
+          >
             <input
               type="radio"
               name={name}
@@ -816,7 +1067,13 @@ interface CheckboxFieldProps {
   children: React.ReactNode;
 }
 
-function CheckboxField({ name, checked, onChange, error, children }: CheckboxFieldProps) {
+function CheckboxField({
+  name,
+  checked,
+  onChange,
+  error,
+  children,
+}: CheckboxFieldProps) {
   return (
     <div>
       <label className="flex items-start gap-3 cursor-pointer group">
@@ -840,7 +1097,7 @@ function CheckboxField({ name, checked, onChange, error, children }: CheckboxFie
           <AlertCircle className="w-4 h-4" />
           {error}
         </motion.p>
-        )}
+      )}
     </div>
   );
 }

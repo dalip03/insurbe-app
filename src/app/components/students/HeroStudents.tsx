@@ -20,8 +20,7 @@ function HeroStudents() {
   return (
     <section className="relative py-16 sm:py-10 px-4 sm:px-8 lg:px-18 overflow-hidden">
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
-
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 items-center  mt-15">
           {/* LEFT CONTENT */}
           <motion.div
             initial="hidden"
@@ -103,9 +102,85 @@ function HeroStudents() {
             initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, ease: "easeOut", delay: 0.15 }}
-            className="relative w-full"
+            className="relative w-full "
           >
-            <div className="relative aspect-[4/3] sm:aspect-[5/4] lg:aspect-[7/6] rounded-3xl overflow-hidden shadow-xl">
+            {/* 🎁 Offer Badge */}
+            <div className="absolute top-0 -left-18 translate-x-1/4 -translate-y-1/4 z-20">
+              {/* Glow layer */}
+              <motion.div
+                aria-hidden
+                initial={{ opacity: 0 }}
+                animate={{
+                  opacity: [0.4, 0.8, 0.4],
+                  scale: [1, 1.08, 1],
+                }}
+                transition={{
+                  duration: 2.8,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+                className="
+      absolute inset-0
+      rounded-full
+      bg-linear-to-br from-pink-300 to-pink-400
+      blur-xl
+    "
+              />
+
+              {/* Badge */}
+              <motion.div
+                initial={{ scale: 0.6, opacity: 0, rotate: -20 }}
+                animate={{
+                  scale: 1,
+                  opacity: 1,
+                  rotate: 0,
+                  y: [0, -6, 0],
+                }}
+                transition={{
+                  scale: { duration: 0.4, ease: "easeOut" },
+                  opacity: { duration: 0.3 },
+                  rotate: { duration: 0.4 },
+                  y: {
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  },
+                }}
+                whileHover={{ scale: 1.08 }}
+                className="
+    relative
+    w-24 h-24
+    rounded-full
+    bg-linear-to-br from-primary to-purple-400 
+    text-white
+    flex items-center justify-center
+    shadow-2xl
+    border border-white
+    cursor-default
+  "
+              >
+                {/* TEXT WRAPPER WITH TILT */}
+                <motion.div
+                  initial={{ rotate: -6 }}
+                  animate={{ rotate: [-6, -4, -6] }}
+                  transition={{
+                    duration: 4,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                  className="text-center font-extrabold"
+                >
+                  <span className="block text-xl leading-none tracking-tight">
+                    €50
+                  </span>
+
+                  <span className="block text-[14px] font-semibold px-2 leading-tight opacity-95 mt-0.5">
+                    instant Bonus
+                  </span>
+                </motion.div>
+              </motion.div>
+            </div>
+            <div className="relative aspect-4/3 sm:aspect-5/4  rounded-3xl overflow-hidden shadow-xl">
               <Image
                 src="/hero_assets/heroin.jpg"
                 alt="Student insurance in Germany"
@@ -116,7 +191,6 @@ function HeroStudents() {
               />
             </div>
           </motion.div>
-
         </div>
       </div>
     </section>
