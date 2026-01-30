@@ -1,0 +1,3 @@
+export const INSURANCE_LIMITS = {
+  PKV_INCOME_THRESHOLD: 74400,
+};

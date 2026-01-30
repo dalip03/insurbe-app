@@ -13,11 +13,12 @@ import {
   AirVent,
   PlaneLanding,
 } from "lucide-react";
+import { INSURANCE_LIMITS } from "../constants/insurance";
 
 const products = [
   {
     title: "Working Professionals",
-    desc: "PKV or Expat Insurance if you earn above €73,800",
+    desc: `PKV or Expat Insurance if you earn above €${INSURANCE_LIMITS.PKV_INCOME_THRESHOLD.toLocaleString()}`,
     icon: Briefcase,
     link: "/products/privateProducts",
     gradient: "from-primary to-purple-600",
@@ -165,16 +166,13 @@ export default function ProductBanner() {
           const Icon = product.icon;
 
           return (
-            <motion.div
-              key={index}
-              variants={cardVariants}
-            >
+            <motion.div key={index} variants={cardVariants}>
               <Link href={product.link}>
                 <motion.div
-                  whileHover={{ 
-                    y: -12, 
+                  whileHover={{
+                    y: -12,
                     scale: 1.02,
-                    transition: { duration: 0.3 }
+                    transition: { duration: 0.3 },
                   }}
                   className="group relative h-full cursor-pointer bg-white border-2 border-transparent hover:border-purple-200 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden"
                 >
@@ -256,9 +254,7 @@ export default function ProductBanner() {
                     </div>
 
                     {/* CTA */}
-                    <motion.div
-                      className="inline-flex items-center gap-2 text-sm font-bold text-purple-600 group-hover:gap-3 transition-all mt-auto"
-                    >
+                    <motion.div className="inline-flex items-center gap-2 text-sm font-bold text-purple-600 group-hover:gap-3 transition-all mt-auto">
                       Explore Plans
                       <motion.div
                         animate={{ x: [0, 5, 0] }}
@@ -275,7 +271,7 @@ export default function ProductBanner() {
                   {/* Border Glow */}
                   <motion.div
                     className={`absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br ${product.gradient}`}
-                    style={{ filter: 'blur(20px)', zIndex: -1 }}
+                    style={{ filter: "blur(20px)", zIndex: -1 }}
                   />
                 </motion.div>
               </Link>
@@ -283,8 +279,6 @@ export default function ProductBanner() {
           );
         })}
       </motion.div>
-
-     
     </section>
   );
 }

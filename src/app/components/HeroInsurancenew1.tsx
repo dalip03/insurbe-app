@@ -118,7 +118,7 @@ export default function HeroInsurancenew1() {
                   whileTap={{ scale: 0.96 }}
                   className="w-full xs:flex-1 rounded-2xl lg:rounded-3xl bg-linear-to-r from-primary to-purple-600 text-white text-sm sm:text-base font-bold py-3 sm:py-4 px-6 shadow-xl hover:shadow-2xl transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-purple-300/50"
                 >
-                  Get a free Appointment
+                 Book an Appointment
                 </motion.button>
 
                 <motion.button

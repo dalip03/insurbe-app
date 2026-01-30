@@ -149,7 +149,7 @@ export default function PrivateInsuranceTariffs() {
 
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold">
             Which{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-primary">
+            <span className="text-transparent bg-clip-text bg-linear-to-r from-purple-600 to-primary">
               tariff suits
             </span>{" "}
             you best
@@ -186,7 +186,7 @@ export default function PrivateInsuranceTariffs() {
         <div className="text-center mt-8">
           <button
             onClick={() => setShowCompare(!showCompare)}
-            className="px-10 py-4 rounded-full bg-gradient-to-r from-purple-600 to-primary text-white font-semibold shadow-lg inline-flex items-center gap-2"
+            className="px-10 py-4 rounded-full bg-linear-to-r from-purple-600 to-primary text-white font-semibold shadow-lg inline-flex items-center gap-2"
           >
             {showCompare ? "Hide" : "Compare"} tariffs
             {showCompare ? <ChevronUp /> : <ChevronDown />}
@@ -257,7 +257,7 @@ export default function PrivateInsuranceTariffs() {
                       key={idx}
                       className={`h-2 flex-1 rounded-full ${
                         idx <= currentQuestion
-                          ? "bg-gradient-to-r from-purple-600 to-primary"
+                          ? "bg-linear-to-r from-purple-600 to-primary"
                           : "bg-gray-200"
                       }`}
                     />
@@ -306,12 +306,12 @@ function TariffColumn({
       <div
         className={`relative p-8 rounded-3xl ${
           highlighted
-            ? "bg-gradient-to-br from-purple-600 to-purple-700 text-white shadow-2xl"
+            ? "bg-linear-to-br from-purple-600 to-purple-700 text-white shadow-2xl"
             : "bg-white shadow-xl"
         }`}
       >
         {highlighted && (
-          <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-yellow-400 to-orange-400 px-4 py-2 rounded-full text-xs font-bold flex items-center gap-1">
+          <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-linear-to-r from-yellow-400 to-orange-400 px-4 py-2 rounded-full text-xs font-bold flex items-center gap-1">
             <Star className="w-3 h-3 fill-current" />
             {badge}
           </div>

@@ -6,14 +6,20 @@ import React, {
   useRef,
   useMemo,
   useCallback,
+  memo,
 } from "react";
 import {
   Briefcase,
-  UserCheck,
   Euro,
+  UserCircle,
+  Building2,
+  Users,
+  CheckCircle2,
+  XCircle,
   Baby,
-  CalendarDays,
+  Calendar,
   Globe,
+  ArrowRight,
 } from "lucide-react";
 
 import { useRouter } from "next/navigation";
@@ -48,6 +54,182 @@ const getNormalizedEmployment = (
   if (lower.includes("employ")) return "employed";
   return "other";
 };
+
+// Constants
+const EMPLOYMENT_OPTIONS = [
+  { label: "Self-employed/Freelancer", icon: UserCircle },
+  { label: " Employed", icon: Building2 },
+  { label: "Others", icon: Users },
+] as const;
+
+const INCOME_OPTIONS = [
+  { label: "< €30,000", value: "<30000" },
+  { label: "€30,001 – €77,400", value: "30001-77400" },
+  { label: "> €77,400", value: ">77400" },
+] as const;
+
+const CACHE_DURATION = 24 * 60 * 60 * 1000;
+const POPUP_DURATION = 3000;
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const PHONE_REGEX = /^\+?[\d\s-]{10,}$/;
+
+const EU_COUNTRIES = [
+  "Austria", "Belgium", "Bulgaria", "Croatia", "Cyprus", "Czech Republic",
+  "Denmark", "Estonia", "Finland", "France", "Germany", "Greece", "Hungary",
+  "Ireland", "Italy", "Latvia", "Lithuania", "Luxembourg", "Malta",
+  "Netherlands", "Poland", "Portugal", "Romania", "Slovakia", "Slovenia",
+  "Spain", "Sweden", "Iceland", "Liechtenstein", "Norway", "Switzerland",
+  "United Kingdom",
+] as const;
+
+// Animation variants
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
+  exit: { opacity: 0, transition: { duration: 0.3 } },
+};
+
+const itemVariants = {
+  hidden: { x: -20, opacity: 0 },
+  visible: { x: 0, opacity: 1, transition: { duration: 0.4 } },
+};
+
+const imageVariants = {
+  hidden: { scale: 0.8, opacity: 0 },
+  visible: { scale: 1, opacity: 1, transition: { duration: 0.5 } },
+};
+
+const stepImages = {
+  1: "/gifs_assets/step1.gif",
+  99: "/gifs_assets/step2.gif",
+  2: "/gifs_assets/step3.svg",
+  3: "/gifs_assets/step1.gif",
+  98: "/gifs_assets/step2.gif",
+  4: "/gifs_assets/step2.gif",
+  5: "/gifs_assets/step3.svg",
+} as const;
+
+// Memoized child components
+const Popup = memo(({ message }: { message: string }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 50, scale: 0.9 }}
+    animate={{ opacity: 1, y: 0, scale: 1 }}
+    exit={{ opacity: 0, y: 50, scale: 0.9 }}
+    transition={{ duration: 0.3 }}
+    role="alert"
+    className="fixed bottom-10 left-1/2 -translate-x-1/2 bg-primary text-white px-6 py-3 rounded-lg shadow-xl z-50 max-w-md text-center"
+  >
+    {message}
+  </motion.div>
+));
+Popup.displayName = "Popup";
+
+const StepImage = memo(({ step }: { step: number }) => (
+  <motion.div
+    variants={imageVariants}
+    className="flex justify-center items-center"
+  >
+    <Image
+      src={stepImages[step as keyof typeof stepImages] || stepImages[1]}
+      alt={`Step ${step} illustration`}
+      width={400}
+      height={300}
+      className="w-full max-w-md"
+      priority={step === 1}
+      unoptimized
+    />
+  </motion.div>
+));
+StepImage.displayName = "StepImage";
+
+const EmploymentButton = memo(({ 
+  option, 
+  icon: Icon,
+  onClick 
+}: { 
+  option: string; 
+  icon: any;
+  onClick: (val: string) => void;
+}) => (
+  <motion.button
+    variants={itemVariants}
+    whileHover={{ scale: 1.02, x: 5 }}
+    whileTap={{ scale: 0.98 }}
+    onClick={() => onClick(option)}
+    className="w-full p-5 border-2 border-gray-200 font-medium rounded-xl hover:border-primary hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 transition-all text-left flex items-center gap-4 group cursor-pointer shadow-sm hover:shadow-md"
+  >
+    <motion.div
+      whileHover={{ rotate: 360, scale: 1.1 }}
+      transition={{ duration: 0.6 }}
+      className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-primary flex items-center justify-center flex-shrink-0 shadow-md group-hover:shadow-lg transition"
+    >
+      <Icon className="w-6 h-6 text-white" />
+    </motion.div>
+    <span className="flex-1 font-semibold text-gray-800 group-hover:text-primary transition">
+      {option}
+    </span>
+    <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-primary transition" />
+  </motion.button>
+));
+EmploymentButton.displayName = "EmploymentButton";
+
+const IncomeButton = memo(({ 
+  label, 
+  value, 
+  onClick 
+}: { 
+  label: string; 
+  value: string; 
+  onClick: (val: string) => void;
+}) => (
+  <motion.button
+    variants={itemVariants}
+    whileHover={{ scale: 1.02, x: 5 }}
+    whileTap={{ scale: 0.98 }}
+    onClick={() => onClick(value)}
+    className="w-full p-5 border-2 border-gray-200 font-medium rounded-xl hover:border-primary hover:bg-gradient-to-r hover:from-green-50 hover:to-emerald-50 transition-all text-left flex items-center gap-4 group cursor-pointer shadow-sm hover:shadow-md"
+  >
+    <motion.div
+      whileHover={{ rotate: 360, scale: 1.1 }}
+      transition={{ duration: 0.6 }}
+      className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center flex-shrink-0 shadow-md group-hover:shadow-lg transition"
+    >
+      <Euro className="w-6 h-6 text-white" />
+    </motion.div>
+    <span className="flex-1 font-semibold text-gray-800 group-hover:text-primary transition">
+      {label}
+    </span>
+    <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-primary transition" />
+  </motion.button>
+));
+IncomeButton.displayName = "IncomeButton";
+
+// PROGRESS BAR COMPONENT
+const ProgressBar = memo(({ currentStep, totalSteps }: { currentStep: number; totalSteps: number }) => {
+  const progress = (currentStep / totalSteps) * 100;
+  
+  return (
+    <div className="w-full max-w-3xl mx-auto mb-8">
+      <div className="flex items-center justify-between mb-2">
+        <span className="text-sm font-medium text-gray-700">
+          Question {currentStep} of {totalSteps}
+        </span>
+        <span className="text-sm font-medium text-gray-700">
+          {Math.round(progress)}% Complete
+        </span>
+      </div>
+      <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+        <motion.div
+          className="h-full bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 rounded-full"
+          initial={{ width: 0 }}
+          animate={{ width: `${progress}%` }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+        />
+      </div>
+    </div>
+  );
+});
+ProgressBar.displayName = "ProgressBar";
 
 export default function InsuranceJourney() {
   const router = useRouter();
@@ -84,24 +266,17 @@ export default function InsuranceJourney() {
   const [hasChildren, setHasChildren] = useState<boolean | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Animation variants
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
-    exit: { opacity: 0, transition: { duration: 0.3 } },
-  };
+  // PROGRESS HELPER FUNCTION
+  const getProgressStep = useCallback((currentStep: number): number => {
+    if (currentStep === 1) return 1;
+    if (currentStep === 2 || currentStep === 99 || currentStep === 98) return 2;
+    if (currentStep === 3) return 3;
+    if (currentStep === 4) return 4;
+    if (currentStep === 5) return 5;
+    return 1;
+  }, []);
 
-  const itemVariants = {
-    hidden: { x: -20, opacity: 0 },
-    visible: { x: 0, opacity: 1, transition: { duration: 0.4 } },
-  };
-
-  const imageVariants = {
-    hidden: { scale: 0.8, opacity: 0 },
-    visible: { scale: 1, opacity: 1, transition: { duration: 0.5 } },
-  };
-
-  // Calculate TK Price based on income
+  // Calculate TK Price
   const calculateTKPrice = useCallback(
     (yearlyIncome: number, hasChildrenFlag: boolean, age: number) => {
       const maxIncome = 5812.5 * 12;
@@ -133,13 +308,15 @@ export default function InsuranceJourney() {
 
   // Fetch countries
   useEffect(() => {
+    let isMounted = true;
+
     async function fetchCountries() {
       try {
         const cached = localStorage.getItem("countries_cache");
         if (cached) {
           const { data, timestamp } = JSON.parse(cached);
-          if (Date.now() - timestamp < 24 * 60 * 60 * 1000) {
-            setCountries(data);
+          if (Date.now() - timestamp < CACHE_DURATION) {
+            if (isMounted) setCountries(data);
             return;
           }
         }
@@ -158,30 +335,32 @@ export default function InsuranceJourney() {
           .filter((country) => country.name.trim().length > 0)
           .sort((a, b) => a.name.localeCompare(b.name));
 
-        setCountries(list);
-
-        localStorage.setItem(
-          "countries_cache",
-          JSON.stringify({ data: list, timestamp: Date.now() }),
-        );
+        if (isMounted) {
+          setCountries(list);
+          localStorage.setItem(
+            "countries_cache",
+            JSON.stringify({ data: list, timestamp: Date.now() }),
+          );
+        }
       } catch (e) {
         console.error("Error loading countries", e);
       }
     }
 
     fetchCountries();
+    return () => { isMounted = false; };
   }, []);
 
   // Close dropdown on outside click
   useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
+    const handleClickOutside = (event: MouseEvent) => {
       if (
         dropdownRef.current &&
         !dropdownRef.current.contains(event.target as Node)
       ) {
         setIsDropdownOpen(false);
       }
-    }
+    };
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
@@ -190,7 +369,7 @@ export default function InsuranceJourney() {
   // Popup auto hide
   useEffect(() => {
     if (popup) {
-      const timer = setTimeout(() => setPopup(""), 3000);
+      const timer = setTimeout(() => setPopup(""), POPUP_DURATION);
       return () => clearTimeout(timer);
     }
   }, [popup]);
@@ -224,14 +403,12 @@ export default function InsuranceJourney() {
       return;
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
+    if (!EMAIL_REGEX.test(email)) {
       setPopup("Please enter a valid email address");
       return;
     }
 
-    const phoneRegex = /^\+?[\d\s-]{10,}$/;
-    if (!phoneRegex.test(phone)) {
+    if (!PHONE_REGEX.test(phone)) {
       setPopup("Please enter a valid phone number");
       return;
     }
@@ -246,14 +423,12 @@ export default function InsuranceJourney() {
       return;
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
+    if (!EMAIL_REGEX.test(email)) {
       setPopup("Please enter a valid email address");
       return;
     }
 
-    const phoneRegex = /^\+?[\d\s-]{10,}$/;
-    if (!phoneRegex.test(phone)) {
+    if (!PHONE_REGEX.test(phone)) {
       setPopup("Please enter a valid phone number");
       return;
     }
@@ -304,42 +479,7 @@ export default function InsuranceJourney() {
         return;
       }
 
-      const EU_COUNTRIES = [
-        "Austria",
-        "Belgium",
-        "Bulgaria",
-        "Croatia",
-        "Cyprus",
-        "Czech Republic",
-        "Denmark",
-        "Estonia",
-        "Finland",
-        "France",
-        "Germany",
-        "Greece",
-        "Hungary",
-        "Ireland",
-        "Italy",
-        "Latvia",
-        "Lithuania",
-        "Luxembourg",
-        "Malta",
-        "Netherlands",
-        "Poland",
-        "Portugal",
-        "Romania",
-        "Slovakia",
-        "Slovenia",
-        "Spain",
-        "Sweden",
-        "Iceland",
-        "Liechtenstein",
-        "Norway",
-        "Switzerland",
-        "United Kingdom",
-      ];
-
-      const isEU = EU_COUNTRIES.includes(currentSelectedCountry);
+      const isEU = EU_COUNTRIES.includes(currentSelectedCountry as any);
       const currentYear = new Date().getFullYear();
       const age = currentDob ? currentYear - parseInt(currentDob) : 25;
       const normalizedEmployment = getNormalizedEmployment(
@@ -445,17 +585,9 @@ export default function InsuranceJourney() {
     [currentYear],
   );
 
-  const stepImages: Record<number, string> = useMemo(
-    () => ({
-      1: "/gifs_assets/step1.gif",
-      99: "/gifs_assets/step2.gif",
-      2: "/gifs_assets/step3.svg",
-      3: "/gifs_assets/step1.gif",
-      98: "/gifs_assets/step2.gif",
-      4: "/gifs_assets/step2.gif",
-      5: "/gifs_assets/step3.svg",
-    }),
-    [],
+  const calculatedAge = useMemo(
+    () => (dob ? currentYear - parseInt(dob) : null),
+    [dob, currentYear]
   );
 
   // ================= UI ===================
@@ -468,12 +600,12 @@ export default function InsuranceJourney() {
         transition={{ duration: 0.6 }}
         className="max-w-3xl mx-auto text-center mb-10"
       >
-        <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-3">
+        <h1 className="text-3xl sm:text-5xl font-extrabold text-gray-900 mb-3">
           Just{" "}
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-primary">
-            2 minutes
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-600">
+            2 minutes to find your 
           </span>{" "}
-          to find your best-fit insurance
+          best-fit insurance
         </h1>
 
         <p className="text-gray-500 text-base md:text-lg">
@@ -481,20 +613,12 @@ export default function InsuranceJourney() {
         </p>
       </motion.div>
 
+      {/* PROGRESS BAR */}
+      <ProgressBar currentStep={getProgressStep(step)} totalSteps={5} />
+
       {/* Popup */}
       <AnimatePresence>
-        {popup && (
-          <motion.div
-            initial={{ opacity: 0, y: 50, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 50, scale: 0.9 }}
-            transition={{ duration: 0.3 }}
-            role="alert"
-            className="fixed bottom-10 left-1/2 -translate-x-1/2 bg-primary text-white px-6 py-3 rounded-lg shadow-xl z-50 max-w-md text-center"
-          >
-            {popup}
-          </motion.div>
-        )}
+        {popup && <Popup message={popup} />}
       </AnimatePresence>
 
       <AnimatePresence mode="wait">
@@ -506,50 +630,24 @@ export default function InsuranceJourney() {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="w-full max-w-6xl mx-auto
-bg-white/70 backdrop-blur-xl
-border border-white/40
-rounded-3xl shadow-xl shadow-purple-500/10
-p-6 md:p-10"
+            className="w-full max-w-6xl mx-auto bg-white/70 backdrop-blur-xl border border-white/40 rounded-3xl shadow-xl shadow-purple-500/10 p-6 md:p-10"
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-              <motion.div
-                variants={imageVariants}
-                className="flex justify-center items-center"
-              >
-                <Image
-                  src={stepImages[1]}
-                  alt="Employment selection"
-                  width={400}
-                  height={300}
-                  className="w-full max-w-md"
-                  priority
-                  unoptimized
-                />
-              </motion.div>
+              <StepImage step={1} />
 
               <motion.div variants={containerVariants} className="space-y-4">
-                <motion.h2 className="text-xl font-semibold text-gray-800 flex items-center gap-3">
-                  <Briefcase className="w-5 h-5 text-primary" />
-                  What’s your employment status?
+                <motion.h2 className="text-2xl sm:text-3xl font-semibold text-gray-800 flex items-center gap-3">
+                  <Briefcase className="w-6 h-6 text-primary" />
+                  What's your employment status?
                 </motion.h2>
-                {["Self-employed/Freelancer", "Employed", "Others"].map(
-                  (item) => (
-                    <motion.button
-                      key={item}
-                      variants={itemVariants}
-                      whileHover={{ scale: 1.02, x: 5 }}
-                      whileTap={{ scale: 0.98 }}
-                      onClick={() => handleEmploymentSelect(item)}
-                      className="w-full p-4 rounded-xl border-2
-bg-white hover:bg-primary/5
-hover:border-primary transition
-font-medium text-gray-800"
-                    >
-                      {item}
-                    </motion.button>
-                  ),
-                )}
+                {EMPLOYMENT_OPTIONS.map((item) => (
+                  <EmploymentButton
+                    key={item.label}
+                    option={item.label}
+                    icon={item.icon}
+                    onClick={handleEmploymentSelect}
+                  />
+                ))}
               </motion.div>
             </div>
           </motion.div>
@@ -563,28 +661,13 @@ font-medium text-gray-800"
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="w-full max-w-6xl mx-auto"
+            className="w-full max-w-6xl mx-auto bg-white/70 backdrop-blur-xl border border-white/40 rounded-3xl shadow-xl shadow-purple-500/10 p-6 md:p-10"
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-              <motion.div
-                variants={imageVariants}
-                className="flex justify-center items-center"
-              >
-                <Image
-                  src={stepImages[99]}
-                  alt="Contact details"
-                  width={400}
-                  height={300}
-                  className="w-full max-w-md"
-                  unoptimized
-                />
-              </motion.div>
+              <StepImage step={99} />
 
               <motion.div variants={containerVariants} className="space-y-4">
-                <motion.h2
-                  variants={itemVariants}
-                  className="text-xl font-semibold mb-4 text-gray-700"
-                >
+                <motion.h2 className="text-2xl sm:text-3xl font-semibold text-gray-800">
                   Please provide your details
                 </motion.h2>
 
@@ -640,55 +723,24 @@ font-medium text-gray-800"
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="w-full max-w-6xl mx-auto"
+            className="w-full max-w-6xl mx-auto bg-white/70 backdrop-blur-xl border border-white/40 rounded-3xl shadow-xl shadow-purple-500/10 p-6 md:p-10"
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-              <motion.div
-                variants={imageVariants}
-                className="flex justify-center items-center"
-              >
-                <Image
-                  src={stepImages[2]}
-                  alt="Income selection"
-                  width={400}
-                  height={300}
-                  className="w-full max-w-md"
-                  unoptimized
-                />
-              </motion.div>
+              <StepImage step={2} />
 
               <motion.div variants={containerVariants} className="space-y-4">
-                <motion.h2 className="text-xl font-semibold text-gray-800 flex items-center gap-3">
-                  <Euro className="w-5 h-5 text-primary" />
+                <motion.h2 className="text-2xl sm:text-3xl font-semibold text-gray-800 flex items-center gap-3">
+                  <Euro className="w-6 h-6 text-primary" />
                   Your yearly gross income
                 </motion.h2>
-                <motion.button
-                  variants={itemVariants}
-                  whileHover={{ scale: 1.02, x: 5 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => handleIncomeSelect("<30000")}
-                  className="w-full p-4 border-2 cursor-pointer rounded-lg text-left hover:border-primary hover:bg-primary/5 transition focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-                >
-                  &lt; €30,000
-                </motion.button>
-                <motion.button
-                  variants={itemVariants}
-                  whileHover={{ scale: 1.02, x: 5 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => handleIncomeSelect("30001-77400")}
-                  className="w-full p-4 border-2 cursor-pointer rounded-lg text-left hover:border-primary hover:bg-primary/5 transition focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-                >
-                  €30,001 – €77,400
-                </motion.button>
-                <motion.button
-                  variants={itemVariants}
-                  whileHover={{ scale: 1.02, x: 5 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => handleIncomeSelect(">77400")}
-                  className="w-full p-4 border-2 cursor-pointer rounded-lg text-left hover:border-primary hover:bg-primary/5 transition focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-                >
-                  &gt; €77,400
-                </motion.button>
+                {INCOME_OPTIONS.map((item) => (
+                  <IncomeButton
+                    key={item.value}
+                    label={item.label}
+                    value={item.value}
+                    onClick={handleIncomeSelect}
+                  />
+                ))}
               </motion.div>
             </div>
           </motion.div>
@@ -702,28 +754,17 @@ font-medium text-gray-800"
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="w-full max-w-6xl mx-auto"
+            className="w-full max-w-6xl mx-auto bg-white/70 backdrop-blur-xl border border-white/40 rounded-3xl shadow-xl shadow-purple-500/10 p-6 md:p-10"
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-              <motion.div
-                variants={imageVariants}
-                className="flex justify-center items-center"
-              >
-                <Image
-                  src={stepImages[3]}
-                  alt="Children question"
-                  width={400}
-                  height={300}
-                  className="w-full max-w-md"
-                  unoptimized
-                />
-              </motion.div>
+              <StepImage step={3} />
 
               <motion.div variants={containerVariants} className="space-y-4">
                 <motion.h2
                   variants={itemVariants}
-                  className="text-xl font-semibold mb-4 text-gray-700"
+                  className="text-2xl sm:text-3xl font-semibold text-gray-800 flex items-center gap-3"
                 >
+                  <Baby className="w-6 h-6 text-primary" />
                   Do you have children?
                 </motion.h2>
                 <motion.p
@@ -738,29 +779,25 @@ font-medium text-gray-800"
                   whileHover={{ scale: 1.02, x: 5 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => handleChildrenSelection(true)}
-                  className={`w-full p-4 border-2 cursor-pointer rounded-lg text-left transition focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
+                  className={`w-full p-5 border-2 cursor-pointer rounded-xl text-left transition shadow-sm hover:shadow-md ${
                     hasChildren === true
-                      ? "border-primary bg-primary/5"
-                      : "border-gray-300 hover:border-primary hover:bg-primary/5"
+                      ? "border-primary bg-gradient-to-r from-green-50 to-emerald-50"
+                      : "border-gray-200 hover:border-primary hover:bg-primary/5"
                   }`}
                 >
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                  <div className="flex items-center gap-4">
+                    <motion.div
+                      whileHover={{ scale: 1.1 }}
+                      className={`w-12 h-12 rounded-xl flex items-center justify-center ${
                         hasChildren === true
-                          ? "border-primary"
-                          : "border-gray-300"
+                          ? "bg-gradient-to-br from-green-500 to-emerald-500"
+                          : "bg-gray-100"
                       }`}
                     >
-                      {hasChildren === true && (
-                        <motion.div
-                          initial={{ scale: 0 }}
-                          animate={{ scale: 1 }}
-                          className="w-2.5 h-2.5 rounded-full bg-primary"
-                        />
-                      )}
-                    </div>
-                    <span className="font-semibold">Yes, I have children</span>
+                      <CheckCircle2 className={`w-6 h-6 ${hasChildren === true ? "text-white" : "text-gray-400"}`} />
+                    </motion.div>
+                    <span className="font-semibold text-gray-800 flex-1">Yes, I have children</span>
+                    {hasChildren === true && <ArrowRight className="w-5 h-5 text-primary" />}
                   </div>
                 </motion.button>
 
@@ -769,29 +806,25 @@ font-medium text-gray-800"
                   whileHover={{ scale: 1.02, x: 5 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => handleChildrenSelection(false)}
-                  className={`w-full p-4 border-2 cursor-pointer rounded-lg text-left transition focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
+                  className={`w-full p-5 border-2 cursor-pointer rounded-xl text-left transition shadow-sm hover:shadow-md ${
                     hasChildren === false
-                      ? "border-primary bg-primary/5"
-                      : "border-gray-300 hover:border-primary hover:bg-primary/5"
+                      ? "border-primary bg-gradient-to-r from-blue-50 to-cyan-50"
+                      : "border-gray-200 hover:border-primary hover:bg-primary/5"
                   }`}
                 >
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                  <div className="flex items-center gap-4">
+                    <motion.div
+                      whileHover={{ scale: 1.1 }}
+                      className={`w-12 h-12 rounded-xl flex items-center justify-center ${
                         hasChildren === false
-                          ? "border-primary"
-                          : "border-gray-300"
+                          ? "bg-gradient-to-br from-blue-500 to-cyan-500"
+                          : "bg-gray-100"
                       }`}
                     >
-                      {hasChildren === false && (
-                        <motion.div
-                          initial={{ scale: 0 }}
-                          animate={{ scale: 1 }}
-                          className="w-2.5 h-2.5 rounded-full bg-primary"
-                        />
-                      )}
-                    </div>
-                    <span className="font-semibold">No children</span>
+                      <XCircle className={`w-6 h-6 ${hasChildren === false ? "text-white" : "text-gray-400"}`} />
+                    </motion.div>
+                    <span className="font-semibold text-gray-800 flex-1">No children</span>
+                    {hasChildren === false && <ArrowRight className="w-5 h-5 text-primary" />}
                   </div>
                 </motion.button>
               </motion.div>
@@ -807,22 +840,10 @@ font-medium text-gray-800"
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="w-full max-w-6xl mx-auto"
+            className="w-full max-w-6xl mx-auto bg-white/70 backdrop-blur-xl border border-white/40 rounded-3xl shadow-xl shadow-purple-500/10 p-6 md:p-10"
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-              <motion.div
-                variants={imageVariants}
-                className="flex justify-center items-center"
-              >
-                <Image
-                  src={stepImages[98]}
-                  alt="Contact form"
-                  width={400}
-                  height={300}
-                  className="w-full max-w-md"
-                  unoptimized
-                />
-              </motion.div>
+              <StepImage step={98} />
 
               <motion.div variants={containerVariants} className="space-y-4">
                 <motion.h2
@@ -877,28 +898,17 @@ font-medium text-gray-800"
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="w-full max-w-6xl mx-auto"
+            className="w-full max-w-6xl mx-auto bg-white/70 backdrop-blur-xl border border-white/40 rounded-3xl shadow-xl shadow-purple-500/10 p-6 md:p-10"
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-              <motion.div
-                variants={imageVariants}
-                className="flex justify-center items-center"
-              >
-                <Image
-                  src={stepImages[4]}
-                  alt="Birth year selection"
-                  width={400}
-                  height={300}
-                  className="w-full max-w-md"
-                  unoptimized
-                />
-              </motion.div>
+              <StepImage step={4} />
 
               <motion.div variants={containerVariants} className="space-y-4">
                 <motion.h2
                   variants={itemVariants}
-                  className="text-xl font-semibold mb-4 text-gray-700"
+                  className="text-2xl sm:text-3xl font-semibold text-gray-800 flex items-center gap-3"
                 >
+                  <Calendar className="w-6 h-6 text-primary" />
                   What&apos;s your Birth Year?
                 </motion.h2>
                 <motion.select
@@ -917,7 +927,7 @@ font-medium text-gray-800"
                 </motion.select>
 
                 <AnimatePresence>
-                  {dob && (
+                  {calculatedAge && (
                     <motion.div
                       initial={{ opacity: 0, height: 0 }}
                       animate={{ opacity: 1, height: "auto" }}
@@ -926,7 +936,7 @@ font-medium text-gray-800"
                     >
                       Age:{" "}
                       <span className="font-semibold">
-                        {currentYear - parseInt(dob)} years
+                        {calculatedAge} years
                       </span>
                     </motion.div>
                   )}
@@ -959,28 +969,17 @@ font-medium text-gray-800"
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="w-full max-w-6xl mx-auto"
+            className="w-full max-w-6xl mx-auto bg-white/70 backdrop-blur-xl border border-white/40 rounded-3xl shadow-xl shadow-purple-500/10 p-6 md:p-10"
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-              <motion.div
-                variants={imageVariants}
-                className="flex justify-center items-center"
-              >
-                <Image
-                  src={stepImages[5]}
-                  alt="Country selection"
-                  width={400}
-                  height={300}
-                  className="w-full max-w-md"
-                  unoptimized
-                />
-              </motion.div>
+              <StepImage step={5} />
 
               <motion.div variants={containerVariants} className="space-y-4">
                 <motion.h2
                   variants={itemVariants}
-                  className="text-xl font-semibold mb-4 text-gray-700"
+                  className="text-2xl sm:text-3xl font-semibold text-gray-800 flex items-center gap-3"
                 >
+                  <Globe className="w-6 h-6 text-primary" />
                   Where are you from?
                 </motion.h2>
 

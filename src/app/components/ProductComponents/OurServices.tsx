@@ -139,7 +139,7 @@ export default function OurServices() {
                 {/* POPULAR BADGE */}
                 {isPopular && (
                   <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-10">
-                    <div className="bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 text-xs font-bold px-5 py-2 rounded-full shadow-lg flex items-center gap-1">
+                    <div className="bg-linear-to-r from-yellow-400 to-orange-400 text-gray-900 text-xs font-bold px-5 py-2 rounded-full shadow-lg flex items-center gap-1">
                       <Star className="w-3 h-3 fill-current" />
                       {plan.badge}
                     </div>
@@ -151,7 +151,7 @@ export default function OurServices() {
                   whileHover={{ y: -8 }}
                   className={`h-full rounded-3xl p-8 flex flex-col justify-between ${
                     isPopular
-                      ? "bg-gradient-to-br from-[#531D6F] to-purple-700 text-white shadow-2xl"
+                      ? "bg-linear-to-br from-[#531D6F] to-purple-700 text-white shadow-2xl"
                       : "bg-white shadow-xl"
                   }`}
                 >

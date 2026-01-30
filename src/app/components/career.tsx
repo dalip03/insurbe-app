@@ -92,14 +92,17 @@ const CareerSection = () => {
         className="text-center mb-10 px-4 md:px-10 lg:px-20"
       >
         <h2 className="text-4xl md:text-5xl font-bold mb-4">
-          Want to Work with Us?
+          Want to{" "}
+          <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-purple-600">
+            Work with Us?
+          </span>
         </h2>
         <p className="text-gray-600 text-lg max-w-xl mx-auto">
           Do meaningful work. Take ownership. Push your ideas. Never stop
           learning.
         </p>
       </motion.div>
-{/* bg-gradient-to-br from-white via-[#f7e9ff] to-white */}
+      {/* bg-gradient-to-br from-white via-[#f7e9ff] to-white */}
       {/* Image Gallery */}
       <motion.div
         variants={fadeInUp}
@@ -122,7 +125,10 @@ const CareerSection = () => {
         className="max-w-3xl mx-auto px-4 md:px-10 lg:px-20"
       >
         <h3 className="text-2xl font-semibold mb-6 text-center">
-          Open positions at InsurBe
+          Open positions at{" "}
+          <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-purple-600">
+            InsurBe
+          </span>
         </h3>
 
         {positions.map((group, index) => (

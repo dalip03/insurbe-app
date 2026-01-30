@@ -2,11 +2,14 @@
 
 import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, X, Sparkles, TrendingUp, BotOff, TextCursorInputIcon } from "lucide-react";
+import {
+  Check,
+  X,
+  ArrowRight,
+} from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import PlansCompare from "./PlanCompares";
-import InsuranceCalculator from "../CalculatorComponents/InsuranceCalculator";
 import { usePremiumStore } from "@/app/stores/premiumStore";
 import { useJourneyStore } from "@/app/stores/journeyStore";
 import { useDocumentStore } from "@/app/stores/documentStore";
@@ -27,7 +30,8 @@ export default function ComparePlans() {
   const router = useRouter();
   const { setPremium, setTKPremium } = usePremiumStore();
   const { setHalleschePremiumDocs, setHallescheExpatDocs } = useDocumentStore();
-  const { incomeRange, employmentStatus, dob, selectedCountry } = useJourneyStore();
+  const { incomeRange, employmentStatus, dob, selectedCountry } =
+    useJourneyStore();
 
   const [viewMode, setViewMode] = useState("default");
   const [expandedCard, setExpandedCard] = useState<string | null>(null);
@@ -64,15 +68,42 @@ export default function ComparePlans() {
       const coverageStart = new Date().toISOString().split("T")[0];
 
       const EU_COUNTRIES = [
-        "Austria", "Belgium", "Bulgaria", "Croatia", "Cyprus",
-        "Czech Republic", "Denmark", "Estonia", "Finland", "France",
-        "Germany", "Greece", "Hungary", "Ireland", "Italy",
-        "Latvia", "Lithuania", "Luxembourg", "Malta", "Netherlands",
-        "Poland", "Portugal", "Romania", "Slovakia", "Slovenia",
-        "Spain", "Sweden", "Iceland", "Liechtenstein", "Norway",
-        "Switzerland", "United Kingdom",
+        "Austria",
+        "Belgium",
+        "Bulgaria",
+        "Croatia",
+        "Cyprus",
+        "Czech Republic",
+        "Denmark",
+        "Estonia",
+        "Finland",
+        "France",
+        "Germany",
+        "Greece",
+        "Hungary",
+        "Ireland",
+        "Italy",
+        "Latvia",
+        "Lithuania",
+        "Luxembourg",
+        "Malta",
+        "Netherlands",
+        "Poland",
+        "Portugal",
+        "Romania",
+        "Slovakia",
+        "Slovenia",
+        "Spain",
+        "Sweden",
+        "Iceland",
+        "Liechtenstein",
+        "Norway",
+        "Switzerland",
+        "United Kingdom",
       ];
-      const isEU = selectedCountry ? EU_COUNTRIES.includes(selectedCountry) : true;
+      const isEU = selectedCountry
+        ? EU_COUNTRIES.includes(selectedCountry)
+        : true;
 
       const updatedProducts = await Promise.all(
         availableProducts.map(async (product: any) => {
@@ -143,7 +174,7 @@ export default function ComparePlans() {
           }
 
           return { ...product, loading: false };
-        })
+        }),
       );
 
       // ✅ Update store with fetched premiums
@@ -185,8 +216,8 @@ export default function ComparePlans() {
           product.loading || product.premium === null
             ? "..."
             : typeof product.premium === "number"
-            ? Math.round(product.premium).toString()
-            : product.premium?.toString() || "N/A",
+              ? Math.round(product.premium).toString()
+              : product.premium?.toString() || "N/A",
         period: "/ Month",
         logo,
         description: product.description,
@@ -351,7 +382,7 @@ export default function ComparePlans() {
   };
 
   // ✅ Handle Choose Plan - Opens Health Modal for available plans
-  const handleChoosePlan = (plan: typeof plans[0]) => {
+  const handleChoosePlan = (plan: (typeof plans)[0]) => {
     if (plan.available) {
       // ✅ Check if self-employed (always eligible for private)
       const isSelfEmployed =
@@ -390,7 +421,9 @@ export default function ComparePlans() {
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
         <div className="text-center">
           <div className="w-20 h-20 border-4 border-purple-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-700 font-semibold text-lg">Loading your personalized plans...</p>
+          <p className="text-gray-700 font-semibold text-lg">
+            Loading your personalized plans...
+          </p>
         </div>
       </div>
     );
@@ -404,79 +437,77 @@ export default function ComparePlans() {
       className="min-h-screen py-10 px-4 sm:px-6 md:px-16 "
     >
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-10 gap-6">
-          <motion.div
-            initial={{ x: -50, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-linear-to-r from-purple-100 to-blue-100 border border-purple-200 mb-4">
-              <span className="text-sm font-bold text-purple-700 uppercase tracking-wide">Best Match</span>
-            </div>
+       {/* Header */}
+<div className="flex justify-center mb-10">
+  <motion.div
+    initial={{ y: 30, opacity: 0 }}
+    animate={{ y: 0, opacity: 1 }}
+    transition={{ duration: 0.6, delay: 0.2 }}
+    className="text-center max-w-2xl"
+  >
+    {/* Badge */}
+   
+    {/* Heading */}
+    <h1 className="text-3xl md:text-4xl font-extrabold leading-snug">
+      Best Plans suggested 
+      based{" "}
+      <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-purple-600">
+        on your personal  Profile
+      </span>
+    </h1>
 
-            <h1 className="text-3xl md:text-5xl font-extrabold bg-linear-to-r from-primary to-purple-600 bg-clip-text text-transparent leading-snug">
-              Best Plans suggested <br />
-              based on your personal <br /> Profile
-            </h1>
+    {/* Buttons */}
+    <motion.div
+      initial={{ y: 20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.5, delay: 0.4 }}
+      className="flex flex-wrap justify-center gap-4 mt-8"
+    >
+      <motion.button
+        type="button"
+        whileHover={{ scale: 1.03 }}
+        whileTap={{ scale: 0.97 }}
+        onClick={handleDefaultClick}
+        className="
+          inline-flex items-center gap-2
+          px-8 py-3
+          rounded-full
+          font-semibold
+          text-white
+          bg-gradient-to-r from-primary to-purple-600
+          shadow-md hover:shadow-lg
+          transition
+          focus:outline-none focus:ring-2 focus:ring-purple-300
+        "
+      >
+        Default
+        <ArrowRight className="w-4 h-4" />
+      </motion.button>
 
-            <motion.div
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-              className="flex gap-3 mt-6"
-            >
-              <motion.button
-                type="button"
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={handleDefaultClick}
-                className={`px-8 py-3 rounded-xl font-bold transition-all shadow-lg focus:outline-none focus:ring-4 focus:ring-purple-300 ${
-                  viewMode === "default"
-                    ? "bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-purple-500/50"
-                    : "bg-white text-gray-700 hover:bg-gray-50 border-2 border-gray-200"
-                }`}
-              >
-                Default
-              </motion.button>
+      <motion.button
+        type="button"
+        whileHover={{ scale: 1.03 }}
+        whileTap={{ scale: 0.97 }}
+        onClick={handlePersonalizedCalculationClick}
+        className="
+          inline-flex items-center gap-2
+          px-8 py-3
+          rounded-full
+          font-semibold
+          text-purple-600
+          border-2 border-purple-600
+          bg-white
+          hover:bg-purple-50
+          transition
+          focus:outline-none focus:ring-2 focus:ring-purple-300
+        "
+      >
+        Personalized Calculation
+      </motion.button>
+    </motion.div>
+  </motion.div>
+</div>
 
-              <motion.button
-                type="button"
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={handlePersonalizeClick}
-                className={`px-8 py-3 rounded-xl cursor-pointer font-bold transition-all shadow-lg focus:outline-none focus:ring-4 focus:ring-purple-300 ${
-                  viewMode === "personalize"
-                    ? "bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-purple-500/50"
-                    : "bg-white text-gray-700 hover:bg-gray-50 border-2 border-gray-200"
-                }`}
-              >
-                Personalize
-              </motion.button>
-            </motion.div>
-          </motion.div>
-
-          <motion.div
-            initial={{ x: 50, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="text-left lg:text-right max-w-xs"
-          >
-            <p className="text-sm text-gray-600 mb-3 font-medium">
-              Modify charges to match your profile
-            </p>
-            <motion.button
-              type="button"
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={handlePersonalizedCalculationClick}
-              className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 cursor-pointer text-white font-bold px-8 py-4 rounded-xl shadow-xl shadow-emerald-500/30 transition-all w-full lg:w-auto focus:outline-none focus:ring-4 focus:ring-emerald-300 flex items-center justify-center gap-2"
-            >
-              <TrendingUp className="w-5 h-5" />
-              Personalized Calculation
-            </motion.button>
-          </motion.div>
-        </div>
 
         {/* Insurance Calculator */}
         <AnimatePresence>
@@ -499,7 +530,7 @@ export default function ComparePlans() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8 text-center"
         >
-          <span className="inline-block bg-gradient-to-r from-purple-100 to-blue-100 text-purple-700 px-6 py-3 rounded-full text-sm font-bold shadow-lg border-2 border-purple-200">
+          <span className="inline-block bg-linear-to-r from-purple-100 to-blue-100 text-primary px-6 py-3 rounded-full text-sm font-bold shadow-lg border-2 border-purple-200">
             🎯 {plans.length} Plans Available for You
           </span>
         </motion.div>
@@ -542,7 +573,7 @@ export default function ComparePlans() {
                   ${plan.bgColor}
                   ${
                     isHovered
-                      ? "border-purple-500 ring-4 ring-purple-200"
+                      ? "border-primary ring-4 ring-purple-200"
                       : "border-white/60"
                   }
                 `}
@@ -553,7 +584,7 @@ export default function ComparePlans() {
                     initial={{ scale: 0, rotate: -180 }}
                     animate={{ scale: 1, rotate: 0 }}
                     transition={{ delay: 0.6, type: "spring" }}
-                    className="absolute -top-4 -right-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-xs font-bold px-4 py-2 rounded-full shadow-xl z-10 border-2 border-white"
+                    className="absolute -top-4 -right-4 bg-gradient-to-r from-amber-50 to-orange-50 text-black text-xs font-bold px-4 py-2 rounded-full shadow-xl z-10 border-2 border-white"
                   >
                     ⭐ Recommended
                   </motion.div>
@@ -576,14 +607,16 @@ export default function ComparePlans() {
                       {plan.loading ? (
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 border-4 border-purple-600 border-t-transparent rounded-full animate-spin"></div>
-                          <span className="text-sm text-gray-600 font-medium">Loading...</span>
+                          <span className="text-sm text-gray-600 font-medium">
+                            Loading...
+                          </span>
                         </div>
                       ) : (
                         <>
-                          <span className="text-gray-700 text-4xl sm:text-5xl font-bold">
+                          <span className="text-gray-700 text-3xl sm:text-4xl font-bold">
                             €
                           </span>
-                          <span className="text-5xl sm:text-6xl bg-gradient-to-br from-gray-900 to-purple-900 bg-clip-text text-transparent font-extrabold">
+                          <span className="text-3xl sm:text-4xl bg-gradient-to-br from-gray-900 to-purple-900 bg-clip-text text-transparent font-extrabold">
                             {plan.price}
                           </span>
                           <span className="text-sm text-gray-600 font-medium ml-1">
@@ -593,7 +626,7 @@ export default function ComparePlans() {
                       )}
                     </motion.div>
 
-                    <div className="mt-3 font-bold text-gray-900 text-xl">
+                    <div className="mt-3 font-bold text-gray-900 text-[16px]">
                       {plan.name}
                     </div>
 
@@ -649,9 +682,11 @@ export default function ComparePlans() {
                       className="flex items-start gap-3"
                     >
                       <div className="bg-green-100 rounded-full p-1 mt-0.5">
-                        <Check className="w-4 h-4 text-green-600 flex-shrink-0" />
+                        <Check className="w-4 h-4 text-green-600 shrink-0" />
                       </div>
-                      <span className="text-sm text-gray-700 font-medium">{feature}</span>
+                      <span className="text-sm text-gray-700 font-medium">
+                        {feature}
+                      </span>
                     </motion.li>
                   ))}
                 </motion.ul>
@@ -668,15 +703,15 @@ export default function ComparePlans() {
                   disabled={plan.loading}
                   className={`w-full py-4 rounded-xl font-bold cursor-pointer transition-all mt-auto shadow-lg focus:outline-none focus:ring-4 disabled:opacity-50 disabled:cursor-not-allowed ${
                     isHovered
-                      ? "bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-purple-500/50 ring-purple-300"
-                      : "bg-white text-purple-600 border-2 border-purple-600 hover:bg-purple-50"
+                      ? "bg-gradient-to-r from-primary to-purple-600 text-white shadow-purple-500/50 ring-purple-300"
+                      : "bg-white text-primary border-2 border-primary hover:bg-purple-50"
                   }`}
                 >
                   {plan.loading
                     ? "Loading..."
                     : plan.available
-                    ? "Apply Now →"
-                    : "Coming Soon 🚀"}
+                      ? "Apply Now →"
+                      : "Coming Soon 🚀"}
                 </motion.button>
               </motion.div>
             );
@@ -696,7 +731,7 @@ export default function ComparePlans() {
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setExpandedCard(null)}
-              className="px-24 py-4 rounded-xl font-bold bg-white text-purple-600 border-2 border-purple-600 hover:bg-purple-50 transition-all shadow-lg focus:outline-none focus:ring-4 focus:ring-purple-300"
+              className="px-12 py-4 rounded-4xl font-bold cursor-pointer bg-white text-primary border-2 border-primary hover:bg-purple-50 transition-all shadow-lg focus:outline-none focus:ring-4 focus:ring-purple-300"
             >
               Hide Details ↑
             </motion.button>
@@ -706,7 +741,7 @@ export default function ComparePlans() {
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setExpandedCard("compare")}
-              className="px-24 py-4 rounded-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 transition-all shadow-xl shadow-purple-500/50 focus:outline-none focus:ring-4 focus:ring-purple-300"
+              className="px-12 cursor-pointer py-4 rounded-4xl font-bold bg-linear-to-r from-primary to-purple-600 text-white  transition-all shadow-xl shadow-purple-500/50 focus:outline-none focus:ring-4 focus:ring-purple-300"
             >
               Show Details ↓
             </motion.button>
@@ -772,7 +807,9 @@ export default function ComparePlans() {
                   <button
                     type="button"
                     onClick={() =>
-                      setCurrentHealthQuestion(Math.max(0, currentHealthQuestion - 1))
+                      setCurrentHealthQuestion(
+                        Math.max(0, currentHealthQuestion - 1),
+                      )
                     }
                     className="flex items-center gap-2 text-gray-600 hover:text-purple-600 transition mb-4 font-semibold"
                   >
@@ -815,7 +852,7 @@ export default function ComparePlans() {
                     onClick={() =>
                       handleHealthAnswer(
                         healthQuestions[currentHealthQuestion].key,
-                        "yes"
+                        "yes",
                       )
                     }
                     className="w-full p-5 border-2 cursor-pointer rounded-xl text-left hover:border-purple-500 hover:bg-purple-50 transition font-semibold text-gray-800 shadow-sm hover:shadow-md"
@@ -830,7 +867,7 @@ export default function ComparePlans() {
                     onClick={() =>
                       handleHealthAnswer(
                         healthQuestions[currentHealthQuestion].key,
-                        "no"
+                        "no",
                       )
                     }
                     className="w-full p-5 border-2 cursor-pointer rounded-xl text-left hover:border-purple-500 hover:bg-purple-50 transition font-semibold text-gray-800 shadow-sm hover:shadow-md"
@@ -853,7 +890,8 @@ export default function ComparePlans() {
                   ))}
                 </div>
                 <p className="text-sm text-gray-500 text-center font-medium">
-                  Question {currentHealthQuestion + 1} of {healthQuestions.length}
+                  Question {currentHealthQuestion + 1} of{" "}
+                  {healthQuestions.length}
                 </p>
               </div>
             </motion.div>
@@ -932,9 +970,11 @@ export default function ComparePlans() {
                   transition={{ delay: 0.4 }}
                   className="text-gray-600 mb-8 leading-relaxed"
                 >
-                  <span className="font-bold text-purple-600">{selectedPlanName}</span>{" "}
-                  integration is currently under development. We'll notify
-                  you once it's available.
+                  <span className="font-bold text-purple-600">
+                    {selectedPlanName}
+                  </span>{" "}
+                  integration is currently under development. We'll notify you
+                  once it's available.
                 </motion.p>
 
                 <motion.button

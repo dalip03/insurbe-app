@@ -2,14 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  X,
-  Calendar,
-  Mail,
-  User,
-  CheckCircle,
-  Clock,
-} from "lucide-react";
+import { X, Calendar, Mail, User, CheckCircle, Clock } from "lucide-react";
 
 interface AppointmentModalProps {
   open: boolean;
@@ -105,8 +98,10 @@ export default function AppointmentModal({
               {/* Content */}
               <div className="p-6 sm:p-8">
                 <h2 className="text-2xl sm:text-3xl font-bold mb-2">
-                  Book                 <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-purple-600">
-an Appointment </span>
+                  Book{" "}
+                  <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-purple-600">
+                    an Appointment{" "}
+                  </span>
                 </h2>
                 <p className="text-gray-600 mb-6">
                   Fill in your details and we’ll get back to you soon
@@ -193,6 +188,9 @@ an Appointment </span>
                           <option>11:00 – 12:00</option>
                           <option>14:00 – 15:00</option>
                           <option>15:00 – 16:00</option>
+                          <option>16:00 – 17:00</option>
+                          <option>17:00 – 18:00</option>
+                          <option>18:00 – 19:00</option>
                         </select>
                       </div>
                     </div>
