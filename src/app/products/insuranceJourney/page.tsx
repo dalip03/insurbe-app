@@ -192,7 +192,7 @@ const IncomeButton = memo(({
     <motion.div
       whileHover={{ rotate: 360, scale: 1.1 }}
       transition={{ duration: 0.6 }}
-      className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center flex-shrink-0 shadow-md group-hover:shadow-lg transition"
+      className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center flex-shrink-0 shadow-md group-hover:shadow-lg transition"
     >
       <Euro className="w-6 h-6 text-white" />
     </motion.div>
