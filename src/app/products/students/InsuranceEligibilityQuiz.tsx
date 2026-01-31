@@ -13,6 +13,8 @@ import {
   Calendar,
   PartyPopper,
   StarIcon,
+  Users,
+  Heart,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -29,14 +31,6 @@ export default function InsuranceEligibilityQuiz() {
       setStep(2);
     } else if (step === 2 && age) {
       setStep(3);
-
-      // Check if age is less than 30 and redirect
-      const numericAge = parseInt(age.split("-")[0]); // Gets first number from range
-      if (numericAge < 30) {
-        setTimeout(() => {
-          router.push("/products/public-insurance");
-        }, 3000);
-      }
     }
   };
 
@@ -85,8 +79,27 @@ export default function InsuranceEligibilityQuiz() {
     },
   ];
 
+  // TK Public Insurance benefits for under 30
+  const tkBenefits = [
+    {
+      icon: Shield,
+      text: "Statutory health coverage",
+      color: "text-blue-600",
+    },
+    {
+      icon: Users,
+      text: "Income-based premium",
+      color: "text-green-600",
+    },
+    {
+      icon: Heart,
+      text: "Family insurance available",
+      color: "text-red-600",
+    },
+  ];
+
   // Determine if user is eligible for public insurance (age < 30)
-  const isEligibleForPublic = age && parseInt(age.split("-")[0]) < 30;
+const isEligibleForPublic = age === "below-30";
 
   return (
     <section className="relative py-16 sm:py-10 px-4 sm:px-8 lg:px-18 overflow-hidden">
@@ -108,7 +121,7 @@ export default function InsuranceEligibilityQuiz() {
             opacity: [0.03, 0.06, 0.03],
           }}
           transition={{ duration: 25, repeat: Infinity }}
-          className="absolute -bottom-1/4 -right-1/4 w-1/2 h-1/2 bg-linear-to-r from-primary to-purple-600 rounded-full blur-3xl"
+          className="absolute -bottom-1/4 -right-1/4 w-1/2 h-1/2 bg-gradient-to-r from-primary to-purple-600 rounded-full blur-3xl"
         />
       </div>
 
@@ -128,9 +141,9 @@ export default function InsuranceEligibilityQuiz() {
             </span>
           </div>
 
-          <h2 className="text-4xl sm:text-5xl  font-extrabold text-gray-900 leading-[1.1]">
+          <h2 className="text-4xl sm:text-5xl font-extrabold text-gray-900 leading-[1.1]">
             Not sure which plan
-            <span className="block mt-3 text-transparent bg-clip-text bg-linear-to-r from-primary to-purple-600 animate-gradient">
+            <span className="block mt-3 text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-600 animate-gradient">
               fits your profile?
             </span>
           </h2>
@@ -370,68 +383,99 @@ export default function InsuranceEligibilityQuiz() {
                   className="space-y-6"
                 >
                   {isEligibleForPublic ? (
-                    // PUBLIC INSURANCE ELIGIBILITY
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="text-center space-y-6 py-8"
-                    >
-                      <motion.div
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        transition={{
-                          delay: 0.2,
-                          type: "spring",
-                          stiffness: 200,
-                        }}
-                        className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-green-400 to-emerald-500 shadow-2xl shadow-green-500/30"
-                      >
-                        <PartyPopper className="w-12 h-12 text-white" />
-                      </motion.div>
-
-                      <div>
-                        <h3 className="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-emerald-600 mb-3">
-                          Great News! 🎉
-                        </h3>
-                        <p className="text-xl font-bold text-gray-900 mb-2">
-                          You're eligible for Public Health Insurance
-                        </p>
-                        <p className="text-gray-600 max-w-md mx-auto">
-                          Based on your age ({age}), you qualify for
-                          comprehensive public health insurance with excellent
-                          coverage and affordable rates.
-                        </p>
-                      </div>
-
-                      <div className="bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 rounded-2xl p-6 max-w-md mx-auto">
-                        <div className="flex items-center justify-center gap-2 mb-3">
-                          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                          <span className="text-sm font-semibold text-green-700">
-                            Redirecting you now...
-                          </span>
+                    // TK PUBLIC INSURANCE FOR UNDER 30
+                    <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-600 via-cyan-600 to-blue-700 p-[2px]">
+                      <div className="bg-white rounded-3xl p-8 space-y-6">
+                        {/* Header */}
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="flex-1">
+                            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gradient-to-r from-purple-100 to-purple-100 border border-green-200 mb-3">
+                              <PartyPopper className="w-4 h-4 text-purple-600" />
+                              <span className="text-xs font-bold text-purple-700 uppercase tracking-wide">
+                                Best Value
+                              </span>
+                            </div>
+                            <h4 className="text-3xl font-extrabold text-gray-900 mb-2">
+                              TK Public Insurance
+                            </h4>
+                            <p className="text-gray-600 text-sm">
+                              German public health insurance for students under 30
+                            </p>
+                          </div>
+                          <div className="flex items-center">
+                            <Image
+                              src="/partners_asset/TK_logo.avif"
+                              alt="TK"
+                              width={40}
+                              height={40}
+                              className="object-contain"
+                            />
+                          </div>
                         </div>
-                        <p className="text-sm text-gray-600">
-                          Please wait while we take you to the Public Health
-                          Insurance page with all the details.
-                        </p>
-                      </div>
 
-                      {/* Loading animation */}
-                      <div className="flex justify-center gap-2">
-                        {[0, 1, 2].map((i) => (
-                          <motion.div
-                            key={i}
-                            animate={{ y: [0, -10, 0] }}
-                            transition={{
-                              duration: 0.6,
-                              repeat: Infinity,
-                              delay: i * 0.2,
-                            }}
-                            className="w-2 h-2 bg-green-500 rounded-full"
-                          />
-                        ))}
+                        {/* Benefits */}
+                        <div className="space-y-3">
+                          {tkBenefits.map((benefit, idx) => {
+                            const Icon = benefit.icon;
+                            return (
+                              <motion.div
+                                key={idx}
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: idx * 0.1 }}
+                                className="flex items-start gap-4 px-4 py-3 rounded-xl bg-gradient-to-br from-gray-50 to-white border border-gray-100 hover:shadow-md transition-shadow"
+                              >
+                                <div
+                                  className={`p-2 rounded-lg bg-gradient-to-br ${
+                                    idx === 0
+                                      ? "from-blue-100 to-blue-200"
+                                      : idx === 1
+                                      ? "from-green-100 to-green-200"
+                                      : "from-red-100 to-red-200"
+                                  }`}
+                                >
+                                  <Icon className={`w-5 h-5 ${benefit.color}`} />
+                                </div>
+                                <span className="text-gray-700 font-medium text-sm leading-relaxed flex-1">
+                                  {benefit.text}
+                                </span>
+                              </motion.div>
+                            );
+                          })}
+                        </div>
+
+                        {/* Pricing & CTA */}
+                        <div className="pt-4 border-t border-gray-200">
+                          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                            <div>
+                              <p className="text-sm text-gray-500 mb-1">
+                                Starting from
+                              </p>
+                              <p className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-600">
+                                €120.4
+                                <span className="text-lg text-gray-500 font-medium">
+                                  /month
+                                </span>
+                              </p>
+                            </div>
+
+                            <motion.button
+                              onClick={() => router.push("/insuranceSignupFlow")}
+                              whileHover={{ scale: 1.05, y: -2 }}
+                              whileTap={{ scale: 0.95 }}
+                              className="w-full sm:w-auto px-8 py-4 rounded-2xl font-bold text-lg text-white bg-gradient-to-r from-purple-600 to-pink-400 shadow-2xl shadow-blue-500/40 hover:shadow-blue-500/60 transition-all flex items-center justify-center gap-2"
+                            >
+                              Purchase Now
+                              <ChevronRight className="w-5 h-5" />
+                            </motion.button>
+                          </div>
+
+                          <p className="text-xs text-gray-500 mt-4 text-center sm:text-left">
+                            🔒 No commitment required • Cancel anytime • Money-back guarantee
+                          </p>
+                        </div>
                       </div>
-                    </motion.div>
+                    </div>
                   ) : (
                     // PRIVATE INSURANCE PLAN (Age 30+)
                     <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-purple-600 via-pink-600 to-blue-600 p-[2px]">
@@ -446,17 +490,17 @@ export default function InsuranceEligibilityQuiz() {
                               </span>
                             </div>
                             <h4 className="text-3xl font-extrabold text-gray-900 mb-2">
-                              Premium Private Insurance
+                              Private Insurance
                             </h4>
                             <p className="text-gray-600 text-sm">
                               Tailored for{" "}
                               {degree === "bachelor"
                                 ? "Bachelor's"
                                 : degree === "master"
-                                  ? "Master's"
-                                  : degree === "phd"
-                                    ? "PhD"
-                                    : "Graduate"}{" "}
+                                ? "Master's"
+                                : degree === "phd"
+                                ? "PhD"
+                                : "Graduate"}{" "}
                               students in the {age} age group
                             </p>
                           </div>
@@ -481,22 +525,20 @@ export default function InsuranceEligibilityQuiz() {
                                 initial={{ opacity: 0, x: -20 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ delay: idx * 0.1 }}
-                                className="flex items-start gap-4 px-4 py-1 rounded-xl bg-linear-to-br from-gray-50 to-white border border-gray-100 hover:shadow-md transition-shadow"
+                                className="flex items-start gap-4 px-4 py-1 rounded-xl bg-gradient-to-br from-gray-50 to-white border border-gray-100 hover:shadow-md transition-shadow"
                               >
                                 <div
-                                  className={`p-2 rounded-lg bg-linear-to-br ${
+                                  className={`p-2 rounded-lg bg-gradient-to-br ${
                                     idx === 0
                                       ? "from-emerald-100 to-emerald-200"
                                       : idx === 1
-                                        ? "from-blue-100 to-blue-200"
-                                        : idx === 2
-                                          ? "from-purple-100 to-purple-200"
-                                          : "from-pink-100 to-pink-200"
+                                      ? "from-blue-100 to-blue-200"
+                                      : idx === 2
+                                      ? "from-purple-100 to-purple-200"
+                                      : "from-pink-100 to-pink-200"
                                   }`}
                                 >
-                                  <Icon
-                                    className={`w-5 h-5 ${benefit.color}`}
-                                  />
+                                  <Icon className={`w-5 h-5 ${benefit.color}`} />
                                 </div>
                                 <span className="text-gray-700 font-medium text-sm leading-relaxed flex-1">
                                   {benefit.text}
@@ -533,8 +575,7 @@ export default function InsuranceEligibilityQuiz() {
                           </div>
 
                           <p className="text-xs text-gray-500 mt-4 text-center sm:text-left">
-                            🔒 No commitment required • Cancel anytime •
-                            Money-back guarantee
+                            🔒 No commitment required • Cancel anytime • Money-back guarantee
                           </p>
                         </div>
                       </div>

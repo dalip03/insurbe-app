@@ -25,6 +25,10 @@ const sections = [
     title: "Changes to this Policy",
     content: `We may revise our Privacy Policy from time to time. We will post any changes to the Privacy Policy on this page. We will not reduce your rights under this Privacy Policy without your explicit consent.`,
   },
+ {
+    title: "Promotional Cashback Offers",
+    content: `As part of a promotional offer, InsurBe may grant a cashback of up to €50 following a successful insurance signup. The cashback is paid to a German bank account in the policyholder’s name, subject to eligibility criteria and verification.`
+ }
 ];
 
 export default function PrivacyPolicy() {

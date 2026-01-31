@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Jost, Lexend } from "next/font/google";
 import "./globals.css";
-import Footer from "./components/Footer";
 import Header from "./components/Header";
 import Footernew from "./components/footernew";
+import CookieBanner from "./cookie/CookieBanner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -46,8 +46,8 @@ export default function RootLayout({
       >
         <Header/>
         {children}
-        {/* <Footer/> */}
         <Footernew/>
+         <CookieBanner />
       </body>
     </html>
   );

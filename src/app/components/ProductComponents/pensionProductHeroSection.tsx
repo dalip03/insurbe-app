@@ -83,7 +83,7 @@ const PensionProductHeroSection = () => {
                 onClick={() => router.push("/products/insuranceJourney")}
                 className="flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-gradient-to-r from-primary to-purple-600 text-white font-semibold shadow-lg hover:opacity-90 transition"
               >
-                Take the Questionnaire
+                Get a Quote
                 <ArrowRight className="w-4 h-4" />
               </button>
 

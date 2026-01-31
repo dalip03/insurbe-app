@@ -16,6 +16,7 @@ import {
   AlertCircle,
   Sparkles,
   ChevronRight,
+  MessageCircle,
 } from "lucide-react";
 
 interface FormData {
@@ -254,13 +255,7 @@ export default function InsurBeSignupForm() {
                 >
                   info@Insurbe.com
                 </a>{" "}
-                or call{" "}
-                <a
-                  href="tel:+4970244695100"
-                  className="text-green-600 font-semibold hover:underline"
-                >
-                  +49 7024 469 51-0
-                </a>
+               
               </p>
             </div>
           </div>
@@ -348,12 +343,8 @@ export default function InsurBeSignupForm() {
                   €15
                 </span>
 
-                <span className="block text-[11px] font-semibold leading-tight opacity-95 mt-0.5">
-                  Amazon
-                </span>
-
-                <span className="block text-[10px] font-medium leading-tight opacity-90">
-                  Gutschein
+                <span className="block text-[14px] font-semibold leading-tight opacity-95 mt-0.5">
+                  Cashback*
                 </span>
               </motion.div>
             </motion.div>
@@ -378,8 +369,8 @@ export default function InsurBeSignupForm() {
 
           {/* Optional inline offer text */}
           <p className="mt-4 text-sm font-semibold text-primary border border-primary/20 inline-block px-6 py-3 rounded-full ">
-            🎉 Including a <span className="font-bold">€15 Amazon voucher</span>{" "}
-            on successful signup
+            🎉 Including a <span className="font-bold">€15 cashback</span>{" "}
+            on successful signup!*
           </p>
         </motion.div>
 
@@ -896,27 +887,24 @@ export default function InsurBeSignupForm() {
                       label:
                         "Yes, I sufficiently informed myself about the product and I would like to continue without further consultation.",
                     },
-                    {
-                      value: "yes",
-                      label: "I would like a consultation.",
-                    },
+                   
                   ]}
                 />
 
-                {formData.needsConsultation === "yes" && (
+                
                   <div className="mt-4 bg-blue-50 border-l-4 border-blue-500 p-4 rounded-lg">
                     <p className="text-sm text-blue-800 flex items-center gap-2">
-                      <Phone className="w-4 h-4" />
-                      We would be happy to advise you by phone:{" "}
+                      <MessageCircle className="w-4 h-4" />
+                      We would be happy to advise you by email:{" "}
                       <a
-                        href="tel:+4970244695100"
+                        href="/book-appointment"
                         className="font-bold hover:underline"
                       >
-                        +49 7024 469 51-0
+                       info@insurbe.com
                       </a>
                     </p>
                   </div>
-                )}
+               
               </div>
             </div>
           </FormSection>
