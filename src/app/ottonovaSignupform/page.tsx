@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   CheckCircle,
@@ -61,6 +61,17 @@ interface FormData {
   needsConsultation: string;
 }
 
+type CountryOption = {
+  name: string;
+  flag: string;
+  code: string;
+};
+
+type CountryAPI = {
+  name: { common: string };
+  flags: { svg?: string; png?: string };
+  cca2: string;
+};
 export default function InsurBeSignupForm() {
   const [formData, setFormData] = useState<FormData>({
     title: "",
@@ -96,6 +107,63 @@ export default function InsurBeSignupForm() {
     {},
   );
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [countryResidenceType, setCountryResidenceType] = useState<
+    "germany" | "other"
+  >("germany");
+
+  const [countries, setCountries] = useState<CountryOption[]>([]);
+
+  const CACHE_DURATION = 1000 * 60 * 60 * 24; // 24 hours
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function fetchCountries() {
+      try {
+        const cached = localStorage.getItem("countries_cache");
+        if (cached) {
+          const { data, timestamp } = JSON.parse(cached);
+          if (Date.now() - timestamp < CACHE_DURATION) {
+            if (isMounted) setCountries(data);
+            return;
+          }
+        }
+
+        const res = await fetch(
+          "https://restcountries.com/v3.1/all?fields=name,flags,cca2",
+        );
+        const data = await res.json();
+
+        const list: CountryOption[] = data
+          .map(
+            (c: CountryAPI): CountryOption => ({
+              name: c.name.common,
+              flag: c.flags.svg || c.flags.png || "",
+              code: c.cca2,
+            }),
+          )
+          .filter((country: CountryOption) => country.name.trim().length > 0)
+          .sort((a: CountryOption, b: CountryOption) =>
+            a.name.localeCompare(b.name),
+          );
+
+        if (isMounted) {
+          setCountries(list);
+          localStorage.setItem(
+            "countries_cache",
+            JSON.stringify({ data: list, timestamp: Date.now() }),
+          );
+        }
+      } catch (e) {
+        console.error("Error loading countries", e);
+      }
+    }
+
+    fetchCountries();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -255,7 +323,6 @@ export default function InsurBeSignupForm() {
                 >
                   info@Insurbe.com
                 </a>{" "}
-               
               </p>
             </div>
           </div>
@@ -340,7 +407,7 @@ export default function InsurBeSignupForm() {
                 className="text-center font-extrabold"
               >
                 <span className="block text-xl leading-none tracking-tight">
-                  €15
+                  €50
                 </span>
 
                 <span className="block text-[14px] font-semibold leading-tight opacity-95 mt-0.5">
@@ -369,8 +436,8 @@ export default function InsurBeSignupForm() {
 
           {/* Optional inline offer text */}
           <p className="mt-4 text-sm font-semibold text-primary border border-primary/20 inline-block px-6 py-3 rounded-full ">
-            🎉 Including a <span className="font-bold">€15 cashback</span>{" "}
-            on successful signup!*
+            🎉 Including a <span className="font-bold">€50 cashback</span> on
+            successful signup!*
           </p>
         </motion.div>
 
@@ -564,6 +631,7 @@ export default function InsurBeSignupForm() {
           {/* Period of Insurance */}
           <FormSection title="Period of Insurance" icon={Calendar} color="pink">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+              {/* Start Month */}
               <FormField
                 label="Start Month"
                 name="startMonth"
@@ -590,14 +658,15 @@ export default function InsurBeSignupForm() {
                     "October",
                     "November",
                     "December",
-                  ].map((month, idx) => (
-                    <option key={idx} value={month}>
+                  ].map((month) => (
+                    <option key={month} value={month}>
                       {month}
                     </option>
                   ))}
                 </select>
               </FormField>
 
+              {/* Start Year */}
               <FormField
                 label="Start Year"
                 name="startYear"
@@ -611,14 +680,18 @@ export default function InsurBeSignupForm() {
                   className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-pink-500 focus:outline-none transition-colors"
                 >
                   <option value="">Select</option>
-                  {[2026, 2027, 2028].map((year) => (
-                    <option key={year} value={year}>
-                      {year}
-                    </option>
-                  ))}
+                  {Array.from({ length: 5 }, (_, i) => {
+                    const year = new Date().getFullYear() + i;
+                    return (
+                      <option key={year} value={year}>
+                        {year}
+                      </option>
+                    );
+                  })}
                 </select>
               </FormField>
 
+              {/* Period of Insurance */}
               <FormField
                 label="Period of Insurance"
                 name="periodOfInsurance"
@@ -632,10 +705,15 @@ export default function InsurBeSignupForm() {
                   className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-pink-500 focus:outline-none transition-colors"
                 >
                   <option value="">Select</option>
-                  <option value="3months">3 Months</option>
-                  <option value="6months">6 Months</option>
-                  <option value="12months">12 Months</option>
-                  <option value="24months">24 Months</option>
+
+                  {Array.from({ length: 60 }, (_, i) => {
+                    const months = i + 1;
+                    return (
+                      <option key={months} value={`${months}months`}>
+                        {months} {months === 1 ? "Month" : "Months"}
+                      </option>
+                    );
+                  })}
                 </select>
               </FormField>
             </div>
@@ -805,27 +883,86 @@ export default function InsurBeSignupForm() {
             icon={MapPin}
             color="indigo"
           >
-            <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-lg mb-4">
+            {/* Info */}
+            <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-lg mb-6">
               <p className="text-sm text-blue-800">
                 The country of the permanent or usual place of residence prior
                 to start of the temporary foreign residence.
               </p>
             </div>
-            <FormField label="Country of Domicile" name="countryOfOrigin">
-              <select
+
+            {/* Radio buttons */}
+            <div className="space-y-4 mb-6">
+              {/* Germany */}
+              <label className="flex items-center gap-3 cursor-pointer">
+                <input
+                  type="radio"
+                  name="countryResidenceType"
+                  value="germany"
+                  checked={countryResidenceType === "germany"}
+                  onChange={() => {
+                    setCountryResidenceType("germany");
+                    setFormData((prev) => ({
+                      ...prev,
+                      countryOfOrigin: "Germany",
+                    }));
+                  }}
+                  className="w-5 h-5 accent-red-600"
+                />
+                <span className="text-gray-800 font-medium">Germany</span>
+              </label>
+
+              {/* Other country */}
+              <label className="flex items-center gap-3 cursor-pointer">
+                <input
+                  type="radio"
+                  name="countryResidenceType"
+                  value="other"
+                  checked={countryResidenceType === "other"}
+                  onChange={() => {
+                    setCountryResidenceType("other");
+                    setFormData((prev) => ({
+                      ...prev,
+                      countryOfOrigin: "",
+                    }));
+                  }}
+                  className="w-5 h-5 accent-red-600"
+                />
+                <span className="text-gray-800 font-medium">
+                  another country (please state which)
+                </span>
+              </label>
+            </div>
+
+            {/* Country select (dynamic) */}
+            {countryResidenceType === "other" && (
+              <FormField
+                label="Country of origin (last domicile) *"
                 name="countryOfOrigin"
-                value={formData.countryOfOrigin}
-                onChange={handleInputChange}
-                className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-indigo-500 focus:outline-none transition-colors"
               >
-                <option value="Germany">Germany</option>
-                <option value="USA">United States</option>
-                <option value="UK">United Kingdom</option>
-                <option value="India">India</option>
-                <option value="China">China</option>
-                <option value="Other">Other</option>
-              </select>
-            </FormField>
+                <select
+                  name="countryOfOrigin"
+                  value={formData.countryOfOrigin}
+                  onChange={handleInputChange}
+                  required
+                  className="
+          w-full px-4 py-3 rounded-xl
+          border-2 border-gray-200
+          focus:border-indigo-500
+          focus:outline-none
+          transition-colors
+        "
+                >
+                  <option value="">Select country</option>
+
+                  {countries.map((country: CountryOption) => (
+                    <option key={country.code} value={country.name}>
+                      {country.name}
+                    </option>
+                  ))}
+                </select>
+              </FormField>
+            )}
           </FormSection>
 
           {/* Declaration of Agreement */}
@@ -887,24 +1024,21 @@ export default function InsurBeSignupForm() {
                       label:
                         "Yes, I sufficiently informed myself about the product and I would like to continue without further consultation.",
                     },
-                   
                   ]}
                 />
 
-                
-                  <div className="mt-4 bg-blue-50 border-l-4 border-blue-500 p-4 rounded-lg">
-                    <p className="text-sm text-blue-800 flex items-center gap-2">
-                      <MessageCircle className="w-4 h-4" />
-                      We would be happy to advise you by email:{" "}
-                      <a
-                        href="/book-appointment"
-                        className="font-bold hover:underline"
-                      >
-                       info@insurbe.com
-                      </a>
-                    </p>
-                  </div>
-               
+                <div className="mt-4 bg-blue-50 border-l-4 border-blue-500 p-4 rounded-lg">
+                  <p className="text-sm text-blue-800 flex items-center gap-2">
+                    <MessageCircle className="w-4 h-4" />
+                    We would be happy to advise you by email:{" "}
+                    <a
+                      href="/book-appointment"
+                      className="font-bold hover:underline"
+                    >
+                      info@insurbe.com
+                    </a>
+                  </p>
+                </div>
               </div>
             </div>
           </FormSection>

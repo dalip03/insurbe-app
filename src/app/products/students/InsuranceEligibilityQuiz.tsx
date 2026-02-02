@@ -452,7 +452,7 @@ const isEligibleForPublic = age === "below-30";
                                 Starting from
                               </p>
                               <p className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-600">
-                                €120.4
+                                €141
                                 <span className="text-lg text-gray-500 font-medium">
                                   /month
                                 </span>
