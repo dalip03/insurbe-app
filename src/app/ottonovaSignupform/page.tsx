@@ -436,8 +436,7 @@ export default function InsurBeSignupForm() {
 
           {/* Optional inline offer text */}
           <p className="mt-4 text-sm font-semibold text-primary border border-primary/20 inline-block px-6 py-3 rounded-full ">
-            🎉 Including a <span className="font-bold">€50 cashback</span> on
-            successful signup!*
+            🎉 Including a <span className="font-bold">€15 Welcome Bonus*</span>
           </p>
         </motion.div>
 
@@ -1056,7 +1055,14 @@ export default function InsurBeSignupForm() {
           </motion.button>
 
           <p className="text-center text-sm text-gray-500">
-            🔒 Your data is encrypted and secure. We respect your privacy.
+            🔒 Your data is encrypted and secure. We respect your{" "}
+            <a
+              href="/privacypolicy"
+              className="text-purple-600 font-semibold hover:underline"
+            >
+              privacy
+            </a>
+            .
           </p>
         </motion.form>
       </div>

@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import AppointmentModal from "../components/modals/AppointmentModal";
+import { useState } from "react";
 
 const categories = [
   {
@@ -30,6 +32,8 @@ const categories = [
 ];
 
 export default function EnterpriseHeroSection() {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
     <section className="relative min-h-screen bg-gradient-to-br from-purple-400 via-purple-500 to-pink-500 py-16 sm:py-10 px-4 sm:px-8 lg:px-18 overflow-hidden">
       {/* Background Pattern */}
@@ -57,11 +61,12 @@ export default function EnterpriseHeroSection() {
           </p>
 
           {/* CTA */}
-         <Link href="/book-appointment">
-  <motion.a
-    whileHover={{ scale: 1.05 }}
-    whileTap={{ scale: 0.95 }}
-    className="
+        
+     <motion.button
+                  onClick={() => setIsModalOpen(true)}
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.96 }}
+ className="
       inline-flex items-center gap-2
       px-8 py-4
       rounded-full
@@ -71,12 +76,10 @@ export default function EnterpriseHeroSection() {
       shadow-xl
       hover:shadow-2xl
       transition
-    "
-  >
-    Get in touch
-    <ArrowRight className="w-5 h-5" />
-  </motion.a>
-</Link>
+    "          >
+                 Get in Touch
+                </motion.button>
+
         </motion.div>
 
         {/* Cards */}
@@ -149,6 +152,12 @@ export default function EnterpriseHeroSection() {
           ))}
         </motion.div>
       </div>
+         <AppointmentModal
+            open={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+          />
     </section>
+ 
+          
   );
 }

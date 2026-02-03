@@ -18,7 +18,7 @@ import { usePathname } from "next/navigation";
 
 // Updated navLinks with About Us dropdown
 const navLinks = [
-  { name: "Home", href: "/" },
+  // { name: "Home", href: "/" },
   {
     name: "About Us",
     submenu: [
@@ -392,66 +392,39 @@ const Header = () => {
             ),
           )}
         </div>
-        {/* Desktop Login CTA */}
-        <div className="hidden md:flex items-center gap-4 ml-6">
-          <Link href="/login">
-            <motion.button
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-              className="
-        relative
-        px-6 py-3
-        rounded-full
-        bg-gradient-to-r from-primary to-purple-600 
-        text-white
-        font-bold
-        shadow-lg
-        hover:shadow-xl
-        hover:shadow-purple-500/50
-        transition-all
-        duration-300
-        overflow-hidden
-        group
+       {/* Desktop Login CTA */}
+<div className="hidden md:flex items-center gap-4 ml-6">
+  <Link href="/login">
+    <motion.button
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      className="
+        flex items-center gap-2
+        px-4 py-2
+        text-gray-700
+        font-medium
+        hover:text-primary
+        transition-colors
+        duration-200 cursor-pointer
       "
-            >
-              {/* Animated shine effect */}
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-                animate={{
-                  x: ["-100%", "100%"],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "linear",
-                }}
-              />
-
-              {/* Pulsing glow */}
-              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-primary to-purple-600 blur-md opacity-0 group-hover:opacity-75 transition-opacity duration-300" />
-
-              {/* Button text */}
-              <span className="relative z-10 flex items-center gap-2">
-                Login
-                <motion.svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  animate={{ x: [0, 3, 0] }}
-                  transition={{ duration: 1.5, repeat: Infinity }}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M17 8l4 4m0 0l-4 4m4-4H3"
-                  />
-                </motion.svg>
-              </span>
-            </motion.button>
-          </Link>
-        </div>
+    >
+      <svg 
+        className="w-5 h-5" 
+        fill="none" 
+        stroke="currentColor" 
+        viewBox="0 0 24 24"
+      >
+        <path 
+          strokeLinecap="round" 
+          strokeLinejoin="round" 
+          strokeWidth={2} 
+          d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" 
+        />
+      </svg>
+      <span>My account</span>
+    </motion.button>
+  </Link>
+</div>
 
         {/* Mobile Menu Button */}
         <motion.button
@@ -629,7 +602,7 @@ const Header = () => {
                         >
                           <span className="flex items-center gap-3">
                             <span className="text-xl">
-                              {link.name === "Home" && "🏠"}
+                              {/* {link.name === "Home" && "🏠"} */}
                               {link.name === "Enterprise" && "🏢"}
                               {link.name === "Support" && "🆘"}
                             </span>

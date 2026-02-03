@@ -171,11 +171,11 @@ function HeroStudents() {
                   className="text-center font-extrabold"
                 >
                   <span className="block text-xl leading-none tracking-tight">
-                    €50
+                    €15
                   </span>
 
                   <span className="block text-[14px] font-semibold px-2 leading-tight opacity-95 mt-0.5">
-                    Cashback*
+                     Welcome Bonus*
                   </span>
                 </motion.div>
               </motion.div>

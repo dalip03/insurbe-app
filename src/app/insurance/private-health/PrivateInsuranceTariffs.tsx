@@ -320,7 +320,7 @@ function TariffColumn({
         <h3 className="text-3xl font-bold mb-4">{title}</h3>
 
         <div className="mb-6">
-          <span className="text-5xl font-bold">{price}</span>
+          <span className="text-3xl font-bold">{price}</span>
           <span className="ml-2 text-sm">{period}</span>
         </div>
 

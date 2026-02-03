@@ -190,18 +190,26 @@ export default function ComparePlans() {
       let logo = "/icons/default.svg";
       let bgColor = "bg-gradient-to-br from-white to-gray-50";
       let available = false;
+      let textColor = "text-black";
+      let buttonColor = "bg-white text-primary";
 
       if (product.id === "tk") {
         logo = "/icons/tk.svg";
-        bgColor = "bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50";
+        bgColor = "bg-white";
+        textColor = "text-gray-700";
+        buttonColor = "bg-gradient-to-r from-purple-600 to-purple-700 text-white";
         available = false; // TK coming soon
       } else if (product.id === "hallesche-premium") {
         logo = "/icons/H.svg";
-        bgColor = "bg-gradient-to-br from-purple-50 via-fuchsia-50 to-pink-50";
+        bgColor = "bg-gradient-to-r from-purple-600 to-purple-700";
+        textColor = "text-white";
+        buttonColor = "bg-white text-purple-600";
         available = true;
       } else if (product.id === "hallesche-expat") {
         logo = "/icons/H.svg";
-        bgColor = "bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50";
+        bgColor = "bg-white";
+        textColor = "text-black";
+        buttonColor = "bg-gradient-to-r from-purple-600 to-purple-700 text-white";
         available = true;
       }
 
@@ -219,6 +227,8 @@ export default function ComparePlans() {
         description: product.description,
         features: product.features || [],
         bgColor,
+        textColor,
+        buttonColor,
         available,
         recommended: product.type === "premium",
         tariffIds: product.tariffIds,
@@ -566,13 +576,9 @@ export default function ComparePlans() {
                   snap-center
                   rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all
                   flex flex-col relative
-                  border-2
+                 
                   ${plan.bgColor}
-                  ${
-                    isHovered
-                      ? "border-primary ring-4 ring-purple-200"
-                      : "border-white/60"
-                  }
+                 
                 `}
               >
                 {/* Recommended Badge */}
@@ -610,25 +616,25 @@ export default function ComparePlans() {
                         </div>
                       ) : (
                         <>
-                          <span className="text-gray-700 text-3xl sm:text-4xl font-bold">
+                          <span className={`text-gray-700 text-3xl sm:text-4xl font-bold10 ${plan.textColor}`}>
                             €
                           </span>
-                          <span className="text-3xl sm:text-4xl bg-gradient-to-br from-gray-900 to-purple-900 bg-clip-text text-transparent font-extrabold">
+                          <span className={`text-3xl sm:text-4xl bg-gradient-to-br from-gray-900 to-purple-900 bg-clip-text text-transparent font-extrabold ${plan.textColor}`}>
                             {plan.price}
                           </span>
-                          <span className="text-sm text-gray-600 font-medium ml-1">
+                          <span className={`text-sm text-gray-600 font-medium ml-1 ${plan.textColor}`}>
                             {plan.period}
                           </span>
                         </>
                       )}
                     </motion.div>
 
-                    <div className="mt-3 font-bold text-gray-900 text-[16px]">
+                    <div className={`mt-3 font-bold text-gray-900 text-[16px] ${plan.textColor}`}>
                       {plan.name}
                     </div>
 
                     {plan.id === "tk" && (
-                      <p className="text-xs text-gray-500 mt-1 font-medium">
+                      <p className={`text-xs text-gray-500 mt-1 font-medium ${plan.textColor}`}>
                         (Employee portion)
                       </p>
                     )}
@@ -655,7 +661,7 @@ export default function ComparePlans() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: index * 0.1 + 0.6 }}
-                  className="text-sm text-gray-700 mb-6 leading-relaxed font-medium"
+                  className={`text-sm text-gray-700 mb-6 leading-relaxed font-medium ${plan.textColor}`}
                 >
                   {plan.description}
                 </motion.p>
@@ -681,7 +687,7 @@ export default function ComparePlans() {
                       <div className="bg-green-100 rounded-full p-1 mt-0.5">
                         <Check className="w-4 h-4 text-green-600 shrink-0" />
                       </div>
-                      <span className="text-sm text-gray-700 font-medium">
+                      <span className={`text-sm text- font-medium ${plan.textColor}`}>
                         {feature}
                       </span>
                     </motion.li>
@@ -698,11 +704,8 @@ export default function ComparePlans() {
                   transition={{ delay: index * 0.1 + 0.8 }}
                   onClick={() => handleChoosePlan(plan)}
                   disabled={plan.loading}
-                  className={`w-full py-4 rounded-xl font-bold cursor-pointer transition-all mt-auto shadow-lg focus:outline-none focus:ring-4 disabled:opacity-50 disabled:cursor-not-allowed ${
-                    isHovered
-                      ? "bg-gradient-to-r from-primary to-purple-600 text-white shadow-purple-500/50 ring-purple-300"
-                      : "bg-white text-primary border-2 border-primary hover:bg-purple-50"
-                  }`}
+                  className={`w-full  py-4 rounded-4xl font-bold cursor-pointer transition-all mt-auto shadow-lg focus:outline-none focus:ring-4 disabled:opacity-50 disabled:cursor-not-allowed  
+                   ${plan.buttonColor} `}
                 >
                   {plan.loading
                     ? "Loading..."
