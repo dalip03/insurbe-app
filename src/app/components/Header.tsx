@@ -320,7 +320,7 @@ const Header = () => {
                                         {/* ICON */}
                                         <div
                                           className={`w-12 h-12 rounded-xl flex items-center justify-center ${getBg(
-                                            item.name
+                                            item.name,
                                           )} group-hover:scale-110 transition-transform`}
                                         >
                                           {getIcon(item.name)}
@@ -348,7 +348,7 @@ const Header = () => {
                                                 </span>
                                                 {tag.label}
                                               </Link>
-                                            )
+                                            ),
                                           )}
                                         </div>
 
@@ -389,8 +389,68 @@ const Header = () => {
               >
                 {link.name}
               </Link>
-            )
+            ),
           )}
+        </div>
+        {/* Desktop Login CTA */}
+        <div className="hidden md:flex items-center gap-4 ml-6">
+          <Link href="/login">
+            <motion.button
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.95 }}
+              className="
+        relative
+        px-6 py-3
+        rounded-full
+        bg-gradient-to-r from-primary to-purple-600 
+        text-white
+        font-bold
+        shadow-lg
+        hover:shadow-xl
+        hover:shadow-purple-500/50
+        transition-all
+        duration-300
+        overflow-hidden
+        group
+      "
+            >
+              {/* Animated shine effect */}
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                animate={{
+                  x: ["-100%", "100%"],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "linear",
+                }}
+              />
+
+              {/* Pulsing glow */}
+              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-primary to-purple-600 blur-md opacity-0 group-hover:opacity-75 transition-opacity duration-300" />
+
+              {/* Button text */}
+              <span className="relative z-10 flex items-center gap-2">
+                Login
+                <motion.svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  animate={{ x: [0, 3, 0] }}
+                  transition={{ duration: 1.5, repeat: Infinity }}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M17 8l4 4m0 0l-4 4m4-4H3"
+                  />
+                </motion.svg>
+              </span>
+            </motion.button>
+          </Link>
         </div>
 
         {/* Mobile Menu Button */}
@@ -449,6 +509,24 @@ const Header = () => {
                 {/* Navigation Links - THIS IS THE KEY FIX */}
                 <div className="flex-1 min-h-0 overflow-y-auto p-4">
                   <div className="space-y-1">
+                    {/* Mobile Login CTA */}
+                    <Link
+                      href="/login"
+                      onClick={handleLinkClick}
+                      className="
+    flex items-center justify-center
+    px-4 py-3.5 mb-2
+    rounded-xl
+    bg-gradient-to-r from-primary to-purple-600
+    text-white
+    font-semibold
+    shadow-lg
+    transition
+  "
+                    >
+                      🔐 Login
+                    </Link>
+
                     {navLinks.map((link) =>
                       link.submenu ? (
                         <div key={link.name}>
@@ -565,7 +643,7 @@ const Header = () => {
                             />
                           )}
                         </Link>
-                      )
+                      ),
                     )}
                   </div>
                 </div>
