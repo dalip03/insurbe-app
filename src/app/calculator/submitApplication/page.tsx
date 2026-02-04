@@ -40,6 +40,7 @@ export default function SubmitApplication() {
   const [phone, setPhone] = useState(journeyStore.phone || "");
   const [address, setAddress] = useState("");
   const [agreeTerms, setAgreeTerms] = useState(false);
+  const [seriousIllness, setSeriousIllness] = useState<string>(""); // NEW
 
   /* ---------- UI state ---------- */
 
@@ -92,6 +93,11 @@ export default function SubmitApplication() {
       return;
     }
 
+    if (!seriousIllness) {
+      setError("Please answer the health question");
+      return;
+    }
+
     setLoading(true);
     setError(null);
 
@@ -131,6 +137,8 @@ export default function SubmitApplication() {
       plz: "10115",
       ort: "Berlin",
       land: "DE",
+
+      seriousIllness, // NEW
 
       /* ✅ ONLY BANK DATA IS DUMMY */
       bank: {
@@ -249,9 +257,9 @@ export default function SubmitApplication() {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-3xl md:text-5xl font-extrabold bg-linear-to-r from-primary to-purple-600 bg-clip-text text-transparent leading-snug"
+            className="text-3xl md:text-5xl font-extrabold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent leading-snug"
           >
-            InsurBe Application
+           Private health insurance application
           </motion.h1>
 
           {/* Subheading */}
@@ -460,6 +468,64 @@ export default function SubmitApplication() {
                   <p className="text-xs text-gray-500 mt-1">
                     This helps us process your application faster
                   </p>
+                </div>
+              </motion.div>
+            </div>
+
+            {/* ========== NEW SECTION: HEALTH QUESTION ========== */}
+            <div className="space-y-4">
+              <div className="bg-gradient-to-r from-green-500 via-teal-500 to-cyan-600 rounded-xl p-4 shadow-lg">
+                <h2 className="text-xl font-bold text-white">Health Information</h2>
+              </div>
+
+              <motion.div variants={itemVariants} className="space-y-3">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Have you had a serious illness in the last 5 years? *
+                </label>
+                <p className="text-xs text-gray-600 mb-4">
+                  This includes, among other things, cancer, severe addictions, cardiovascular diseases, or serious illnesses affecting organs, other parts of the body, or the psyche.
+                </p>
+                
+                <div className="space-y-3">
+                  <motion.label
+                    whileHover={{ scale: 1.02 }}
+                    className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                      seriousIllness === "yes"
+                        ? "border-red-500 bg-red-50"
+                        : "border-gray-300 bg-white hover:border-red-300"
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name="seriousIllness"
+                      value="yes"
+                      checked={seriousIllness === "yes"}
+                      onChange={(e) => setSeriousIllness(e.target.value)}
+                      className="h-5 w-5 text-red-600 focus:ring-red-500"
+                      required
+                    />
+                    <span className="ml-3 text-sm font-medium text-gray-900">Yes</span>
+                  </motion.label>
+
+                  <motion.label
+                    whileHover={{ scale: 1.02 }}
+                    className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                      seriousIllness === "no"
+                        ? "border-green-500 bg-green-50"
+                        : "border-gray-300 bg-white hover:border-green-300"
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name="seriousIllness"
+                      value="no"
+                      checked={seriousIllness === "no"}
+                      onChange={(e) => setSeriousIllness(e.target.value)}
+                      className="h-5 w-5 text-green-600 focus:ring-green-500"
+                      required
+                    />
+                    <span className="ml-3 text-sm font-medium text-gray-900">No</span>
+                  </motion.label>
                 </div>
               </motion.div>
             </div>

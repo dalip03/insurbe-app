@@ -470,6 +470,11 @@ function TariffColumn({
   showCompare,
   onSignup,
 }: any) {
+
+  const router = useRouter();
+  const onSignupForm = () => {
+    router.push("/calculator/submitApplication");
+  }
   return (
     <div className="flex flex-col">
       <div
@@ -500,7 +505,8 @@ function TariffColumn({
         </ul>
 
         <button
-          onClick={onSignup}
+          // onClick={onSignup}
+          onClick={onSignupForm}
           className={`w-full py-4 rounded-full font-bold ${
             highlighted
               ? "bg-white text-purple-600"
