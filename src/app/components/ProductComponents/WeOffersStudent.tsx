@@ -11,6 +11,7 @@ import {
   StarIcon,
 } from "lucide-react";
 import ServiceModal from "./ServiceModal";
+import { INSURANCE_PLANS } from "@/app/constants/insurance";
 
 const plans = [
   {
@@ -24,18 +25,18 @@ const plans = [
     bgGradient: "from-blue-50 to-cyan-50",
     badge: "Most Popular",
   },
-  {
-    title: "Student Private Health",
-    description:
-      "Premium care with faster access and flexible coverage options.",
-    icon: HeartPulse,
-    key: "private",
-    href: "/ottonovaSignupform",
-    gradient: "from-purple-500 to-pink-500",
-    bgGradient: "from-purple-50 to-pink-50",
-    badge: "Expat Choice",
-    priceNote: "Starts at 116 € / month",
-  },
+    {
+      title: "Student Private Health",
+      description:
+        "Premium care with faster access and flexible coverage options.",
+      icon: HeartPulse,
+      key: "private",
+      href: "/ottonovaSignupform",
+      gradient: "from-purple-500 to-pink-500",
+      bgGradient: "from-purple-50 to-pink-50",
+      badge: "Expat Choice",
+      priceNote: `Starts at ${INSURANCE_PLANS.INSURBE_STUDENT_CLASSIC} € / month`,
+    },
 ];
 
 export default function WeOffersStudent() {

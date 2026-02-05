@@ -401,6 +401,14 @@ export default function ComparePlans() {
         return;
       }
 
+      // ✅ Store plan details in sessionStorage BEFORE health modal
+      const planData = {
+        title: plan.name,
+        price: plan.price,
+        category: "Private Hallesche",
+      };
+      sessionStorage.setItem("selectedPlan", JSON.stringify(planData));
+
       // ✅ Open health questions modal
       setPendingPlanId(plan.id);
       setShowHealthModal(true);

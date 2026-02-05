@@ -22,7 +22,7 @@ const navLinks = [
   {
     name: "About Us",
     submenu: [
-      { name: "About", href: "/about", icon: "ℹ️" },
+      { name: "About Us", href: "/about", icon: "ℹ️" },
       { name: "Careers", href: "/career", icon: "💼" },
     ],
   },
@@ -393,7 +393,7 @@ const Header = () => {
           )}
         </div>
        {/* Desktop Login CTA */}
-<div className="hidden md:flex items-center gap-4 ml-6">
+{/* <div className="hidden md:flex items-center gap-4 ml-6">
   <Link href="/login">
     <motion.button
       whileHover={{ scale: 1.05 }}
@@ -424,6 +424,22 @@ const Header = () => {
       <span>My account</span>
     </motion.button>
   </Link>
+</div> */}
+{/* Desktop Login CTA */}
+<div className="hidden md:flex items-center gap-4 ml-6">
+<Link href="/login">
+  <motion.button
+    whileHover={{ scale: 1.05 }}
+    whileTap={{ scale: 0.95 }}
+    className={`px-5 py-2.5 rounded-full font-semibold transition ${
+      pathname === "/login"
+        ? "bg-primary text-white"
+        : "bg-gradient-to-r from-primary to-purple-600 text-white"
+    }`}
+  >
+    Login
+  </motion.button>
+</Link>
 </div>
 
         {/* Mobile Menu Button */}

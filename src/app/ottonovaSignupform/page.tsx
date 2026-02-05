@@ -18,6 +18,7 @@ import {
   ChevronRight,
   MessageCircle,
 } from "lucide-react";
+import { INSURANCE_PLANS } from "../constants/insurance";
 
 interface FormData {
   // Applicant Details
@@ -840,7 +841,7 @@ export default function InsurBeSignupForm() {
                     InsurBe Student Classic
                   </div>
                   <div className="font-extrabold text-emerald-600 text-lg">
-                    116 €
+                    {INSURANCE_PLANS.INSURBE_STUDENT_CLASSIC} €
                   </div>
                 </div>
               </div>

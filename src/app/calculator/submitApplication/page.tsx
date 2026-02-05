@@ -1,12 +1,11 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePremiumStore } from "@/app/stores/premiumStore";
 import { useJourneyStore } from "@/app/stores/journeyStore";
-import { Shield } from "lucide-react";
-
+import { Shield, Star } from "lucide-react";
+ import { useRouter } from "next/navigation";
 /* ---------------- Helpers ---------------- */
 
 function getTwoDaysFromNow() {
@@ -27,6 +26,20 @@ export default function SubmitApplication() {
   const journeyStore = useJourneyStore();
 
   const selectedPlan = journeyStore.selectedPlan;
+
+  /* ---------- Selected Plan from sessionStorage ---------- */
+  const [plan, setPlan] = useState<{
+    title: string;
+    price: string;
+    category: string;
+  } | null>(null);
+
+  useEffect(() => {
+    const planData = sessionStorage.getItem("selectedPlan");
+    if (planData) {
+      setPlan(JSON.parse(planData));
+    }
+  }, []);
 
   /* ---------- Form state ---------- */
 
@@ -180,7 +193,7 @@ export default function SubmitApplication() {
           coverageStart,
           tariffId: DUMMY_TARIFF_ID,
           soapResponse: responseText,
-        })
+        }),
       );
 
       router.push("/calculator/submitApplication/success");
@@ -248,7 +261,7 @@ export default function SubmitApplication() {
           >
             <Shield className="w-5 h-5 text-purple-600" />
             <span className="text-purple-700 font-bold text-sm tracking-wide ">
-              InsurBe 
+              InsurBe
             </span>
           </motion.div>
 
@@ -257,20 +270,20 @@ export default function SubmitApplication() {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-3xl md:text-5xl font-extrabold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent leading-snug"
+            className="text-3xl md:text-5xl md:px-12 font-extrabold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent leading-snug"
           >
-           Private health insurance application
+            {plan ? plan.category : "Private"} health insurance application
           </motion.h1>
 
           {/* Subheading */}
-          <motion.p
+          {/* <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.7, delay: 0.2 }}
             className="text-md md:text-lg text-gray-600 max-w-2xl mx-auto"
           >
             You can only apply for this insurance, if you provide an address in Germany.
-          </motion.p>
+          </motion.p> */}
         </div>
       </div>
 
@@ -289,10 +302,12 @@ export default function SubmitApplication() {
             transition={{ duration: 0.6, delay: 0.4 }}
             className="space-y-8"
           >
-            {/* ========== SECTION 1: PERSONAL DETAILS - Single Blue Theme ========== */}
+            {/* ========== SECTION 1: PERSONAL DETAILS - Orange to Pink ========== */}
             <div className="space-y-6">
-              <div className="bg-gradient-to-r from-orange-400 to-pink-600 rounded-xl p-5 shadow-lg border-2 border-blue-200">
-                <h2 className="text-2xl font-bold text-white">Personal Details</h2>
+              <div className="bg-gradient-to-r from-orange-400 to-pink-600 rounded-xl p-5 shadow-lg border-2 border-orange-200">
+                <h2 className="text-2xl font-bold text-white">
+                  Personal Details
+                </h2>
               </div>
 
               {/* Salutation */}
@@ -304,7 +319,7 @@ export default function SubmitApplication() {
                   whileFocus={{ scale: 1.01 }}
                   value={salutation}
                   onChange={(e) => setSalutation(e.target.value)}
-                  className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                  className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
                   required
                 >
                   <option value="Mr">Mr</option>
@@ -315,7 +330,10 @@ export default function SubmitApplication() {
               </motion.div>
 
               {/* Name Fields */}
-              <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <motion.div
+                variants={itemVariants}
+                className="grid grid-cols-1 md:grid-cols-2 gap-4"
+              >
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     First Name *
@@ -325,7 +343,7 @@ export default function SubmitApplication() {
                     type="text"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
-                    className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                    className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
                     placeholder="Max"
                     required
                   />
@@ -340,7 +358,7 @@ export default function SubmitApplication() {
                     type="text"
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
-                    className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                    className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
                     placeholder="Mustermann"
                     required
                   />
@@ -348,7 +366,10 @@ export default function SubmitApplication() {
               </motion.div>
 
               {/* DOB, Gender & Coverage Start */}
-              <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <motion.div
+                variants={itemVariants}
+                className="grid grid-cols-1 md:grid-cols-2 gap-4"
+              >
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Date of Birth *
@@ -359,7 +380,7 @@ export default function SubmitApplication() {
                     value={dob}
                     onChange={(e) => setDob(e.target.value)}
                     max={new Date().toISOString().split("T")[0]}
-                    className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                    className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
                     required
                   />
                   <AnimatePresence>
@@ -384,7 +405,7 @@ export default function SubmitApplication() {
                     whileFocus={{ scale: 1.01 }}
                     value={gender}
                     onChange={(e) => setGender(e.target.value)}
-                    className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                    className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
                     required
                   >
                     <option value="Male">Male</option>
@@ -395,7 +416,7 @@ export default function SubmitApplication() {
 
                 <div className="md:col-span-2">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Coverage Start Date 
+                    Coverage Start Date
                   </label>
                   <motion.input
                     type="text"
@@ -413,7 +434,9 @@ export default function SubmitApplication() {
             {/* ========== SECTION 2: Contact Information & Address - Blue to Indigo ========== */}
             <div className="space-y-4">
               <div className="bg-gradient-to-r from-primary via-indigo-600 to-purple-700 rounded-xl p-4 shadow-lg">
-                <h2 className="text-xl font-bold text-white">Contact Information & Address</h2>
+                <h2 className="text-xl font-bold text-white">
+                  Contact Information & Address
+                </h2>
               </div>
 
               <motion.div variants={itemVariants} className="space-y-4">
@@ -472,10 +495,59 @@ export default function SubmitApplication() {
               </motion.div>
             </div>
 
-            {/* ========== NEW SECTION: HEALTH QUESTION ========== */}
+            {/* ========== SECTION 3: Selected Plan Details - Purple to Indigo ========== */}
+            {plan && (
+              <div className="space-y-4">
+                <div className="bg-gradient-to-r from-primary via-indigo-600 to-purple-700 rounded-xl p-4 shadow-lg">
+                  <h2 className="text-xl font-bold text-white">
+                    Selected Plan Details
+                  </h2>
+                </div>
+
+                <motion.div
+                  variants={itemVariants}
+                  className="space-y-6 bg-white rounded-xl p-6 border-2 border-gray-200 shadow-sm"
+                >
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
+                    <div>
+                      <p className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">
+                        Plan Category & Name
+                      </p>
+                      <p className="text-2xl font-bold text-gray-900">
+                        {plan.category} {plan.title}
+                      </p>
+                    </div>
+
+                    <div className="text-right">
+                      <p className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">
+                        Monthly Premium
+                      </p>
+                      <p className="text-3xl font-extrabold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+                        {plan.price}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="pt-4 border-t-2 border-gray-100">
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => router.back()}
+                      className="w-full py-3 px-6 rounded-lg font-semibold text-primary bg-gradient-to-r from-primary/10 to-purple-100 border-2 border-primary/20 hover:border-primary hover:bg-primary/20 transition-all"
+                    >
+                      ← Change Plan
+                    </motion.button>
+                  </div>
+                </motion.div>
+              </div>
+            )}
+
+            {/* ========== SECTION 4: Health Information - Green to Cyan ========== */}
             <div className="space-y-4">
               <div className="bg-gradient-to-r from-green-500 via-teal-500 to-cyan-600 rounded-xl p-4 shadow-lg">
-                <h2 className="text-xl font-bold text-white">Health Information</h2>
+                <h2 className="text-xl font-bold text-white">
+                  Health Information
+                </h2>
               </div>
 
               <motion.div variants={itemVariants} className="space-y-3">
@@ -483,9 +555,11 @@ export default function SubmitApplication() {
                   Have you had a serious illness in the last 5 years? *
                 </label>
                 <p className="text-xs text-gray-600 mb-4">
-                  This includes, among other things, cancer, severe addictions, cardiovascular diseases, or serious illnesses affecting organs, other parts of the body, or the psyche.
+                  This includes, among other things, cancer, severe addictions,
+                  cardiovascular diseases, or serious illnesses affecting
+                  organs, other parts of the body, or the psyche.
                 </p>
-                
+
                 <div className="space-y-3">
                   <motion.label
                     whileHover={{ scale: 1.02 }}
@@ -504,7 +578,9 @@ export default function SubmitApplication() {
                       className="h-5 w-5 text-red-600 focus:ring-red-500"
                       required
                     />
-                    <span className="ml-3 text-sm font-medium text-gray-900">Yes</span>
+                    <span className="ml-3 text-sm font-medium text-gray-900">
+                      Yes
+                    </span>
                   </motion.label>
 
                   <motion.label
@@ -524,16 +600,20 @@ export default function SubmitApplication() {
                       className="h-5 w-5 text-green-600 focus:ring-green-500"
                       required
                     />
-                    <span className="ml-3 text-sm font-medium text-gray-900">No</span>
+                    <span className="ml-3 text-sm font-medium text-gray-900">
+                      No
+                    </span>
                   </motion.label>
                 </div>
               </motion.div>
             </div>
 
-            {/* ========== SECTION 3: Important Notice & Legal Agreement - Pink to Amber ========== */}
+            {/* ========== SECTION 5: Important Notice & Agreement - Pink to Amber ========== */}
             <div className="space-y-4">
               <div className="bg-gradient-to-r from-pink-500 via-rose-500 to-amber-500 rounded-xl p-4 shadow-lg">
-                <h2 className="text-xl font-bold text-white">Important Notice & Agreement</h2>
+                <h2 className="text-xl font-bold text-white">
+                  Important Notice & Agreement
+                </h2>
               </div>
 
               {/* Important Info Box */}
@@ -565,19 +645,22 @@ export default function SubmitApplication() {
                   ))}
                 </ul>
 
-                {/* Note about documents */}
                 <div className="mt-4 pt-4 border-t border-pink-300">
                   <p className="text-sm text-gray-600 italic">
-                    <strong>Note:</strong> Some documents may not be automatically
-                    generated because multiple tariff IDs are being processed. Our
-                    team is working on this, and we'll share any missing documents
-                    with you as soon as they're available.
+                    <strong>Note:</strong> Some documents may not be
+                    automatically generated because multiple tariff IDs are
+                    being processed. Our team is working on this, and we'll
+                    share any missing documents with you as soon as they're
+                    available.
                   </p>
                 </div>
               </motion.div>
 
               {/* Terms Checkbox */}
-              <motion.div variants={itemVariants} className="flex items-start bg-amber-50 border-2 border-amber-200 rounded-xl p-4">
+              <motion.div
+                variants={itemVariants}
+                className="flex items-start bg-amber-50 border-2 border-amber-200 rounded-xl p-4"
+              >
                 <input
                   type="checkbox"
                   id="terms"
@@ -588,11 +671,17 @@ export default function SubmitApplication() {
                 />
                 <label htmlFor="terms" className="ml-3 text-sm text-gray-700">
                   I agree to the{" "}
-                  <a href="/terms" className="text-amber-600 font-semibold hover:underline">
+                  <a
+                    href="/terms"
+                    className="text-amber-600 font-semibold hover:underline"
+                  >
                     Terms and Conditions
                   </a>{" "}
                   and{" "}
-                  <a href="/privacy" className="text-amber-600 font-semibold hover:underline">
+                  <a
+                    href="/privacy"
+                    className="text-amber-600 font-semibold hover:underline"
+                  >
                     Privacy Policy
                   </a>
                 </label>
@@ -614,7 +703,7 @@ export default function SubmitApplication() {
             </AnimatePresence>
           </motion.div>
 
-          {/* Submit Button - Multi-color Gradient */}
+          {/* Submit Button */}
           <motion.button
             type="submit"
             disabled={loading}
@@ -626,7 +715,7 @@ export default function SubmitApplication() {
                 : "bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 hover:from-purple-700 hover:via-pink-700 hover:to-red-700 shadow-purple-500/50"
             }`}
           >
-            {loading ? "Submitting..." : "Submit Application ✨"}
+            {loading ? "Submitting..." : "Submit Application "}
           </motion.button>
         </motion.form>
       </motion.div>

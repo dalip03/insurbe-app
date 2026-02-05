@@ -1,3 +1,10 @@
 export const INSURANCE_LIMITS = {
   PKV_INCOME_THRESHOLD: 74400,
 };
+
+
+export const INSURANCE_PLANS = {
+   
+      INSURBE_STUDENT_CLASSIC: 117,
+   
+};

@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { INSURANCE_PLANS } from "@/app/constants/insurance";
 
 export default function InsuranceEligibilityQuiz() {
   const router = useRouter();
@@ -556,7 +557,7 @@ const isEligibleForPublic = age === "below-30";
                                 Starting from
                               </p>
                               <p className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">
-                                €116
+                                €{INSURANCE_PLANS.INSURBE_STUDENT_CLASSIC}
                                 <span className="text-lg text-gray-500 font-medium">
                                   /month
                                 </span>

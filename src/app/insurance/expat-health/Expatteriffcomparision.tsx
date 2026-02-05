@@ -251,7 +251,7 @@ export default function Expatteriffcomparision() {
             <button
               onClick={() => setShowCompare(true)}
               className="inline-flex items-center gap-2 px-10 py-4 rounded-full
-        bg-linear-to-r from-primary to-purple-600
+        bg-gradient-to-r from-primary to-purple-600
         text-white font-semibold shadow-lg"
             >
               Compare tariffs
@@ -470,11 +470,22 @@ function TariffColumn({
   showCompare,
   onSignup,
 }: any) {
-
   const router = useRouter();
-  const onSignupForm = () => {
+
+  const handleSignup = () => {
+    // Store plan details in sessionStorage
+    const planData = {
+      title: title,
+      price: price,
+      category: "Expat",
+    };
+
+    sessionStorage.setItem("selectedPlan", JSON.stringify(planData));
+
+    // Navigate to form
     router.push("/calculator/submitApplication");
-  }
+  };
+
   return (
     <div className="flex flex-col">
       <div
@@ -505,8 +516,7 @@ function TariffColumn({
         </ul>
 
         <button
-          // onClick={onSignup}
-          onClick={onSignupForm}
+          onClick={handleSignup}
           className={`w-full py-4 rounded-full font-bold ${
             highlighted
               ? "bg-white text-purple-600"
