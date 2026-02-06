@@ -6,5 +6,6 @@ export const INSURANCE_LIMITS = {
 export const INSURANCE_PLANS = {
    
       INSURBE_STUDENT_CLASSIC: 117,
+      INSURBE_STUDENT_BONUS: 15,
    
 };

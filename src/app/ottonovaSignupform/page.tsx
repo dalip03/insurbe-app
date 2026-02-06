@@ -408,7 +408,7 @@ export default function InsurBeSignupForm() {
                 className="text-center font-extrabold"
               >
                 <span className="block text-xl leading-none tracking-tight">
-                  €50
+                  € {INSURANCE_PLANS.INSURBE_STUDENT_BONUS}
                 </span>
 
                 <span className="block text-[14px] font-semibold leading-tight opacity-95 mt-0.5">

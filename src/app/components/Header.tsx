@@ -392,8 +392,8 @@ const Header = () => {
             ),
           )}
         </div>
-       {/* Desktop Login CTA */}
-{/* <div className="hidden md:flex items-center gap-4 ml-6">
+        {/* Desktop Login CTA */}
+        {/* <div className="hidden md:flex items-center gap-4 ml-6">
   <Link href="/login">
     <motion.button
       whileHover={{ scale: 1.05 }}
@@ -425,22 +425,31 @@ const Header = () => {
     </motion.button>
   </Link>
 </div> */}
-{/* Desktop Login CTA */}
-<div className="hidden md:flex items-center gap-4 ml-6">
-<Link href="/login">
-  <motion.button
-    whileHover={{ scale: 1.05 }}
-    whileTap={{ scale: 0.95 }}
-    className={`px-5 py-2.5 rounded-full font-semibold transition ${
-      pathname === "/login"
-        ? "bg-primary text-white"
-        : "bg-gradient-to-r from-primary to-purple-600 text-white"
-    }`}
-  >
-    Login
-  </motion.button>
-</Link>
-</div>
+        {/* Desktop Login CTA */}
+        <div className="hidden md:flex items-center gap-4 ml-6 ">
+          <Link href="/login">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="flex flex-row cursor-pointer items-center gap-1 px-4 py-2 text-gray-900 hover:text-primary transition-colors"
+            >
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                />
+              </svg>
+              <span className="text-sm font-medium">Log in</span>
+            </motion.button>
+          </Link>
+        </div>
 
         {/* Mobile Menu Button */}
         <motion.button

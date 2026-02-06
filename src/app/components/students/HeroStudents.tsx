@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { INSURANCE_PLANS } from "@/app/constants/insurance";
 
 function HeroStudents() {
   const router = useRouter();
@@ -171,7 +172,7 @@ function HeroStudents() {
                   className="text-center font-extrabold"
                 >
                   <span className="block text-xl leading-none tracking-tight">
-                    €15
+                    €{INSURANCE_PLANS.INSURBE_STUDENT_BONUS}
                   </span>
 
                   <span className="block text-[14px] font-semibold px-2 leading-tight opacity-95 mt-0.5">
