@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "./components/Header";
 import Footernew from "./components/footernew";
 import CookieBanner from "./cookie/CookieBanner";
+import { Providers } from "./providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -43,11 +44,13 @@ export default function RootLayout({
     <html lang="en" className={`${jost.variable} ${lexend.variable}`}>
       <body
         className={`font-jost ${geistSans.variable} ${geistMono.variable} antialiased gradient-to-br from-white to-[#fdf3ff] min-h-screen`}
-      >
+      ><Providers>
         <Header/>
-        {children}
+         {children}
         <Footernew/>
+
          <CookieBanner />
+         </Providers>
       </body>
     </html>
   );
