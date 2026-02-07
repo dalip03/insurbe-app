@@ -167,7 +167,7 @@ export default function HeroInsurancenew1() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="relative w-full h-[400px] sm:h-[500px] md:h-[550px] lg:h-[500px] xl:h-[600px] order-1 lg:order-2"
             >
-              <div className="absolute inset-0 w-full h-full rounded-2xl lg:rounded-3xl overflow-hidden shadow-2xl border-4 border-white/20">
+              <div className="absolute inset-0 w-full h-full rounded-2xl lg:rounded-3xl overflow-hidden shadow-2xl ">
                 <Image
                   src="/hero_assets/phero8.avif"
                   alt="Insurance made easy"

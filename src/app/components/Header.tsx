@@ -25,7 +25,7 @@ const navLinks = [
   {
     name: "About Us",
     submenu: [
-      { name: "About Us", href: "/about", icon: "ℹ️" },
+      { name: "About InsurBe", href: "/about", icon: "ℹ️" },
       { name: "Careers", href: "/career", icon: "💼" },
     ],
   },
