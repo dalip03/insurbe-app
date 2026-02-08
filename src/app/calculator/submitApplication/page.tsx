@@ -672,14 +672,14 @@ export default function SubmitApplication() {
                 <label htmlFor="terms" className="ml-3 text-sm text-gray-700">
                   I agree to the{" "}
                   <a
-                    href="/terms"
+                    href="/termscondition"
                     className="text-amber-600 font-semibold hover:underline"
                   >
                     Terms and Conditions
                   </a>{" "}
                   and{" "}
                   <a
-                    href="/privacy"
+                    href="/privacypolicy"
                     className="text-amber-600 font-semibold hover:underline"
                   >
                     Privacy Policy
