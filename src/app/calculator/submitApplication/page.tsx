@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { usePremiumStore } from "@/app/stores/premiumStore";
 import { useJourneyStore } from "@/app/stores/journeyStore";
 import { Shield, Star } from "lucide-react";
- import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 /* ---------------- Helpers ---------------- */
 
 function getTwoDaysFromNow() {
@@ -510,19 +510,19 @@ export default function SubmitApplication() {
                 >
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
                     <div>
-                      <p className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">
+                      <p className="text-[12px] font-medium text-gray-500 uppercase tracking-wide mb-1">
                         Plan Category & Name
                       </p>
-                      <p className="text-2xl font-bold text-gray-900">
+                      <p className="text-xl font-bold text-gray-900">
                         {plan.category} {plan.title}
                       </p>
                     </div>
 
                     <div className="text-right">
-                      <p className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">
+                      <p className="text-[12px] font-medium text-gray-500 uppercase tracking-wide mb-2">
                         Monthly Premium
                       </p>
-                      <p className="text-3xl font-extrabold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+                      <p className="text-xl font-extrabold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
                         {plan.price}
                       </p>
                     </div>
@@ -533,7 +533,7 @@ export default function SubmitApplication() {
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={() => router.back()}
-                      className="w-full py-3 px-6 rounded-lg font-semibold text-primary bg-gradient-to-r from-primary/10 to-purple-100 border-2 border-primary/20 hover:border-primary hover:bg-primary/20 transition-all"
+                      className="w-full py-3 px-6 rounded-lg font-medium text-sm  text-primary bg-gradient-to-r from-primary/10 to-purple-100 border-2 border-primary/20 hover:border-primary hover:bg-primary/20 transition-all"
                     >
                       ← Change Plan
                     </motion.button>

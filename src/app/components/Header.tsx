@@ -177,7 +177,7 @@ const Header = () => {
     document.body.style.overflow = "unset";
   };
 
-   const { data: session, status } = useSession();
+  const { data: session, status } = useSession();
 
   // Optional: avoid flicker while loading
   if (status === "loading") return null;
@@ -399,32 +399,30 @@ const Header = () => {
             ),
           )}
         </div>
-      
-       <div className="hidden md:flex items-center gap-4 ml-6">
-      {!session ? (
-        // 🔐 NOT LOGGED IN → SIGNUP
-        <Link href="/signup">
-          <button
-          
-            className="flex items-center gap-2 px-4 py-2 rounded-xl cursor-pointer"
-          >
-            <UserPlus className="w-4 h-4" />
-            <span className="text-sm font-semibold text-primary">Sign Up</span>
-          </button>
-        </Link>
-      ) : (
-        // 🔓 LOGGED IN → LOGOUT
-        <button
-          type="button"
-         
-          onClick={() => signOut({ callbackUrl: "/login" })}
-          className="flex items-center gap-2 px-4 py-2 rounded-xl text-red-600 hover:bg-red-50 transition-all"
-        >
-          <LogOut className="w-4 h-4" />
-          <span className="text-sm font-semibold">Logout</span>
-        </button>
-      )}
-    </div>
+
+        <div className="hidden md:flex items-center gap-4 ml-6">
+          {!session ? (
+            // 🔐 NOT LOGGED IN → SIGNUP
+            <Link href="/login">
+              <button className="flex items-center gap-2 px-4 py-2 rounded-xl cursor-pointer">
+                <UserPlus className="w-4 h-4 " />
+                <span className="text-sm">
+                  Log in
+                </span>
+              </button>
+            </Link>
+          ) : (
+            // 🔓 LOGGED IN → LOGOUT
+            <button
+              type="button"
+              onClick={() => signOut({ callbackUrl: "/login" })}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl text-red-600 hover:bg-red-50 transition-all"
+            >
+              <LogOut className="w-4 h-4" />
+              <span className="text-sm font-semibold">Logout</span>
+            </button>
+          )}
+        </div>
 
         {/* Mobile Menu Button */}
         <motion.button

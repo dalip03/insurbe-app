@@ -3,185 +3,88 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, Star, Sparkles, ChevronDown, ChevronUp, X, CheckCircle } from "lucide-react";
+import { Check, Star, Sparkles, ChevronDown, ChevronUp, CheckCircle } from "lucide-react";
 
 /* ------------------------------------------------------------------ */
-/* TYPES                                                               */
-/* ------------------------------------------------------------------ */
-
-interface HealthAnswer {
-  doctorVisit: string | null;
-  doctorPreventative: string | null;
-  hospitalized: string | null;
-  psychotherapy: string | null;
-  chronicDiseases: string | null;
-  dentalVisit: string | null;
-  missingTeeth: string | null;
-}
-
-/* ------------------------------------------------------------------ */
-/* DATA                                                                */
+/* DATA */
 /* ------------------------------------------------------------------ */
 type ComparisonKey = "standard" | "plus" | "premium";
 
-const comparisonData: Array<{ label: string } & Record<ComparisonKey, string>> =
-  [
-    {
-      label: "Hospital accommodation",
-      standard: "Shared room",
-      plus: "2-bed room",
-      premium: "Single room",
-    },
-    {
-      label: "Doctor choice",
-      standard: "Attending physician",
-      plus: "Private doctor",
-      premium: "Private doctor",
-    },
-    {
-      label: "Medicines & remedies",
-      standard: "80% up to €4,000",
-      plus: "80% up to €2,000",
-      premium: "100%",
-    },
-    {
-      label: "Alternative medicine",
-      standard: "–",
-      plus: "€1,200 / year",
-      premium: "€2,400 / year",
-    },
-    {
-      label: "Visual aids",
-      standard: "€150 / 2 years",
-      plus: "€300 / 2 years",
-      premium: "€450 / 2 years",
-    },
-    {
-      label: "Dental treatment",
-      standard: "100% (1 cleaning)",
-      plus: "100% (2 cleanings)",
-      premium: "100%",
-    },
-    {
-      label: "Dentures & orthodontics",
-      standard: "70%",
-      plus: "80%",
-      premium: "90%",
-    },
-    {
-      label: "Deductible",
-      standard: "€600 – €3,000",
-      plus: "€600 – €3,000",
-      premium: "€600 – €3,000",
-    },
-    {
-      label: "Health bonus",
-      standard: "€100 / month",
-      plus: "€100 / month",
-      premium: "€100 / month",
-    },
-  ];
+const comparisonData: Array<{ label: string } & Record<ComparisonKey, string>> = [
+  {
+    label: "Hospital accommodation",
+    standard: "Shared room",
+    plus: "2-bed room",
+    premium: "Single room",
+  },
+  {
+    label: "Doctor choice",
+    standard: "Attending physician",
+    plus: "Private doctor",
+    premium: "Private doctor",
+  },
+  {
+    label: "Medicines & remedies",
+    standard: "80% up to €4,000",
+    plus: "80% up to €2,000",
+    premium: "100%",
+  },
+  {
+    label: "Alternative medicine",
+    standard: "–",
+    plus: "€1,200 / year",
+    premium: "€2,400 / year",
+  },
+  {
+    label: "Visual aids",
+    standard: "€150 / 2 years",
+    plus: "€300 / 2 years",
+    premium: "€450 / 2 years",
+  },
+  {
+    label: "Dental treatment",
+    standard: "100% (1 cleaning)",
+    plus: "100% (2 cleanings)",
+    premium: "100%",
+  },
+  {
+    label: "Dentures & orthodontics",
+    standard: "70%",
+    plus: "80%",
+    premium: "90%",
+  },
+  {
+    label: "Deductible",
+    standard: "€600 – €3,000",
+    plus: "€600 – €3,000",
+    premium: "€600 – €3,000",
+  },
+  {
+    label: "Health bonus",
+    standard: "€100 / month",
+    plus: "€100 / month",
+    premium: "€100 / month",
+  },
+];
 
 /* ------------------------------------------------------------------ */
-/* MAIN COMPONENT                                                       */
+/* MAIN COMPONENT */
 /* ------------------------------------------------------------------ */
 
 export default function PrivateInsuranceTariffs() {
   const router = useRouter();
   const [showCompare, setShowCompare] = useState(false);
 
-  // Health modal state
-  const [showHealthModal, setShowHealthModal] = useState(false);
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-
-  const [healthAnswers, setHealthAnswers] = useState<HealthAnswer>({
-    doctorVisit: null,
-    doctorPreventative: null,
-    hospitalized: null,
-    psychotherapy: null,
-    chronicDiseases: null,
-    dentalVisit: null,
-    missingTeeth: null,
-  });
-
-  const healthQuestions = [
-    {
-      key: "doctorVisit",
-      label: "Have you visited a doctor in the past 3 years?",
-    },
-    {
-      key: "doctorPreventative",
-      label: "Was the visit only for preventive checkups?",
-    },
-    {
-      key: "hospitalized",
-      label: "Have you been hospitalized in the past 5 years?",
-    },
-    { key: "psychotherapy", label: "Any psychotherapy in the past 10 years?" },
-    { key: "chronicDiseases", label: "Any chronic diseases or disabilities?" },
-    { key: "dentalVisit", label: "Visited a dentist in the past 3 years?" },
-    {
-      key: "missingTeeth",
-      label: "Any missing teeth (excluding wisdom teeth)?",
-    },
-  ];
-
-  /* ---------------- Health Logic ---------------- */
-
-  const handleHealthAnswer = (value: "yes" | "no") => {
-    const key = healthQuestions[currentQuestion].key as keyof HealthAnswer;
-    const updated = { ...healthAnswers, [key]: value };
-    setHealthAnswers(updated);
-
-    // branching
-    if (currentQuestion === 0 && value === "no") {
-      setCurrentQuestion(2);
-      return;
-    }
-
-    if (currentQuestion < healthQuestions.length - 1) {
-      setCurrentQuestion((q) => q + 1);
-      return;
-    }
-
-    evaluateHealth(updated);
+  // ✅ Handle plan selection - store data and navigate directly
+  const handlePlanSelect = (title: string, price: string) => {
+    const planData = {
+      title,
+      price,
+      category: "Private",
+    };
+    sessionStorage.setItem("selectedPlan", JSON.stringify(planData));
+    router.push("/calculator/submitApplication");
   };
-
-  const evaluateHealth = (answers: HealthAnswer) => {
-    const doctorSafe =
-      answers.doctorVisit === "no" ||
-      (answers.doctorVisit === "yes" && answers.doctorPreventative === "yes");
-
-    const otherSafe =
-      answers.hospitalized === "no" &&
-      answers.psychotherapy === "no" &&
-      answers.chronicDiseases === "no" &&
-      answers.dentalVisit === "no" &&
-      answers.missingTeeth === "no";
-
-    setShowHealthModal(false);
-
-    requestAnimationFrame(() => {
-      if (doctorSafe && otherSafe) {
-        router.push("/products/insuranceJourney");
-      } else {
-        router.push("/book-appointment");
-      }
-
-      // reset
-      setCurrentQuestion(0);
-      setHealthAnswers({
-        doctorVisit: null,
-        doctorPreventative: null,
-        hospitalized: null,
-        psychotherapy: null,
-        chronicDiseases: null,
-        dentalVisit: null,
-        missingTeeth: null,
-      });
-    });
-  };
-
 
   /* ------------------------------------------------------------------ */
 
@@ -210,42 +113,35 @@ export default function PrivateInsuranceTariffs() {
 
         {/* Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {(["standard", "plus", "premium"] as const).map((key, idx) => (
-            <TariffColumn
-              key={key}
-              title={
-                key === "standard"
-                  ? "Standard"
-                  : key === "plus"
-                    ? "Plus"
-                    : "Premium"
-              }
-              price={
-                key === "standard"
-                  ? "€331.73"
-                  : key === "plus"
-                    ? "€526.57"
-                    : "€636.00"
-              }
-              period="per month"
-              badge={
-                key === "plus"
-                  ? "Most Popular"
-                  : key === "premium"
+          {(["standard", "plus", "premium"] as const).map((key, idx) => {
+            const title = key === "standard" ? "Standard" : key === "plus" ? "Plus" : "Premium";
+            const price = key === "standard" ? "€331.73" : key === "plus" ? "€526.57" : "€636.00";
+            
+            return (
+              <TariffColumn
+                key={key}
+                title={title}
+                price={price}
+                period="per month"
+                badge={
+                  key === "plus"
+                    ? "Most Popular"
+                    : key === "premium"
                     ? "Ultimate"
                     : "Essential"
-              }
-              highlighted={key === "plus"}
-              points={[
-                "Private or shared room",
-                "Comprehensive outpatient care",
-                "Strong dental benefits",
-              ]}
-              comparisonKey={key}
-              showCompare={showCompare}
-              onSelect={() => setShowHealthModal(true)}
-            />
-          ))}
+                }
+                highlighted={key === "plus"}
+                points={[
+                  "Private or shared room",
+                  "Comprehensive outpatient care",
+                  "Strong dental benefits",
+                ]}
+                comparisonKey={key}
+                showCompare={showCompare}
+                onSelect={() => handlePlanSelect(title, price)}
+              />
+            );
+          })}
         </div>
 
         {/* Compare Button */}
@@ -259,91 +155,12 @@ export default function PrivateInsuranceTariffs() {
           </button>
         </div>
       </div>
-
-      {/* ---------------- HEALTH MODAL ---------------- */}
-
-      <AnimatePresence>
-        {showHealthModal && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/70 backdrop-blur-md z-40"
-            />
-
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              transition={{ type: "spring", duration: 0.5 }}
-              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
-                bg-white rounded-3xl shadow-2xl p-10 max-w-2xl w-full mx-4 z-50
-                border-4 border-purple-100"
-            >
-              <button
-                onClick={() => setShowHealthModal(false)}
-                className="absolute top-6 right-6 bg-gray-100 p-2 rounded-full"
-              >
-                <X />
-              </button>
-
-              <h2 className="text-3xl font-extrabold bg-gradient-to-r from-purple-600 to-primary bg-clip-text text-transparent">
-                Quick health check
-              </h2>
-
-              <p className="text-xl text-gray-700 mt-6">
-                {healthQuestions[currentQuestion].label}
-              </p>
-
-              <div className="mt-8 space-y-4">
-                <motion.button
-                  whileHover={{ scale: 1.02, x: 6 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => handleHealthAnswer("yes")}
-                  className="w-full p-5 border-2 rounded-xl font-semibold hover:border-purple-500 hover:bg-purple-50"
-                >
-                  ✓ Yes
-                </motion.button>
-
-                <motion.button
-                  whileHover={{ scale: 1.02, x: 6 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => handleHealthAnswer("no")}
-                  className="w-full p-5 border-2 rounded-xl font-semibold hover:border-purple-500 hover:bg-purple-50"
-                >
-                  ✗ No
-                </motion.button>
-              </div>
-
-              <div className="mt-8">
-                <div className="flex gap-2 mb-2">
-                  {healthQuestions.map((_, idx) => (
-                    <div
-                      key={idx}
-                      className={`h-2 flex-1 rounded-full ${
-                        idx <= currentQuestion
-                          ? "bg-linear-to-r from-purple-600 to-primary"
-                          : "bg-gray-200"
-                      }`}
-                    />
-                  ))}
-                </div>
-
-                <p className="text-sm text-gray-500 text-center">
-                  Question {currentQuestion + 1} of {healthQuestions.length}
-                </p>
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
     </section>
   );
 }
 
 /* ------------------------------------------------------------------ */
-/* TARIFF COLUMN                                                        */
+/* TARIFF COLUMN */
 /* ------------------------------------------------------------------ */
 
 function TariffColumn({
@@ -367,12 +184,6 @@ function TariffColumn({
   showCompare: boolean;
   onSelect: () => void;
 }) {
-
-  const router = useRouter();
-
-    const onRedirect = () => {
-    router.push("/insuranceSignupFlow");
-  }
   return (
     <div className="flex flex-col">
       <div
@@ -406,7 +217,7 @@ function TariffColumn({
         </ul>
 
         <button
-          onClick={onRedirect}
+          onClick={onSelect}
           className={`w-full py-4 rounded-full font-bold ${
             highlighted
               ? "bg-white text-purple-600"
@@ -417,50 +228,44 @@ function TariffColumn({
         </button>
       </div>
 
- {/* Comparison */}
-<AnimatePresence>
-  {showCompare && (
-    <motion.div
-      initial={{ opacity: 0, height: 0 }}
-      animate={{ opacity: 1, height: "auto" }}
-      exit={{ opacity: 0, height: 0 }}
-      className="rounded-b-3xl overflow-hidden mt-2"
-    >
-      {/* Glassmorphism background */}
-      <div className="backdrop-blur-xl bg-white/80 border-t-2 border-purple-200 shadow-2xl p-8">
-        {/* Stacked Cards */}
-        <div className="space-y-3">
-          {comparisonData.map((item, index) => (
-            <motion.div
-              key={item.label}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.08 }}
-              className="flex items-center justify-between bg-gradient-to-r from-purple-50 to-blue-50 rounded-2xl p-4 border border-purple-200 hover:shadow-lg hover:scale-[1.02] transition-all group"
-            >
-              {/* Left side */}
-              <div className="flex items-center gap-4">
-                <div className="p-2 bg-white rounded-xl shadow-sm group-hover:bg-purple-100 transition">
-                  <CheckCircle className="w-5 h-5 text-purple-600" />
-                </div>
-                <p className="text-sm font-bold text-gray-700">
-                  {item.label}
-                </p>
+      {/* Comparison */}
+      <AnimatePresence>
+        {showCompare && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="rounded-b-3xl overflow-hidden mt-2"
+          >
+            <div className="backdrop-blur-xl bg-white/80 border-t-2 border-purple-200 shadow-2xl p-8">
+              <div className="space-y-3">
+                {comparisonData.map((item, index) => (
+                  <motion.div
+                    key={item.label}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.08 }}
+                    className="flex items-center justify-between bg-gradient-to-r from-purple-50 to-blue-50 rounded-2xl p-4 border border-purple-200 hover:shadow-lg hover:scale-[1.02] transition-all group"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="p-2 bg-white rounded-xl shadow-sm group-hover:bg-purple-100 transition">
+                        <CheckCircle className="w-5 h-5 text-purple-600" />
+                      </div>
+                      <p className="text-sm font-bold text-gray-700">
+                        {item.label}
+                      </p>
+                    </div>
+
+                    <p className="text-sm font-semibold text-purple-700 bg-white px-4 py-2 rounded-xl shadow-sm">
+                      {item[comparisonKey]}
+                    </p>
+                  </motion.div>
+                ))}
               </div>
-
-              {/* Right side */}
-              <p className="text-sm font-semibold text-purple-700 bg-white px-4 py-2 rounded-xl shadow-sm">
-                {item[comparisonKey]}
-              </p>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </motion.div>
-  )}
-</AnimatePresence>
-
-
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
