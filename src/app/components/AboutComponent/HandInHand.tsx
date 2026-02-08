@@ -11,7 +11,7 @@ export default function HandInHand() {
           <div className="flex justify-center md:justify-end">
             <div className="relative">
               <Image
-                src="/about/hansemerkur.webp"
+                src="/about_assets/hansemerkur.webp"
                 alt="HanseMerkur Logo"
                 width={400}
                 height={300}

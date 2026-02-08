@@ -60,7 +60,7 @@ export default function AboutTeamNew() {
           <div className="relative">
             <div className="relative rounded-3xl overflow-hidden backdrop-blur-xl bg-white/70 border border-white/40 shadow-2xl shadow-purple-500/10">
               <Image
-                src="/about/colorTshirt.webp"
+                src="/about_assets/colorTshirt.webp"
                 alt="InsurBe team representing diversity and collaboration"
                 width={800}
                 height={600}

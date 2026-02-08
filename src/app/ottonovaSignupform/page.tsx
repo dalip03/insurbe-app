@@ -412,7 +412,7 @@ export default function InsurBeSignupForm() {
                 </span>
 
                 <span className="block text-[14px] font-semibold leading-tight opacity-95 mt-0.5">
-                  Cashback*
+                  Welcome Bonus*
                 </span>
               </motion.div>
             </motion.div>

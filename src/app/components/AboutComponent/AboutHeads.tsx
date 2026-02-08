@@ -14,7 +14,7 @@ const teamMembers: TeamMember[] = [
   {
     name: "Marvin Fürst",
     role: "Founder & CEO",
-    image: "/about/marvin.jpeg",
+    image: "/about_assets/marvin.jpeg",
     bio: [
       "Founder and industry expert with over a decade of experience in financial services and leadership. Holds degrees in Business Informatics and Management from Frankfurt School of Finance & Management and Berlin School of Economics and Law. Driven to simplify insurance through transparency, trust, and smart digital solutions for modern life.",
     ],
@@ -22,7 +22,7 @@ const teamMembers: TeamMember[] = [
   {
     name: "Manjunathan B",
     role: "Director",
-    image: "/about/ceo1.JPG",
+    image: "/about_assets/ceo1.JPG",
     bio: [
       "Seasoned business leader with over 24 years of experience in IT consultancy and enterprise growth. Holds a strong academic foundation in engineering and management, enabling a strategic, technology-driven approach to long-term business success and client value creation.",
     ],
@@ -30,7 +30,7 @@ const teamMembers: TeamMember[] = [
   {
     name: "Abinandhanan S",
     role: "Head of Technology",
-    image: "/about/Abhinandan.JPG",
+    image: "/about_assets/Abhinandan.JPG",
     bio: [
       "Technology leader with advanced academic training in computer science and artificial intelligence. Brings over a decade of experience in research and building scalable, enterprise-grade AI systems that power innovation in modern insurance platforms.",
     ],
@@ -38,7 +38,7 @@ const teamMembers: TeamMember[] = [
   {
     name: "Safiya R",
     role: "Chief of Staff",
-    image: "/about/safiya.JPG",
+    image: "/about_assets/safiya.JPG",
     bio: [
       "Professionally trained in business operations and organizational strategy. Combines academic insight with hands-on execution to streamline processes, align leadership priorities, and ensure operational excellence across the organization.",
     ],
