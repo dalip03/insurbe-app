@@ -14,6 +14,7 @@ export default function AppointmentModal({
   onClose,
 }: AppointmentModalProps) {
   const [showSuccess, setShowSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -23,24 +24,46 @@ export default function AppointmentModal({
     comment: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (loading) return;
 
-    console.log("Appointment data:", formData);
+    setLoading(true);
 
-    setShowSuccess(true);
-
-    setTimeout(() => {
-      setShowSuccess(false);
-      onClose();
-      setFormData({
-        name: "",
-        email: "",
-        date: "",
-        time: "",
-        comment: "",
+    try {
+      const res = await fetch("/api/contactmodalform", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
       });
-    }, 1000);
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        throw new Error("Email send failed");
+      }
+
+      setShowSuccess(true);
+
+      setTimeout(() => {
+        setShowSuccess(false);
+        onClose();
+        setFormData({
+          name: "",
+          email: "",
+          date: "",
+          time: "",
+          comment: "",
+        });
+      }, 1200);
+    } catch (error) {
+      console.error(error);
+      alert("Something went wrong. Please try again ❌");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -69,7 +92,7 @@ export default function AppointmentModal({
               onClick={(e) => e.stopPropagation()}
               className="relative bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden"
             >
-              {/* Success */}
+              {/* Success Overlay */}
               <AnimatePresence>
                 {showSuccess && (
                   <motion.div
@@ -100,9 +123,10 @@ export default function AppointmentModal({
                 <h2 className="text-2xl sm:text-3xl font-bold mb-2">
                   Book{" "}
                   <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-purple-600">
-                    an Appointment{" "}
+                    an Appointment
                   </span>
                 </h2>
+
                 <p className="text-gray-600 mb-6">
                   Fill in your details and we’ll get back to you soon
                 </p>
@@ -161,7 +185,10 @@ export default function AppointmentModal({
                           min={new Date().toISOString().split("T")[0]}
                           value={formData.date}
                           onChange={(e) =>
-                            setFormData({ ...formData, date: e.target.value })
+                            setFormData({
+                              ...formData,
+                              date: e.target.value,
+                            })
                           }
                           className="w-full pl-10 py-3 border rounded-lg"
                         />
@@ -178,7 +205,10 @@ export default function AppointmentModal({
                           required
                           value={formData.time}
                           onChange={(e) =>
-                            setFormData({ ...formData, time: e.target.value })
+                            setFormData({
+                              ...formData,
+                              time: e.target.value,
+                            })
                           }
                           className="w-full pl-10 py-3 border rounded-lg"
                         >
@@ -203,7 +233,6 @@ export default function AppointmentModal({
                     </label>
                     <textarea
                       rows={3}
-                      placeholder="Write text here..."
                       value={formData.comment}
                       onChange={(e) =>
                         setFormData({
@@ -211,18 +240,20 @@ export default function AppointmentModal({
                           comment: e.target.value,
                         })
                       }
+                      placeholder="Write text here..."
                       className="w-full p-3 border rounded-lg"
                     />
                   </div>
 
                   {/* Submit */}
                   <motion.button
+                    type="submit"
+                    disabled={loading}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    type="submit"
-                    className="w-full  bg-linear-to-r from-primary to-purple-600 text-white text-sm sm:text-base font-bold py-3 sm:py-4 px-6 shadow-xl hover:shadow-2xl transition-all duration-300 rounded-2xl focus:outline-none focus:ring-4 focus:ring-purple-300/50"
+                    className="w-full bg-linear-to-r from-primary to-purple-600 text-white font-bold py-3 sm:py-4 rounded-2xl shadow-xl disabled:opacity-60"
                   >
-                    Submit Appointment
+                    {loading ? "Submitting..." : "Submit Appointment"}
                   </motion.button>
                 </form>
               </div>

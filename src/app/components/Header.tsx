@@ -181,7 +181,13 @@ const Header = () => {
   const { data: session, status } = useSession();
 
   // Optional: avoid flicker while loading
-  if (status === "loading") return null;
+   if (status === "loading") {
+    return (
+      <div className="hidden md:flex items-center gap-4 ml-6">
+        <div className="h-9 w-24 rounded-xl bg-gray-200 animate-pulse" />
+      </div>
+    );
+  }
   return (
     <header className="sticky top-0 w-full z-50 backdrop-blur-xl bg-white/70 supports-backdrop-filter:bg-white/60 border-b border-white/20 shadow-[0_8px_30px_rgba(0,0,0,0.06)]">
       <nav className="flex justify-between items-center px-6 md:px-10 xl:px-20 py-4 w-full">
@@ -189,7 +195,6 @@ const Header = () => {
         <Link href="/" className="font-bold font-serif flex items-center gap-2">
           <Image src="/logo.svg" alt="Logo" width={100} height={20} priority />
         </Link>
-
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-10 text-lg">
           {navLinks.map((link) =>
@@ -406,29 +411,25 @@ const Header = () => {
             ),
           )}
         </div>
-
         <div className="hidden md:flex items-center gap-4 ml-6">
           {!session ? (
-            // 🔐 NOT LOGGED IN → SIGNUP
             <Link href="/login">
-              <button className="flex items-center gap-2 px-4 py-2 rounded-xl cursor-pointer">
-                <UserPlus className="w-4 h-4 " />
-                <span className="text-sm">Log in</span>
+              <button className="px-4 py-2 rounded-xl cursor-pointer bg-primary text-white text-sm font-semibold">
+                Log in
               </button>
             </Link>
           ) : (
-            // 🔓 LOGGED IN → LOGOUT
             <button
               type="button"
               onClick={() => signOut({ callbackUrl: "/login" })}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl text-red-600 hover:bg-red-50 transition-all"
+              className="flex items-center cursor-pointer gap-2 px-4 py-2 rounded-xl text-red-600 hover:bg-red-50 transition-all"
             >
               <LogOut className="w-4 h-4" />
               <span className="text-sm font-semibold">Logout</span>
             </button>
           )}
         </div>
-
+      
         {/* Mobile Menu Button */}
         <motion.button
           whileTap={{ scale: 0.95 }}
