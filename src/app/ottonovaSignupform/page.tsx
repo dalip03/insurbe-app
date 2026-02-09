@@ -20,6 +20,89 @@ import {
 } from "lucide-react";
 import { INSURANCE_PLANS } from "../constants/insurance";
 
+const nameRegex = /^[A-Za-z\s'-]{2,}$/;
+const cityRegex = /^[A-Za-z\s'-]{2,}$/;
+const passportRegex = /^[A-Za-z0-9]{6,}$/;
+const postalCodeRegex = /^\d{6}$/;
+const phoneRegex = /^[+]?[0-9\s-]{7,15}$/;
+
+const validateField = (
+  name: keyof FormData,
+  value: any,
+  formData: FormData,
+  countryResidenceType: "germany" | "other",
+): string => {
+  switch (name) {
+    case "title":
+      if (!value) return "Please select a title";
+      break;
+
+    case "firstName":
+      if (!value.trim()) return "First name is required";
+      if (!nameRegex.test(value)) return "Only letters allowed";
+      break;
+
+    case "surname":
+      if (!value.trim()) return "Surname is required";
+      if (!nameRegex.test(value)) return "Only letters allowed";
+      break;
+
+      
+
+    case "street":
+      if (!value.trim()) return "Street address is required";
+      if (value.length < 5) return "Street address is too short";
+      break;
+
+    case "postalCode":
+      if (!value) return "Postal code is required";
+      if (!postalCodeRegex.test(value))
+        return "Postal code must be 6 digits";
+      break;
+
+    case "townCity":
+      if (!value.trim()) return "Town/City is required";
+      if (!cityRegex.test(value)) return "Only letters allowed";
+      break;
+
+    case "mobileNumber":
+      if (value && !phoneRegex.test(value))
+        return "Invalid phone number";
+      break;
+
+    case "email":
+      if (!value) return "Email is required";
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))
+        return "Invalid email address";
+      break;
+
+    case "passportId":
+      if (!value) return "Passport ID is required";
+      if (!passportRegex.test(value))
+        return "Invalid passport format";
+      break;
+
+    case "dateOfBirth":
+      if (!value) return "Date of birth is required";
+      const dob = new Date(value);
+      if (dob >= new Date()) return "Date must be in the past";
+      let age = new Date().getFullYear() - dob.getFullYear();
+      if (age < 16) return "Minimum age is 16";
+      break;
+
+    case "countryOfOrigin":
+      if (countryResidenceType === "other" && !value)
+        return "Please select a country";
+      break;
+
+    case "acceptTerms":
+      if (!value) return "You must accept the terms";
+      break;
+  }
+
+  return "";
+};
+
 interface FormData {
   // Applicant Details
   title: string;
@@ -115,7 +198,9 @@ export default function InsurBeSignupForm() {
   const [countries, setCountries] = useState<CountryOption[]>([]);
 
   const CACHE_DURATION = 1000 * 60 * 60 * 24; // 24 hours
-
+const [touched, setTouched] = useState<
+  Partial<Record<keyof FormData, boolean>>
+>({});
   useEffect(() => {
     let isMounted = true;
 
@@ -166,72 +251,156 @@ export default function InsurBeSignupForm() {
     };
   }, []);
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-  ) => {
-    const { name, value, type } = e.target;
-    const checked = (e.target as HTMLInputElement).checked;
+ const handleInputChange = (
+  e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+) => {
+  const { name, value, type } = e.target;
+  const checked = (e.target as HTMLInputElement).checked;
 
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
+  const fieldValue = type === "checkbox" ? checked : value;
+
+  setFormData((prev) => {
+    const updatedForm = { ...prev, [name]: fieldValue };
+
+    const errorMessage = validateField(
+      name as keyof FormData,
+      fieldValue,
+      updatedForm,
+      countryResidenceType,
+    );
+
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: errorMessage,
     }));
 
-    // Clear error when user starts typing
-    if (errors[name as keyof FormData]) {
-      setErrors((prev) => ({ ...prev, [name]: "" }));
-    }
-  };
+    return updatedForm;
+  });
+};
 
   const validateForm = (): boolean => {
-    const newErrors: Partial<Record<keyof FormData, string>> = {};
+  const newErrors: Partial<Record<keyof FormData, string>> = {};
 
-    // Required field validation
-    if (!formData.title) newErrors.title = "Please select a title";
-    if (!formData.firstName) newErrors.firstName = "First name is required";
-    if (!formData.surname) newErrors.surname = "Surname is required";
-    if (!formData.street) newErrors.street = "Street address is required";
-    if (!formData.postalCode) newErrors.postalCode = "Postal code is required";
-    if (!formData.townCity) newErrors.townCity = "Town/City is required";
-    if (!formData.email) newErrors.email = "Email is required";
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = "Invalid email address";
-    }
-    if (!formData.dateOfBirth)
-      newErrors.dateOfBirth = "Date of birth is required";
-    if (!formData.passportId) newErrors.passportId = "Passport ID is required";
+  // Title
+  if (!formData.title) newErrors.title = "Please select a title";
 
-    // Period of Insurance
-    if (!formData.startMonth) newErrors.startMonth = "Start month is required";
-    if (!formData.startYear) newErrors.startYear = "Start year is required";
-    if (!formData.periodOfInsurance)
-      newErrors.periodOfInsurance = "Period is required";
+  // First name
+  if (!formData.firstName.trim())
+    newErrors.firstName = "First name is required";
+  else if (!nameRegex.test(formData.firstName))
+    newErrors.firstName = "Only letters allowed";
 
-    // Study Details
-    if (!formData.hasInsuredPartner)
-      newErrors.hasInsuredPartner = "Please select an option";
-    if (!formData.studyType) newErrors.studyType = "Study type is required";
-    if (!formData.nameOfInstitution)
-      newErrors.nameOfInstitution = "Institution name is required";
-    if (!formData.beginOfStudy)
-      newErrors.beginOfStudy = "Begin date is required";
-    if (!formData.endOfStudy) newErrors.endOfStudy = "End date is required";
-    if (!formData.hadPreviousInsurance)
-      newErrors.hadPreviousInsurance = "Please select an option";
+  // Surname
+  if (!formData.surname.trim())
+    newErrors.surname = "Surname is required";
+  else if (!nameRegex.test(formData.surname))
+    newErrors.surname = "Only letters allowed";
 
-    // Medical Questions
-    if (!formData.medicalQuestion1)
-      newErrors.medicalQuestion1 = "Please answer this question";
-    if (!formData.medicalQuestion2)
-      newErrors.medicalQuestion2 = "Please answer this question";
+  // Street
+  if (!formData.street.trim())
+    newErrors.street = "Street address is required";
+  else if (formData.street.length < 5)
+    newErrors.street = "Street address is too short";
 
-    // Declaration
-    if (!formData.acceptTerms)
-      newErrors.acceptTerms = "You must accept the terms";
+  // Postal Code (Germany)
+  if (!formData.postalCode)
+    newErrors.postalCode = "Postal code is required";
+  else if (!postalCodeRegex.test(formData.postalCode))
+    newErrors.postalCode = "Postal code must be 5 digits";
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+  // Town / City
+  if (!formData.townCity.trim())
+    newErrors.townCity = "Town/City is required";
+  else if (!cityRegex.test(formData.townCity))
+    newErrors.townCity = "Only letters allowed";
+
+  // Mobile (optional)
+  if (
+    formData.mobileNumber &&
+    !phoneRegex.test(formData.mobileNumber)
+  ) {
+    newErrors.mobileNumber = "Invalid phone number";
+  }
+
+  // Email
+  if (!formData.email)
+    newErrors.email = "Email is required";
+  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email))
+    newErrors.email = "Invalid email address";
+
+  // Passport ID
+  if (!formData.passportId)
+    newErrors.passportId = "Passport ID is required";
+  else if (!passportRegex.test(formData.passportId))
+    newErrors.passportId = "Invalid passport format";
+
+  // Date of Birth
+  if (!formData.dateOfBirth) {
+    newErrors.dateOfBirth = "Date of birth is required";
+  } else {
+    const dob = new Date(formData.dateOfBirth);
+    const age =
+      new Date().getFullYear() - dob.getFullYear();
+    if (dob >= new Date())
+      newErrors.dateOfBirth = "Date must be in the past";
+    else if (age < 16)
+      newErrors.dateOfBirth = "Minimum age is 16";
+  }
+
+  // Period of Insurance
+  if (!formData.startMonth)
+    newErrors.startMonth = "Start month is required";
+  if (!formData.startYear)
+    newErrors.startYear = "Start year is required";
+  if (!formData.periodOfInsurance)
+    newErrors.periodOfInsurance = "Period is required";
+
+  // Study Details
+  if (!formData.hasInsuredPartner)
+    newErrors.hasInsuredPartner = "Please select an option";
+  if (!formData.studyType)
+    newErrors.studyType = "Study type is required";
+  if (!formData.nameOfInstitution)
+    newErrors.nameOfInstitution = "Institution name is required";
+
+  if (!formData.beginOfStudy)
+    newErrors.beginOfStudy = "Begin date is required";
+  if (!formData.endOfStudy)
+    newErrors.endOfStudy = "End date is required";
+
+  if (
+    formData.beginOfStudy &&
+    formData.endOfStudy &&
+    new Date(formData.beginOfStudy) >=
+      new Date(formData.endOfStudy)
+  ) {
+    newErrors.endOfStudy = "End date must be after begin date";
+  }
+
+  if (!formData.hadPreviousInsurance)
+    newErrors.hadPreviousInsurance = "Please select an option";
+
+  // Medical Questions
+  if (!formData.medicalQuestion1)
+    newErrors.medicalQuestion1 = "Please answer this question";
+  if (!formData.medicalQuestion2)
+    newErrors.medicalQuestion2 = "Please answer this question";
+
+  // Country (when other selected)
+  if (
+    countryResidenceType === "other" &&
+    !formData.countryOfOrigin
+  ) {
+    newErrors.countryOfOrigin = "Please select a country";
+  }
+
+  // Declaration
+  if (!formData.acceptTerms)
+    newErrors.acceptTerms = "You must accept the terms";
+
+  setErrors(newErrors);
+  return Object.keys(newErrors).length === 0;
+};
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -487,6 +656,7 @@ export default function InsurBeSignupForm() {
                   name="firstName"
                   value={formData.firstName}
                   onChange={handleInputChange}
+                  
                   className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:outline-none transition-colors"
                   placeholder="Enter first name"
                 />
@@ -998,7 +1168,7 @@ export default function InsurBeSignupForm() {
                 other products for advertising purposes by email. I can object
                 to the{" "}
                 <a
-                  href="#"
+                  href="/privacypolicy"
                   className="text-purple-600 font-semibold hover:underline"
                 >
                   use of my data

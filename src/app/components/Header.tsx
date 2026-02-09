@@ -16,7 +16,7 @@ import {
   UserPlus,
 } from "lucide-react";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 
 // Updated navLinks with About Us dropdown
@@ -132,6 +132,7 @@ const Header = () => {
   const productHoverTimeout = useRef<NodeJS.Timeout | null>(null);
   const aboutHoverTimeout = useRef<NodeJS.Timeout | null>(null);
   const pathname = usePathname();
+  const router = useRouter();
 
   const toggleDrawer = () => {
     setIsOpen(!isOpen);
@@ -317,11 +318,14 @@ const Header = () => {
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: index * 0.05 }}
                                   >
-                                    <Link
-                                      href={item.href}
-                                      tabIndex={showProducts ? 0 : -1}
-                                      onClick={() => setShowProducts(false)}
-                                      className="group block h-60 p-6 rounded-2xl border border-gray-200 hover:border-primary hover:shadow-xl transition-all bg-white"
+                                    <div
+                                      role="button"
+                                      tabIndex={0}
+                                      onClick={() => {
+                                        setShowProducts(false);
+                                        router.push(item.href);
+                                      }}
+                                      className="group h-60 p-6 rounded-2xl border border-gray-200 hover:border-primary hover:shadow-xl transition-all bg-white cursor-pointer"
                                     >
                                       <div className="flex flex-col h-full">
                                         {/* ICON */}
@@ -337,24 +341,27 @@ const Header = () => {
                                         <h4 className="font-semibold text-gray-900 mb-2 group-hover:text-primary transition mt-3">
                                           {item.name}
                                         </h4>
-                                        {/* PRODUCT TAGS */}
+
+                                        {/* ✅ PRODUCT TAGS (ONLY NAVIGATION LINKS) */}
                                         <div className="flex flex-wrap gap-2 mb-3">
                                           {productTagsConfig[item.name]?.map(
                                             (tag) => (
-                                              <Link
+                                              <button
                                                 key={tag.label}
-                                                href={tag.href}
+                                                type="button"
                                                 onClick={(e) => {
-                                                  e.stopPropagation();
+                                                  e.stopPropagation(); // stops card click
                                                   setShowProducts(false);
+                                                  router.push(tag.href);
                                                 }}
-                                                className={`flex items-center gap-1.5 text-[11px] px-2.5 py-1 rounded-full font-semibold ${tag.color} transition-all duration-200 hover:-translate-y-0.5 hover:scale-[1.03] hover:shadow-sm`}
+                                                className={`flex items-center gap-1.5 text-[11px] px-2.5 py-1 rounded-full font-semibold ${tag.color}
+              transition-all duration-200 hover:-translate-y-0.5 hover:scale-[1.03] hover:shadow-sm`}
                                               >
                                                 <span className="text-xs">
                                                   {tag.icon}
                                                 </span>
                                                 {tag.label}
-                                              </Link>
+                                              </button>
                                             ),
                                           )}
                                         </div>
@@ -372,7 +379,7 @@ const Header = () => {
                                             "Affordable and flexible insurance plans for students"}
                                         </p>
                                       </div>
-                                    </Link>
+                                    </div>
                                   </motion.div>
                                 );
                               })}
@@ -406,9 +413,7 @@ const Header = () => {
             <Link href="/login">
               <button className="flex items-center gap-2 px-4 py-2 rounded-xl cursor-pointer">
                 <UserPlus className="w-4 h-4 " />
-                <span className="text-sm">
-                  Log in
-                </span>
+                <span className="text-sm">Log in</span>
               </button>
             </Link>
           ) : (

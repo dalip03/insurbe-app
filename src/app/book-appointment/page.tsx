@@ -52,7 +52,7 @@ export default function BookAppointmentPage() {
           </h2>
 
           <p className="text-gray-600 mb-6">
-            Our pension expert will contact you within 24 hours to confirm your
+            Our insurance expert will contact you within 24 hours to confirm your
             appointment.
           </p>
 
@@ -81,11 +81,11 @@ export default function BookAppointmentPage() {
           </span>
 
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-            Book your pension consultation
+            Book your insurance consultation
           </h1>
 
           <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-            Get personalized advice for pension planning in Germany — tailored
+            Get personalized advice for insurance planning in Germany — tailored
             to expats, professionals, and freelancers.
           </p>
         </motion.div>

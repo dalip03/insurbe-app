@@ -41,10 +41,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${jost.variable} ${lexend.variable}`}>
+    <html lang="en" className={`${jost.variable} ${lexend.variable}`} suppressHydrationWarning>
       <body
-        className={`font-jost ${geistSans.variable} ${geistMono.variable} antialiased gradient-to-br from-white to-[#fdf3ff] min-h-screen`}
-      ><Providers>
+        className={`font-jost ${geistSans.variable} ${geistMono.variable} antialiased gradient-to-br from-white to-[#fdf3ff] min-h-screen`} suppressHydrationWarning
+    
+    ><Providers>
         <Header/>
          {children}
         <Footernew/>

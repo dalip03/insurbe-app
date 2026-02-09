@@ -4,8 +4,12 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
+import AppointmentModal from "../components/modals/AppointmentModal";
 
 export default function BuildPerfectPlanCTA() {
+      const [isModalOpen, setIsModalOpen] = useState(false);
+  
   return (
     <section className="relative overflow-hidden py-20 px-4 sm:px-8 lg:px-20">
       {/* Background Gradient */}
@@ -25,7 +29,7 @@ export default function BuildPerfectPlanCTA() {
           className="flex justify-center lg:justify-start"
         >
           <div className="relative w-72 sm:w-80 md:w-96">
-            {/* Replace image path if needed */}
+            
             <Image
               src="/gifs_assets/Last_step.svg"
               alt="Build your perfect insurance plan"
@@ -56,11 +60,11 @@ export default function BuildPerfectPlanCTA() {
             designed around your needs.
           </p>
 
-          <Link href="/book-appointment">
-            <motion.a
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="
+           <motion.button
+                  onClick={() => setIsModalOpen(true)}
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.96 }}
+ className="
       inline-flex items-center gap-2
       px-8 py-4
       rounded-full
@@ -70,14 +74,15 @@ export default function BuildPerfectPlanCTA() {
       shadow-xl
       hover:shadow-2xl
       transition
-    "
-            >
-              Get in touch
-              <ArrowRight className="w-5 h-5" />
-            </motion.a>
-          </Link>
+    "          >
+                 Get in Touch
+                </motion.button>
         </motion.div>
       </div>
+       <AppointmentModal
+                  open={isModalOpen}
+                  onClose={() => setIsModalOpen(false)}
+                />
     </section>
   );
 }

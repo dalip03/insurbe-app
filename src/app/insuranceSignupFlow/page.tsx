@@ -2,7 +2,14 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle, UploadCloud, ArrowLeft, Shield } from "lucide-react";
+import {
+  CheckCircle,
+  UploadCloud,
+  ArrowLeft,
+  Shield,
+  AlertCircle,
+  Loader2,
+} from "lucide-react";
 import { useSearchParams, useRouter } from "next/navigation";
 
 type Step = 1 | 2 | 3 | 4;
@@ -12,6 +19,34 @@ const PROVIDERS: Record<string, { name: string; desc: string }> = {
   dak: { name: "DAK", desc: "Excellent coverage for families" },
   aok: { name: "AOK", desc: "Personal support across Germany" },
 };
+
+const GERMAN_STATES = [
+  "Bavaria",
+  "Berlin",
+  "Brandenburg",
+  "Bremen",
+  "Hamburg",
+  "Hesse",
+  "Lower Saxony",
+  "Mecklenburg-Vorpommern",
+  "North Rhine-Westphalia",
+  "Rhineland-Palatinate",
+  "Saarland",
+  "Saxony",
+  "Saxony-Anhalt",
+  "Schleswig-Holstein",
+  "Thuringia",
+];
+
+interface Country {
+  name: { common: string };
+  cca2: string;
+}
+
+interface City {
+  name: string;
+  country: string;
+}
 
 export default function InsuranceSignupFlow() {
   const router = useRouter();
@@ -23,6 +58,12 @@ export default function InsuranceSignupFlow() {
   }, []);
 
   const [step, setStep] = useState<Step>(1);
+
+  // API Data States
+  const [countries, setCountries] = useState<Country[]>([]);
+  const [cities, setCities] = useState<string[]>([]);
+  const [loadingCountries, setLoadingCountries] = useState(false);
+  const [loadingCities, setLoadingCities] = useState(false);
 
   const [selectPlan, setSelectPlan] = useState({
     reason: "",
@@ -38,9 +79,44 @@ export default function InsuranceSignupFlow() {
   });
 
   const [personal, setPersonal] = useState({
-    name: "",
+    gender: "",
+    firstName: "",
+    lastName: "",
+    nationality: "",
+    countryOfBirth: "",
+    placeOfBirth: "",
+    birthState: "",
+    passportNumber: "",
+    confirmPassportNumber: "",
+    countryCode: "+49",
+    phoneNumber: "",
     email: "",
+    confirmEmail: "",
+    // Address
+    country: "Germany",
+    city: "",
+    postalCode: "",
+    streetNo: "",
+    additionalInfo: "",
+    // Marital status
+    maritalStatus: "",
+    includeFamilyMembers: "",
   });
+
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
+
+  // Fetch countries on mount
+  useEffect(() => {
+    fetchCountries();
+  }, []);
+
+  // Fetch cities when country of birth changes
+  useEffect(() => {
+    if (personal.countryOfBirth) {
+      fetchCities(personal.countryOfBirth);
+    }
+  }, [personal.countryOfBirth]);
 
   useEffect(() => {
     if (providerFromUrl && PROVIDERS[providerFromUrl]) {
@@ -51,23 +127,287 @@ export default function InsuranceSignupFlow() {
     }
   }, [providerFromUrl]);
 
+  // Fetch countries from REST Countries API
+  const fetchCountries = async () => {
+    setLoadingCountries(true);
+    try {
+      const response = await fetch(
+        "https://restcountries.com/v3.1/all?fields=name,cca2",
+      );
+      const data: Country[] = await response.json();
+      const sortedCountries = data.sort((a, b) =>
+        a.name.common.localeCompare(b.name.common),
+      );
+      setCountries(sortedCountries);
+    } catch (error) {
+      console.error("Error fetching countries:", error);
+      setErrors((prev) => ({ ...prev, countries: "Failed to load countries" }));
+    } finally {
+      setLoadingCountries(false);
+    }
+  };
+
+  // Fetch cities from GeoDB Cities API
+  const fetchCities = async (countryName: string) => {
+    setLoadingCities(true);
+    try {
+      // Find country code from country name
+      const country = countries.find((c) => c.name.common === countryName);
+      if (!country) return;
+
+      const response = await fetch(
+        `https://wft-geo-db.p.rapidapi.com/v1/geo/countries/${country.cca2}/places?limit=100&types=CITY`,
+        {
+          headers: {
+            "X-RapidAPI-Key": "your_api_key_here", // You'll need to get a free API key from rapidapi.com
+            "X-RapidAPI-Host": "wft-geo-db.p.rapidapi.com",
+          },
+        },
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        const cityNames = data.data.map((city: any) => city.name).sort();
+        setCities(cityNames);
+      } else {
+        // Fallback to a simpler API or manual list
+        setCities([]);
+      }
+    } catch (error) {
+      console.error("Error fetching cities:", error);
+      // Fallback - allow manual entry
+      setCities([]);
+    } finally {
+      setLoadingCities(false);
+    }
+  };
+
+  // Comprehensive validation function
+  const validateField = (name: string, value: string): string => {
+    let error = "";
+
+    switch (name) {
+      case "firstName":
+      case "lastName":
+        if (!value.trim()) {
+          error = "This field is required";
+        } else if (value.trim().length < 2) {
+          error = "Must be at least 2 characters";
+        } else if (
+          !/^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u.test(
+            value,
+          )
+        ) {
+          error = "Only letters allowed";
+        }
+        break;
+
+      case "email":
+        if (!value.trim()) {
+          error = "Email is required";
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+          error = "Invalid email format";
+        }
+        break;
+
+      case "confirmEmail":
+        if (!value.trim()) {
+          error = "Please confirm your email";
+        } else if (value !== personal.email) {
+          error = "Emails do not match";
+        }
+        break;
+
+      case "phoneNumber":
+        if (!value.trim()) {
+          error = "Phone number is required";
+        } else if (!/^[\d\s-]{7,15}$/.test(value.replace(/\s/g, ""))) {
+          error = "Invalid phone number (7-15 digits)";
+        }
+        break;
+
+      case "countryCode":
+        if (!value.trim()) {
+          error = "Country code is required";
+        } else if (!/^\+?\d{1,4}$/.test(value)) {
+          error = "Invalid country code";
+        }
+        break;
+
+      case "passportNumber":
+        if (!value.trim()) {
+          error = "Passport number is required";
+        } else if (value.trim().length < 6) {
+          error = "Passport number too short";
+        } else if (!/^[A-Z0-9]{6,12}$/i.test(value)) {
+          error = "Invalid passport number format";
+        }
+        break;
+
+      case "confirmPassportNumber":
+        if (!value.trim()) {
+          error = "Please confirm passport number";
+        } else if (value !== personal.passportNumber) {
+          error = "Passport numbers do not match";
+        }
+        break;
+
+      case "postalCode":
+        if (!value.trim()) {
+          error = "Postal code is required";
+        } else if (personal.country === "Germany" && !/^\d{5}$/.test(value)) {
+          error = "German postal code must be 5 digits";
+        } else if (!/^[A-Z0-9\s-]{3,10}$/i.test(value)) {
+          error = "Invalid postal code format";
+        }
+        break;
+
+      case "streetNo":
+        if (!value.trim()) {
+          error = "Street address is required";
+        } else if (value.trim().length < 3) {
+          error = "Address too short";
+        }
+        break;
+
+      case "city":
+        if (!value.trim()) {
+          error = "City is required";
+        } else if (value.trim().length < 2) {
+          error = "City name too short";
+        }
+        break;
+
+      case "gender":
+      case "nationality":
+      case "countryOfBirth":
+      case "placeOfBirth":
+      case "country":
+      case "maritalStatus":
+        if (!value) {
+          error = "This field is required";
+        }
+        break;
+
+      case "birthState":
+        if (personal.countryOfBirth === "Germany" && !value) {
+          error = "Birth state is required for Germany";
+        }
+        break;
+
+      case "includeFamilyMembers":
+        if (!value) {
+          error = "Please select an option";
+        }
+        break;
+    }
+
+    return error;
+  };
+
+  // Real-time validation handler
+  const handlePersonalChange = (name: string, value: string) => {
+    setPersonal((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    // Validate on change if field has been touched
+    if (touched[name]) {
+      const error = validateField(name, value);
+      setErrors((prev) => ({
+        ...prev,
+        [name]: error,
+      }));
+    }
+  };
+
+  // Handle blur to mark field as touched
+  const handleBlur = (name: string) => {
+    setTouched((prev) => ({
+      ...prev,
+      [name]: true,
+    }));
+
+    const error = validateField(name, personal[name as keyof typeof personal]);
+    setErrors((prev) => ({
+      ...prev,
+      [name]: error,
+    }));
+  };
+
+  // Validate all fields
+  const validateAllFields = () => {
+    const newErrors: Record<string, string> = {};
+    const fieldsToValidate = [
+      "gender",
+      "firstName",
+      "lastName",
+      "nationality",
+      "countryOfBirth",
+      "placeOfBirth",
+      "passportNumber",
+      "confirmPassportNumber",
+      "countryCode",
+      "phoneNumber",
+      "email",
+      "confirmEmail",
+      "country",
+      "city",
+      "postalCode",
+      "streetNo",
+      "maritalStatus",
+      "includeFamilyMembers",
+    ];
+
+    if (personal.countryOfBirth === "Germany") {
+      fieldsToValidate.push("birthState");
+    }
+
+    fieldsToValidate.forEach((field) => {
+      const error = validateField(
+        field,
+        personal[field as keyof typeof personal],
+      );
+      if (error) {
+        newErrors[field] = error;
+      }
+    });
+
+    setErrors(newErrors);
+    setTouched(
+      fieldsToValidate.reduce((acc, field) => ({ ...acc, [field]: true }), {}),
+    );
+
+    return Object.keys(newErrors).length === 0;
+  };
+
   const canProceedPlan =
     selectPlan.reason &&
     selectPlan.dob &&
     selectPlan.provider &&
+    selectPlan.insuredBefore &&
     documents.passport &&
     documents.contract &&
     documents.photo;
 
-  const canProceedPersonal = personal.name && personal.email;
+ 
+  const next = () => {
+    if (step === 2) {
+      if (validateAllFields()) {
+        setStep((s) => (s + 1) as Step);
+      }
+    } else {
+      setStep((s) => (s + 1) as Step);
+    }
+  };
 
-  const next = () => setStep((s) => (s + 1) as Step);
   const back = () => setStep((s) => (s - 1) as Step);
 
   return (
     <section className="py-14 px-4">
       <div className="max-w-4xl mx-auto">
-        {/* ========== SUBTLE HEADER ========== */}
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -78,20 +418,20 @@ export default function InsuranceSignupFlow() {
             Insurance Signup
           </div>
           <h1 className="text-3xl md:text-4xl font-bold mb-2">
-          Public{" "}
+            Public{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-600">
               Insurance Journey
             </span>
           </h1>
         </motion.div>
 
-        {/* ========== MAIN CARD WITH SUBTLE BORDER ========== */}
+        {/* Main Card */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="bg-white border rounded-2xl shadow-lg p-6 sm:p-10"
         >
-          {/* STEPPER */}
+          {/* Stepper */}
           <div className="flex items-center justify-between mb-10">
             {["Select Plan", "Personal Info", "Review"].map((label, i) => (
               <div key={label} className="flex items-center gap-2">
@@ -115,6 +455,7 @@ export default function InsuranceSignupFlow() {
           </div>
 
           <AnimatePresence mode="wait">
+            {/* STEP 1: Select Plan */}
             {step === 1 && (
               <motion.div
                 key="step1"
@@ -122,11 +463,15 @@ export default function InsuranceSignupFlow() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
               >
-                <h2 className="text-2xl font-bold mb-6 text-gray-900">Select plan</h2>
+                <h2 className="text-2xl font-bold mb-6 text-gray-900">
+                  Select plan
+                </h2>
 
                 {/* Reason */}
                 <div className="mb-6">
-                  <p className="font-medium mb-2">What is the reason for your stay in Germany?</p>
+                  <p className="font-medium mb-2">
+                    What is the reason for your stay in Germany? *
+                  </p>
                   <div className="flex gap-3">
                     {["Student", "Employee", "Trainee"].map((r) => (
                       <button
@@ -149,10 +494,11 @@ export default function InsuranceSignupFlow() {
 
                 {/* DOB */}
                 <div className="mb-6">
-                  <label className="block font-medium mb-2">Birth date</label>
+                  <label className="block font-medium mb-2">Birth date *</label>
                   <input
                     type="date"
                     value={selectPlan.dob}
+                    max={new Date().toISOString().split("T")[0]}
                     onChange={(e) =>
                       setSelectPlan({ ...selectPlan, dob: e.target.value })
                     }
@@ -160,20 +506,24 @@ export default function InsuranceSignupFlow() {
                   />
                 </div>
 
-                {/* SELECTED PROVIDER */}
+                {/* Selected Provider */}
                 <div className="mb-6">
-                  <p className="font-medium mb-2">Selected provider</p>
+                  <p className="font-medium mb-2">Selected provider *</p>
                   <div className="p-4 rounded-xl border border-purple-200 bg-gradient-to-r from-purple-50 to-blue-50">
                     <p className="font-semibold text-purple-700">
                       {selectPlan.provider}
                     </p>
-                    <p className="text-sm text-gray-600">Public health insurance</p>
+                    <p className="text-sm text-gray-600">
+                      Public health insurance
+                    </p>
                   </div>
                 </div>
 
                 {/* Previous Insurance */}
                 <div className="mb-6">
-                  <p className="font-medium mb-2">Where were you insured before?</p>
+                  <p className="font-medium mb-2">
+                    Where were you insured before? *
+                  </p>
                   <div className="flex gap-3">
                     {["Abroad", "Germany"].map((v) => (
                       <button
@@ -197,14 +547,14 @@ export default function InsuranceSignupFlow() {
                   </div>
                 </div>
 
-                {/* Upload documents */}
+                {/* Upload Documents */}
                 <div className="mb-8">
-                  <p className="font-medium mb-3">Upload documents</p>
+                  <p className="font-medium mb-3">Upload documents *</p>
                   <div className="grid sm:grid-cols-3 gap-4">
                     {[
-                      { key: "passport", label: "Passport *" },
-                      { key: "contract", label: "Employment contract *" },
-                      { key: "photo", label: "Portrait photo *" },
+                      { key: "passport", label: "Passport" },
+                      { key: "contract", label: "Employment contract" },
+                      { key: "photo", label: "Portrait photo" },
                     ].map((d) => (
                       <div
                         key={d.key}
@@ -221,7 +571,11 @@ export default function InsuranceSignupFlow() {
                               : "border-gray-300 hover:border-purple-300"
                           }`}
                       >
-                        <UploadCloud className="w-6 h-6 mx-auto mb-2 text-gray-500" />
+                        {documents[d.key as keyof typeof documents] ? (
+                          <CheckCircle className="w-6 h-6 mx-auto mb-2 text-purple-600" />
+                        ) : (
+                          <UploadCloud className="w-6 h-6 mx-auto mb-2 text-gray-500" />
+                        )}
                         <p className="text-sm font-medium">{d.label}</p>
                       </div>
                     ))}
@@ -243,46 +597,686 @@ export default function InsuranceSignupFlow() {
               </motion.div>
             )}
 
-            {/* STEP 2, 3, 4 remain exactly the same */}
+            {/* STEP 2: Personal Information */}
             {step === 2 && (
-              <motion.div key="step2" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
-                <h2 className="text-2xl font-bold mb-6 text-gray-900">Personal information</h2>
-                <div className="space-y-5">
-                  <input
-                    placeholder="Full name"
-                    value={personal.name}
-                    onChange={(e) =>
-                      setPersonal({ ...personal, name: e.target.value })
-                    }
-                    className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:border-purple-500 focus:ring-2 focus:ring-purple-100 transition-all"
-                  />
-                  <input
-                    placeholder="Email address"
-                    type="email"
-                    value={personal.email}
-                    onChange={(e) =>
-                      setPersonal({ ...personal, email: e.target.value })
-                    }
-                    className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:border-purple-500 focus:ring-2 focus:ring-purple-100 transition-all"
-                  />
+              <motion.div
+                key="step2"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+              >
+                <h2 className="text-2xl font-bold mb-4 text-gray-900">
+                  Personal information
+                </h2>
+                <p className="text-sm text-gray-600 mb-6">
+                  Please provide the information that is shown in your passport.
+                </p>
+
+                <div className="space-y-6 max-h-[600px] overflow-y-auto pr-2">
+                  {/* Gender */}
+                  <div>
+                    <label className="block font-medium mb-2 text-sm">
+                      Gender *
+                    </label>
+                    <div className="flex gap-3">
+                      {["Male", "Female", "Other"].map((g) => (
+                        <button
+                          key={g}
+                          type="button"
+                          onClick={() => handlePersonalChange("gender", g)}
+                          onBlur={() => handleBlur("gender")}
+                          className={`px-4 py-2 rounded-lg border-2 text-sm font-medium transition-all
+                            ${
+                              personal.gender === g
+                                ? "bg-gradient-to-r from-purple-600 to-blue-600 text-white border-transparent"
+                                : "border-gray-300 hover:border-purple-300"
+                            }`}
+                        >
+                          {g}
+                        </button>
+                      ))}
+                    </div>
+                    {touched.gender && errors.gender && (
+                      <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                        <AlertCircle className="w-3 h-3" />
+                        {errors.gender}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* First Name & Last Name */}
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block font-medium mb-2 text-sm">
+                        First name *
+                      </label>
+                      <input
+                        type="text"
+                        value={personal.firstName}
+                        onChange={(e) =>
+                          handlePersonalChange("firstName", e.target.value)
+                        }
+                        onBlur={() => handleBlur("firstName")}
+                        className={`w-full border-2 rounded-lg px-4 py-3 focus:ring-2 transition-all ${
+                          touched.firstName && errors.firstName
+                            ? "border-red-500 focus:border-red-500 focus:ring-red-100"
+                            : "border-gray-300 focus:border-purple-500 focus:ring-purple-100"
+                        }`}
+                        placeholder="First name"
+                      />
+                      {touched.firstName && errors.firstName && (
+                        <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                          <AlertCircle className="w-3 h-3" />
+                          {errors.firstName}
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <label className="block font-medium mb-2 text-sm">
+                        Last name *
+                      </label>
+                      <input
+                        type="text"
+                        value={personal.lastName}
+                        onChange={(e) =>
+                          handlePersonalChange("lastName", e.target.value)
+                        }
+                        onBlur={() => handleBlur("lastName")}
+                        className={`w-full border-2 rounded-lg px-4 py-3 focus:ring-2 transition-all ${
+                          touched.lastName && errors.lastName
+                            ? "border-red-500 focus:border-red-500 focus:ring-red-100"
+                            : "border-gray-300 focus:border-purple-500 focus:ring-purple-100"
+                        }`}
+                        placeholder="Last name"
+                      />
+                      {touched.lastName && errors.lastName && (
+                        <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                          <AlertCircle className="w-3 h-3" />
+                          {errors.lastName}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Nationality & Country of Birth */}
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block font-medium mb-2 text-sm">
+                        Nationality *
+                      </label>
+                      {loadingCountries ? (
+                        <div className="flex items-center gap-2 px-4 py-3 border-2 border-gray-300 rounded-lg">
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          <span className="text-sm text-gray-500">
+                            Loading...
+                          </span>
+                        </div>
+                      ) : (
+                        <select
+                          value={personal.nationality}
+                          onChange={(e) =>
+                            handlePersonalChange("nationality", e.target.value)
+                          }
+                          onBlur={() => handleBlur("nationality")}
+                          className={`w-full border-2 rounded-lg px-4 py-3 focus:ring-2 transition-all ${
+                            touched.nationality && errors.nationality
+                              ? "border-red-500 focus:border-red-500 focus:ring-red-100"
+                              : "border-gray-300 focus:border-purple-500 focus:ring-purple-100"
+                          }`}
+                        >
+                          <option value="">Select nationality</option>
+                          {countries.map((c) => (
+                            <option key={c.cca2} value={c.name.common}>
+                              {c.name.common}
+                            </option>
+                          ))}
+                        </select>
+                      )}
+                      {touched.nationality && errors.nationality && (
+                        <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                          <AlertCircle className="w-3 h-3" />
+                          {errors.nationality}
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <label className="block font-medium mb-2 text-sm">
+                        Country of birth *
+                      </label>
+                      {loadingCountries ? (
+                        <div className="flex items-center gap-2 px-4 py-3 border-2 border-gray-300 rounded-lg">
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          <span className="text-sm text-gray-500">
+                            Loading...
+                          </span>
+                        </div>
+                      ) : (
+                        <select
+                          value={personal.countryOfBirth}
+                          onChange={(e) =>
+                            handlePersonalChange(
+                              "countryOfBirth",
+                              e.target.value,
+                            )
+                          }
+                          onBlur={() => handleBlur("countryOfBirth")}
+                          className={`w-full border-2 rounded-lg px-4 py-3 focus:ring-2 transition-all ${
+                            touched.countryOfBirth && errors.countryOfBirth
+                              ? "border-red-500 focus:border-red-500 focus:ring-red-100"
+                              : "border-gray-300 focus:border-purple-500 focus:ring-purple-100"
+                          }`}
+                        >
+                          <option value="">Select country</option>
+                          {countries.map((c) => (
+                            <option key={c.cca2} value={c.name.common}>
+                              {c.name.common}
+                            </option>
+                          ))}
+                        </select>
+                      )}
+                      {touched.countryOfBirth && errors.countryOfBirth && (
+                        <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                          <AlertCircle className="w-3 h-3" />
+                          {errors.countryOfBirth}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Place of Birth & Birth State */}
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block font-medium mb-2 text-sm">
+                        Place of birth *
+                      </label>
+                      <input
+                        type="text"
+                        value={personal.placeOfBirth}
+                        onChange={(e) =>
+                          handlePersonalChange("placeOfBirth", e.target.value)
+                        }
+                        onBlur={() => handleBlur("placeOfBirth")}
+                        list="cities-list"
+                        className={`w-full border-2 rounded-lg px-4 py-3 focus:ring-2 transition-all ${
+                          touched.placeOfBirth && errors.placeOfBirth
+                            ? "border-red-500 focus:border-red-500 focus:ring-red-100"
+                            : "border-gray-300 focus:border-purple-500 focus:ring-purple-100"
+                        }`}
+                        placeholder="City of birth"
+                      />
+                      {cities.length > 0 && (
+                        <datalist id="cities-list">
+                          {cities.map((city) => (
+                            <option key={city} value={city} />
+                          ))}
+                        </datalist>
+                      )}
+                      {touched.placeOfBirth && errors.placeOfBirth && (
+                        <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                          <AlertCircle className="w-3 h-3" />
+                          {errors.placeOfBirth}
+                        </p>
+                      )}
+                    </div>
+                    {personal.countryOfBirth === "Germany" && (
+                      <div>
+                        <label className="block font-medium mb-2 text-sm">
+                          Birth state *
+                        </label>
+                        <select
+                          value={personal.birthState}
+                          onChange={(e) =>
+                            handlePersonalChange("birthState", e.target.value)
+                          }
+                          onBlur={() => handleBlur("birthState")}
+                          className={`w-full border-2 rounded-lg px-4 py-3 focus:ring-2 transition-all ${
+                            touched.birthState && errors.birthState
+                              ? "border-red-500 focus:border-red-500 focus:ring-red-100"
+                              : "border-gray-300 focus:border-purple-500 focus:ring-purple-100"
+                          }`}
+                        >
+                          <option value="">Select state</option>
+                          {GERMAN_STATES.map((s) => (
+                            <option key={s} value={s}>
+                              {s}
+                            </option>
+                          ))}
+                        </select>
+                        {touched.birthState && errors.birthState && (
+                          <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                            <AlertCircle className="w-3 h-3" />
+                            {errors.birthState}
+                          </p>
+                        )}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Passport Numbers */}
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block font-medium mb-2 text-sm">
+                        Passport number *
+                      </label>
+                      <input
+                        type="text"
+                        value={personal.passportNumber}
+                        onChange={(e) =>
+                          handlePersonalChange(
+                            "passportNumber",
+                            e.target.value.toUpperCase(),
+                          )
+                        }
+                        onBlur={() => handleBlur("passportNumber")}
+                        className={`w-full border-2 rounded-lg px-4 py-3 focus:ring-2 transition-all ${
+                          touched.passportNumber && errors.passportNumber
+                            ? "border-red-500 focus:border-red-500 focus:ring-red-100"
+                            : "border-gray-300 focus:border-purple-500 focus:ring-purple-100"
+                        }`}
+                        placeholder="A1234567"
+                      />
+                      {touched.passportNumber && errors.passportNumber && (
+                        <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                          <AlertCircle className="w-3 h-3" />
+                          {errors.passportNumber}
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <label className="block font-medium mb-2 text-sm">
+                        Confirm passport number *
+                      </label>
+                      <input
+                        type="text"
+                        value={personal.confirmPassportNumber}
+                        onChange={(e) =>
+                          handlePersonalChange(
+                            "confirmPassportNumber",
+                            e.target.value.toUpperCase(),
+                          )
+                        }
+                        onBlur={() => handleBlur("confirmPassportNumber")}
+                        className={`w-full border-2 rounded-lg px-4 py-3 focus:ring-2 transition-all ${
+                          touched.confirmPassportNumber &&
+                          errors.confirmPassportNumber
+                            ? "border-red-500 focus:border-red-500 focus:ring-red-100"
+                            : "border-gray-300 focus:border-purple-500 focus:ring-purple-100"
+                        }`}
+                        placeholder="Confirm passport number"
+                      />
+                      {touched.confirmPassportNumber &&
+                        errors.confirmPassportNumber && (
+                          <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                            <AlertCircle className="w-3 h-3" />
+                            {errors.confirmPassportNumber}
+                          </p>
+                        )}
+                    </div>
+                  </div>
+
+                  {/* Country Code & Phone Number */}
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block font-medium mb-2 text-sm">
+                        Country code *
+                      </label>
+                      <input
+                        type="text"
+                        value={personal.countryCode}
+                        onChange={(e) =>
+                          handlePersonalChange("countryCode", e.target.value)
+                        }
+                        onBlur={() => handleBlur("countryCode")}
+                        className={`w-full border-2 rounded-lg px-4 py-3 focus:ring-2 transition-all ${
+                          touched.countryCode && errors.countryCode
+                            ? "border-red-500 focus:border-red-500 focus:ring-red-100"
+                            : "border-gray-300 focus:border-purple-500 focus:ring-purple-100"
+                        }`}
+                        placeholder="+49"
+                      />
+                      {touched.countryCode && errors.countryCode && (
+                        <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                          <AlertCircle className="w-3 h-3" />
+                          {errors.countryCode}
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <label className="block font-medium mb-2 text-sm">
+                        Phone number *
+                      </label>
+                      <input
+                        type="tel"
+                        value={personal.phoneNumber}
+                        onChange={(e) =>
+                          handlePersonalChange("phoneNumber", e.target.value)
+                        }
+                        onBlur={() => handleBlur("phoneNumber")}
+                        className={`w-full border-2 rounded-lg px-4 py-3 focus:ring-2 transition-all ${
+                          touched.phoneNumber && errors.phoneNumber
+                            ? "border-red-500 focus:border-red-500 focus:ring-red-100"
+                            : "border-gray-300 focus:border-purple-500 focus:ring-purple-100"
+                        }`}
+                        placeholder="123 456 7890"
+                      />
+                      {touched.phoneNumber && errors.phoneNumber && (
+                        <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                          <AlertCircle className="w-3 h-3" />
+                          {errors.phoneNumber}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Email Addresses */}
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block font-medium mb-2 text-sm">
+                        E-mail *
+                      </label>
+                      <input
+                        type="email"
+                        value={personal.email}
+                        onChange={(e) =>
+                          handlePersonalChange("email", e.target.value)
+                        }
+                        onBlur={() => handleBlur("email")}
+                        className={`w-full border-2 rounded-lg px-4 py-3 focus:ring-2 transition-all ${
+                          touched.email && errors.email
+                            ? "border-red-500 focus:border-red-500 focus:ring-red-100"
+                            : "border-gray-300 focus:border-purple-500 focus:ring-purple-100"
+                        }`}
+                        placeholder="email@example.com"
+                      />
+                      {touched.email && errors.email && (
+                        <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                          <AlertCircle className="w-3 h-3" />
+                          {errors.email}
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <label className="block font-medium mb-2 text-sm">
+                        Confirm e-mail *
+                      </label>
+                      <input
+                        type="email"
+                        value={personal.confirmEmail}
+                        onChange={(e) =>
+                          handlePersonalChange("confirmEmail", e.target.value)
+                        }
+                        onBlur={() => handleBlur("confirmEmail")}
+                        className={`w-full border-2 rounded-lg px-4 py-3 focus:ring-2 transition-all ${
+                          touched.confirmEmail && errors.confirmEmail
+                            ? "border-red-500 focus:border-red-500 focus:ring-red-100"
+                            : "border-gray-300 focus:border-purple-500 focus:ring-purple-100"
+                        }`}
+                        placeholder="Confirm email"
+                      />
+                      {touched.confirmEmail && errors.confirmEmail && (
+                        <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                          <AlertCircle className="w-3 h-3" />
+                          {errors.confirmEmail}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Address Section */}
+                  <div className="pt-4 border-t">
+                    <h3 className="text-lg font-bold mb-4 text-gray-900">
+                      Address
+                    </h3>
+                    <p className="text-sm text-gray-600 mb-4">
+                      Please provide your German address if you already have
+                      one. If not, use your current address.
+                    </p>
+
+                    <div className="space-y-4">
+                      {/* Country */}
+                      <div>
+                        <label className="block font-medium mb-2 text-sm">
+                          Country *
+                        </label>
+                        {loadingCountries ? (
+                          <div className="flex items-center gap-2 px-4 py-3 border-2 border-gray-300 rounded-lg">
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                            <span className="text-sm text-gray-500">
+                              Loading...
+                            </span>
+                          </div>
+                        ) : (
+                          <select
+                            value={personal.country}
+                            onChange={(e) =>
+                              handlePersonalChange("country", e.target.value)
+                            }
+                            onBlur={() => handleBlur("country")}
+                            className={`w-full border-2 rounded-lg px-4 py-3 focus:ring-2 transition-all ${
+                              touched.country && errors.country
+                                ? "border-red-500 focus:border-red-500 focus:ring-red-100"
+                                : "border-gray-300 focus:border-purple-500 focus:ring-purple-100"
+                            }`}
+                          >
+                            <option value="">Select country</option>
+                            {countries.map((c) => (
+                              <option key={c.cca2} value={c.name.common}>
+                                {c.name.common}
+                              </option>
+                            ))}
+                          </select>
+                        )}
+                        {touched.country && errors.country && (
+                          <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                            <AlertCircle className="w-3 h-3" />
+                            {errors.country}
+                          </p>
+                        )}
+                      </div>
+
+                      {/* City & Postal Code */}
+                      <div className="grid sm:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block font-medium mb-2 text-sm">
+                            City *
+                          </label>
+                          <input
+                            type="text"
+                            value={personal.city}
+                            onChange={(e) =>
+                              handlePersonalChange("city", e.target.value)
+                            }
+                            onBlur={() => handleBlur("city")}
+                            className={`w-full border-2 rounded-lg px-4 py-3 focus:ring-2 transition-all ${
+                              touched.city && errors.city
+                                ? "border-red-500 focus:border-red-500 focus:ring-red-100"
+                                : "border-gray-300 focus:border-purple-500 focus:ring-purple-100"
+                            }`}
+                            placeholder="City"
+                          />
+                          {touched.city && errors.city && (
+                            <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                              <AlertCircle className="w-3 h-3" />
+                              {errors.city}
+                            </p>
+                          )}
+                        </div>
+                        <div>
+                          <label className="block font-medium mb-2 text-sm">
+                            Postal code *
+                          </label>
+                          <input
+                            type="text"
+                            value={personal.postalCode}
+                            onChange={(e) =>
+                              handlePersonalChange("postalCode", e.target.value)
+                            }
+                            onBlur={() => handleBlur("postalCode")}
+                            className={`w-full border-2 rounded-lg px-4 py-3 focus:ring-2 transition-all ${
+                              touched.postalCode && errors.postalCode
+                                ? "border-red-500 focus:border-red-500 focus:ring-red-100"
+                                : "border-gray-300 focus:border-purple-500 focus:ring-purple-100"
+                            }`}
+                            placeholder="12345"
+                          />
+                          {touched.postalCode && errors.postalCode && (
+                            <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                              <AlertCircle className="w-3 h-3" />
+                              {errors.postalCode}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Street No & Additional Info */}
+                      <div className="grid sm:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block font-medium mb-2 text-sm">
+                            Street, No. *
+                          </label>
+                          <input
+                            type="text"
+                            value={personal.streetNo}
+                            onChange={(e) =>
+                              handlePersonalChange("streetNo", e.target.value)
+                            }
+                            onBlur={() => handleBlur("streetNo")}
+                            className={`w-full border-2 rounded-lg px-4 py-3 focus:ring-2 transition-all ${
+                              touched.streetNo && errors.streetNo
+                                ? "border-red-500 focus:border-red-500 focus:ring-red-100"
+                                : "border-gray-300 focus:border-purple-500 focus:ring-purple-100"
+                            }`}
+                            placeholder="Street name and number"
+                          />
+                          {touched.streetNo && errors.streetNo && (
+                            <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                              <AlertCircle className="w-3 h-3" />
+                              {errors.streetNo}
+                            </p>
+                          )}
+                        </div>
+                        <div>
+                          <label className="block font-medium mb-2 text-sm">
+                            Additional information
+                          </label>
+                          <input
+                            type="text"
+                            value={personal.additionalInfo}
+                            onChange={(e) =>
+                              handlePersonalChange(
+                                "additionalInfo",
+                                e.target.value,
+                              )
+                            }
+                            className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:border-purple-500 focus:ring-2 focus:ring-purple-100 transition-all"
+                            placeholder="Apt, floor, etc."
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Marital Status Section */}
+                  <div className="pt-4 border-t">
+                    <h3 className="text-lg font-bold mb-4 text-gray-900">
+                      Marital status
+                    </h3>
+
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block font-medium mb-2 text-sm">
+                          Marital status *
+                        </label>
+                        <select
+                          value={personal.maritalStatus}
+                          onChange={(e) =>
+                            handlePersonalChange(
+                              "maritalStatus",
+                              e.target.value,
+                            )
+                          }
+                          onBlur={() => handleBlur("maritalStatus")}
+                          className={`w-full border-2 rounded-lg px-4 py-3 focus:ring-2 transition-all ${
+                            touched.maritalStatus && errors.maritalStatus
+                              ? "border-red-500 focus:border-red-500 focus:ring-red-100"
+                              : "border-gray-300 focus:border-purple-500 focus:ring-purple-100"
+                          }`}
+                        >
+                          <option value="">Select status</option>
+                          <option value="Single">Single</option>
+                          <option value="Married">Married</option>
+                          <option value="Divorced">Divorced</option>
+                          <option value="Widowed">Widowed</option>
+                        </select>
+                        {touched.maritalStatus && errors.maritalStatus && (
+                          <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                            <AlertCircle className="w-3 h-3" />
+                            {errors.maritalStatus}
+                          </p>
+                        )}
+                      </div>
+
+                      <div>
+                        <label className="block font-medium mb-4 text-sm">
+                          Would you like to include your family members living
+                          in Germany in your insurance free of charge? *
+                        </label>
+                        <div className="flex gap-4">
+                          {["Yes", "No"].map((option) => (
+                            <button
+                              key={option}
+                              type="button"
+                              onClick={() =>
+                                handlePersonalChange(
+                                  "includeFamilyMembers",
+                                  option,
+                                )
+                              }
+                              onBlur={() => handleBlur("includeFamilyMembers")}
+                              className={`flex-1 px-3 py-2 rounded-lg border-2 font-medium transition-all
+                                ${
+                                  personal.includeFamilyMembers === option
+                                    ? "bg-gradient-to-r from-purple-600 to-blue-600 text-white border-transparent"
+                                    : "border-gray-300 hover:border-purple-300"
+                                }`}
+                            >
+                              {option}
+                            </button>
+                          ))}
+                        </div>
+                        {touched.includeFamilyMembers &&
+                          errors.includeFamilyMembers && (
+                            <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                              <AlertCircle className="w-3 h-3" />
+                              {errors.includeFamilyMembers}
+                            </p>
+                          )}
+                        {personal.includeFamilyMembers === "Yes" && (
+                          <p className="text-sm text-gray-600 mt-3 p-3 bg-blue-50 rounded-lg">
+                            If you want to include your family members living in
+                            Germany, insured and children free of charge, you
+                            will receive a consultation during application from
+                            the health insurance company.
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 </div>
+
                 <div className="flex gap-4 mt-8">
                   <button
+                    type="button"
                     onClick={back}
-                    className="flex-1 border-2 border-gray-300 rounded-lg py-3 flex items-center justify-center gap-2 font-medium hover:border-purple-400 hover:bg-purple-50"
+                    className="flex-1 border-2 border-gray-300 rounded-lg py-3 flex items-center justify-center gap-2 font-medium hover:border-purple-400 hover:bg-purple-50 transition-all"
                   >
                     <ArrowLeft className="w-4 h-4" />
                     Back
                   </button>
                   <button
-                    disabled={!canProceedPersonal}
+                    type="button"
                     onClick={next}
-                    className={`flex-1 py-3 rounded-lg font-semibold shadow-md
-                      ${
-                        canProceedPersonal
-                          ? "bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:shadow-lg"
-                          : "bg-gray-200 text-gray-400 cursor-not-allowed"
-                      }`}
+                    className="flex-1 py-3 rounded-lg font-semibold shadow-md transition-all bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:shadow-lg"
                   >
                     Review →
                   </button>
@@ -290,25 +1284,66 @@ export default function InsuranceSignupFlow() {
               </motion.div>
             )}
 
+            {/* STEP 3: Review */}
             {step === 3 && (
-              <motion.div key="step3" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
-                <h2 className="text-2xl font-bold mb-6 text-gray-900">Review</h2>
-                <div className="space-y-3 text-sm bg-gray-50 p-6 rounded-xl border">
-                  <Review label="Name" value={personal.name} />
+              <motion.div
+                key="step3"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+              >
+                <h2 className="text-2xl font-bold mb-6 text-gray-900">
+                  Review
+                </h2>
+                <div className="space-y-3 text-sm bg-gray-50 p-6 rounded-xl border max-h-[500px] overflow-y-auto">
+                  <Review
+                    label="Name"
+                    value={`${personal.firstName} ${personal.lastName}`}
+                  />
+                  <Review label="Gender" value={personal.gender} />
                   <Review label="Email" value={personal.email} />
-                  <Review label="Reason" value={selectPlan.reason} />
-                  <Review label="Provider" value={selectPlan.provider} />
+                  <Review
+                    label="Phone"
+                    value={`${personal.countryCode} ${personal.phoneNumber}`}
+                  />
+                  <Review label="Nationality" value={personal.nationality} />
+                  <Review
+                    label="Birth Place"
+                    value={`${personal.placeOfBirth}, ${personal.countryOfBirth}`}
+                  />
+                  <Review label="Passport" value={personal.passportNumber} />
+                  <Review
+                    label="Address"
+                    value={`${personal.streetNo}, ${personal.city} ${personal.postalCode}, ${personal.country}`}
+                  />
+                  <Review
+                    label="Marital Status"
+                    value={personal.maritalStatus}
+                  />
+                  <Review
+                    label="Family Members"
+                    value={personal.includeFamilyMembers}
+                  />
+                  <Review label="Reason for Stay" value={selectPlan.reason} />
+                  <Review
+                    label="Insurance Provider"
+                    value={selectPlan.provider}
+                  />
+                  <Review
+                    label="Previously Insured"
+                    value={selectPlan.insuredBefore}
+                  />
                 </div>
                 <div className="flex gap-4 mt-8">
                   <button
                     onClick={back}
-                    className="flex-1 border-2 border-gray-300 rounded-lg py-3 font-medium hover:border-purple-400 hover:bg-purple-50"
+                    className="flex-1 border-2 border-gray-300 rounded-lg py-3 font-medium hover:border-purple-400 hover:bg-purple-50 transition-all"
                   >
                     Back
                   </button>
                   <button
                     onClick={next}
-                    className="flex-1 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg py-3 font-semibold shadow-md hover:shadow-lg"
+                    className="flex-1 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg py-3 font-semibold shadow-md hover:shadow-lg transition-all"
                   >
                     Submit ✓
                   </button>
@@ -316,6 +1351,7 @@ export default function InsuranceSignupFlow() {
               </motion.div>
             )}
 
+            {/* STEP 4: Success */}
             {step === 4 && (
               <motion.div
                 key="step4"
@@ -346,8 +1382,8 @@ export default function InsuranceSignupFlow() {
                     contacting us via email, chat, or any other channel.
                     <br />
                     <br />
-                    It may take up to <strong>24 hours</strong> for us to provide
-                    all the necessary documents.
+                    It may take up to <strong>24 hours</strong> for us to
+                    provide all the necessary documents.
                   </p>
                   <button
                     onClick={() => router.push("/")}
