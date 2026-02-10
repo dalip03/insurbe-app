@@ -591,14 +591,20 @@ export default function ComprehensiveInsuranceForm() {
             </div>
 
             {/* Contact */}
-            <div className="mt-8 flex items-center justify-center gap-2 text-blue-600">
-              <Phone className="w-5 h-5" />
-              <a
-                href="tel:089121407112"
-                className="text-xl font-bold hover:underline"
-              >
-                0xx xxx xxx xx
-              </a>
+            <div className="mt-8 text-center text-gray-700">
+              <p className="flex items-center justify-center gap-2 text-purple-600">
+                <Mail className="w-5 h-5" />
+                Need more details?
+              </p>
+              <p className="mt-1">
+                Reach us at{" "}
+                <a
+                  href="mailto:info@insurbe.com"
+                  className="font-semibold text-purple-600 hover:underline"
+                >
+                  info@insurbe.com
+                </a>
+              </p>
             </div>
           </div>
         </motion.div>
