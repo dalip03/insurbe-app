@@ -1,208 +1,214 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
+import jsPDF from "jspdf";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   CheckCircle,
-  FileText,
-  Shield,
   User,
   Mail,
+  Phone,
   MapPin,
   Calendar,
-  GraduationCap,
-  Phone,
-  Building,
+  Shield,
+  FileText,
+  Heart,
+  Activity,
+  ArrowRight,
+  ArrowLeft,
   AlertCircle,
+  Loader2,
+  Building2,
+  GraduationCap,
+  Ruler,
+  Weight as WeightIcon,
   Sparkles,
-  ChevronRight,
-  MessageCircle,
+  Clock,
 } from "lucide-react";
-import { INSURANCE_PLANS } from "../constants/insurance";
+import { useRouter } from "next/navigation";
 
-const nameRegex = /^[A-Za-z\s'-]{2,}$/;
-const cityRegex = /^[A-Za-z\s'-]{2,}$/;
-const passportRegex = /^[A-Za-z0-9]{6,}$/;
-const postalCodeRegex = /^\d{6}$/;
-const phoneRegex = /^[+]?[0-9\s-]{7,15}$/;
-
-const validateField = (
-  name: keyof FormData,
-  value: any,
-  formData: FormData,
-  countryResidenceType: "germany" | "other",
-): string => {
-  switch (name) {
-    case "title":
-      if (!value) return "Please select a title";
-      break;
-
-    case "firstName":
-      if (!value.trim()) return "First name is required";
-      if (!nameRegex.test(value)) return "Only letters allowed";
-      break;
-
-    case "surname":
-      if (!value.trim()) return "Surname is required";
-      if (!nameRegex.test(value)) return "Only letters allowed";
-      break;
-
-      
-
-    case "street":
-      if (!value.trim()) return "Street address is required";
-      if (value.length < 5) return "Street address is too short";
-      break;
-
-    case "postalCode":
-      if (!value) return "Postal code is required";
-      if (!postalCodeRegex.test(value))
-        return "Postal code must be 6 digits";
-      break;
-
-    case "townCity":
-      if (!value.trim()) return "Town/City is required";
-      if (!cityRegex.test(value)) return "Only letters allowed";
-      break;
-
-    case "mobileNumber":
-      if (value && !phoneRegex.test(value))
-        return "Invalid phone number";
-      break;
-
-    case "email":
-      if (!value) return "Email is required";
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))
-        return "Invalid email address";
-      break;
-
-    case "passportId":
-      if (!value) return "Passport ID is required";
-      if (!passportRegex.test(value))
-        return "Invalid passport format";
-      break;
-
-    case "dateOfBirth":
-      if (!value) return "Date of birth is required";
-      const dob = new Date(value);
-      if (dob >= new Date()) return "Date must be in the past";
-      let age = new Date().getFullYear() - dob.getFullYear();
-      if (age < 16) return "Minimum age is 16";
-      break;
-
-    case "countryOfOrigin":
-      if (countryResidenceType === "other" && !value)
-        return "Please select a country";
-      break;
-
-    case "acceptTerms":
-      if (!value) return "You must accept the terms";
-      break;
-  }
-
-  return "";
-};
+type Step = 1 | 2 | 3 | 4 | 5 | 6;
 
 interface FormData {
-  // Applicant Details
-  title: string;
-  firstName: string;
-  surname: string;
-  street: string;
-  postalCode: string;
-  townCity: string;
-  mobileNumber: string;
+  // Step 1: Email & Phone Verification
   email: string;
-  passportId: string;
-  dateOfBirth: string;
+  confirmEmail: string;
+  phoneNumber: string;
+  confirmPhoneNumber: string;
 
-  // Period of Insurance
-  startMonth: string;
-  startYear: string;
-  periodOfInsurance: string;
+  // Step 2: Personal Information
+  firstName: string;
+  lastName: string;
+  birthday: string;
+  nationality: string;
+  permanentResidencePermit: string;
+  temporaryResidencePermitSince: string;
+  inGermanySince: string;
+  address: string;
+  city: string;
+  postalCode: string;
 
-  // Study Details
-  hasInsuredPartner: string;
-  studyType: string;
-  nameOfInstitution: string;
-  beginOfStudy: string;
-  endOfStudy: string;
-  hadPreviousInsurance: string;
+  // Step 3: Previous Insurance
+  currentInsuranceStatus: string;
+  insuranceCompanyName: string;
+  insuranceCountry: string;
+  insuredSince: string;
+  insurancePolicyCancelled: string;
 
-  // Health Insurance
-  insuranceType: string;
+  // Step 4: Occupation/Study
+  occupationStatus: string;
+  university: string;
+  courseOfStudy: string;
+  studyStartDate: string;
+  studyEndDate: string;
 
-  // Medical Questions
-  medicalQuestion1: string;
-  medicalQuestion2: string;
+  // Step 5: Health Information (Basic)
+  gender: string;
+  height: string;
+  weight: string;
 
-  // Country of Origin
-  countryOfOrigin: string;
+  // Step 6: Health Questions (Detailed)
+  healthQ1: string; // Allergies
+  healthQ2: string; // Treatments/examinations
+  healthQ3: string; // Addiction treatment
+  healthQ4: string; // Medication
+  healthQ5: string; // HIV
+  healthQ6: string; // Chronic illnesses
+  healthQ7: string; // Impairments
+  healthQ7_1: string; // Prosthesis
+  healthQ7_2: string; // Hearing aid
+  healthQ7_3: string; // Infertility
+  healthQ7_4: string; // Body implant
+  healthQ7_5: string; // Missing teeth
+  healthQ7_6: string; // Disability/deformity
+  healthQ7_7: string; // Reduced earning capacity
+  healthQ8: string; // Cancer treatments
+  healthQ9: string; // Scheduled treatments
+  healthQ10: string; // Mental health
+  healthQ11: string; // Hospitalization
 
-  // Declaration
+  // Step 7: Insurance Plan Selection
+  selectedPlan: string;
+  insuranceStartDate: string;
+
+  // Terms
   acceptTerms: boolean;
   acceptMarketing: boolean;
-  needsConsultation: string;
 }
 
-type CountryOption = {
+// Types
+interface CountryAPI {
+  name: { common: string };
+  flags: { svg: string; png: string };
+  cca2: string;
+}
+
+interface Country {
   name: string;
   flag: string;
   code: string;
-};
+}
 
-type CountryAPI = {
-  name: { common: string };
-  flags: { svg?: string; png?: string };
-  cca2: string;
-};
-export default function InsurBeSignupForm() {
+export default function ComprehensiveInsuranceForm() {
+  const router = useRouter();
+  const [step, setStep] = useState<Step>(1);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [countries, setCountries] = useState<Country[]>([]);
+  const [loadingCountries, setLoadingCountries] = useState(false);
+
   const [formData, setFormData] = useState<FormData>({
-    title: "",
-    firstName: "",
-    surname: "",
-    street: "",
-    postalCode: "",
-    townCity: "",
-    mobileNumber: "",
+    // Step 1
     email: "",
-    passportId: "",
-    dateOfBirth: "",
-    startMonth: "",
-    startYear: "",
-    periodOfInsurance: "",
-    hasInsuredPartner: "",
-    studyType: "",
-    nameOfInstitution: "",
-    beginOfStudy: "",
-    endOfStudy: "",
-    hadPreviousInsurance: "",
-    insuranceType: "classic",
-    medicalQuestion1: "",
-    medicalQuestion2: "",
-    countryOfOrigin: "Germany",
-    acceptTerms: false,
+    confirmEmail: "",
+    phoneNumber: "",
+    confirmPhoneNumber: "",
 
+    // Step 2
+    firstName: "",
+    lastName: "",
+    birthday: "",
+    nationality: "",
+    permanentResidencePermit: "",
+    temporaryResidencePermitSince: "",
+    inGermanySince: "",
+    address: "",
+    city: "",
+    postalCode: "",
+
+    // Step 3
+    currentInsuranceStatus: "",
+    insuranceCompanyName: "",
+    insuranceCountry: "",
+    insuredSince: "",
+    insurancePolicyCancelled: "",
+
+    // Step 4
+    occupationStatus: "",
+    university: "",
+    courseOfStudy: "",
+    studyStartDate: "",
+    studyEndDate: "",
+
+    // Step 5
+    gender: "",
+    height: "",
+    weight: "",
+
+    // Step 6
+    healthQ1: "",
+    healthQ2: "",
+    healthQ3: "",
+    healthQ4: "",
+    healthQ5: "",
+    healthQ6: "",
+    healthQ7: "",
+    healthQ7_1: "",
+    healthQ7_2: "",
+    healthQ7_3: "",
+    healthQ7_4: "",
+    healthQ7_5: "",
+    healthQ7_6: "",
+    healthQ7_7: "",
+    healthQ8: "",
+    healthQ9: "",
+    healthQ10: "",
+    healthQ11: "",
+
+    // Step 7
+    selectedPlan: "study-protect",
+    insuranceStartDate: "",
+
+    // Terms
+    acceptTerms: false,
     acceptMarketing: false,
-    needsConsultation: "no",
   });
 
   const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>(
     {},
   );
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [countryResidenceType, setCountryResidenceType] = useState<
-    "germany" | "other"
-  >("germany");
+  const [touched, setTouched] = useState<
+    Partial<Record<keyof FormData, boolean>>
+  >({});
 
-  const [countries, setCountries] = useState<CountryOption[]>([]);
+  const [selectedPlan, setSelectedPlan] = useState<{
+    title: string;
+    price: string;
+    category: string;
+    age: string;
+    degree: string;
+  } | null>(null);
 
-  const CACHE_DURATION = 1000 * 60 * 60 * 24; // 24 hours
-const [touched, setTouched] = useState<
-  Partial<Record<keyof FormData, boolean>>
->({});
+  useEffect(() => {
+    const stored = sessionStorage.getItem("selectedPlan");
+    if (stored) {
+      setSelectedPlan(JSON.parse(stored));
+    }
+  }, []);
+
+  // Add this useEffect to fetch countries
   useEffect(() => {
     let isMounted = true;
+    const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours
 
     async function fetchCountries() {
       try {
@@ -218,20 +224,17 @@ const [touched, setTouched] = useState<
         const res = await fetch(
           "https://restcountries.com/v3.1/all?fields=name,flags,cca2",
         );
+
         const data = await res.json();
 
-        const list: CountryOption[] = data
-          .map(
-            (c: CountryAPI): CountryOption => ({
-              name: c.name.common,
-              flag: c.flags.svg || c.flags.png || "",
-              code: c.cca2,
-            }),
-          )
-          .filter((country: CountryOption) => country.name.trim().length > 0)
-          .sort((a: CountryOption, b: CountryOption) =>
-            a.name.localeCompare(b.name),
-          );
+        const list = data
+          .map((c: any) => ({
+            name: c.name.common,
+            flag: c.flags?.svg || c.flags?.png,
+            code: c.cca2,
+          }))
+          .filter((c: any) => c.name)
+          .sort((a: any, b: any) => a.name.localeCompare(b.name));
 
         if (isMounted) {
           setCountries(list);
@@ -246,254 +249,356 @@ const [touched, setTouched] = useState<
     }
 
     fetchCountries();
+
     return () => {
       isMounted = false;
     };
   }, []);
 
- const handleInputChange = (
-  e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-) => {
-  const { name, value, type } = e.target;
-  const checked = (e.target as HTMLInputElement).checked;
+  // Validation
+  const validateStep = (currentStep: Step): boolean => {
+    const newErrors: Partial<Record<keyof FormData, string>> = {};
 
-  const fieldValue = type === "checkbox" ? checked : value;
+    // STEP 1 – Personal Info
+    if (currentStep === 1) {
+      if (!formData.email) newErrors.email = "Email is required";
+      else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email))
+        newErrors.email = "Invalid email format";
 
-  setFormData((prev) => {
-    const updatedForm = { ...prev, [name]: fieldValue };
+      if (!formData.phoneNumber)
+        newErrors.phoneNumber = "Phone number is required";
 
-    const errorMessage = validateField(
-      name as keyof FormData,
-      fieldValue,
-      updatedForm,
-      countryResidenceType,
-    );
+      if (!formData.firstName) newErrors.firstName = "First name is required";
 
-    setErrors((prevErrors) => ({
-      ...prevErrors,
-      [name]: errorMessage,
-    }));
+      if (!formData.lastName) newErrors.lastName = "Last name is required";
 
-    return updatedForm;
-  });
-};
+      if (!formData.birthday) newErrors.birthday = "Birthday is required";
 
-  const validateForm = (): boolean => {
-  const newErrors: Partial<Record<keyof FormData, string>> = {};
+      if (!formData.nationality)
+        newErrors.nationality = "Nationality is required";
 
-  // Title
-  if (!formData.title) newErrors.title = "Please select a title";
+      if (!formData.address) newErrors.address = "Address is required";
 
-  // First name
-  if (!formData.firstName.trim())
-    newErrors.firstName = "First name is required";
-  else if (!nameRegex.test(formData.firstName))
-    newErrors.firstName = "Only letters allowed";
+      if (!formData.city) newErrors.city = "City is required";
 
-  // Surname
-  if (!formData.surname.trim())
-    newErrors.surname = "Surname is required";
-  else if (!nameRegex.test(formData.surname))
-    newErrors.surname = "Only letters allowed";
+      if (!formData.postalCode)
+        newErrors.postalCode = "Postal code is required";
+    }
 
-  // Street
-  if (!formData.street.trim())
-    newErrors.street = "Street address is required";
-  else if (formData.street.length < 5)
-    newErrors.street = "Street address is too short";
+    // STEP 2 – Previous Insurance
+    if (currentStep === 2) {
+      if (!formData.currentInsuranceStatus)
+        newErrors.currentInsuranceStatus = "Please select insurance status";
+    }
 
-  // Postal Code (Germany)
-  if (!formData.postalCode)
-    newErrors.postalCode = "Postal code is required";
-  else if (!postalCodeRegex.test(formData.postalCode))
-    newErrors.postalCode = "Postal code must be 5 digits";
+    // STEP 3 – Occupation
+    if (currentStep === 3) {
+      if (!formData.occupationStatus)
+        newErrors.occupationStatus = "Occupation status is required";
 
-  // Town / City
-  if (!formData.townCity.trim())
-    newErrors.townCity = "Town/City is required";
-  else if (!cityRegex.test(formData.townCity))
-    newErrors.townCity = "Only letters allowed";
+      if (formData.occupationStatus === "Student") {
+        if (!formData.university)
+          newErrors.university = "University is required";
+        if (!formData.courseOfStudy)
+          newErrors.courseOfStudy = "Course of study is required";
+        if (!formData.studyStartDate)
+          newErrors.studyStartDate = "Study start date is required";
+      }
+    }
 
-  // Mobile (optional)
-  if (
-    formData.mobileNumber &&
-    !phoneRegex.test(formData.mobileNumber)
-  ) {
-    newErrors.mobileNumber = "Invalid phone number";
-  }
+    // STEP 4 – Health Basic
+    if (currentStep === 4) {
+      if (!formData.gender) newErrors.gender = "Gender is required";
+      if (!formData.height) newErrors.height = "Height is required";
+      if (!formData.weight) newErrors.weight = "Weight is required";
+    }
 
-  // Email
-  if (!formData.email)
-    newErrors.email = "Email is required";
-  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email))
-    newErrors.email = "Invalid email address";
+    // STEP 5 – Health Detailed
+    if (currentStep === 5) {
+      const questions = [
+        "healthQ1",
+        "healthQ2",
+        "healthQ3",
+        "healthQ4",
+        "healthQ5",
+        "healthQ6",
+        "healthQ7",
+        "healthQ8",
+        "healthQ9",
+        "healthQ10",
+        "healthQ11",
+      ] as const;
 
-  // Passport ID
-  if (!formData.passportId)
-    newErrors.passportId = "Passport ID is required";
-  else if (!passportRegex.test(formData.passportId))
-    newErrors.passportId = "Invalid passport format";
+      questions.forEach((q) => {
+        if (!formData[q]) {
+          newErrors[q] = "Please answer this question";
+        }
+      });
 
-  // Date of Birth
-  if (!formData.dateOfBirth) {
-    newErrors.dateOfBirth = "Date of birth is required";
-  } else {
-    const dob = new Date(formData.dateOfBirth);
-    const age =
-      new Date().getFullYear() - dob.getFullYear();
-    if (dob >= new Date())
-      newErrors.dateOfBirth = "Date must be in the past";
-    else if (age < 16)
-      newErrors.dateOfBirth = "Minimum age is 16";
-  }
+      if (formData.healthQ7 === "Yes") {
+        const subs = [
+          "healthQ7_1",
+          "healthQ7_2",
+          "healthQ7_3",
+          "healthQ7_4",
+          "healthQ7_5",
+          "healthQ7_6",
+          "healthQ7_7",
+        ] as const;
 
-  // Period of Insurance
-  if (!formData.startMonth)
-    newErrors.startMonth = "Start month is required";
-  if (!formData.startYear)
-    newErrors.startYear = "Start year is required";
-  if (!formData.periodOfInsurance)
-    newErrors.periodOfInsurance = "Period is required";
+        subs.forEach((q) => {
+          if (!formData[q]) {
+            newErrors[q] = "Required";
+          }
+        });
+      }
+    }
 
-  // Study Details
-  if (!formData.hasInsuredPartner)
-    newErrors.hasInsuredPartner = "Please select an option";
-  if (!formData.studyType)
-    newErrors.studyType = "Study type is required";
-  if (!formData.nameOfInstitution)
-    newErrors.nameOfInstitution = "Institution name is required";
+    // STEP 6 – Plan & Terms
+    if (currentStep === 6) {
+      if (!formData.insuranceStartDate)
+        newErrors.insuranceStartDate = "Insurance start date is required";
 
-  if (!formData.beginOfStudy)
-    newErrors.beginOfStudy = "Begin date is required";
-  if (!formData.endOfStudy)
-    newErrors.endOfStudy = "End date is required";
+      if (!formData.acceptTerms)
+        newErrors.acceptTerms = "You must accept the terms";
+    }
 
-  if (
-    formData.beginOfStudy &&
-    formData.endOfStudy &&
-    new Date(formData.beginOfStudy) >=
-      new Date(formData.endOfStudy)
-  ) {
-    newErrors.endOfStudy = "End date must be after begin date";
-  }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
-  if (!formData.hadPreviousInsurance)
-    newErrors.hadPreviousInsurance = "Please select an option";
+  const handleChange = (name: keyof FormData, value: string | boolean) => {
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    setTouched((prev) => ({ ...prev, [name]: true }));
+  };
 
-  // Medical Questions
-  if (!formData.medicalQuestion1)
-    newErrors.medicalQuestion1 = "Please answer this question";
-  if (!formData.medicalQuestion2)
-    newErrors.medicalQuestion2 = "Please answer this question";
-
-  // Country (when other selected)
-  if (
-    countryResidenceType === "other" &&
-    !formData.countryOfOrigin
-  ) {
-    newErrors.countryOfOrigin = "Please select a country";
-  }
-
-  // Declaration
-  if (!formData.acceptTerms)
-    newErrors.acceptTerms = "You must accept the terms";
-
-  setErrors(newErrors);
-  return Object.keys(newErrors).length === 0;
-};
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (validateForm()) {
-      // Store form data in localStorage for persistence
-      localStorage.setItem("InsurBeFormData", JSON.stringify(formData));
-      setIsSubmitted(true);
+  const handleNext = () => {
+    if (validateStep(step)) {
+      setStep((prev) => Math.min(prev + 1, 6) as Step);
       window.scrollTo({ top: 0, behavior: "smooth" });
-    } else {
-      // Scroll to first error
-      const firstError = Object.keys(errors)[0];
-      const element = document.getElementsByName(firstError)[0];
-      element?.scrollIntoView({ behavior: "smooth", block: "center" });
     }
   };
 
+  const handleBack = () => {
+    setStep((prev) => Math.max(prev - 1, 1) as Step);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleSubmit = () => {
+    if (validateStep(6)) {
+      localStorage.setItem("insuranceFormData", JSON.stringify(formData));
+      setIsSubmitted(true);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
+  const stepTitles = {
+    1: "Personal Information",
+    2: "Previous Insurance",
+    3: "Occupation Details",
+    4: "Health Information",
+    5: "Detailed Health Questions",
+    6: "Insurance Plan & Confirmation",
+  };
+
   if (isSubmitted) {
+    const downloadPDF = () => {
+      const doc = new jsPDF("p", "mm", "a4");
+      const marginX = 15;
+      let y = 20;
+
+      const addSection = (title: string) => {
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(14);
+        doc.text(title, marginX, y);
+        y += 8;
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(11);
+      };
+
+      const addField = (label: string, value: string | boolean) => {
+        const text = `${label}: ${value || "N/A"}`;
+        const lines = doc.splitTextToSize(text, 180);
+        doc.text(lines, marginX, y);
+        y += lines.length * 6;
+
+        if (y > 280) {
+          doc.addPage();
+          y = 20;
+        }
+      };
+
+      // HEADER
+      doc.setFontSize(16);
+      doc.text("INSURANCE APPLICATION SUMMARY", marginX, y);
+      y += 12;
+
+      // STEP 1 – PERSONAL INFO
+      addSection("Personal Information");
+      addField("Email", formData.email);
+      addField("Phone", formData.phoneNumber);
+      addField("First Name", formData.firstName);
+      addField("Last Name", formData.lastName);
+      addField("Birthday", formData.birthday);
+      addField("Nationality", formData.nationality);
+      addField(
+        "Address",
+        `${formData.address}, ${formData.city}, ${formData.postalCode}`,
+      );
+
+      // STEP 2 – PREVIOUS INSURANCE
+      addSection("Previous Insurance");
+      addField("Insurance Status", formData.currentInsuranceStatus);
+      addField("Company", formData.insuranceCompanyName);
+      addField("Country", formData.insuranceCountry);
+      addField("Insured Since", formData.insuredSince);
+      addField("Policy Cancelled", formData.insurancePolicyCancelled);
+
+      // STEP 3 – OCCUPATION
+      addSection("Occupation Details");
+      addField("Occupation Status", formData.occupationStatus);
+      addField("University", formData.university);
+      addField("Course of Study", formData.courseOfStudy);
+      addField(
+        "Study Period",
+        `${formData.studyStartDate || ""} - ${formData.studyEndDate || ""}`,
+      );
+
+      // STEP 4 – HEALTH BASIC
+      addSection("Health Information");
+      addField("Gender", formData.gender);
+      addField("Height (cm)", formData.height);
+      addField("Weight (kg)", formData.weight);
+
+      // STEP 5 – HEALTH QUESTIONS
+      addSection("Health Questionnaire");
+      addField("Allergies", formData.healthQ1);
+      addField("Treatments", formData.healthQ2);
+      addField("Addiction Treatment", formData.healthQ3);
+      addField("Medication", formData.healthQ4);
+      addField("HIV", formData.healthQ5);
+      addField("Chronic Illness", formData.healthQ6);
+      addField("Impairments", formData.healthQ7);
+      addField("Cancer Treatment", formData.healthQ8);
+      addField("Scheduled Treatment", formData.healthQ9);
+      addField("Mental Health", formData.healthQ10);
+      addField("Hospitalization", formData.healthQ11);
+
+      if (formData.healthQ7 === "Yes") {
+        addField("Prosthesis", formData.healthQ7_1);
+        addField("Hearing Aid", formData.healthQ7_2);
+        addField("Infertility", formData.healthQ7_3);
+        addField("Body Implant", formData.healthQ7_4);
+        addField("Missing Teeth", formData.healthQ7_5);
+        addField("Disability / Deformity", formData.healthQ7_6);
+        addField("Reduced Earning Capacity", formData.healthQ7_7);
+      }
+
+      // STEP 6 – PLAN
+      addSection("Insurance Plan");
+      addField("Selected Plan", formData.selectedPlan);
+      addField("Insurance Start Date", formData.insuranceStartDate);
+      addField("Accepted Terms", formData.acceptTerms ? "Yes" : "No");
+      addField("Marketing Consent", formData.acceptMarketing ? "Yes" : "No");
+
+      doc.save("insurance-application.pdf");
+    };
+
     return (
-      <section className="min-h-screen py-20 px-4 ">
+      <section className="min-h-screen py-20 px-4 bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
+          initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6 }}
           className="max-w-3xl mx-auto"
         >
-          <div className="backdrop-blur-xl bg-white/80 border border-white/40 rounded-3xl shadow-2xl shadow-green-500/10 p-12 text-center">
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
-              className="inline-flex items-center justify-center w-32 h-32 rounded-full bg-linear-to-br from-green-400 to-emerald-500 shadow-2xl shadow-green-500/30 mb-8"
-            >
-              <CheckCircle className="w-16 h-16 text-white" />
-            </motion.div>
-
-            <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-4">
-              Application Submitted Successfully! 🎉
-            </h1>
-
-            <p className="text-xl text-gray-600 mb-8">
-              Thank you,{" "}
-              <span className="font-bold text-green-600">
-                {formData.firstName}
-              </span>
-              ! Your insurance application has been received.
-            </p>
-
-            <div className="bg-linear-to-br from-green-50 to-emerald-50 border-2 border-green-200 rounded-2xl p-6 mb-8">
-              <h3 className="font-bold text-gray-900 mb-3 flex items-center justify-center gap-2">
-                <FileText className="w-5 h-5 text-green-600" />
-                What happens next?
-              </h3>
-              <ul className="text-left space-y-3 max-w-xl mx-auto">
-                {[
-                  "We'll review your application within 24-48 hours",
-                  "You'll receive a confirmation email at " + formData.email,
-                  "Our team will contact you if additional information is needed",
-                  "Once approved, you'll receive your policy documents",
-                ].map((item, idx) => (
-                  <motion.li
-                    key={idx}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.5 + idx * 0.1 }}
-                    className="flex items-start gap-3"
-                  >
-                    <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
-                    <span className="text-gray-700">{item}</span>
-                  </motion.li>
-                ))}
-              </ul>
+          <div className="bg-white rounded-3xl shadow-2xl p-8 sm:p-12 text-center">
+            {/* Profile Image */}
+            <div className="w-32 h-32 mx-auto mb-6 rounded-full bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center">
+              <User className="w-16 h-16 text-purple-600" />
             </div>
 
+            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+              Thank you, {formData.firstName}!
+            </h1>
+
+            <p className="text-lg text-gray-600 mb-8">
+              We will contact you on{" "}
+              <strong>February 27, 2026 at 4:00 PM</strong> (German time / CET)
+              to clarify a few questions by phone. Until then, you can review
+              your information below.
+            </p>
+
+            {/* User Badge */}
+            <div className="inline-flex items-center gap-3 px-6 py-3 bg-blue-600 text-white rounded-full mb-12 shadow-lg">
+              <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center font-bold">
+                1
+              </div>
+              <span className="font-semibold">
+                {formData.firstName} {formData.lastName}
+              </span>
+            </div>
+
+            {/* Plan Summary */}
+            <div className="mb-12">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                Your plan
+              </h2>
+              <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-8 border border-blue-200">
+                <div className="text-5xl font-bold text-blue-600 mb-2">
+                  €{selectedPlan?.price ?? "--"}
+                </div>
+                <div className="text-gray-600 mb-6">monthly</div>
+
+                <div className="bg-white rounded-xl p-6 shadow-md">
+                  <h3 className="text-xl font-bold text-blue-600 mb-2">
+                    {selectedPlan?.title ?? "Selected Plan"}
+                  </h3>
+                  <p className="text-sm text-blue-700">
+                    {selectedPlan?.category === "Public"
+                      ? "Statutory public health insurance"
+                      : "Private student health insurance"}
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-6 flex items-center justify-between py-4 border-t border-gray-200">
+                <span className="text-gray-600">Insurance start date</span>
+                <span className="font-bold text-gray-900">
+                  {formData.insuranceStartDate}
+                </span>
+              </div>
+            </div>
+
+            {/* Actions */}
             <div className="space-y-4">
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => (window.location.href = "/")}
-                className="px-8 py-4 rounded-2xl font-bold text-white bg-linear-to-r from-green-600 to-emerald-600 shadow-xl shadow-green-500/30 hover:shadow-green-500/50 transition-all"
+                onClick={downloadPDF}
+                className="w-full py-4 bg-blue-600 text-white rounded-xl font-semibold shadow-lg hover:bg-blue-700 transition"
+              >
+                Download overview
+              </motion.button>
+
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => router.push("/")}
+                className="w-full py-4 border-2 border-gray-300 text-gray-700 rounded-xl font-semibold hover:border-purple-500 hover:text-purple-600 transition"
               >
                 Return to Homepage
               </motion.button>
+            </div>
 
-              <p className="text-sm text-gray-500">
-                Need help? Contact us at{" "}
-                <a
-                  href="mailto:info@Insurbe.com"
-                  className="text-green-600 font-semibold hover:underline"
-                >
-                  info@Insurbe.com
-                </a>{" "}
-              </p>
+            {/* Contact */}
+            <div className="mt-8 flex items-center justify-center gap-2 text-blue-600">
+              <Phone className="w-5 h-5" />
+              <a
+                href="tel:089121407112"
+                className="text-xl font-bold hover:underline"
+              >
+                0xx xxx xxx xx
+              </a>
             </div>
           </div>
         </motion.div>
@@ -502,799 +607,941 @@ const [touched, setTouched] = useState<
   }
 
   return (
-    <section className="min-h-screen py-20 px-4 bg-linear-to-br from-slate-50 via-purple-50/30 to-blue-50/40">
+    <section className="min-h-screen py-12 px-4 bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="relative text-center mb-6"
+          className="text-center mb-8"
         >
-          {/* 🎁 Offer Badge */}
-          <div className="absolute top-0 right-0 translate-x-1/4 -translate-y-1/4 z-20">
-            {/* Glow layer */}
-            <motion.div
-              aria-hidden
-              initial={{ opacity: 0 }}
-              animate={{
-                opacity: [0.4, 0.8, 0.4],
-                scale: [1, 1.08, 1],
-              }}
-              transition={{
-                duration: 2.8,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-              className="
-      absolute inset-0
-      rounded-full
-      bg-linear-to-br from-pink-300 to-pink-400
-      blur-xl
-    "
-            />
-
-            {/* Badge */}
-            <motion.div
-              initial={{ scale: 0.6, opacity: 0, rotate: -20 }}
-              animate={{
-                scale: 1,
-                opacity: 1,
-                rotate: 0,
-                y: [0, -6, 0],
-              }}
-              transition={{
-                scale: { duration: 0.4, ease: "easeOut" },
-                opacity: { duration: 0.3 },
-                rotate: { duration: 0.4 },
-                y: {
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                },
-              }}
-              whileHover={{ scale: 1.08 }}
-              className="
-    relative
-    w-24 h-24
-    rounded-full
-    bg-linear-to-br from-primary via-purple-400 to-pink-500
-    text-white
-    flex items-center justify-center
-    shadow-2xl
-    border border-white
-    cursor-default
-  "
-            >
-              {/* TEXT WRAPPER WITH TILT */}
-              <motion.div
-                initial={{ rotate: -6 }}
-                animate={{ rotate: [-6, -4, -6] }}
-                transition={{
-                  duration: 4,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-                className="text-center font-extrabold"
-              >
-                <span className="block text-xl leading-none tracking-tight">
-                  € {INSURANCE_PLANS.INSURBE_STUDENT_BONUS}
-                </span>
-
-                <span className="block text-[14px] font-semibold leading-tight opacity-95 mt-0.5">
-                  Welcome Bonus*
-                </span>
-              </motion.div>
-            </motion.div>
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-100 text-purple-700 rounded-full text-sm font-semibold mb-4">
+            <Shield className="w-4 h-4" />
+            Insurance Application
           </div>
-
-          {/* Existing Content */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-linear-to-r from-purple-100 to-blue-100 border border-purple-200/50 mb-4">
-            <Shield className="w-4 h-4 text-purple-600" />
-            <span className="text-sm font-semibold text-purple-700">
-              InsurBe STUDENT
+          <h1 className="text-3xl sm:text-5xl font-extrabold text-gray-900 mb-2">
+            Get Your{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-primary">
+              Health Insurance
             </span>
-          </div>
-
-          <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-4">
-            Online Application
           </h1>
-
-          <p className="text-lg text-gray-600">
-            You can only apply for this insurance, if you provide an address in
-            Germany.
-          </p>
-
-          {/* Optional inline offer text */}
-          <p className="mt-4 text-sm font-semibold text-primary border border-primary/20 inline-block px-6 py-3 rounded-full ">
-            🎉 Including a <span className="font-bold">€15 Welcome Bonus*</span>
+          <p className="text-gray-600">
+            Complete your application in 6 easy steps
           </p>
         </motion.div>
 
-        {/* Form */}
-        <motion.form
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          onSubmit={handleSubmit}
-          className="backdrop-blur-xl bg-white/70 border border-white/40 rounded-3xl shadow-2xl shadow-purple-500/10 p-8 sm:p-12 space-y-10"
+        {/* Progress Bar */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-sm font-medium text-gray-600">
+              Step {step} of 6
+            </span>
+            <span className="text-sm font-medium text-gray-600">
+              {Math.round((step / 6) * 100)}% Complete
+            </span>
+          </div>
+          <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
+            <motion.div
+              className="h-full bg-gradient-to-r from-purple-600 to-blue-600 rounded-full"
+              initial={{ width: 0 }}
+              animate={{ width: `${(step / 6) * 100}%` }}
+              transition={{ duration: 0.5 }}
+            />
+          </div>
+
+          {/* Step Indicators */}
+          <div className="flex justify-between mt-4">
+            {[1, 2, 3, 4, 5, 6].map((s) => (
+              <div key={s} className="flex flex-col items-center">
+                <div
+                  className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all ${
+                    s < step
+                      ? "bg-gradient-to-r from-purple-600 to-primary text-white"
+                      : s === step
+                        ? "bg-purple-600 text-white"
+                        : "bg-gray-200 text-gray-400"
+                  }`}
+                >
+                  {s < step ? "✓" : s}
+                </div>
+                <span className="text-xs text-gray-500 mt-2 hidden sm:block text-center max-w-[80px]">
+                  {s === 1 && "Contact"}
+                  {s === 2 && "Personal"}
+                  {s === 3 && "Insurance"}
+                  {s === 4 && "Occupation"}
+                  {s === 5 && "Health"}
+                  {s === 6 && "Questions"}
+                  {s === 7 && "Confirm"}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Form Card */}
+        <motion.div
+          key={step}
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -20 }}
+          className="bg-white rounded-3xl shadow-2xl p-6 sm:p-10"
         >
-          {/* Applicant Details */}
-          <FormSection
-            title="Applicant (policyholder, insured person)"
-            icon={User}
-            color="purple"
-          >
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <FormField
-                label="Title"
-                name="title"
-                required
-                error={errors.title}
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+            {stepTitles[step]}
+          </h2>
+          <p className="text-gray-600 mb-8">
+            Please provide accurate information for your application
+          </p>
+
+          <AnimatePresence mode="wait">
+            {/* STEP 1: Email & Phone */}
+            {/* {step === 1 && (
+              <motion.div
+                key="step1"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="space-y-6"
               >
-                <select
-                  name="title"
-                  value={formData.title}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:outline-none transition-colors"
-                >
-                  <option value="">Select</option>
-                  <option value="mr">Mr.</option>
-                  <option value="ms">Ms.</option>
-                  <option value="dr">Dr.</option>
-                  <option value="prof">Prof.</option>
-                </select>
-              </FormField>
+                <div className="grid sm:grid-cols-2 gap-6">
+                  <FormField label="Email Address *" error={errors.email}>
+                    <div className="relative">
+                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                      <input
+                        type="email"
+                        value={formData.email}
+                        onChange={(e) => handleChange("email", e.target.value)}
+                        className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition"
+                        placeholder="you@example.com"
+                      />
+                    </div>
+                  </FormField>
 
-              <FormField
-                label="First Name"
-                name="firstName"
-                required
-                error={errors.firstName}
+                  <FormField
+                    label="Confirm Email *"
+                    error={errors.confirmEmail}
+                  >
+                    <div className="relative">
+                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                      <input
+                        type="email"
+                        value={formData.confirmEmail}
+                        onChange={(e) =>
+                          handleChange("confirmEmail", e.target.value)
+                        }
+                        className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition"
+                        placeholder="Confirm your email"
+                      />
+                    </div>
+                  </FormField>
+
+                  <FormField label="Phone Number *" error={errors.phoneNumber}>
+                    <div className="relative">
+                      <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                      <input
+                        type="tel"
+                        value={formData.phoneNumber}
+                        onChange={(e) =>
+                          handleChange("phoneNumber", e.target.value)
+                        }
+                        className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition"
+                        placeholder="+49 123 456 7890"
+                      />
+                    </div>
+                  </FormField>
+
+                  <FormField
+                    label="Confirm Phone Number *"
+                    error={errors.confirmPhoneNumber}
+                  >
+                    <div className="relative">
+                      <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                      <input
+                        type="tel"
+                        value={formData.confirmPhoneNumber}
+                        onChange={(e) =>
+                          handleChange("confirmPhoneNumber", e.target.value)
+                        }
+                        className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition"
+                        placeholder="Confirm your phone"
+                      />
+                    </div>
+                  </FormField>
+                </div>
+              </motion.div>
+            )} */}
+
+            {/* STEP 2: Personal Information */}
+            {step === 1 && (
+              <motion.div
+                key="step2"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="space-y-6"
               >
-                <input
-                  type="text"
-                  name="firstName"
-                  value={formData.firstName}
-                  onChange={handleInputChange}
-                  
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:outline-none transition-colors"
-                  placeholder="Enter first name"
-                />
-              </FormField>
+                <div className="grid sm:grid-cols-2 gap-6">
+                  <FormField label="Email Address *" error={errors.email}>
+                    <div className="relative">
+                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                      <input
+                        type="email"
+                        value={formData.email}
+                        onChange={(e) => handleChange("email", e.target.value)}
+                        className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100"
+                        placeholder="you@example.com"
+                      />
+                    </div>
+                  </FormField>
+                  <FormField label="Phone Number *" error={errors.phoneNumber}>
+                    <div className="relative">
+                      <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                      <input
+                        type="tel"
+                        value={formData.phoneNumber}
+                        onChange={(e) =>
+                          handleChange("phoneNumber", e.target.value)
+                        }
+                        className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100"
+                        placeholder="+49 123 456 7890"
+                      />
+                    </div>
+                  </FormField>
+                  <FormField label="First Name *" error={errors.firstName}>
+                    <input
+                      type="text"
+                      value={formData.firstName}
+                      onChange={(e) =>
+                        handleChange("firstName", e.target.value)
+                      }
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition"
+                      placeholder="John"
+                    />
+                  </FormField>
 
-              <FormField
-                label="Surname"
-                name="surname"
-                required
-                error={errors.surname}
+                  <FormField label="Last Name *" error={errors.lastName}>
+                    <input
+                      type="text"
+                      value={formData.lastName}
+                      onChange={(e) => handleChange("lastName", e.target.value)}
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition"
+                      placeholder="Doe"
+                    />
+                  </FormField>
+
+                  <FormField label="Birthday *" error={errors.birthday}>
+                    <input
+                      type="date"
+                      value={formData.birthday}
+                      onChange={(e) => handleChange("birthday", e.target.value)}
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition"
+                    />
+                  </FormField>
+
+                  <FormField label="Nationality *" error={errors.nationality}>
+                    {loadingCountries ? (
+                      <div className="flex items-center gap-2 px-4 py-3 border-2 border-gray-200 rounded-xl">
+                        <Loader2 className="w-5 h-5 animate-spin text-purple-600" />
+                        <span className="text-gray-600">
+                          Loading countries...
+                        </span>
+                      </div>
+                    ) : countries.length === 0 ? (
+                      <div className="px-4 py-3 border-2 border-red-200 rounded-xl text-red-600">
+                        Failed to load countries. Please refresh the page.
+                      </div>
+                    ) : (
+                      <select
+                        value={formData.nationality}
+                        onChange={(e) =>
+                          handleChange("nationality", e.target.value)
+                        }
+                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100"
+                      >
+                        <option value="">Select nationality</option>
+
+                        {countries.map((c) => (
+                          <option key={c.code} value={c.name}>
+                            {c.name}
+                          </option>
+                        ))}
+                      </select>
+                    )}
+                  </FormField>
+                </div>
+
+                <div className="grid sm:grid-cols-2 gap-6">
+                  <FormField label="Permanent Residence Permit">
+                    <select
+                      value={formData.permanentResidencePermit}
+                      onChange={(e) =>
+                        handleChange("permanentResidencePermit", e.target.value)
+                      }
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition"
+                    >
+                      <option value="">Select</option>
+                      <option value="Yes">Yes</option>
+                      <option value="No">No</option>
+                    </select>
+                  </FormField>
+
+                  <FormField label="Temporary Residence Permit Since">
+                    <input
+                      type="date"
+                      value={formData.temporaryResidencePermitSince}
+                      onChange={(e) =>
+                        handleChange(
+                          "temporaryResidencePermitSince",
+                          e.target.value,
+                        )
+                      }
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition"
+                    />
+                  </FormField>
+
+                  <FormField label="In Germany Since">
+                    <input
+                      type="date"
+                      value={formData.inGermanySince}
+                      onChange={(e) =>
+                        handleChange("inGermanySince", e.target.value)
+                      }
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition"
+                    />
+                  </FormField>
+                </div>
+
+                <div className="border-t pt-6">
+                  <h3 className="font-semibold text-gray-900 mb-4">
+                    Address in Germany
+                  </h3>
+                  <div className="grid sm:grid-cols-2 gap-6">
+                    <div className="sm:col-span-2">
+                      <FormField
+                        label="Street Address *"
+                        error={errors.address}
+                      >
+                        <input
+                          type="text"
+                          value={formData.address}
+                          onChange={(e) =>
+                            handleChange("address", e.target.value)
+                          }
+                          className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition"
+                          placeholder="Street name and number"
+                        />
+                      </FormField>
+                    </div>
+
+                    <FormField label="City *" error={errors.city}>
+                      <input
+                        type="text"
+                        value={formData.city}
+                        onChange={(e) => handleChange("city", e.target.value)}
+                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition"
+                        placeholder="Berlin"
+                      />
+                    </FormField>
+
+                    <FormField label="Postal Code *" error={errors.postalCode}>
+                      <input
+                        type="text"
+                        value={formData.postalCode}
+                        onChange={(e) =>
+                          handleChange("postalCode", e.target.value)
+                        }
+                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition"
+                        placeholder="10115"
+                      />
+                    </FormField>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+
+            {/* STEP 3: Previous Insurance */}
+            {step === 2 && (
+              <motion.div
+                key="step3"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="space-y-6"
               >
-                <input
-                  type="text"
-                  name="surname"
-                  value={formData.surname}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:outline-none transition-colors"
-                  placeholder="Enter surname"
-                />
-              </FormField>
-
-              <FormField
-                label="Additional Address Information"
-                name="additionalAddress"
-              >
-                <input
-                  type="text"
-                  name="additionalAddress"
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:outline-none transition-colors"
-                  placeholder="Apartment, suite, etc."
-                />
-              </FormField>
-
-              <FormField
-                label="Street"
-                name="street"
-                required
-                error={errors.street}
-              >
-                <input
-                  type="text"
-                  name="street"
-                  value={formData.street}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:outline-none transition-colors"
-                  placeholder="Street address"
-                />
-              </FormField>
-
-              <FormField
-                label="Postal Code"
-                name="postalCode"
-                required
-                error={errors.postalCode}
-              >
-                <input
-                  type="text"
-                  name="postalCode"
-                  value={formData.postalCode}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:outline-none transition-colors"
-                  placeholder="Postal code"
-                />
-              </FormField>
-
-              <FormField
-                label="Town/City"
-                name="townCity"
-                required
-                error={errors.townCity}
-              >
-                <input
-                  type="text"
-                  name="townCity"
-                  value={formData.townCity}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:outline-none transition-colors"
-                  placeholder="Town or city"
-                />
-              </FormField>
-
-              <FormField label="Mobile Number" name="mobileNumber">
-                <input
-                  type="tel"
-                  name="mobileNumber"
-                  value={formData.mobileNumber}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:outline-none transition-colors"
-                  placeholder="+49 123 4567890"
-                />
-              </FormField>
-
-              <FormField
-                label="E-Mail"
-                name="email"
-                required
-                error={errors.email}
-              >
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:outline-none transition-colors"
-                  placeholder="your.email@example.com"
-                />
-              </FormField>
-
-              <FormField
-                label="Passport ID No."
-                name="passportId"
-                required
-                error={errors.passportId}
-              >
-                <input
-                  type="text"
-                  name="passportId"
-                  value={formData.passportId}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:outline-none transition-colors"
-                  placeholder="Passport number"
-                />
-              </FormField>
-
-              <FormField
-                label="Date of Birth"
-                name="dateOfBirth"
-                required
-                error={errors.dateOfBirth}
-              >
-                <input
-                  type="date"
-                  name="dateOfBirth"
-                  value={formData.dateOfBirth}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:outline-none transition-colors"
-                />
-              </FormField>
-            </div>
-          </FormSection>
-
-          {/* Period of Insurance */}
-          <FormSection title="Period of Insurance" icon={Calendar} color="pink">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-              {/* Start Month */}
-              <FormField
-                label="Start Month"
-                name="startMonth"
-                required
-                error={errors.startMonth}
-              >
-                <select
-                  name="startMonth"
-                  value={formData.startMonth}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-pink-500 focus:outline-none transition-colors"
-                >
-                  <option value="">Select</option>
-                  {[
-                    "January",
-                    "February",
-                    "March",
-                    "April",
-                    "May",
-                    "June",
-                    "July",
-                    "August",
-                    "September",
-                    "October",
-                    "November",
-                    "December",
-                  ].map((month) => (
-                    <option key={month} value={month}>
-                      {month}
-                    </option>
-                  ))}
-                </select>
-              </FormField>
-
-              {/* Start Year */}
-              <FormField
-                label="Start Year"
-                name="startYear"
-                required
-                error={errors.startYear}
-              >
-                <select
-                  name="startYear"
-                  value={formData.startYear}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-pink-500 focus:outline-none transition-colors"
-                >
-                  <option value="">Select</option>
-                  {Array.from({ length: 5 }, (_, i) => {
-                    const year = new Date().getFullYear() + i;
-                    return (
-                      <option key={year} value={year}>
-                        {year}
-                      </option>
-                    );
-                  })}
-                </select>
-              </FormField>
-
-              {/* Period of Insurance */}
-              <FormField
-                label="Period of Insurance"
-                name="periodOfInsurance"
-                required
-                error={errors.periodOfInsurance}
-              >
-                <select
-                  name="periodOfInsurance"
-                  value={formData.periodOfInsurance}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-pink-500 focus:outline-none transition-colors"
-                >
-                  <option value="">Select</option>
-
-                  {Array.from({ length: 60 }, (_, i) => {
-                    const months = i + 1;
-                    return (
-                      <option key={months} value={`${months}months`}>
-                        {months} {months === 1 ? "Month" : "Months"}
-                      </option>
-                    );
-                  })}
-                </select>
-              </FormField>
-            </div>
-          </FormSection>
-
-          {/* Study Details */}
-          <FormSection
-            title="Study details (insured person)"
-            icon={GraduationCap}
-            color="blue"
-          >
-            <div className="space-y-6">
-              <RadioGroup
-                label="Has the insured person a limited residency permit in Germany?"
-                name="hasInsuredPartner"
-                value={formData.hasInsuredPartner}
-                onChange={handleInputChange}
-                error={errors.hasInsuredPartner}
-                options={[
-                  { value: "yes", label: "Yes" },
-                  { value: "no", label: "No" },
-                ]}
-              />
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <FormField
-                  label="Study Type"
-                  name="studyType"
-                  required
-                  error={errors.studyType}
+                  label="Current Insurance Status *"
+                  error={errors.currentInsuranceStatus}
                 >
                   <select
-                    name="studyType"
-                    value={formData.studyType}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:outline-none transition-colors"
+                    value={formData.currentInsuranceStatus}
+                    onChange={(e) =>
+                      handleChange("currentInsuranceStatus", e.target.value)
+                    }
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition"
                   >
-                    <option value="">Select</option>
-                    <option value="bachelor">Bachelor's Degree</option>
-                    <option value="master">Master's Degree</option>
-                    <option value="phd">PhD / Doctorate</option>
-                    <option value="language">Language Course</option>
-                    <option value="other">Other</option>
+                    <option value="">Select status</option>
+                    <option value="Foreign insurance">Foreign insurance</option>
+                    <option value="German public">
+                      German public insurance
+                    </option>
+                    <option value="German private">
+                      German private insurance
+                    </option>
+                    <option value="No insurance">No insurance</option>
                   </select>
                 </FormField>
 
-                <FormField
-                  label="Name of Institution"
-                  name="nameOfInstitution"
-                  required
-                  error={errors.nameOfInstitution}
-                >
-                  <input
-                    type="text"
-                    name="nameOfInstitution"
-                    value={formData.nameOfInstitution}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:outline-none transition-colors"
-                    placeholder="University or institution name"
-                  />
-                </FormField>
+                {formData.currentInsuranceStatus &&
+                  formData.currentInsuranceStatus !== "No insurance" && (
+                    <div className="grid sm:grid-cols-2 gap-6">
+                      <FormField label="Name of Insurance Company">
+                        <input
+                          type="text"
+                          value={formData.insuranceCompanyName}
+                          onChange={(e) =>
+                            handleChange("insuranceCompanyName", e.target.value)
+                          }
+                          className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition"
+                          placeholder="Company name"
+                        />
+                      </FormField>
 
-                <FormField
-                  label="Begin of Study"
-                  name="beginOfStudy"
-                  required
-                  error={errors.beginOfStudy}
-                >
-                  <input
-                    type="date"
-                    name="beginOfStudy"
-                    value={formData.beginOfStudy}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:outline-none transition-colors"
-                  />
-                </FormField>
+                      <FormField label="Country">
+                        {loadingCountries ? (
+                          <div className="flex items-center gap-2 px-4 py-3">
+                            <Loader2 className="w-5 h-5 animate-spin" />
+                            <span>Loading...</span>
+                          </div>
+                        ) : (
+                          <select
+                            value={formData.insuranceCountry}
+                            onChange={(e) =>
+                              handleChange("insuranceCountry", e.target.value)
+                            }
+                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition"
+                          >
+                            <option value="">Select country</option>
 
-                <FormField
-                  label="End of Study"
-                  name="endOfStudy"
-                  required
-                  error={errors.endOfStudy}
-                >
-                  <input
-                    type="date"
-                    name="endOfStudy"
-                    value={formData.endOfStudy}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:outline-none transition-colors"
-                  />
-                </FormField>
-              </div>
+                            {countries.map((c) => (
+                              <option key={c.code} value={c.name}>
+                                {c.name}
+                              </option>
+                            ))}
+                          </select>
+                        )}
+                      </FormField>
 
-              <RadioGroup
-                label="Has the insured person had a health insurance (still at the commencement of the new InsurBe Student insurance or within a period of 6 months before)?"
-                name="hadPreviousInsurance"
-                value={formData.hadPreviousInsurance}
-                onChange={handleInputChange}
-                error={errors.hadPreviousInsurance}
-                options={[
-                  { value: "yes", label: "Yes" },
-                  { value: "no", label: "No" },
-                ]}
-              />
-            </div>
-          </FormSection>
+                      <FormField label="Insured Since">
+                        <input
+                          type="month"
+                          value={formData.insuredSince}
+                          onChange={(e) =>
+                            handleChange("insuredSince", e.target.value)
+                          }
+                          className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition"
+                        />
+                      </FormField>
 
-          {/* Health Insurance */}
-          <FormSection title="Health Insurance" icon={Shield} color="emerald">
-            <label
-              className={`flex items-start gap-4 p-5 rounded-2xl border-2 cursor-pointer transition-all border-emerald-500 bg-linear-to-br from-emerald-50 to-green-50 shadow-lg`}
-            >
-              <input
-                type="radio"
-                name="insuranceType"
-                value="classic"
-                checked={true}
-                readOnly
-                className="mt-1 w-5 h-5 text-emerald-600 focus:ring-emerald-500"
-              />
-
-              <div className="flex-1">
-                <div className="flex items-center justify-between">
-                  <div className="font-bold text-gray-900 text-lg">
-                    InsurBe Student Classic
-                  </div>
-                  <div className="font-extrabold text-emerald-600 text-lg">
-                    {INSURANCE_PLANS.INSURBE_STUDENT_CLASSIC} €
-                  </div>
-                </div>
-              </div>
-            </label>
-          </FormSection>
-
-          {/* Medical Questions */}
-          <FormSection title="Medical Questions" icon={FileText} color="red">
-            <div className="space-y-6">
-              <RadioGroup
-                label="Within the last 36 months period have you been treated or have you sought medical advice for health issues (except minor acute common cold, flue, similar illness or health care that lasted no longer than 30 days without any permanent treatment or damage)?"
-                name="medicalQuestion1"
-                value={formData.medicalQuestion1}
-                onChange={handleInputChange}
-                error={errors.medicalQuestion1}
-                options={[
-                  { value: "yes", label: "Yes" },
-                  { value: "no", label: "No" },
-                ]}
-              />
-
-              <RadioGroup
-                label="Are you awaiting results of tests/investigations or have at least one medical treatment planned (such as in-patient/out-patient or e.g. pending according to) but not related to hospital admission as surgery)?"
-                name="medicalQuestion2"
-                value={formData.medicalQuestion2}
-                onChange={handleInputChange}
-                error={errors.medicalQuestion2}
-                options={[
-                  { value: "yes", label: "Yes" },
-                  { value: "no", label: "No" },
-                ]}
-              />
-            </div>
-          </FormSection>
-
-          {/* Country of Origin */}
-          <FormSection
-            title="Country of origin (land domicile) ℹ️"
-            icon={MapPin}
-            color="indigo"
-          >
-            {/* Info */}
-            <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-lg mb-6">
-              <p className="text-sm text-blue-800">
-                The country of the permanent or usual place of residence prior
-                to start of the temporary foreign residence.
-              </p>
-            </div>
-
-            {/* Radio buttons */}
-            <div className="space-y-4 mb-6">
-              {/* Germany */}
-              <label className="flex items-center gap-3 cursor-pointer">
-                <input
-                  type="radio"
-                  name="countryResidenceType"
-                  value="germany"
-                  checked={countryResidenceType === "germany"}
-                  onChange={() => {
-                    setCountryResidenceType("germany");
-                    setFormData((prev) => ({
-                      ...prev,
-                      countryOfOrigin: "Germany",
-                    }));
-                  }}
-                  className="w-5 h-5 accent-red-600"
-                />
-                <span className="text-gray-800 font-medium">Germany</span>
-              </label>
-
-              {/* Other country */}
-              <label className="flex items-center gap-3 cursor-pointer">
-                <input
-                  type="radio"
-                  name="countryResidenceType"
-                  value="other"
-                  checked={countryResidenceType === "other"}
-                  onChange={() => {
-                    setCountryResidenceType("other");
-                    setFormData((prev) => ({
-                      ...prev,
-                      countryOfOrigin: "",
-                    }));
-                  }}
-                  className="w-5 h-5 accent-red-600"
-                />
-                <span className="text-gray-800 font-medium">
-                  another country (please state which)
-                </span>
-              </label>
-            </div>
-
-            {/* Country select (dynamic) */}
-            {countryResidenceType === "other" && (
-              <FormField
-                label="Country of origin (last domicile) *"
-                name="countryOfOrigin"
-              >
-                <select
-                  name="countryOfOrigin"
-                  value={formData.countryOfOrigin}
-                  onChange={handleInputChange}
-                  required
-                  className="
-          w-full px-4 py-3 rounded-xl
-          border-2 border-gray-200
-          focus:border-indigo-500
-          focus:outline-none
-          transition-colors
-        "
-                >
-                  <option value="">Select country</option>
-
-                  {countries.map((country: CountryOption) => (
-                    <option key={country.code} value={country.name}>
-                      {country.name}
-                    </option>
-                  ))}
-                </select>
-              </FormField>
+                      <FormField label="Insurance Policy Cancelled">
+                        <select
+                          value={formData.insurancePolicyCancelled}
+                          onChange={(e) =>
+                            handleChange(
+                              "insurancePolicyCancelled",
+                              e.target.value,
+                            )
+                          }
+                          className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition"
+                        >
+                          <option value="">Select</option>
+                          <option value="Yes">Yes</option>
+                          <option value="No">No</option>
+                        </select>
+                      </FormField>
+                    </div>
+                  )}
+              </motion.div>
             )}
-          </FormSection>
 
-          {/* Declaration of Agreement */}
-          <FormSection
-            title="Declaration of Agreement"
-            icon={FileText}
-            color="purple"
-          >
-            <div className="space-y-4">
-              <CheckboxField
-                name="acceptTerms"
-                checked={formData.acceptTerms}
-                onChange={handleInputChange}
-                error={errors.acceptTerms}
+            {/* STEP 4: Occupation */}
+            {step === 3 && (
+              <motion.div
+                key="step4"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="space-y-6"
               >
-                I have read and hereby accept the{" "}
-                <a
-                  href="#"
-                  className="text-purple-600 font-semibold hover:underline"
+                <FormField
+                  label="Occupation Status *"
+                  error={errors.occupationStatus}
                 >
-                  Consumer and Product Information Sheet and the Terms and
-                  Conditions of Insurance
-                </a>
-                .
-              </CheckboxField>
+                  <select
+                    value={formData.occupationStatus}
+                    onChange={(e) =>
+                      handleChange("occupationStatus", e.target.value)
+                    }
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition"
+                  >
+                    <option value="">Select status</option>
+                    <option value="Student">Student</option>
+                    <option value="Employee">Employee</option>
+                    <option value="Self-employed">Self-employed</option>
+                    <option value="Unemployed">Unemployed</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </FormField>
 
-              <CheckboxField
-                name="acceptMarketing"
-                checked={formData.acceptMarketing}
-                onChange={handleInputChange}
+                {formData.occupationStatus === "Student" && (
+                  <div className="grid sm:grid-cols-2 gap-6">
+                    <FormField
+                      label="Your University *"
+                      error={errors.university}
+                    >
+                      <input
+                        type="text"
+                        value={formData.university}
+                        onChange={(e) =>
+                          handleChange("university", e.target.value)
+                        }
+                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition"
+                        placeholder="University name"
+                      />
+                    </FormField>
+
+                    <FormField
+                      label="Your Course of Study *"
+                      error={errors.courseOfStudy}
+                    >
+                      <input
+                        type="text"
+                        value={formData.courseOfStudy}
+                        onChange={(e) =>
+                          handleChange("courseOfStudy", e.target.value)
+                        }
+                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition"
+                        placeholder="Computer Science"
+                      />
+                    </FormField>
+
+                    <FormField
+                      label="Study Start Date *"
+                      error={errors.studyStartDate}
+                    >
+                      <input
+                        type="date"
+                        value={formData.studyStartDate}
+                        onChange={(e) =>
+                          handleChange("studyStartDate", e.target.value)
+                        }
+                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition"
+                      />
+                    </FormField>
+
+                    <FormField label="Expected End Date">
+                      <input
+                        type="date"
+                        value={formData.studyEndDate}
+                        onChange={(e) =>
+                          handleChange("studyEndDate", e.target.value)
+                        }
+                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition"
+                      />
+                    </FormField>
+                  </div>
+                )}
+              </motion.div>
+            )}
+
+            {/* STEP 5: Basic Health Info */}
+            {step === 4 && (
+              <motion.div
+                key="step5"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="space-y-6"
               >
-                I consent to InsurBe GmbH sending me information and offers on
-                other products for advertising purposes by email. I can object
-                to the{" "}
-                <a
-                  href="/privacypolicy"
-                  className="text-purple-600 font-semibold hover:underline"
-                >
-                  use of my data
-                </a>{" "}
-                for advertising purposes at any time, for example by email to{" "}
-                <a
-                  href="mailto:info@insurbe.com"
-                  className="text-purple-600 font-semibold hover:underline"
-                >
-                  info@insurbe.com
-                </a>
-              </CheckboxField>
+                <FormField label="Gender *" error={errors.gender}>
+                  <div className="flex gap-4">
+                    {["Male", "Female", "Diverse"].map((g) => (
+                      <button
+                        key={g}
+                        type="button"
+                        onClick={() => handleChange("gender", g)}
+                        className={`flex-1 py-3 px-4 rounded-xl border-2 font-medium transition ${
+                          formData.gender === g
+                            ? "border-purple-600 bg-purple-50 text-purple-700"
+                            : "border-gray-200 hover:border-purple-300"
+                        }`}
+                      >
+                        {g}
+                      </button>
+                    ))}
+                  </div>
+                </FormField>
 
-              <div className="pt-4 border-t border-gray-200">
-                <RadioGroup
-                  label="Consultation Preference"
-                  name="needsConsultation"
-                  value={formData.needsConsultation}
-                  onChange={handleInputChange}
-                  options={[
-                    {
-                      value: "no",
-                      label:
-                        "Yes, I sufficiently informed myself about the product and I would like to continue without further consultation.",
-                    },
-                  ]}
+                <div className="grid sm:grid-cols-2 gap-6">
+                  <FormField label="Height (cm) *" error={errors.height}>
+                    <div className="relative">
+                      <Ruler className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                      <input
+                        type="number"
+                        value={formData.height}
+                        onChange={(e) => handleChange("height", e.target.value)}
+                        className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition"
+                        placeholder="172"
+                      />
+                    </div>
+                  </FormField>
+
+                  <FormField label="Weight (kg) *" error={errors.weight}>
+                    <div className="relative">
+                      <WeightIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                      <input
+                        type="number"
+                        value={formData.weight}
+                        onChange={(e) => handleChange("weight", e.target.value)}
+                        className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition"
+                        placeholder="65"
+                      />
+                    </div>
+                  </FormField>
+                </div>
+              </motion.div>
+            )}
+
+            {/* STEP 6: Detailed Health Questions */}
+            {step === 5 && (
+              <motion.div
+                key="step6"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="space-y-6 max-h-[600px] overflow-y-auto pr-2"
+              >
+                <HealthQuestion
+                  number={1}
+                  question="Do you have or have you had any allergies within the last 3 years?"
+                  value={formData.healthQ1}
+                  onChange={(val) => handleChange("healthQ1", val)}
+                  error={errors.healthQ1}
                 />
 
-                <div className="mt-4 bg-blue-50 border-l-4 border-blue-500 p-4 rounded-lg">
-                  <p className="text-sm text-blue-800 flex items-center gap-2">
-                    <MessageCircle className="w-4 h-4" />
-                    We would be happy to advise you by email:{" "}
-                    <a
-                      href="/book-appointment"
-                      className="font-bold hover:underline"
-                    >
-                      info@insurbe.com
-                    </a>
-                  </p>
+                <HealthQuestion
+                  number={2}
+                  question="Have you had any treatments or examinations (including follow-up care) by doctors or therapists within the last 3 years?"
+                  value={formData.healthQ2}
+                  onChange={(val) => handleChange("healthQ2", val)}
+                  error={errors.healthQ2}
+                />
+
+                <HealthQuestion
+                  number={3}
+                  question="Have you ever been in treatment for alcohol, medication, drug addiction or any other addiction?"
+                  value={formData.healthQ3}
+                  onChange={(val) => handleChange("healthQ3", val)}
+                  error={errors.healthQ3}
+                />
+
+                <HealthQuestion
+                  number={4}
+                  question="Have you taken any medication for at least two consecutive weeks within the last three years?"
+                  value={formData.healthQ4}
+                  onChange={(val) => handleChange("healthQ4", val)}
+                  error={errors.healthQ4}
+                />
+
+                <HealthQuestion
+                  number={5}
+                  question="Have you ever been diagnosed with an HIV infection?"
+                  value={formData.healthQ5}
+                  onChange={(val) => handleChange("healthQ5", val)}
+                  error={errors.healthQ5}
+                />
+
+                <HealthQuestion
+                  number={6}
+                  question="Do you have any chronic illnesses?"
+                  value={formData.healthQ6}
+                  onChange={(val) => handleChange("healthQ6", val)}
+                  error={errors.healthQ6}
+                />
+
+                <div className="space-y-4">
+                  <HealthQuestion
+                    number={7}
+                    question="Do you have one or more of the impairments listed below?"
+                    value={formData.healthQ7}
+                    onChange={(val) => handleChange("healthQ7", val)}
+                    error={errors.healthQ7}
+                  />
+
+                  {formData.healthQ7 === "Yes" && (
+                    <div className="ml-6 space-y-4 border-l-4 border-purple-200 pl-4">
+                      <SubHealthQuestion
+                        label="1. Do you wear a prosthesis? (Dentures don't count)"
+                        value={formData.healthQ7_1}
+                        onChange={(val) => handleChange("healthQ7_1", val)}
+                        error={errors.healthQ7_1}
+                      />
+                      <SubHealthQuestion
+                        label="2. Do you wear a hearing aid?"
+                        value={formData.healthQ7_2}
+                        onChange={(val) => handleChange("healthQ7_2", val)}
+                        error={errors.healthQ7_2}
+                      />
+                      <SubHealthQuestion
+                        label="3. Have you been diagnosed with infertility or impaired fertility?"
+                        value={formData.healthQ7_3}
+                        onChange={(val) => handleChange("healthQ7_3", val)}
+                        error={errors.healthQ7_3}
+                      />
+                      <SubHealthQuestion
+                        label="4. Do you have a body implant? (Dental implants don't count)"
+                        value={formData.healthQ7_4}
+                        onChange={(val) => handleChange("healthQ7_4", val)}
+                        error={errors.healthQ7_4}
+                      />
+                      <SubHealthQuestion
+                        label="5. Do you have any missing teeth that haven't been replaced? (Wisdom teeth don't count)"
+                        value={formData.healthQ7_5}
+                        onChange={(val) => handleChange("healthQ7_5", val)}
+                        error={errors.healthQ7_5}
+                      />
+                      <SubHealthQuestion
+                        label="6. Do you have a disability, a malformation of an organ, or a physical deformity?"
+                        value={formData.healthQ7_6}
+                        onChange={(val) => handleChange("healthQ7_6", val)}
+                        error={errors.healthQ7_6}
+                      />
+                      <SubHealthQuestion
+                        label="7. Do you have a reduced earning capacity or are you unable to work?"
+                        value={formData.healthQ7_7}
+                        onChange={(val) => handleChange("healthQ7_7", val)}
+                        error={errors.healthQ7_7}
+                      />
+                    </div>
+                  )}
                 </div>
-              </div>
-            </div>
-          </FormSection>
 
-          {/* Submit Button */}
-          <motion.button
-            type="submit"
-            whileHover={{ scale: 1.02, y: -2 }}
-            whileTap={{ scale: 0.98 }}
-            className="w-full py-5 rounded-2xl font-bold text-xl text-white bg-linear-to-r from-purple-600 via-pink-600 to-blue-600 shadow-2xl shadow-purple-500/40 hover:shadow-purple-500/60 transition-all flex items-center justify-center gap-3"
+                <HealthQuestion
+                  number={8}
+                  question="Have you had any treatments or examinations (including follow-up care) for malignant cancers within the last 10 years?"
+                  value={formData.healthQ8}
+                  onChange={(val) => handleChange("healthQ8", val)}
+                  error={errors.healthQ8}
+                />
+
+                <HealthQuestion
+                  number={9}
+                  question="Are you scheduled, advised, or expected to undergo any treatments, examinations (including follow-up care), or operations by doctors or therapists?"
+                  value={formData.healthQ9}
+                  onChange={(val) => handleChange("healthQ9", val)}
+                  error={errors.healthQ9}
+                />
+
+                <HealthQuestion
+                  number={10}
+                  question="Have you had any treatments or examinations (including follow-up care) for mental or psychosomatic illnesses or complaints within the last 10 years?"
+                  value={formData.healthQ10}
+                  onChange={(val) => handleChange("healthQ10", val)}
+                  error={errors.healthQ10}
+                />
+
+                <HealthQuestion
+                  number={11}
+                  question="Have you had any treatment requiring hospitalization or any operations without hospitalization within the last 5 years?"
+                  value={formData.healthQ11}
+                  onChange={(val) => handleChange("healthQ11", val)}
+                  error={errors.healthQ11}
+                />
+              </motion.div>
+            )}
+
+            {/* STEP 7: Plan Selection & Terms */}
+            {step === 6 && (
+              <motion.div
+                key="step7"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="space-y-6"
+              >
+                {/* Plan Card */}
+                <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-6 border-2 border-blue-200">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-xl font-bold text-blue-900">
+                      Study Protect
+                    </h3>
+                    <div className="text-3xl font-bold text-blue-600">
+                      €115.71
+                    </div>
+                  </div>
+                  <p className="text-sm text-blue-700 mb-4">
+                    Excess €500 / year
+                  </p>
+                  <div className="bg-white rounded-lg p-4">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-600">
+                        Study Protect tariff
+                      </span>
+                      <span className="font-bold">€115.71</span>
+                    </div>
+                    <div className="flex items-center justify-between text-sm mt-2">
+                      <span className="text-gray-600">
+                        Long-term care insurance
+                      </span>
+                      <span className="font-bold">€31.92</span>
+                    </div>
+                    <div className="border-t mt-3 pt-3 flex items-center justify-between font-bold">
+                      <span>In total</span>
+                      <span className="text-lg text-blue-600">€147.63</span>
+                    </div>
+                  </div>
+                </div>
+
+                <FormField
+                  label="Insurance Start Date *"
+                  error={errors.insuranceStartDate}
+                >
+                  <input
+                    type="date"
+                    value={formData.insuranceStartDate}
+                    onChange={(e) =>
+                      handleChange("insuranceStartDate", e.target.value)
+                    }
+                    min={new Date().toISOString().split("T")[0]}
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition"
+                  />
+                </FormField>
+
+                {/* Terms */}
+                <div className="space-y-4 border-t pt-6">
+                  <label className="flex items-start gap-3 cursor-pointer group">
+                    <input
+                      type="checkbox"
+                      checked={formData.acceptTerms}
+                      onChange={(e) =>
+                        handleChange("acceptTerms", e.target.checked)
+                      }
+                      className="mt-1 w-5 h-5 text-purple-600 rounded"
+                    />
+                    <span className="text-sm text-gray-700">
+                      I have read and accept the{" "}
+                      <a
+                        href="/termscondition"
+                        className="text-purple-600 font-semibold hover:underline"
+                      >
+                        Terms and Conditions
+                      </a>{" "}
+                      and{" "}
+                      <a
+                        href="/privacypolicy"
+                        className="text-purple-600 font-semibold hover:underline"
+                      >
+                        Privacy Policy
+                      </a>
+                      . *
+                    </span>
+                  </label>
+                  {errors.acceptTerms && (
+                    <p className="text-red-600 text-sm flex items-center gap-1 ml-8">
+                      <AlertCircle className="w-4 h-4" />
+                      {errors.acceptTerms}
+                    </p>
+                  )}
+
+                  <label className="flex items-start gap-3 cursor-pointer group">
+                    <input
+                      type="checkbox"
+                      checked={formData.acceptMarketing}
+                      onChange={(e) =>
+                        handleChange("acceptMarketing", e.target.checked)
+                      }
+                      className="mt-1 w-5 h-5 text-purple-600 rounded"
+                    />
+                    <span className="text-sm text-gray-700">
+                      I consent to receiving marketing communications via email.
+                    </span>
+                  </label>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Navigation Buttons */}
+          <div className="flex gap-4 mt-8 pt-6 border-t">
+            {step > 1 && (
+              <motion.button
+                type="button"
+                onClick={handleBack}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="flex-1 py-4 border-2 border-gray-300 text-gray-700 rounded-xl font-semibold hover:border-purple-500 hover:text-purple-600 transition flex items-center justify-center gap-2"
+              >
+                <ArrowLeft className="w-5 h-5" />
+                Back
+              </motion.button>
+            )}
+            {step < 6 ? (
+              <motion.button
+                type="button"
+                onClick={handleNext}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="flex-1 py-4 bg-gradient-to-r from-purple-600 to-primary text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition flex items-center justify-center gap-2"
+              >
+                Continue
+                <ArrowRight className="w-5 h-5" />
+              </motion.button>
+            ) : (
+              <motion.button
+                type="button"
+                onClick={handleSubmit}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="flex-1 py-4 bg-gradient-to-r from-primary to-blue-600 cursor-pointer text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition flex items-center justify-center gap-2"
+              >
+                <Sparkles className="w-5 h-5" />
+                Submit Application
+              </motion.button>
+            )}
+          </div>
+        </motion.div>
+
+        {/* Help Text */}
+        <p className="text-center text-sm text-gray-500 mt-6">
+          🔒 Your data is encrypted and secure. Questions? Email{" "}
+          <a
+            href="mailto:info@insurbe.com"
+            className="text-purple-600 font-semibold hover:underline"
           >
-            <Sparkles className="w-6 h-6" />
-            Submit Application
-            <ChevronRight className="w-6 h-6" />
-          </motion.button>
-
-          <p className="text-center text-sm text-gray-500">
-            🔒 Your data is encrypted and secure. We respect your{" "}
-            <a
-              href="/privacypolicy"
-              className="text-purple-600 font-semibold hover:underline"
-            >
-              privacy
-            </a>
-            .
-          </p>
-        </motion.form>
+            info@insurbe.com
+          </a>
+        </p>
       </div>
     </section>
   );
 }
 
 // Helper Components
-
-interface FormSectionProps {
-  title: string;
-  icon: React.ElementType;
-  color: string;
-  children: React.ReactNode;
-}
-
-function FormSection({ title, icon: Icon, color, children }: FormSectionProps) {
-  const colorMap: Record<string, string> = {
-    purple: "from-purple-600 to-purple-700",
-    pink: "from-pink-600 to-pink-700",
-    blue: "from-blue-600 to-blue-700",
-    emerald: "from-emerald-600 to-emerald-700",
-    red: "from-red-600 to-red-700",
-    indigo: "from-indigo-600 to-indigo-700",
-  };
-
-  return (
-    <div className="space-y-6">
-      <div
-        className={`flex items-center gap-3 px-6 py-4 rounded-2xl bg-linear-to-r ${colorMap[color]} text-white shadow-lg`}
-      >
-        <Icon className="w-6 h-6" />
-        <h2 className="text-xl font-bold">{title}</h2>
-      </div>
-      {children}
-    </div>
-  );
-}
-
 interface FormFieldProps {
   label: string;
-  name: string;
-  required?: boolean;
   error?: string;
   children: React.ReactNode;
 }
 
-function FormField({ label, name, required, error, children }: FormFieldProps) {
+function FormField({ label, error, children }: FormFieldProps) {
   return (
     <div>
-      <label
-        htmlFor={name}
-        className="block text-sm font-semibold text-gray-700 mb-2"
-      >
+      <label className="block text-sm font-semibold text-gray-700 mb-2">
         {label}
-        {required && <span className="text-red-500 ml-1">*</span>}
       </label>
       {children}
       {error && (
         <motion.p
-          initial={{ opacity: 0, y: -10 }}
+          initial={{ opacity: 0, y: -5 }}
           animate={{ opacity: 1, y: 0 }}
           className="mt-2 text-sm text-red-600 flex items-center gap-1"
         >
@@ -1306,96 +1553,93 @@ function FormField({ label, name, required, error, children }: FormFieldProps) {
   );
 }
 
-interface RadioGroupProps {
-  label: string;
-  name: string;
+interface HealthQuestionProps {
+  number: number;
+  question: string;
   value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: (value: string) => void;
   error?: string;
-  options: Array<{ value: string; label: string }>;
 }
 
-function RadioGroup({
-  label,
-  name,
+function HealthQuestion({
+  number,
+  question,
   value,
   onChange,
   error,
-  options,
-}: RadioGroupProps) {
+}: HealthQuestionProps) {
   return (
-    <div>
-      <p className="text-sm font-semibold text-gray-700 mb-3">{label}</p>
-      <div className="flex gap-6">
-        {options.map((option) => (
-          <label
-            key={option.value}
-            className="flex items-center gap-2 cursor-pointer"
+    <div className="border-2 border-gray-200 rounded-xl p-4 hover:border-purple-300 transition">
+      <p className="text-sm font-medium text-gray-900 mb-3">
+        {number}. {question}
+      </p>
+      <div className="flex gap-4">
+        {["Yes", "No"].map((option) => (
+          <button
+            key={option}
+            type="button"
+            onClick={() => onChange(option)}
+            className={`flex-1 py-2 px-4 rounded-lg border-2 font-medium transition ${
+              value === option
+                ? option === "No"
+                  ? "border-green-600 bg-green-50 text-green-700"
+                  : "border-orange-600 bg-orange-50 text-orange-700"
+                : "border-gray-200 hover:border-gray-300"
+            }`}
           >
-            <input
-              type="radio"
-              name={name}
-              value={option.value}
-              checked={value === option.value}
-              onChange={onChange}
-              className="w-5 h-5 text-purple-600 focus:ring-purple-500"
-            />
-            <span className="text-gray-700">{option.label}</span>
-          </label>
+            {option}
+          </button>
         ))}
       </div>
       {error && (
-        <motion.p
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mt-2 text-sm text-red-600 flex items-center gap-1"
-        >
+        <p className="mt-2 text-sm text-red-600 flex items-center gap-1">
           <AlertCircle className="w-4 h-4" />
           {error}
-        </motion.p>
+        </p>
       )}
     </div>
   );
 }
 
-interface CheckboxFieldProps {
-  name: string;
-  checked: boolean;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+interface SubHealthQuestionProps {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
   error?: string;
-  children: React.ReactNode;
 }
 
-function CheckboxField({
-  name,
-  checked,
+function SubHealthQuestion({
+  label,
+  value,
   onChange,
   error,
-  children,
-}: CheckboxFieldProps) {
+}: SubHealthQuestionProps) {
   return (
-    <div>
-      <label className="flex items-start gap-3 cursor-pointer group">
-        <input
-          type="checkbox"
-          name={name}
-          checked={checked}
-          onChange={onChange}
-          className="mt-1 w-5 h-5 text-purple-600 focus:ring-purple-500 rounded"
-        />
-        <span className="text-gray-700 text-sm leading-relaxed group-hover:text-gray-900 transition-colors">
-          {children}
-        </span>
-      </label>
+    <div className="bg-gray-50 rounded-lg p-3">
+      <p className="text-sm text-gray-700 mb-2">{label}</p>
+      <div className="flex gap-3">
+        {["Yes", "No"].map((option) => (
+          <button
+            key={option}
+            type="button"
+            onClick={() => onChange(option)}
+            className={`flex-1 py-1.5 px-3 rounded-lg border-2 text-sm font-medium transition ${
+              value === option
+                ? option === "No"
+                  ? "border-green-600 bg-green-50 text-green-700"
+                  : "border-orange-600 bg-orange-50 text-orange-700"
+                : "border-gray-200 hover:border-gray-300"
+            }`}
+          >
+            {option}
+          </button>
+        ))}
+      </div>
       {error && (
-        <motion.p
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mt-2 ml-8 text-sm text-red-600 flex items-center gap-1"
-        >
-          <AlertCircle className="w-4 h-4" />
+        <p className="mt-1 text-xs text-red-600 flex items-center gap-1">
+          <AlertCircle className="w-3 h-3" />
           {error}
-        </motion.p>
+        </p>
       )}
     </div>
   );

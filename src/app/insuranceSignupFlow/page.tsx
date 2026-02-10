@@ -72,10 +72,12 @@ export default function InsuranceSignupFlow() {
     insuredBefore: "",
   });
 
-  const [documents, setDocuments] = useState({
-    passport: false,
-    contract: false,
-    photo: false,
+  type DocumentKey = "passport" | "contract" | "photo";
+
+  const [documents, setDocuments] = useState<Record<DocumentKey, File | null>>({
+    passport: null,
+    contract: null,
+    photo: null,
   });
 
   const [personal, setPersonal] = useState({
@@ -391,7 +393,6 @@ export default function InsuranceSignupFlow() {
     documents.contract &&
     documents.photo;
 
- 
   const next = () => {
     if (step === 2) {
       if (validateAllFields()) {
@@ -547,38 +548,70 @@ export default function InsuranceSignupFlow() {
                   </div>
                 </div>
 
-                {/* Upload Documents */}
+                {/* Upload Documents (Optional) */}
                 <div className="mb-8">
-                  <p className="font-medium mb-3">Upload documents *</p>
+                  <p className="font-medium mb-3">
+                    Upload documents{" "}
+                    <span className="text-gray-400 text-sm">(optional)</span>
+                  </p>
+
                   <div className="grid sm:grid-cols-3 gap-4">
                     {[
                       { key: "passport", label: "Passport" },
-                      { key: "contract", label: "Employment contract" },
+                      {
+                        key: "contract",
+                        label: "Employment contract / Admission letter",
+                      },
                       { key: "photo", label: "Portrait photo" },
-                    ].map((d) => (
-                      <div
-                        key={d.key}
-                        onClick={() =>
-                          setDocuments({
-                            ...documents,
-                            [d.key]: true,
-                          })
-                        }
-                        className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all hover:shadow-sm
-                          ${
-                            documents[d.key as keyof typeof documents]
-                              ? "border-purple-500 bg-purple-50"
-                              : "border-gray-300 hover:border-purple-300"
-                          }`}
-                      >
-                        {documents[d.key as keyof typeof documents] ? (
-                          <CheckCircle className="w-6 h-6 mx-auto mb-2 text-purple-600" />
-                        ) : (
-                          <UploadCloud className="w-6 h-6 mx-auto mb-2 text-gray-500" />
-                        )}
-                        <p className="text-sm font-medium">{d.label}</p>
-                      </div>
-                    ))}
+                    ].map((d) => {
+                      const file = documents[d.key as DocumentKey];
+
+                      return (
+                        <label
+                          key={d.key}
+                          className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all hover:shadow-sm
+            ${
+              file
+                ? "border-purple-500 bg-purple-50"
+                : "border-gray-300 hover:border-purple-300"
+            }`}
+                        >
+                          {/* Hidden file input */}
+                          <input
+                            type="file"
+                            className="hidden"
+                            accept="image/*,.pdf"
+                            onChange={(e) => {
+                              const selectedFile = e.target.files?.[0] || null;
+                              setDocuments((prev) => ({
+                                ...prev,
+                                [d.key]: selectedFile,
+                              }));
+                            }}
+                          />
+
+                          {file ? (
+                            <>
+                              <CheckCircle className="w-6 h-6 mx-auto mb-2 text-purple-600" />
+                              <p className="text-sm font-medium truncate">
+                                {file.name}
+                              </p>
+                              <p className="text-xs text-gray-500 mt-1">
+                                Click to replace
+                              </p>
+                            </>
+                          ) : (
+                            <>
+                              <UploadCloud className="w-6 h-6 mx-auto mb-2 text-gray-500" />
+                              <p className="text-sm font-medium">{d.label}</p>
+                              <p className="text-xs text-gray-400 mt-1">
+                                Click to upload
+                              </p>
+                            </>
+                          )}
+                        </label>
+                      );
+                    })}
                   </div>
                 </div>
 

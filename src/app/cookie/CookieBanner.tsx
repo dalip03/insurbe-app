@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { getCookieConsent, setCookieConsent } from "../lib/cookieConsent";
+import { getCookieConsent, setCookieConsent } from "../../lib/cookieConsent";
 
 export default function CookieBanner() {
   const [visible, setVisible] = useState(false);

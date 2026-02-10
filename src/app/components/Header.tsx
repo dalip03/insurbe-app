@@ -14,6 +14,7 @@ import {
   GraduationCap,
   LogOut,
   UserPlus,
+  User,
 } from "lucide-react";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
@@ -181,7 +182,7 @@ const Header = () => {
   const { data: session, status } = useSession();
 
   // Optional: avoid flicker while loading
-   if (status === "loading") {
+  if (status === "loading") {
     return (
       <div className="hidden md:flex items-center gap-4 ml-6">
         <div className="h-9 w-24 rounded-xl bg-gray-200 animate-pulse" />
@@ -413,10 +414,12 @@ const Header = () => {
         </div>
         <div className="hidden md:flex items-center gap-4 ml-6">
           {!session ? (
-            <Link href="/login">
-              <button className="px-4 py-2 rounded-xl cursor-pointer bg-primary text-white text-sm font-semibold">
-                Log in
-              </button>
+            <Link
+              href="/login"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl  text-gray-900 text-[15px] font-medium  transition"
+            >
+              <User className="w-5 h-5" />
+              Log in
             </Link>
           ) : (
             <button
@@ -429,7 +432,7 @@ const Header = () => {
             </button>
           )}
         </div>
-      
+
         {/* Mobile Menu Button */}
         <motion.button
           whileTap={{ scale: 0.95 }}

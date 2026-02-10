@@ -100,7 +100,27 @@ export default function InsuranceEligibilityQuiz() {
   ];
 
   // Determine if user is eligible for public insurance (age < 30)
-const isEligibleForPublic = age === "below-30";
+  const isEligibleForPublic = age === "below-30";
+
+  const handlePlanSelect = ({
+    title,
+    price,
+    category,
+  }: {
+    title: string;
+    price: string;
+    category: "Public" | "Private";
+  }) => {
+    const planData = {
+      title,
+      price,
+      category,
+      age,
+      degree,
+    };
+
+    sessionStorage.setItem("selectedPlan", JSON.stringify(planData));
+  };
 
   return (
     <section className="relative py-16 sm:py-10 px-4 sm:px-8 lg:px-18 overflow-hidden">
@@ -400,7 +420,8 @@ const isEligibleForPublic = age === "below-30";
                               TK Public Insurance
                             </h4>
                             <p className="text-gray-600 text-sm">
-                              German public health insurance for students under 30
+                              German public health insurance for students under
+                              30
                             </p>
                           </div>
                           <div className="flex items-center">
@@ -431,11 +452,13 @@ const isEligibleForPublic = age === "below-30";
                                     idx === 0
                                       ? "from-blue-100 to-blue-200"
                                       : idx === 1
-                                      ? "from-green-100 to-green-200"
-                                      : "from-red-100 to-red-200"
+                                        ? "from-green-100 to-green-200"
+                                        : "from-red-100 to-red-200"
                                   }`}
                                 >
-                                  <Icon className={`w-5 h-5 ${benefit.color}`} />
+                                  <Icon
+                                    className={`w-5 h-5 ${benefit.color}`}
+                                  />
                                 </div>
                                 <span className="text-gray-700 font-medium text-sm leading-relaxed flex-1">
                                   {benefit.text}
@@ -461,7 +484,14 @@ const isEligibleForPublic = age === "below-30";
                             </div>
 
                             <motion.button
-                              onClick={() => router.push("/insuranceSignupFlow")}
+                              onClick={() => {
+                                handlePlanSelect({
+                                  title: "TK Public Insurance",
+                                  price: "141",
+                                  category: "Public",
+                                });
+                                router.push("/insuranceSignupFlow");
+                              }}
                               whileHover={{ scale: 1.05, y: -2 }}
                               whileTap={{ scale: 0.95 }}
                               className="w-full sm:w-auto px-8 py-4 rounded-2xl font-bold text-lg text-white bg-gradient-to-r from-purple-600 to-pink-400 shadow-2xl shadow-blue-500/40 hover:shadow-blue-500/60 transition-all flex items-center justify-center gap-2"
@@ -472,7 +502,8 @@ const isEligibleForPublic = age === "below-30";
                           </div>
 
                           <p className="text-xs text-gray-500 mt-4 text-center sm:text-left">
-                            🔒 No commitment required • Cancel anytime • Money-back guarantee
+                            🔒 No commitment required • Cancel anytime •
+                            Money-back guarantee
                           </p>
                         </div>
                       </div>
@@ -498,10 +529,10 @@ const isEligibleForPublic = age === "below-30";
                               {degree === "bachelor"
                                 ? "Bachelor's"
                                 : degree === "master"
-                                ? "Master's"
-                                : degree === "phd"
-                                ? "PhD"
-                                : "Graduate"}{" "}
+                                  ? "Master's"
+                                  : degree === "phd"
+                                    ? "PhD"
+                                    : "Graduate"}{" "}
                               students in the {age} age group
                             </p>
                           </div>
@@ -533,13 +564,15 @@ const isEligibleForPublic = age === "below-30";
                                     idx === 0
                                       ? "from-emerald-100 to-emerald-200"
                                       : idx === 1
-                                      ? "from-blue-100 to-blue-200"
-                                      : idx === 2
-                                      ? "from-purple-100 to-purple-200"
-                                      : "from-pink-100 to-pink-200"
+                                        ? "from-blue-100 to-blue-200"
+                                        : idx === 2
+                                          ? "from-purple-100 to-purple-200"
+                                          : "from-pink-100 to-pink-200"
                                   }`}
                                 >
-                                  <Icon className={`w-5 h-5 ${benefit.color}`} />
+                                  <Icon
+                                    className={`w-5 h-5 ${benefit.color}`}
+                                  />
                                 </div>
                                 <span className="text-gray-700 font-medium text-sm leading-relaxed flex-1">
                                   {benefit.text}
@@ -565,7 +598,14 @@ const isEligibleForPublic = age === "below-30";
                             </div>
 
                             <motion.button
-                              onClick={() => router.push("/ottonovaSignupform")}
+                              onClick={() => {
+                                handlePlanSelect({
+                                  title: "Ottonova Private Insurance",
+                                    price: INSURANCE_PLANS.INSURBE_STUDENT_CLASSIC.toString(),
+                                  category: "Private",
+                                });
+                                router.push("/ottonovaSignupform");
+                              }}
                               whileHover={{ scale: 1.05, y: -2 }}
                               whileTap={{ scale: 0.95 }}
                               className="w-full sm:w-auto px-8 py-4 rounded-2xl font-bold text-lg text-white bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 shadow-2xl shadow-purple-500/40 hover:shadow-purple-500/60 transition-all flex items-center justify-center gap-2"
@@ -576,7 +616,8 @@ const isEligibleForPublic = age === "below-30";
                           </div>
 
                           <p className="text-xs text-gray-500 mt-4 text-center sm:text-left">
-                            🔒 No commitment required • Cancel anytime • Money-back guarantee
+                            🔒 No commitment required • Cancel anytime •
+                            Money-back guarantee
                           </p>
                         </div>
                       </div>
