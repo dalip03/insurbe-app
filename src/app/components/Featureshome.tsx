@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Wallet, FileText, Zap } from "lucide-react";
-import { ICON_BG, iconColors } from "../constants/styles";
+import { ICON_BG } from "../constants/styles";
 
 const advantages = [
   {

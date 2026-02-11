@@ -12,7 +12,7 @@ import {
   HeartPulse,
 } from "lucide-react";
 import Link from "next/link";
-import { ICON_BG, iconColors } from "../constants/styles";
+import { ICON_BG } from "../constants/styles";
 
 export default function ChooseUs() {
   const reasons = [

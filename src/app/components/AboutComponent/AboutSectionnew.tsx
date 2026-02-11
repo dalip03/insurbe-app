@@ -9,7 +9,7 @@ import {
   Building2,
   SlidersHorizontal,
 } from "lucide-react";
-import { ICON_BG, iconColors } from "@/app/constants/styles";
+import { ICON_BG } from "@/app/constants/styles";
 
 export default function AboutSectionnew() {
   const features = [
