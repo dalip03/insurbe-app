@@ -70,8 +70,10 @@ export default function InsuranceSignupFlow() {
     dob: "",
     provider: "",
     insuredBefore: "",
+    institutionName: "", // NEW FIELD
+    previousInsuranceType: "",
+    previousProviderName: "",
   });
-
   type DocumentKey = "passport" | "contract" | "photo";
 
   const [documents, setDocuments] = useState<Record<DocumentKey, File | null>>({
@@ -389,6 +391,9 @@ export default function InsuranceSignupFlow() {
     selectPlan.dob &&
     selectPlan.provider &&
     selectPlan.insuredBefore &&
+    selectPlan.institutionName &&
+    selectPlan.previousInsuranceType &&
+    selectPlan.previousProviderName &&
     documents.passport &&
     documents.contract &&
     documents.photo;
@@ -492,6 +497,34 @@ export default function InsuranceSignupFlow() {
                     ))}
                   </div>
                 </div>
+                {/* Conditional Institution Field */}
+                {selectPlan.reason && (
+                  <div className="mb-6">
+                    <label className="block font-medium mb-2">
+                      {selectPlan.reason === "Student" && "University name *"}
+                      {selectPlan.reason === "Employee" && "Company name *"}
+                      {selectPlan.reason === "Trainee" &&
+                        "Training company name *"}
+                    </label>
+
+                    <input
+                      type="text"
+                      value={selectPlan.institutionName}
+                      onChange={(e) =>
+                        setSelectPlan({
+                          ...selectPlan,
+                          institutionName: e.target.value,
+                        })
+                      }
+                      placeholder={
+                        selectPlan.reason === "Student"
+                          ? "Enter your university"
+                          : "Enter company name"
+                      }
+                      className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:border-purple-500 focus:ring-2 focus:ring-purple-100 transition-all"
+                    />
+                  </div>
+                )}
 
                 {/* DOB */}
                 <div className="mb-6">
@@ -547,6 +580,57 @@ export default function InsuranceSignupFlow() {
                     ))}
                   </div>
                 </div>
+                {/* Previous Insurance Details */}
+                {selectPlan.insuredBefore && (
+                  <div className="mb-6 space-y-6">
+                    {/* Type of insurance */}
+                    <div>
+                      <label className="block font-medium mb-2">
+                        Type of insurance *
+                      </label>
+                      <select
+                        value={selectPlan.previousInsuranceType}
+                        onChange={(e) =>
+                          setSelectPlan({
+                            ...selectPlan,
+                            previousInsuranceType: e.target.value,
+                          })
+                        }
+                        className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:border-purple-500 focus:ring-2 focus:ring-purple-100 transition-all"
+                      >
+                        <option value="">Select insurance type</option>
+                        <option value="Travel Insurance">
+                          Travel Insurance
+                        </option>
+                        <option value="Public Insurance">
+                          Public Insurance
+                        </option>
+                        <option value="Private Insurance">
+                          Private Insurance
+                        </option>
+                      </select>
+                    </div>
+
+                    {/* Provider Name */}
+                    <div>
+                      <label className="block font-medium mb-2">
+                        Provider name *
+                      </label>
+                      <input
+                        type="text"
+                        value={selectPlan.previousProviderName}
+                        onChange={(e) =>
+                          setSelectPlan({
+                            ...selectPlan,
+                            previousProviderName: e.target.value,
+                          })
+                        }
+                        placeholder="Enter previous provider name"
+                        className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:border-purple-500 focus:ring-2 focus:ring-purple-100 transition-all"
+                      />
+                    </div>
+                  </div>
+                )}
 
                 {/* Upload Documents (Optional) */}
                 <div className="mb-8">
@@ -1358,6 +1442,18 @@ export default function InsuranceSignupFlow() {
                     value={personal.includeFamilyMembers}
                   />
                   <Review label="Reason for Stay" value={selectPlan.reason} />
+                  {selectPlan.institutionName && (
+                    <Review
+                      label={
+                        selectPlan.reason === "Student"
+                          ? "University"
+                          : selectPlan.reason === "Employee"
+                            ? "Company"
+                            : "Training Company"
+                      }
+                      value={selectPlan.institutionName}
+                    />
+                  )}
                   <Review
                     label="Insurance Provider"
                     value={selectPlan.provider}
@@ -1366,7 +1462,18 @@ export default function InsuranceSignupFlow() {
                     label="Previously Insured"
                     value={selectPlan.insuredBefore}
                   />
+
+                  <Review
+                    label="Previous Insurance Type"
+                    value={selectPlan.previousInsuranceType}
+                  />
+
+                  <Review
+                    label="Previous Provider"
+                    value={selectPlan.previousProviderName}
+                  />
                 </div>
+
                 <div className="flex gap-4 mt-8">
                   <button
                     onClick={back}
