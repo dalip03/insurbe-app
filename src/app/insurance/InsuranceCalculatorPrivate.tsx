@@ -20,28 +20,102 @@ function calculateTKPremium(
   monthlyIncome: number,
   age: number,
   hasChildren: boolean,
-  employmentStatus: EmploymentStatus
+  employmentStatus: EmploymentStatus,
+  isSaxony: boolean
 ): number {
-  const annualIncome = monthlyIncome * 12;
-  const CAP_ANNUAL = 66150;
-  const cappedAnnual = Math.min(annualIncome, CAP_ANNUAL);
 
-  const isSelfEmployed = employmentStatus === "Self Employed/Freelancer";
+  /* --------------------------- CONSTANTS (2025 TK) --------------------------- */
 
-  const healthRate = isSelfEmployed ? 0.146 : 0.073;
-  const zusatzRate = isSelfEmployed ? 0.0245 : 0.01225;
+  const CONTRIBUTION_CEILING = 5850; // 2025 official
+  const GENERAL_RATE = 0.146; // 14.6%
+  // const TK_ZUSATZ = 0.0269; // 2.69%
+    const TK_ZUSATZ = 0.02542; // 2.6%
 
-  let careRate: number;
-  if (hasChildren || age < 23) {
-    careRate = isSelfEmployed ? 0.036 : 0.018;
-  } else {
-    careRate = isSelfEmployed ? 0.048 : 0.024;
+  const SELF_EMPLOYED_MIN = 1318.33;
+
+  const isSelfEmployed =
+    employmentStatus === "Self Employed/Freelancer";
+
+  /* ---------------------------- ROUNDING HELPER ---------------------------- */
+
+  const round2 = (value: number) =>
+    Math.round(value * 100) / 100;
+
+  /* ---------------------------- EFFECTIVE INCOME --------------------------- */
+
+  let effectiveIncome = Math.min(monthlyIncome, CONTRIBUTION_CEILING);
+
+  if (isSelfEmployed) {
+    effectiveIncome = Math.max(effectiveIncome, SELF_EMPLOYED_MIN);
   }
 
-  const totalAnnual = cappedAnnual * (healthRate + zusatzRate + careRate);
+  /* --------------------------- HEALTH PART ONLY --------------------------- */
 
-  return Math.round((totalAnnual / 12) * 100) / 100;
+  let healthContribution = 0;
+
+  if (isSelfEmployed) {
+    healthContribution = round2(
+      effectiveIncome * GENERAL_RATE
+    );
+  } else {
+    healthContribution = round2(
+      effectiveIncome * (GENERAL_RATE / 2)
+    );
+  }
+
+  /* --------------------------- ZUSATZ PART ONLY --------------------------- */
+
+  let zusatzContribution = 0;
+
+  if (isSelfEmployed) {
+    zusatzContribution = round2(
+      effectiveIncome * TK_ZUSATZ
+    );
+  } else {
+    zusatzContribution = round2(
+      effectiveIncome * (TK_ZUSATZ / 2)
+    );
+  }
+
+  /* --------------------------- CARE INSURANCE ----------------------------- */
+
+  let careContribution = 0;
+
+  if (isSelfEmployed) {
+    const careRate =
+      hasChildren || age < 23 ? 0.036 : 0.042;
+
+    careContribution = round2(
+      effectiveIncome * careRate
+    );
+  } else {
+    if (hasChildren || age < 23) {
+      // With children
+      careContribution = round2(
+        effectiveIncome *
+          (isSaxony ? 0.023 : 0.018)
+      );
+    } else {
+      // Childless 23+
+      careContribution = round2(
+        effectiveIncome *
+          (isSaxony ? 0.029 : 0.024)
+      );
+    }
+  }
+
+  /* ------------------------------ TOTAL ----------------------------------- */
+
+  const totalMonthly =
+    healthContribution +
+    zusatzContribution +
+    careContribution;
+
+  return round2(totalMonthly);
 }
+
+
+
 
 /* -------------------------------------------------------------------------- */
 /*                               MAIN COMPONENT                               */
@@ -54,6 +128,7 @@ export default function InsuranceCalculatorPrivate() {
   const [hasKids, setHasKids] = useState(false);
   const [premium, setPremium] = useState<number | null>(null);
   const [isCalculating, setIsCalculating] = useState(false);
+  const [isSaxony, setIsSaxony] = useState(false);
 
   const handleCalculate = () => {
     const inc = parseFloat(income.replace(/[^0-9.]/g, ""));
@@ -68,7 +143,9 @@ export default function InsuranceCalculatorPrivate() {
     
     // Simulate calculation delay for animation effect
     setTimeout(() => {
-      setPremium(calculateTKPremium(inc, ag, hasKids, status));
+setPremium(
+  calculateTKPremium(inc, ag, hasKids, status, isSaxony)
+);
       setIsCalculating(false);
     }, 800);
   };
@@ -260,6 +337,32 @@ export default function InsuranceCalculatorPrivate() {
                 ))}
               </div>
             </motion.div>
+{/* Saxony */}
+<motion.div variants={itemVariants}>
+  <label className="block font-semibold mb-3 text-gray-900">
+    Federal State
+  </label>
+  <div className="flex gap-3">
+    {["Employed in Saxony", "Other State"].map((opt) => (
+      <motion.button
+        key={opt}
+        onClick={() => setIsSaxony(opt === "Employed in Saxony")}
+        variants={buttonVariants}
+        initial="idle"
+        whileHover="hover"
+        whileTap="tap"
+        className={`px-6 py-2.5 rounded-full border text-sm font-medium transition-all
+          ${
+            isSaxony === (opt === "Employed in Saxony")
+              ? "bg-linear-to-r from-purple-600 to-primary text-white border-transparent shadow-lg"
+              : "bg-white border-gray-300 text-gray-700 hover:border-purple-400 hover:shadow-md"
+          }`}
+      >
+        {opt}
+      </motion.button>
+    ))}
+  </div>
+</motion.div>
 
             {/* CTA */}
             <motion.button
@@ -313,7 +416,8 @@ export default function InsuranceCalculatorPrivate() {
                 transition={{ type: "spring", duration: 0.5 }}
                 className="text-5xl font-bold bg-linear-to-r from-purple-600 to-primary bg-clip-text text-transparent mb-2"
               >
-                € {premium ?? "--"}
+              € {premium !== null ? premium.toFixed(2) : "--"}
+
               </motion.div>
             </AnimatePresence>
 
