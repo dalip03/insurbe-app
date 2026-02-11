@@ -15,6 +15,7 @@ import {
   LogOut,
   UserPlus,
   User,
+  LayoutDashboard,
 } from "lucide-react";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
@@ -422,14 +423,14 @@ const Header = () => {
               Log in
             </Link>
           ) : (
-            <button
-              type="button"
-              onClick={() => signOut({ callbackUrl: "/login" })}
-              className="flex items-center cursor-pointer gap-2 px-4 py-2 rounded-xl text-red-600 hover:bg-red-50 transition-all"
-            >
-              <LogOut className="w-4 h-4" />
-              <span className="text-sm font-semibold">Logout</span>
-            </button>
+           <button
+  type="button"
+  onClick={() => router.push("/dashboard")}
+  className="flex items-center cursor-pointer gap-2 px-4 py-2 rounded-xl text-purple-600 hover:bg-purple-50 transition-all"
+>
+  <LayoutDashboard className="w-4 h-4" />
+  <span className="text-sm font-semibold">Dashboard</span>
+</button>
           )}
         </div>
 

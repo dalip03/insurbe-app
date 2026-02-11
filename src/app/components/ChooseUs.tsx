@@ -12,7 +12,7 @@ import {
   HeartPulse,
 } from "lucide-react";
 import Link from "next/link";
-import { ICON_BG } from "../constants/styles";
+import { ICON_BG, iconColors } from "../constants/styles";
 
 export default function ChooseUs() {
   const reasons = [
@@ -124,18 +124,24 @@ export default function ChooseUs() {
           "
                   >
                     {/* Icon */}
-                    <div className="mb-6">
+                    <div className="relative w-14 h-14 mb-6">
+                      {/* Back Layer 1 */}
                       <div
-                        className={`
-  w-14 h-14 rounded-xl
-  flex items-center justify-center
- 
-  backdrop-blur-xl
-  border border-white/20
-  shadow-lg shadow-purple-500/20 
-                        `}
+                        className={`absolute inset-0 rounded-2xl 
+                             ${ICON_BG} 
+                                      opacity-80`}
+                      />
+
+                      {/* Front Glass Layer */}
+                      <div
+                        className={`relative z-10 w-14 h-14 rounded-2xl 
+                                     flex items-center justify-center
+                                     ${iconColors}
+                                     backdrop-blur-xl
+                                     border border-white/30
+                                     shadow-xl`}
                       >
-                        <Icon className="w-7 h-7 text-black" />
+                        <Icon className="w-7 h-7 text-white" />
                       </div>
                     </div>
 

@@ -14,6 +14,7 @@ import {
   PlaneLanding,
 } from "lucide-react";
 import { INSURANCE_LIMITS } from "../constants/insurance";
+import { ICON_BG, iconColors } from "../constants/styles";
 
 const products = [
   {
@@ -226,7 +227,7 @@ export default function ProductBanner() {
                       <motion.div
                         whileHover={{ rotate: 360, scale: 1.15 }}
                         transition={{ duration: 0.6 }}
-                        className={`relative w-15 h-15 rounded-2xl bg-gradient-to-br ${product.gradient} flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow`}
+                        className={`relative w-14 h-14 rounded-2xl  flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow`}
                       >
                         <motion.div
                           animate={{
@@ -237,9 +238,27 @@ export default function ProductBanner() {
                             repeat: Infinity,
                             delay: index * 0.1,
                           }}
-                          className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${product.gradient} opacity-30 blur-md`}
+                          className={`absolute inset-0 rounded-2xl opacity-30 blur-md`}
                         />
-                        <Icon className="w-6 h-6 text-white relative z-10" />
+                         {/* Back Layer 1 */}
+                                        <div
+                                          className={`absolute inset-0 rounded-2xl 
+                                  ${ICON_BG} 
+                                           opacity-80`}
+                                        />
+                        
+                                        {/* Front Glass Layer */}
+                                        <div
+                                          className={`relative z-10 w-14 h-14 rounded-2xl 
+                                          flex items-center justify-center
+                                          ${iconColors}
+                                          backdrop-blur-xl
+                                          border border-white/30
+                                          shadow-xl`}
+                                        >
+                                          <Icon className="w-6 h-6 text-white relative z-10" />
+                                        </div>
+                        
                       </motion.div>
 
                       {/* Text */}

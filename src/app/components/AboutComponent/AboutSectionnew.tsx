@@ -2,7 +2,14 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { Timer, ShieldCheck, UserCheck, Building2, SlidersHorizontal } from "lucide-react";
+import {
+  Timer,
+  ShieldCheck,
+  UserCheck,
+  Building2,
+  SlidersHorizontal,
+} from "lucide-react";
+import { ICON_BG, iconColors } from "@/app/constants/styles";
 
 export default function AboutSectionnew() {
   const features = [
@@ -67,7 +74,10 @@ export default function AboutSectionnew() {
         >
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
             We Actively Strive To Exceed Our <br className="hidden sm:block" />
-            <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-purple-600"> Customers' Expectations</span>
+            <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-purple-600">
+              {" "}
+              Customers' Expectations
+            </span>
           </h2>
           <p className="text-gray-700 text-sm sm:text-base lg:text-lg">
             Best Offers at competitive prices, never seen before
@@ -96,8 +106,27 @@ export default function AboutSectionnew() {
                   >
                     {/* Icon */}
                     <div className="shrink-0 mt-0.5 sm:mt-1">
-                      <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-linear-to-br from-primary to-purple-600 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all duration-300">
-                        <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-gray-100 " />
+                      <div className=" relative w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-linear-to-br from-primary to-purple-600 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all duration-300">
+
+                      {/* Back Layer 1 */}
+                      <div
+                        className={`absolute inset-0 rounded-full 
+                                  ${ICON_BG} 
+                                           opacity-80`}
+                      />
+
+                      {/* Front Glass Layer */}
+                      <div
+                        className={`relative z-10 w-9 h-9 sm:w-10 sm:h-10 rounded-full 
+                                          flex items-center justify-center
+                                          ${iconColors}
+                                          backdrop-blur-xl
+                                          border border-white/30
+                                          shadow-xl`}
+                      >
+                        <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-gray-100 " />{" "}
+                      </div>
+
                       </div>
                     </div>
 
@@ -124,16 +153,15 @@ export default function AboutSectionnew() {
             viewport={{ once: true }}
             className="relative w-full order-1 lg:order-2"
           >
-           <div className="relative w-full max-w-sm sm:max-w-md lg:max-w-lg aspect-4/4 rounded-3xl overflow-hidden shadow-2xl mx-auto">
-  <Image
-    src="/hero_assets/insurance.jpeg"
-    alt="Team Member"
-    fill
-    className="object-cover object-top"
-    sizes="(max-width: 640px) 90vw, (max-width: 1024px) 60vw, 40vw"
-  />
-</div>
-
+            <div className="relative w-full max-w-sm sm:max-w-md lg:max-w-lg aspect-4/4 rounded-3xl overflow-hidden shadow-2xl mx-auto">
+              <Image
+                src="/hero_assets/insurance.jpeg"
+                alt="Team Member"
+                fill
+                className="object-cover object-top"
+                sizes="(max-width: 640px) 90vw, (max-width: 1024px) 60vw, 40vw"
+              />
+            </div>
 
             {/* Decorative Element */}
             <div className="absolute -bottom-4 -right-4 sm:-bottom-6 sm:-right-6 w-24 h-24 sm:w-32 sm:h-32 bg-primary/20 rounded-full blur-2xl sm:blur-3xl -z-10" />
