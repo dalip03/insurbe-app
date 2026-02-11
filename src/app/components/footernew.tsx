@@ -2,10 +2,11 @@ import Image from "next/image";
 import Link from "next/link";
 import ContactBanner from "./ContactBanner";
 import { Lock, Server, Shield } from "lucide-react";
+import { CARD_BG } from "../constants/styles";
 
 export default function Footernew() {
   return (
-    <footer className="bg-primary text-white py-20 px-6 ">
+    <footer className={`${CARD_BG} text-white py-20 px-6 `}>
       <div className="max-w-full mx-auto">
         <div className="flex flex-col md:flex-row justify-between gap-12">
           {/* Brand Info */}
@@ -14,7 +15,7 @@ export default function Footernew() {
             <div className="flex justify-center md:justify-start py-2 gap-20">
               <Link href="/" className="font-bold font-serif">
                 <Image
-                  src="/icons/logo_white.png"
+                  src="/insurBe_Logowhite.svg"
                   alt="Logo"
                   width={120}
                   height={30}
@@ -23,7 +24,7 @@ export default function Footernew() {
             </div>
 
             {/* Subtitle */}
-            <p className="md:text-lg text-2xl  text-gray-300 ">
+            <p className="md:text-lg text-2xl  text-gray-200 ">
               The only digital solution for all your insurance needs.
             </p>
 
@@ -41,7 +42,7 @@ export default function Footernew() {
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <span className="text-sm font-medium text-gray-300">
+                  <span className="text-sm font-medium text-gray-200">
                     GDPR Compliant
                   </span>
                 </div>
@@ -208,7 +209,7 @@ export default function Footernew() {
         </div>
 
         {/* Footer Bottom */}
-        <div className="border-t border-gray-400 mt-10 pt-6">
+        <div className="border-t border-gray-200 mt-10 pt-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-white/90 text-sm">
             {/* Copyright */}
             <p className="text-center md:text-left">

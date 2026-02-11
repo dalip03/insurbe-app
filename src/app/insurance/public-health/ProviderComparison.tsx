@@ -137,29 +137,29 @@ export default function ProviderComparison() {
 
               {/* FEATURES */}
               <div className="space-y-4 mb-6 text-sm">
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between text-lg items-center">
                   <span>English support</span>
                   <Stars count={p.english} />
                 </div>
 
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between  text-lg items-center">
                   <span>Digital services</span>
                   <Stars count={p.digital} />
                 </div>
 
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between  text-lg items-center">
                   <span>Processing speed</span>
                   <Speed count={p.speed} />
                 </div>
 
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between  text-lg items-center">
                   <span>Dependents</span>
                   <Check className="w-5 h-5 text-green-500" />
                 </div>
               </div>
 
               {/* HIGHLIGHT */}
-              <p className="text-sm mb-6 opacity-90">
+              <p className="text-md mb-6 opacity-90">
                 {p.highlight}
               </p>
 

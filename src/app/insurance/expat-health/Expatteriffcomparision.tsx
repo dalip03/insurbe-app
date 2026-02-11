@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Check, ChevronDown, ChevronUp, Star, X } from "lucide-react";
+import { CARD_BG } from "@/app/constants/styles";
 
 /* ------------------------------------------------------------------ */
 /* HEALTH FLOW TYPES                                                   */
@@ -250,9 +251,9 @@ export default function Expatteriffcomparision() {
           <div className="text-center mt-10">
             <button
               onClick={() => setShowCompare(true)}
-              className="inline-flex items-center gap-2 px-10 py-4 rounded-full
-        bg-gradient-to-r from-primary to-purple-600
-        text-white font-semibold shadow-lg"
+              className={`inline-flex items-center gap-2 px-10 py-4 rounded-full
+       ${CARD_BG}
+         font-semibold `}
             >
               Compare tariffs
               <ChevronDown />
@@ -491,7 +492,7 @@ function TariffColumn({
       <div
         className={`relative p-8 rounded-3xl ${
           highlighted
-            ? "bg-gradient-to-br from-primary to-purple-600 text-white"
+            ?  `${CARD_BG}`
             : "bg-white border-2 border-gray-200"
         }`}
       >

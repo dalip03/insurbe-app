@@ -626,7 +626,7 @@ export default function ComprehensiveInsuranceForm() {
             Insurance Application
           </div>
           <h1 className="text-3xl sm:text-5xl font-extrabold text-gray-900 mb-2">
-            Get Your{" "}
+            Get Your student{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-primary">
               Health Insurance
             </span>

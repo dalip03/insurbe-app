@@ -195,7 +195,7 @@ const Header = () => {
       <nav className="flex justify-between items-center px-6 md:px-10 xl:px-20 py-4 w-full">
         {/* Logo */}
         <Link href="/" className="font-bold font-serif flex items-center gap-2">
-          <Image src="/logo.svg" alt="Logo" width={100} height={20} priority />
+          <Image src="/insurBe_Logo.svg" alt="Logo" width={100} height={20} priority />
         </Link>
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-10 text-lg">
@@ -271,7 +271,17 @@ const Header = () => {
                         transition={{ duration: 0.2 }}
                         className="fixed left-0 top-[72px] w-screen z-50"
                       >
-                        <div className="w-full bg-white shadow-xl border-b border-gray-200">
+                        <div
+                          className="
+  w-full
+  backdrop-blur-xl
+  bg-[#f4f4f4]/98
+  supports-[backdrop-filter]:bg-[#f4f4f4]/98
+  border-b border-white/20
+  shadow-[0_8px_30px_rgba(0,0,0,0.06)]
+"
+                        >
+                          {" "}
                           <div className="max-w-6xl mx-auto px-8 py-10">
                             <h3 className="text-xl font-bold text-gray-900 mb-6">
                               Insurance Products
@@ -423,14 +433,14 @@ const Header = () => {
               Log in
             </Link>
           ) : (
-           <button
-  type="button"
-  onClick={() => router.push("/dashboard")}
-  className="flex items-center cursor-pointer gap-2 px-4 py-2 rounded-xl text-purple-600 hover:bg-purple-50 transition-all"
->
-  <LayoutDashboard className="w-4 h-4" />
-  <span className="text-sm font-semibold">Dashboard</span>
-</button>
+            <button
+              type="button"
+              onClick={() => router.push("/dashboard")}
+              className="flex items-center cursor-pointer gap-2 px-4 py-2 rounded-xl text-purple-600 hover:bg-purple-50 transition-all"
+            >
+              <LayoutDashboard className="w-4 h-4" />
+              <span className="text-sm font-semibold">Dashboard</span>
+            </button>
           )}
         </div>
 

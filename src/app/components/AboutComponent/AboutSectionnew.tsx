@@ -105,29 +105,11 @@ export default function AboutSectionnew() {
                     className="flex items-start gap-3 sm:gap-4 group"
                   >
                     {/* Icon */}
-                    <div className="shrink-0 mt-0.5 sm:mt-1">
-                      <div className=" relative w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-linear-to-br from-primary to-purple-600 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all duration-300">
 
-                      {/* Back Layer 1 */}
-                      <div
-                        className={`absolute inset-0 rounded-full 
-                                  ${ICON_BG} 
-                                           opacity-80`}
-                      />
-
-                      {/* Front Glass Layer */}
-                      <div
-                        className={`relative z-10 w-9 h-9 sm:w-10 sm:h-10 rounded-full 
-                                          flex items-center justify-center
-                                          ${iconColors}
-                                          backdrop-blur-xl
-                                          border border-white/30
-                                          shadow-xl`}
-                      >
-                        <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-gray-100 " />{" "}
-                      </div>
-
-                      </div>
+                    <div
+                      className={`relative w-9 h-9 sm:w-10 sm:h-10 rounded-full ${ICON_BG} shadow-xl flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all duration-300`}
+                    >
+                      <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-gray-100 " />{" "}
                     </div>
 
                     {/* Text */}

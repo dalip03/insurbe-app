@@ -78,25 +78,8 @@ export default function Featureshome() {
               </div>
 
               {/* Icon */}
-              <div className="relative w-14 h-14 mb-6">
-                {/* Back Layer 1 */}
-                <div
-                  className={`absolute inset-0 rounded-2xl 
-          ${ICON_BG} 
-                   opacity-80`}
-                />
-
-                {/* Front Glass Layer */}
-                <div
-                  className={`relative z-10 w-14 h-14 rounded-2xl 
-                  flex items-center justify-center
-                  ${iconColors}
-                  backdrop-blur-xl
-                  border border-white/30
-                  shadow-xl`}
-                >
-                  <item.icon className="w-7 h-7 text-white" />
-                </div>
+              <div className={`relative w-14 h-14 mb-6 rounded-2xl ${ICON_BG} shadow-xl flex items-center justify-center`}>
+                <item.icon className="w-7 h-7 text-white" />
               </div>
 
               {/* Content */}

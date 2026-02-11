@@ -38,6 +38,9 @@ const features = [
 ];
 
 export default function WhyChooseInsurBe() {
+
+  const MotionLink = motion(Link);
+
   return (
     <section className="relative py-20 px-4 sm:px-8 lg:px-20 overflow-hidden">
       {/* Background */}
@@ -128,26 +131,25 @@ export default function WhyChooseInsurBe() {
           transition={{ delay: 0.4 }}
           className="flex justify-center mt-14"
         >
-         <Link href="/book-appointment">
-  <motion.a
-    whileHover={{ scale: 1.05 }}
-    whileTap={{ scale: 0.95 }}
-    className="
-      inline-flex items-center gap-2
-      px-8 py-4
-      rounded-full
-      bg-primary
-      text-white
-      font-semibold
-      shadow-xl
-      hover:shadow-2xl
-      transition
-    "
-  >
-    Get in touch
-    <ArrowRight className="w-5 h-5" />
-  </motion.a>
-</Link>
+        <MotionLink
+  href="/book-appointment"
+  whileHover={{ scale: 1.05 }}
+  whileTap={{ scale: 0.95 }}
+  className="
+    inline-flex items-center gap-2
+    px-8 py-4
+    rounded-full
+    bg-primary
+    text-white
+    font-semibold
+    shadow-xl
+    hover:shadow-2xl
+    transition
+  "
+>
+  Get in touch
+  <ArrowRight className="w-5 h-5" />
+</MotionLink>
         </motion.div>
       </div>
     </section>

@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { CARD_BG } from "@/app/constants/styles";
 
 const plans = [
   {
@@ -151,7 +152,7 @@ export default function OurServices() {
                   whileHover={{ y: -8 }}
                   className={`h-full rounded-3xl p-8 flex flex-col justify-between ${
                     isPopular
-                      ? "bg-linear-to-br from-[#531D6F] to-purple-700 text-white shadow-2xl"
+                      ? `${CARD_BG}`
                       : "bg-white shadow-xl"
                   }`}
                 >

@@ -5,7 +5,8 @@
 :root {
  --background: linear-gradient(to bottom right, #fdf3ff, #ffffff);
   --foreground: #171717;
-  --primary: #531D6F;
+  /* --primary: #531D6F; */
+--primary: #820ad1;
   --secondary: #ffffff;
    --heading: linear-gradient(to right, #531D6F, #8B5CF6);
   --font-jost: "Jost", sans-serif;
