@@ -9,7 +9,7 @@ export default function Footernew() {
       <div className="max-w-full mx-auto">
         <div className="flex flex-col md:flex-row justify-between gap-12">
           {/* Brand Info */}
-          <div className="space-y-4 max-w-md text-center md:text-left mx-auto md:mx-0">
+          <div className="space-y-4 max-w-md text-center md:text-left mx-auto md:mx-0 ">
             {/* Logo */}
             <div className="flex justify-center md:justify-start py-2 gap-20">
               <Link href="/" className="font-bold font-serif">
@@ -28,10 +28,10 @@ export default function Footernew() {
             </p>
 
             {/* GDPR Icon */}
-            <div className="flex justify-center md:justify-start">
-              <div className="flex flex-col sm:flex-row gap-2 md:gap-4 py-4">
+            <div className="flex justify-center md:justify-start ">
+              <div className="flex flex-col sm:flex-row gap-2 md:gap-4 py-4 ">
                 {/* GDPR Compliant */}
-                <div className="flex items-center gap-2 rounded-xl p-2">
+                <div className="flex items-center gap-2 rounded-xl py-2">
                   <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
                     <Image
                       src="/gifs_assets/gdprlogo.svg"
@@ -83,9 +83,9 @@ export default function Footernew() {
             </div>
 
             {/* Register Info */}
-            <p className="md:text-lg text-2xl text-gray-300 ">
+            {/* <p className="md:text-lg text-2xl text-gray-300 ">
               InsurBe is a registered insurance intermediary in Germany
-            </p>
+            </p> */}
           </div>
 
           {/* Navigation + Links */}

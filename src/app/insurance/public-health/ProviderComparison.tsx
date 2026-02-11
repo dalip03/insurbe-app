@@ -176,7 +176,7 @@ export default function ProviderComparison() {
                 onClick={() =>
                   router.push(`/insuranceSignupFlow?provider=${p.id}`)
                 }
-                className={`mt-auto w-full py-4 rounded-xl font-bold transition-all
+                className={`mt-auto w-full py-4 rounded-xl font-bold cursor-pointer transition-all
                   ${
                     p.featured
                       ? "bg-white text-purple-600 hover:bg-purple-50"

@@ -12,6 +12,7 @@ import {
   HeartPulse,
 } from "lucide-react";
 import Link from "next/link";
+import { ICON_BG } from "../constants/styles";
 
 export default function ChooseUs() {
   const reasons = [
@@ -125,14 +126,16 @@ export default function ChooseUs() {
                     {/* Icon */}
                     <div className="mb-6">
                       <div
-                        className="
-                w-14 h-14 rounded-xl
-                bg-gradient-to-br from-primary to-purple-600
-                flex items-center justify-center
-                shadow-md
-              "
+                        className={`
+  w-14 h-14 rounded-xl
+  flex items-center justify-center
+ 
+  backdrop-blur-xl
+  border border-white/20
+  shadow-lg shadow-purple-500/20 
+                        `}
                       >
-                        <Icon className="w-7 h-7 text-white" />
+                        <Icon className="w-7 h-7 text-black" />
                       </div>
                     </div>
 
