@@ -9,6 +9,7 @@ import {
   Shield,
   AlertCircle,
   Loader2,
+  Check,
 } from "lucide-react";
 import { useSearchParams, useRouter } from "next/navigation";
 
@@ -64,7 +65,7 @@ export default function InsuranceSignupFlow() {
   const [cities, setCities] = useState<string[]>([]);
   const [loadingCountries, setLoadingCountries] = useState(false);
   const [loadingCities, setLoadingCities] = useState(false);
-
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [selectPlan, setSelectPlan] = useState({
     reason: "",
     dob: "",
@@ -116,11 +117,11 @@ export default function InsuranceSignupFlow() {
   }, []);
 
   // Fetch cities when country of birth changes
-  useEffect(() => {
-    if (personal.countryOfBirth) {
-      fetchCities(personal.countryOfBirth);
-    }
-  }, [personal.countryOfBirth]);
+  // useEffect(() => {
+  //   if (personal.countryOfBirth) {
+  //     fetchCities(personal.countryOfBirth);
+  //   }
+  // }, [personal.countryOfBirth]);
 
   useEffect(() => {
     if (providerFromUrl && PROVIDERS[providerFromUrl]) {
@@ -410,6 +411,34 @@ export default function InsuranceSignupFlow() {
 
   const back = () => setStep((s) => (s - 1) as Step);
 
+ const handleSubmitApplication = async () => {
+  try {
+    const orderId = `INS-${Date.now()}`;
+
+    await fetch("/api/sendAcknowledgement", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: personal.email,
+        name: personal.firstName,
+        orderId,
+      }),
+    });
+
+    setShowSuccessModal(true);
+
+    setTimeout(() => {
+      router.push("/");
+    }, 2500);
+
+  } catch (error) {
+    console.error("Submission failed:", error);
+  }
+};
+
+
   return (
     <section className="py-14 px-4">
       <div className="max-w-4xl mx-auto">
@@ -636,7 +665,6 @@ export default function InsuranceSignupFlow() {
                 <div className="mb-8">
                   <p className="font-medium mb-3">
                     Upload documents{" "}
-                    <span className="text-gray-400 text-sm">(optional)</span>
                   </p>
 
                   <div className="grid sm:grid-cols-3 gap-4">
@@ -1482,8 +1510,8 @@ export default function InsuranceSignupFlow() {
                     Back
                   </button>
                   <button
-                    onClick={next}
-                    className="flex-1 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg py-3 font-semibold shadow-md hover:shadow-lg transition-all"
+                    onClick={handleSubmitApplication}
+                    className="flex-1 bg-gradient-to-r from-purple-600 to-blue-600 cursor-pointer text-white rounded-lg py-3 font-semibold shadow-md hover:shadow-lg transition-all"
                   >
                     Submit ✓
                   </button>
@@ -1537,6 +1565,39 @@ export default function InsuranceSignupFlow() {
           </AnimatePresence>
         </motion.div>
       </div>
+      <AnimatePresence>
+  {showSuccessModal && (
+    <>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
+      />
+
+      <motion.div
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.8, opacity: 0 }}
+        transition={{ type: "spring", duration: 0.4 }}
+        className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-2xl shadow-2xl p-10 max-w-md w-full z-50 text-center"
+      >
+        <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+          <Check className="w-10 h-10 text-green-600" />
+        </div>
+
+        <h2 className="text-2xl font-bold text-gray-900 mb-3">
+          Application Submitted 🎉
+        </h2>
+
+        <p className="text-gray-600">
+          Thank you! Our team will connect with you shortly.
+        </p>
+      </motion.div>
+    </>
+  )}
+</AnimatePresence>
+
     </section>
   );
 }
