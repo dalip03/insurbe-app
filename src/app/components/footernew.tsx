@@ -135,17 +135,18 @@ export default function Footernew() {
             {/* Navigation */}
             <div>
               <h2 className="md:text-lg text-3xl font-semibold mb-4">
-                Navigation
+                Company
               </h2>
               <ul className="space-y-4">
-                <li>
+                 <li>
                   <a
-                    href="#"
+                    href="/career"
                     className="hover:text-purple-300 text-xl md:text-[18px]"
                   >
-                    Home
+                    Careers
                   </a>
                 </li>
+               
                 <li>
                   <a
                     href="/about"
@@ -161,6 +162,14 @@ export default function Footernew() {
                     className="hover:text-purple-300 text-xl md:text-[18px]"
                   >
                     Contact
+                  </a>
+                </li>
+                 <li>
+                  <a
+                    href="#"
+                    className="hover:text-purple-300 text-xl md:text-[18px]"
+                  >
+                    Become a Partner
                   </a>
                 </li>
               </ul>
@@ -195,14 +204,7 @@ export default function Footernew() {
                   </a>
                 </li>
 
-                <li>
-                  <a
-                    href="/career"
-                    className="hover:text-purple-300 text-xl md:text-[18px]"
-                  >
-                    Careers
-                  </a>
-                </li>
+               
               </ul>
             </div>
           </div>
