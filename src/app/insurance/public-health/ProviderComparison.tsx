@@ -116,16 +116,16 @@ export default function ProviderComparison() {
               className={`relative rounded-3xl p-8 shadow-xl flex flex-col
                 ${
                   p.featured
-                    ? "bg-linear-to-br from-purple-600 to-purple-700 text-white shadow-2xl"
-                    : "bg-white border-2 border-gray-200"
+                  ? "bg-gradient-to-br from-purple-100 via-purple-200 to-pink-200 text-purple-900 hover:from-purple-200 hover:via-purple-300 hover:to-pink-300"
+    : "bg-white text-gray-900 hover:bg-gray-50"
                 }`}
             >
               {/* BADGE */}
               {p.featured && (
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2
-                  bg-linear-to-r from-yellow-200 to-orange-200
+                  bg-linear-to-r from-purple-400 to-blue-400
                   text-gray-900 text-xs font-bold px-4 py-2 rounded-full shadow">
-                  ⭐ Most Popular
+                  <span className="flex gap-1 justify-center items-center"><Star className="w-3 h-3 fill-current" /> Most Popular</span> 
                 </div>
               )}
 

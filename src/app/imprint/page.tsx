@@ -84,7 +84,7 @@ export default function ImprintPage() {
             VAT Identification Number
           </h2>
           <p className="text-gray-700">
-            VAT ID No.: <em>DE[VAT number to be added]</em> <br />
+            VAT ID No.: <em>DE369874296</em> <br />
             <span className="text-gray-600">
               (in accordance with § 27a of the German VAT Act)
             </span>

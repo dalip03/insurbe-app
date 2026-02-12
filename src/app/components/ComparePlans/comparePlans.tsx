@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, X, ArrowRight } from "lucide-react";
+import { Check, X, ArrowRight, Star } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import PlansCompare from "./PlanCompares";
@@ -202,8 +202,8 @@ export default function ComparePlans() {
         available = false; // TK coming soon
       } else if (product.id === "hallesche-premium") {
         logo = "/icons/H.svg";
-        bgColor = "bg-gradient-to-r from-purple-600 to-purple-700";
-        textColor = "text-white";
+        bgColor = "bg-gradient-to-br from-purple-200 via-purple-300 to-pink-200  hover:from-purple-200 hover:via-purple-300 hover:to-pink-300";
+        textColor = "text-purple-900";
         buttonColor = "bg-white text-purple-600";
         available = true;
       } else if (product.id === "hallesche-expat") {
@@ -600,9 +600,9 @@ export default function ComparePlans() {
                     initial={{ scale: 0, rotate: -180 }}
                     animate={{ scale: 1, rotate: 0 }}
                     transition={{ delay: 0.6, type: "spring" }}
-                    className="absolute -top-4 -right-4 bg-gradient-to-r from-amber-50 to-orange-50 text-black text-xs font-bold px-4 py-2 rounded-full shadow-xl z-10 border-2 border-white"
+                    className="absolute -top-4 -right-4 bg-linear-to-r from-purple-400 to-blue-400 text-black text-xs font-bold px-4 py-2 rounded-full shadow-xl z-10 border-2 border-white"
                   >
-                    ⭐ Recommended
+                      <span className="flex gap-1 items-center"><Star className="w-3 h-3 fill-current" />Recommended</span>
                   </motion.div>
                 )}
 

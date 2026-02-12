@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Check, ChevronDown, ChevronUp, Star, X } from "lucide-react";
-import { CARD_BG } from "@/app/constants/styles";
+import { CARD_BG, NEW_CARD_BG } from "@/app/constants/styles";
 
 /* ------------------------------------------------------------------ */
 /* HEALTH FLOW TYPES                                                   */
@@ -492,12 +492,12 @@ function TariffColumn({
       <div
         className={`relative p-8 rounded-3xl ${
           highlighted
-            ?  `${CARD_BG}`
+            ?  `${NEW_CARD_BG}`
             : "bg-white border-2 border-gray-200"
         }`}
       >
         {highlighted && (
-          <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-2 bg-yellow-400 rounded-full text-xs font-bold flex items-center gap-1">
+          <div className="text-black absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-2 bg-linear-to-r from-purple-400 to-blue-400 rounded-full text-xs font-bold flex items-center gap-1">
             <Star className="w-3 h-3 fill-current" /> {badge}
           </div>
         )}
