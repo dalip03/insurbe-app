@@ -53,7 +53,7 @@ export default function CookieBanner() {
               improve your experience. You can accept all cookies or reject
               non-essential ones.  
               <Link
-                href="/privacy-policy"
+                href="/privacypolicy"
                 className="ml-1 text-purple-600 font-semibold hover:underline"
               >
                 Learn more

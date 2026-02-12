@@ -197,7 +197,8 @@ export default function ComparePlans() {
         logo = "/icons/tk.svg";
         bgColor = "bg-white";
         textColor = "text-gray-700";
-        buttonColor = "bg-gradient-to-r from-purple-600 to-purple-700 text-white";
+        buttonColor =
+          "bg-gradient-to-r from-purple-600 to-purple-700 text-white";
         available = false; // TK coming soon
       } else if (product.id === "hallesche-premium") {
         logo = "/icons/H.svg";
@@ -209,7 +210,8 @@ export default function ComparePlans() {
         logo = "/icons/H.svg";
         bgColor = "bg-white";
         textColor = "text-black";
-        buttonColor = "bg-gradient-to-r from-purple-600 to-purple-700 text-white";
+        buttonColor =
+          "bg-gradient-to-r from-purple-600 to-purple-700 text-white";
         available = true;
       }
 
@@ -410,9 +412,12 @@ export default function ComparePlans() {
       sessionStorage.setItem("selectedPlan", JSON.stringify(planData));
 
       // ✅ Open health questions modal
-      setPendingPlanId(plan.id);
-      setShowHealthModal(true);
-      setCurrentHealthQuestion(0);
+      // setPendingPlanId(plan.id);
+      // setShowHealthModal(true);
+      // setCurrentHealthQuestion(0);
+      // ✅ Directly go to next route
+      useJourneyStore.setState({ selectedPlan: plan.id });
+      router.push("/calculator/submitApplication");
     } else {
       setSelectedPlanName(plan.name);
       setShowComingSoonModal(true);
@@ -624,25 +629,35 @@ export default function ComparePlans() {
                         </div>
                       ) : (
                         <>
-                          <span className={`text-gray-700 text-3xl sm:text-4xl font-bold10 ${plan.textColor}`}>
+                          <span
+                            className={`text-gray-700 text-3xl sm:text-4xl font-bold10 ${plan.textColor}`}
+                          >
                             €
                           </span>
-                          <span className={`text-3xl sm:text-4xl bg-gradient-to-br from-gray-900 to-purple-900 bg-clip-text text-transparent font-extrabold ${plan.textColor}`}>
+                          <span
+                            className={`text-3xl sm:text-4xl bg-gradient-to-br from-gray-900 to-purple-900 bg-clip-text text-transparent font-extrabold ${plan.textColor}`}
+                          >
                             {plan.price}
                           </span>
-                          <span className={`text-sm text-gray-600 font-medium ml-1 ${plan.textColor}`}>
+                          <span
+                            className={`text-sm text-gray-600 font-medium ml-1 ${plan.textColor}`}
+                          >
                             {plan.period}
                           </span>
                         </>
                       )}
                     </motion.div>
 
-                    <div className={`mt-3 font-bold text-gray-900 text-[16px] ${plan.textColor}`}>
+                    <div
+                      className={`mt-3 font-bold text-gray-900 text-[16px] ${plan.textColor}`}
+                    >
                       {plan.name}
                     </div>
 
                     {plan.id === "tk" && (
-                      <p className={`text-xs text-gray-500 mt-1 font-medium ${plan.textColor}`}>
+                      <p
+                        className={`text-xs text-gray-500 mt-1 font-medium ${plan.textColor}`}
+                      >
                         (Employee portion)
                       </p>
                     )}
@@ -695,7 +710,9 @@ export default function ComparePlans() {
                       <div className="bg-green-100 rounded-full p-1 mt-0.5">
                         <Check className="w-4 h-4 text-green-600 shrink-0" />
                       </div>
-                      <span className={`text-sm text- font-medium ${plan.textColor}`}>
+                      <span
+                        className={`text-sm text- font-medium ${plan.textColor}`}
+                      >
                         {feature}
                       </span>
                     </motion.li>

@@ -195,7 +195,7 @@ const Header = () => {
       <nav className="flex justify-between items-center px-6 md:px-10 xl:px-20 py-4 w-full">
         {/* Logo */}
         <Link href="/" className="font-bold font-serif flex items-center gap-2">
-          <Image src="/insurBe_Logo.svg" alt="Logo" width={100} height={20} priority />
+          <Image src="/logo.svg" alt="Logo" width={100} height={20} priority />
         </Link>
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-10 text-lg">

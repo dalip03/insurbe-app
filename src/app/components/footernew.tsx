@@ -6,7 +6,7 @@ import { CARD_BG } from "../constants/styles";
 
 export default function Footernew() {
   return (
-    <footer className={`${CARD_BG} text-white py-20 px-6 `}>
+    <footer className="bg-[#531D6F] text-white py-20 px-6 ">
       <div className="max-w-full mx-auto">
         <div className="flex flex-col md:flex-row justify-between gap-12">
           {/* Brand Info */}
@@ -15,7 +15,7 @@ export default function Footernew() {
             <div className="flex justify-center md:justify-start py-2 gap-20">
               <Link href="/" className="font-bold font-serif">
                 <Image
-                  src="/insurBe_Logowhite.svg"
+                  src="/icons/logo_white.png"
                   alt="Logo"
                   width={120}
                   height={30}
@@ -24,7 +24,7 @@ export default function Footernew() {
             </div>
 
             {/* Subtitle */}
-            <p className="md:text-lg text-2xl  text-gray-200 ">
+            <p className="md:text-lg text-2xl  text-white ">
               The only digital solution for all your insurance needs.
             </p>
 
@@ -42,7 +42,7 @@ export default function Footernew() {
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <span className="text-sm font-medium text-gray-200">
+                  <span className="text-sm font-medium text-white">
                     GDPR Compliant
                   </span>
                 </div>
@@ -57,7 +57,7 @@ export default function Footernew() {
                     className="rounded-full object-cover flex-shrink-0"
                   />
 
-                  <span className="text-sm font-medium text-gray-300 leading-tight">
+                  <span className="text-sm font-medium text-white leading-tight">
                     <span className="block whitespace-nowrap">Data Centre</span>
                     <span className="block whitespace-nowrap">in Germany</span>
                   </span>
@@ -73,7 +73,7 @@ export default function Footernew() {
                     className="rounded-full object-cover flex-shrink-0"
                   />
 
-                  <span className="text-sm font-medium text-gray-300 leading-tight">
+                  <span className="text-sm font-medium text-white leading-tight">
                     SECURE
                     <span className="block whitespace-nowrap">
                       SSL Encryption

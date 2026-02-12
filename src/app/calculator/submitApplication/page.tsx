@@ -272,7 +272,12 @@ export default function SubmitApplication() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="text-3xl md:text-5xl md:px-12 font-extrabold bg-gradient-to-r from-primary to-purple-800 bg-clip-text text-transparent leading-snug"
           >
-            <span className="text-gray-700">{plan ? plan.category : "Private"}</span> health insurance application
+            <span className="text-gray-700">
+              {plan
+                ? `${plan.category.split(" ")[1]} - ${plan.category.split(" ")[0]} `
+                : "Private Health"}
+            </span>
+            Health insurance application{" "}
           </motion.h1>
 
           {/* Subheading */}
