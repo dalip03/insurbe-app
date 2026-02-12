@@ -166,7 +166,7 @@ export default function Footernew() {
                 </li>
                  <li>
                   <a
-                    href="#"
+                    href="/becomepartner"
                     className="hover:text-purple-300 text-xl md:text-[18px]"
                   >
                     Become a Partner
