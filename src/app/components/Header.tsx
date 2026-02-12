@@ -436,10 +436,10 @@ const Header = () => {
             <button
               type="button"
               onClick={() => router.push("/dashboard")}
-              className="flex items-center cursor-pointer gap-2 px-4 py-2 rounded-xl text-purple-600 hover:bg-purple-50 transition-all"
+              className="flex items-center cursor-pointer gap-2 px-4 py-2 rounded-xl text-gray-800 hover:bg-purple-50 transition-all"
             >
-              <LayoutDashboard className="w-4 h-4" />
-              <span className="text-sm font-semibold">Dashboard</span>
+              <User className="w-4 h-4" />
+              <span className="text-sm font-medium">My Account</span>
             </button>
           )}
         </div>
