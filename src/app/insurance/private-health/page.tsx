@@ -3,7 +3,6 @@ import PrivatePublicInsuranceHeroSection from "./PrivatePublicInsuranceHeroSecti
 import PrivatePublicInsuranceBenefits from "./PrivatePublicInsuranceBenefits";
 import PrivatePublicInsuranceFAQ from "./PrivatePublicFaq";
 import PrivateInsuranceSteps from "./PrivateInsuranceSteps";
-import InsuranceCalculatorPrivate from "../InsuranceCalculatorPrivate";
 import PrivateInsuranceTariffs from "./PrivateInsuranceTariffs";
 
 function PrivateHealthPage() {
@@ -11,7 +10,6 @@ function PrivateHealthPage() {
     <section className="">
       <PrivatePublicInsuranceHeroSection />
       <PrivatePublicInsuranceBenefits />
-      <InsuranceCalculatorPrivate />
       <PrivateInsuranceTariffs />
       <PrivateInsuranceSteps />
       <PrivatePublicInsuranceFAQ />

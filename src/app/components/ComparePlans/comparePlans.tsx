@@ -24,7 +24,8 @@ interface HealthAnswer {
 
 export default function ComparePlans() {
   const router = useRouter();
-  const { setPremium, setTKPremium } = usePremiumStore();
+  // const { setPremium, setTKPremium } = usePremiumStore();
+  const { premium, setPremium, setTKPremium } = usePremiumStore();
   const { setHalleschePremiumDocs, setHallescheExpatDocs } = useDocumentStore();
   const { incomeRange, employmentStatus, dob, selectedCountry } =
     useJourneyStore();
@@ -62,7 +63,6 @@ export default function ComparePlans() {
       const age = dob ? currentYear - parseInt(dob) : 25;
       const fullDob = dob ? `${dob}-01-01` : "2000-01-01";
       const coverageStart = new Date().toISOString().split("T")[0];
-
       const EU_COUNTRIES = [
         "Austria",
         "Belgium",
@@ -126,7 +126,7 @@ export default function ComparePlans() {
               if (res.ok) {
                 const data = await res.json();
                 setHalleschePremiumDocs(data.documents || []);
-                setPremium(data.premium);
+               setPremium(Number(data.premium));
                 return {
                   ...product,
                   premium: data.premium,
@@ -534,9 +534,9 @@ export default function ComparePlans() {
               animate={{ opacity: 1, height: "auto", marginBottom: 40 }}
               exit={{ opacity: 0, height: 0, marginBottom: 0 }}
               transition={{ duration: 0.3 }}
-              className="overflow-hidden"
+              className="overflow-hidden border"
             >
-              <InsuranceCalculatorPrivate />
+              <InsuranceCalculatorPrivate setPremium={setPremium} premium={premium} />
             </motion.div>
           )}
         </AnimatePresence>

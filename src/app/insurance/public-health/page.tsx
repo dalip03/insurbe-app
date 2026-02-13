@@ -7,15 +7,20 @@ import PublicInsuranceHeroSection from "./PublicInsuranceHeroSection";
 import ProviderComparison from "./ProviderComparison";
 import InsuranceSteps from "../InsuranceSteps";
 import PublicInsuranceFAQ from "./PublicFaq";
+import InsuranceCalculatorPrivate from "../InsuranceCalculatorPrivate";
+import { useState } from "react";
 
 export default function PublicHealthPage() {
+
+  const [premium, setPremium] = useState<number | null>(null);
 
   return (
 
     <section className="">
       <PublicInsuranceHeroSection/>
       <PublicInsuranceBenefits/>
-      <ProviderComparison/> 
+      <InsuranceCalculatorPrivate setPremium={setPremium} premium={premium} />      
+      <ProviderComparison premium={premium} /> 
       <FirstExpatHero/>
       <InsuranceSteps/>
       <PublicInsuranceFAQ/>

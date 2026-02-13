@@ -10,7 +10,6 @@ import { useRouter } from "next/navigation";
 /* -------------------------------------------------------------------------- */
 
 const providers = [
-  
   {
     id: "dak",
     name: "DAK",
@@ -51,10 +50,7 @@ const providers = [
 const Stars = ({ count }: { count: number }) => (
   <div className="flex gap-1">
     {[1, 2, 3].map((i) => (
-      <span
-        key={i}
-        className={i <= count ? "text-black/70" : "text-gray-300"}
-      >
+      <span key={i} className={i <= count ? "text-black/70" : "text-gray-300"}>
         ★
       </span>
     ))}
@@ -78,13 +74,16 @@ const Speed = ({ count }: { count: number }) => (
 /* MAIN */
 /* -------------------------------------------------------------------------- */
 
-export default function ProviderComparison() {
+export default function ProviderComparison({
+  premium,
+}: {
+  premium: number | null;
+}) {
   const router = useRouter();
 
   return (
-    <section className="py-16 px-4">
+    <section className="pb-16 pt-10 px-4">
       <div className="max-w-7xl mx-auto">
-
         {/* HEADER */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -116,23 +115,35 @@ export default function ProviderComparison() {
               className={`relative rounded-3xl p-8 shadow-xl flex flex-col
                 ${
                   p.featured
-                  ? "bg-gradient-to-br from-purple-100 via-purple-200 to-pink-200 text-purple-900 hover:from-purple-200 hover:via-purple-300 hover:to-pink-300"
-    : "bg-white text-gray-900 hover:bg-gray-50"
+                    ? "bg-gradient-to-br from-purple-200 via-purple-300 to-pink-200 text-black hover:from-purple-200 hover:via-purple-300 hover:to-pink-300"
+                    : "bg-white text-gray-900 hover:bg-gray-50"
                 }`}
             >
               {/* BADGE */}
               {p.featured && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2
+                <div
+                  className="absolute -top-4 left-1/2 -translate-x-1/2
                   bg-linear-to-r from-purple-400 to-blue-400
-                  text-gray-900 text-xs font-bold px-4 py-2 rounded-full shadow">
-                  <span className="flex gap-1 justify-center items-center"><Star className="w-3 h-3 fill-current" /> Most Popular</span> 
+                  text-gray-900 text-xs font-bold px-4 py-2 rounded-full shadow"
+                >
+                  <span className="flex gap-1 justify-center items-center">
+                    <Star className="w-3 h-3 fill-current" /> Most Popular
+                  </span>
                 </div>
               )}
 
               {/* HEADER */}
-              <div className="flex items-center gap-3 mb-6">
-                <Image src={p.logo} alt={p.name} width={36} height={36} />
-                <h3 className="text-2xl font-bold">{p.name}</h3>
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-3">
+                  <Image src={p.logo} alt={p.name} width={36} height={36} />
+                  <h3 className="text-2xl font-bold">{p.name}</h3>
+                </div>
+
+                {p.id === "tk" && premium !== null && (
+                 <span className="text-2xl font-bold text-black drop-shadow-[0_0_8px_rgba(147,51,234,0.5)]">
+  € {premium.toFixed(2)}
+</span>
+                )}
               </div>
 
               {/* FEATURES */}
@@ -159,16 +170,12 @@ export default function ProviderComparison() {
               </div>
 
               {/* HIGHLIGHT */}
-              <p className="text-md mb-6 opacity-90">
-                {p.highlight}
-              </p>
+              <p className="text-md mb-6 opacity-90">{p.highlight}</p>
 
               {/* BONUS */}
               <div className="flex items-center gap-2 mb-8">
                 <Gift className="w-5 h-5 " />
-                <span className="font-bold ">
-                  {p.bonus}
-                </span>
+                <span className="font-bold ">{p.bonus}</span>
               </div>
 
               {/* CTA */}
@@ -188,7 +195,6 @@ export default function ProviderComparison() {
             </motion.div>
           ))}
         </div>
-
       </div>
     </section>
   );

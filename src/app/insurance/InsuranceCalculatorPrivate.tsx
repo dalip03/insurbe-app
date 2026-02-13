@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import { CalculatorIcon } from "lucide-react";
 
 type EmploymentStatus = "Employed" | "Self Employed/Freelancer" | "Other";
 
@@ -21,25 +22,22 @@ function calculateTKPremium(
   age: number,
   hasChildren: boolean,
   employmentStatus: EmploymentStatus,
-  isSaxony: boolean
+  isSaxony: boolean,
 ): number {
-
   /* --------------------------- CONSTANTS (2025 TK) --------------------------- */
 
   const CONTRIBUTION_CEILING = 5850; // 2025 official
   const GENERAL_RATE = 0.146; // 14.6%
   // const TK_ZUSATZ = 0.0269; // 2.69%
-    const TK_ZUSATZ = 0.02542; // 2.6%
+  const TK_ZUSATZ = 0.02542; // 2.6%
 
   const SELF_EMPLOYED_MIN = 1318.33;
 
-  const isSelfEmployed =
-    employmentStatus === "Self Employed/Freelancer";
+  const isSelfEmployed = employmentStatus === "Self Employed/Freelancer";
 
   /* ---------------------------- ROUNDING HELPER ---------------------------- */
 
-  const round2 = (value: number) =>
-    Math.round(value * 100) / 100;
+  const round2 = (value: number) => Math.round(value * 100) / 100;
 
   /* ---------------------------- EFFECTIVE INCOME --------------------------- */
 
@@ -54,13 +52,9 @@ function calculateTKPremium(
   let healthContribution = 0;
 
   if (isSelfEmployed) {
-    healthContribution = round2(
-      effectiveIncome * GENERAL_RATE
-    );
+    healthContribution = round2(effectiveIncome * GENERAL_RATE);
   } else {
-    healthContribution = round2(
-      effectiveIncome * (GENERAL_RATE / 2)
-    );
+    healthContribution = round2(effectiveIncome * (GENERAL_RATE / 2));
   }
 
   /* --------------------------- ZUSATZ PART ONLY --------------------------- */
@@ -68,13 +62,9 @@ function calculateTKPremium(
   let zusatzContribution = 0;
 
   if (isSelfEmployed) {
-    zusatzContribution = round2(
-      effectiveIncome * TK_ZUSATZ
-    );
+    zusatzContribution = round2(effectiveIncome * TK_ZUSATZ);
   } else {
-    zusatzContribution = round2(
-      effectiveIncome * (TK_ZUSATZ / 2)
-    );
+    zusatzContribution = round2(effectiveIncome * (TK_ZUSATZ / 2));
   }
 
   /* --------------------------- CARE INSURANCE ----------------------------- */
@@ -82,51 +72,42 @@ function calculateTKPremium(
   let careContribution = 0;
 
   if (isSelfEmployed) {
-    const careRate =
-      hasChildren || age < 23 ? 0.036 : 0.042;
+    const careRate = hasChildren || age < 23 ? 0.036 : 0.042;
 
-    careContribution = round2(
-      effectiveIncome * careRate
-    );
+    careContribution = round2(effectiveIncome * careRate);
   } else {
     if (hasChildren || age < 23) {
       // With children
-      careContribution = round2(
-        effectiveIncome *
-          (isSaxony ? 0.023 : 0.018)
-      );
+      careContribution = round2(effectiveIncome * (isSaxony ? 0.023 : 0.018));
     } else {
       // Childless 23+
-      careContribution = round2(
-        effectiveIncome *
-          (isSaxony ? 0.029 : 0.024)
-      );
+      careContribution = round2(effectiveIncome * (isSaxony ? 0.029 : 0.024));
     }
   }
 
   /* ------------------------------ TOTAL ----------------------------------- */
 
   const totalMonthly =
-    healthContribution +
-    zusatzContribution +
-    careContribution;
+    healthContribution + zusatzContribution + careContribution;
 
   return round2(totalMonthly);
 }
-
-
-
 
 /* -------------------------------------------------------------------------- */
 /*                               MAIN COMPONENT                               */
 /* -------------------------------------------------------------------------- */
 
-export default function InsuranceCalculatorPrivate() {
+export default function InsuranceCalculatorPrivate({
+  setPremium,
+  premium,
+}: {
+  setPremium: (value: number | null) => void;
+  premium: number | null;
+}) {
   const [status, setStatus] = useState<EmploymentStatus>("Employed");
   const [income, setIncome] = useState("6500");
   const [age, setAge] = useState("30");
   const [hasKids, setHasKids] = useState(false);
-  const [premium, setPremium] = useState<number | null>(null);
   const [isCalculating, setIsCalculating] = useState(false);
   const [isSaxony, setIsSaxony] = useState(false);
 
@@ -140,12 +121,12 @@ export default function InsuranceCalculatorPrivate() {
     }
 
     setIsCalculating(true);
-    
+
     // Simulate calculation delay for animation effect
     setTimeout(() => {
-setPremium(
-  calculateTKPremium(inc, ag, hasKids, status, isSaxony)
-);
+      const result = calculateTKPremium(inc, ag, hasKids, status, isSaxony);
+
+      setPremium(result);
       setIsCalculating(false);
     }, 800);
   };
@@ -222,10 +203,10 @@ setPremium(
             className="inline-block mb-4"
           >
             <span className="bg-purple-100 text-purple-700 px-4 py-2 rounded-full text-sm font-semibold">
-              💰 Free Calculator
+              TK Calculator
             </span>
           </motion.div>
-          
+
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">
             Health Insurance{" "}
             <span className="text-transparent bg-clip-text bg-linear-to-r from-purple-600 to-primary">
@@ -251,15 +232,15 @@ setPremium(
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="lg:col-span-2 space-y-6"
+            className="lg:col-span-2 space-y-8"
           >
-            {/* Employment */}
+            {/* Employment Status (Full Width) */}
             <motion.div variants={itemVariants}>
               <label className="block font-semibold mb-3 text-gray-900">
                 Employment Status
               </label>
               <div className="flex flex-wrap gap-2">
-                {statusOptions.map((opt, index) => (
+                {statusOptions.map((opt) => (
                   <motion.button
                     key={opt}
                     onClick={() => setStatus(opt)}
@@ -269,11 +250,11 @@ setPremium(
                     whileTap="tap"
                     transition={{ type: "spring", stiffness: 400 }}
                     className={`px-5 py-2.5 rounded-full border text-sm font-medium transition-all
-                      ${
-                        status === opt
-                          ? "bg-linear-to-r from-purple-600 to-primary text-white border-transparent shadow-lg"
-                          : "bg-white border-gray-300 text-gray-700 hover:border-purple-400 hover:shadow-md"
-                      }`}
+              ${
+                status === opt
+                  ? "bg-linear-to-r from-purple-600 to-primary text-white border-transparent shadow-lg"
+                  : "bg-white border-gray-300 text-gray-700 hover:border-purple-400 hover:shadow-md"
+              }`}
                   >
                     {opt}
                   </motion.button>
@@ -281,88 +262,92 @@ setPremium(
               </div>
             </motion.div>
 
-            {/* Income */}
-            <motion.div variants={itemVariants}>
-              <label className="block font-semibold mb-3 text-gray-900">
-                Gross Monthly Income (€)
-              </label>
-              <motion.input
-                whileFocus={{ scale: 1.01 }}
-                value={income}
-                onChange={(e) => setIncome(e.target.value)}
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:ring-2 focus:ring-purple-300 focus:border-transparent outline-none transition-all"
-              />
-              <p className="text-xs text-gray-500 mt-1.5">
-                Max cap: €5,512.50 / month
-              </p>
-            </motion.div>
+            {/* Responsive Grid Fields */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Income */}
+              <motion.div variants={itemVariants}>
+                <label className="block font-semibold mb-3 text-gray-900">
+                  Gross Monthly Income (€)
+                </label>
+                <motion.input
+                  whileFocus={{ scale: 1.01 }}
+                  value={income}
+                  onChange={(e) => setIncome(e.target.value)}
+                  className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:ring-2 focus:ring-purple-300 focus:border-transparent outline-none transition-all"
+                />
+                <p className="text-xs text-gray-500 mt-1.5">
+                  Max cap: €5,512.50 / month
+                </p>
+              </motion.div>
 
-            {/* Age */}
-            <motion.div variants={itemVariants}>
-              <label className="block font-semibold mb-3 text-gray-900">
-                Age
-              </label>
-              <motion.input
-                whileFocus={{ scale: 1.01 }}
-                type="number"
-                value={age}
-                onChange={(e) => setAge(e.target.value)}
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:ring-2 focus:ring-purple-300 focus:border-transparent outline-none transition-all"
-              />
-            </motion.div>
+              {/* Age */}
+              <motion.div variants={itemVariants}>
+                <label className="block font-semibold mb-3 text-gray-900">
+                  Age
+                </label>
+                <motion.input
+                  whileFocus={{ scale: 1.01 }}
+                  type="number"
+                  value={age}
+                  onChange={(e) => setAge(e.target.value)}
+                  className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:ring-2 focus:ring-purple-300 focus:border-transparent outline-none transition-all"
+                />
+              </motion.div>
 
-            {/* Children */}
-            <motion.div variants={itemVariants}>
-              <label className="block font-semibold mb-3 text-gray-900">
-                Do you have children?
-              </label>
-              <div className="flex gap-3">
-                {["Yes", "No"].map((opt) => (
-                  <motion.button
-                    key={opt}
-                    onClick={() => setHasKids(opt === "Yes")}
-                    variants={buttonVariants}
-                    initial="idle"
-                    whileHover="hover"
-                    whileTap="tap"
-                    className={`px-8 py-2.5 rounded-full border text-sm font-medium transition-all
-                      ${
-                        hasKids === (opt === "Yes")
-                          ? "bg-linear-to-r from-purple-600 to-primary text-white border-transparent shadow-lg"
-                          : "bg-white border-gray-300 text-gray-700 hover:border-purple-400 hover:shadow-md"
-                      }`}
-                  >
-                    {opt}
-                  </motion.button>
-                ))}
-              </div>
-            </motion.div>
-{/* Saxony */}
-<motion.div variants={itemVariants}>
-  <label className="block font-semibold mb-3 text-gray-900">
-    Federal State
-  </label>
-  <div className="flex gap-3">
-    {["Employed in Saxony", "Other State"].map((opt) => (
-      <motion.button
-        key={opt}
-        onClick={() => setIsSaxony(opt === "Employed in Saxony")}
-        variants={buttonVariants}
-        initial="idle"
-        whileHover="hover"
-        whileTap="tap"
-        className={`px-6 py-2.5 rounded-full border text-sm font-medium transition-all
-          ${
-            isSaxony === (opt === "Employed in Saxony")
-              ? "bg-linear-to-r from-purple-600 to-primary text-white border-transparent shadow-lg"
-              : "bg-white border-gray-300 text-gray-700 hover:border-purple-400 hover:shadow-md"
-          }`}
-      >
-        {opt}
-      </motion.button>
-    ))}
-  </div>
-</motion.div>
+              {/* Children */}
+              <motion.div variants={itemVariants}>
+                <label className="block font-semibold mb-3 text-gray-900">
+                  Do you have children?
+                </label>
+                <div className="flex gap-3">
+                  {["Yes", "No"].map((opt) => (
+                    <motion.button
+                      key={opt}
+                      onClick={() => setHasKids(opt === "Yes")}
+                      variants={buttonVariants}
+                      initial="idle"
+                      whileHover="hover"
+                      whileTap="tap"
+                      className={`px-8 py-2.5 rounded-full border text-sm font-medium transition-all
+                ${
+                  hasKids === (opt === "Yes")
+                    ? "bg-linear-to-r from-purple-600 to-primary text-white border-transparent shadow-lg"
+                    : "bg-white border-gray-300 text-gray-700 hover:border-purple-400 hover:shadow-md"
+                }`}
+                    >
+                      {opt}
+                    </motion.button>
+                  ))}
+                </div>
+              </motion.div>
+
+              {/* Federal State */}
+              <motion.div variants={itemVariants}>
+                <label className="block font-semibold mb-3 text-gray-900">
+                  Federal State
+                </label>
+                <div className="flex gap-3">
+                  {["Employed in Saxony", "Other State"].map((opt) => (
+                    <motion.button
+                      key={opt}
+                      onClick={() => setIsSaxony(opt === "Employed in Saxony")}
+                      variants={buttonVariants}
+                      initial="idle"
+                      whileHover="hover"
+                      whileTap="tap"
+                      className={`px-6 py-2.5 rounded-full border text-sm font-medium transition-all
+                ${
+                  isSaxony === (opt === "Employed in Saxony")
+                    ? "bg-linear-to-r from-purple-600 to-primary text-white border-transparent shadow-lg"
+                    : "bg-white border-gray-300 text-gray-700 hover:border-purple-400 hover:shadow-md"
+                }`}
+                    >
+                      {opt}
+                    </motion.button>
+                  ))}
+                </div>
+              </motion.div>
+            </div>
 
             {/* CTA */}
             <motion.button
@@ -373,25 +358,12 @@ setPremium(
               whileTap="tap"
               disabled={isCalculating}
               className="w-full py-4 rounded-xl font-semibold text-white
-                bg-linear-to-r from-purple-600 to-primary
-                hover:opacity-90 transition-all shadow-lg cursor-pointer
-                disabled:opacity-50 disabled:cursor-not-allowed
-                relative overflow-hidden"
+        bg-linear-to-r from-purple-600 to-primary
+        hover:opacity-90 transition-all shadow-lg cursor-pointer
+        disabled:opacity-50 disabled:cursor-not-allowed
+        relative overflow-hidden"
             >
-              {isCalculating ? (
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                  className="inline-block"
-                >
-                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                </motion.div>
-              ) : (
-                "Calculate Monthly Premium"
-              )}
+              {isCalculating ? "Calculating..." : "Calculate Monthly Premium"}
             </motion.button>
           </motion.div>
 
@@ -403,62 +375,29 @@ setPremium(
             transition={{ duration: 0.6, delay: 0.3 }}
             className="flex flex-col justify-center items-center text-center bg-linear-to-br from-purple-50 to-pink-50 rounded-xl p-6 border border-purple-100"
           >
+            {/* Logo Added */}
+            <Image
+              src="/partners_asset/TK_logo.avif"
+              alt="Provider Logo"
+              width={60}
+              height={60}
+              className="mb-4 object-contain"
+            />
+
             <p className="text-sm font-medium text-gray-600 mb-2">
               Estimated Monthly Premium
             </p>
 
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={premium ?? "empty"}
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.8, opacity: 0 }}
-                transition={{ type: "spring", duration: 0.5 }}
-                className="text-5xl font-bold bg-linear-to-r from-purple-600 to-primary bg-clip-text text-transparent mb-2"
-              >
-              € {premium !== null ? premium.toFixed(2) : "--"}
-
-              </motion.div>
-            </AnimatePresence>
+            <motion.div className="text-5xl font-bold bg-linear-to-r from-purple-600 to-primary bg-clip-text text-transparent mb-2">
+              {/* € {premium !== null ? premium.toFixed(2) : "--"} */}€{" "}
+              {typeof premium === "number" ? premium.toFixed(2) : "--"}
+            </motion.div>
 
             <p className="text-gray-500 text-sm mb-6">
               {status === "Self Employed/Freelancer"
                 ? "Full contribution"
                 : "Employee portion only"}
             </p>
-
-            <AnimatePresence>
-              {premium && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20, scale: 0.9 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -20, scale: 0.9 }}
-                  transition={{ duration: 0.4 }}
-                  className="w-full text-left text-sm bg-white rounded-lg p-4 border border-gray-200 shadow-sm"
-                >
-                  <p className="font-semibold mb-3 text-gray-900">Breakdown</p>
-                  <motion.div
-                    initial="hidden"
-                    animate="visible"
-                    variants={containerVariants}
-                    className="space-y-2"
-                  >
-                    <motion.p variants={itemVariants} className="flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-purple-600"></span>
-                      Health Insurance
-                    </motion.p>
-                    <motion.p variants={itemVariants} className="flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-purple-400"></span>
-                      Zusatz Contribution
-                    </motion.p>
-                    <motion.p variants={itemVariants} className="flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-pink-600"></span>
-                      Care Insurance
-                    </motion.p>
-                  </motion.div>
-                </motion.div>
-              )}
-            </AnimatePresence>
           </motion.div>
         </motion.div>
       </div>

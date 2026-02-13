@@ -140,28 +140,18 @@ export default function Footernew() {
               <ul className="space-y-4">
                  <li>
                   <a
+                    href="/about"
+                    className="hover:text-purple-300 text-xl md:text-[18px]"
+                  >
+                    About InsurBe
+                  </a>
+                </li>
+                 <li>
+                  <a
                     href="/career"
                     className="hover:text-purple-300 text-xl md:text-[18px]"
                   >
                     Careers
-                  </a>
-                </li>
-               
-                <li>
-                  <a
-                    href="/about"
-                    className="hover:text-purple-300 text-xl md:text-[18px]"
-                  >
-                    About
-                  </a>
-                </li>
-
-                <li>
-                  <a
-                    href="/support"
-                    className="hover:text-purple-300 text-xl md:text-[18px]"
-                  >
-                    Contact
                   </a>
                 </li>
                  <li>
@@ -172,9 +162,17 @@ export default function Footernew() {
                     Become a Partner
                   </a>
                 </li>
+                <li>
+                  <a
+                    href="/support"
+                    className="hover:text-purple-300 text-xl md:text-[18px]"
+                  >
+                    Contact
+                  </a>
+                </li>                
               </ul>
-            </div>
-
+            </div>    
+            
             {/* Links */}
             <div>
               <h2 className="md:text-lg text-3xl font-semibold mb-4">General</h2>
