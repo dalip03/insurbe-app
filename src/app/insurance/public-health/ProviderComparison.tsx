@@ -27,8 +27,8 @@ const providers = [
     english: 3,
     digital: 3,
     speed: 3,
-    highlight: "Best digital services for students",
-    bonus: "Up to €400",
+    highlight: "Best service for expats, students, and families",
+    bonus: "Bonus up to €4,000*",
     featured: true,
   },
   {

@@ -31,7 +31,7 @@ const lexend = Lexend({
 });
 
 export const metadata: Metadata = {
-  title: "InsureBe",
+  title: "InsurBe",
   description: "Unlock the Best Insurance Solutions in Germany",
 };
 

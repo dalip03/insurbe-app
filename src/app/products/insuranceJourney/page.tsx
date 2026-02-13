@@ -28,6 +28,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useJourneyStore } from "@/app/stores/journeyStore";
 import { usePremiumStore } from "@/app/stores/premiumStore";
 import { useDocumentStore } from "@/app/stores/documentStore";
+import { calculateTKPremium } from "@/app/insurance/InsuranceCalculatorPrivate";
 
 // Types
 interface CountryAPI {
@@ -74,11 +75,37 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PHONE_REGEX = /^\+?[\d\s-]{10,}$/;
 
 const EU_COUNTRIES = [
-  "Austria", "Belgium", "Bulgaria", "Croatia", "Cyprus", "Czech Republic",
-  "Denmark", "Estonia", "Finland", "France", "Germany", "Greece", "Hungary",
-  "Ireland", "Italy", "Latvia", "Lithuania", "Luxembourg", "Malta",
-  "Netherlands", "Poland", "Portugal", "Romania", "Slovakia", "Slovenia",
-  "Spain", "Sweden", "Iceland", "Liechtenstein", "Norway", "Switzerland",
+  "Austria",
+  "Belgium",
+  "Bulgaria",
+  "Croatia",
+  "Cyprus",
+  "Czech Republic",
+  "Denmark",
+  "Estonia",
+  "Finland",
+  "France",
+  "Germany",
+  "Greece",
+  "Hungary",
+  "Ireland",
+  "Italy",
+  "Latvia",
+  "Lithuania",
+  "Luxembourg",
+  "Malta",
+  "Netherlands",
+  "Poland",
+  "Portugal",
+  "Romania",
+  "Slovakia",
+  "Slovenia",
+  "Spain",
+  "Sweden",
+  "Iceland",
+  "Liechtenstein",
+  "Norway",
+  "Switzerland",
   "United Kingdom",
 ] as const;
 
@@ -142,93 +169,105 @@ const StepImage = memo(({ step }: { step: number }) => (
 ));
 StepImage.displayName = "StepImage";
 
-const EmploymentButton = memo(({ 
-  option, 
-  icon: Icon,
-  onClick 
-}: { 
-  option: string; 
-  icon: any;
-  onClick: (val: string) => void;
-}) => (
-  <motion.button
-    variants={itemVariants}
-    whileHover={{ scale: 1.02, x: 5 }}
-    whileTap={{ scale: 0.98 }}
-    onClick={() => onClick(option)}
-    className="w-full p-5 border-2 border-gray-200 font-medium rounded-xl hover:border-primary hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 transition-all text-left flex items-center gap-4 group cursor-pointer shadow-sm hover:shadow-md"
-  >
-    <motion.div
-      whileHover={{ rotate: 360, scale: 1.1 }}
-      transition={{ duration: 0.6 }}
-      className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-primary flex items-center justify-center flex-shrink-0 shadow-md group-hover:shadow-lg transition"
+const EmploymentButton = memo(
+  ({
+    option,
+    icon: Icon,
+    onClick,
+  }: {
+    option: string;
+    icon: any;
+    onClick: (val: string) => void;
+  }) => (
+    <motion.button
+      variants={itemVariants}
+      whileHover={{ scale: 1.02, x: 5 }}
+      whileTap={{ scale: 0.98 }}
+      onClick={() => onClick(option)}
+      className="w-full p-5 border-2 border-gray-200 font-medium rounded-xl hover:border-primary hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 transition-all text-left flex items-center gap-4 group cursor-pointer shadow-sm hover:shadow-md"
     >
-      <Icon className="w-6 h-6 text-white" />
-    </motion.div>
-    <span className="flex-1 font-semibold text-gray-800 group-hover:text-primary transition">
-      {option}
-    </span>
-    <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-primary transition" />
-  </motion.button>
-));
+      <motion.div
+        whileHover={{ rotate: 360, scale: 1.1 }}
+        transition={{ duration: 0.6 }}
+        className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-primary flex items-center justify-center flex-shrink-0 shadow-md group-hover:shadow-lg transition"
+      >
+        <Icon className="w-6 h-6 text-white" />
+      </motion.div>
+      <span className="flex-1 font-semibold text-gray-800 group-hover:text-primary transition">
+        {option}
+      </span>
+      <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-primary transition" />
+    </motion.button>
+  ),
+);
 EmploymentButton.displayName = "EmploymentButton";
 
-const IncomeButton = memo(({ 
-  label, 
-  value, 
-  onClick 
-}: { 
-  label: string; 
-  value: string; 
-  onClick: (val: string) => void;
-}) => (
-  <motion.button
-    variants={itemVariants}
-    whileHover={{ scale: 1.02, x: 5 }}
-    whileTap={{ scale: 0.98 }}
-    onClick={() => onClick(value)}
-    className="w-full p-5 border-2 border-gray-200 font-medium rounded-xl hover:border-primary hover:bg-gradient-to-r hover:from-green-50 hover:to-emerald-50 transition-all text-left flex items-center gap-4 group cursor-pointer shadow-sm hover:shadow-md"
-  >
-    <motion.div
-      whileHover={{ rotate: 360, scale: 1.1 }}
-      transition={{ duration: 0.6 }}
-      className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center flex-shrink-0 shadow-md group-hover:shadow-lg transition"
+const IncomeButton = memo(
+  ({
+    label,
+    value,
+    onClick,
+  }: {
+    label: string;
+    value: string;
+    onClick: (val: string) => void;
+  }) => (
+    <motion.button
+      variants={itemVariants}
+      whileHover={{ scale: 1.02, x: 5 }}
+      whileTap={{ scale: 0.98 }}
+      onClick={() => onClick(value)}
+      className="w-full p-5 border-2 border-gray-200 font-medium rounded-xl hover:border-primary hover:bg-gradient-to-r hover:from-green-50 hover:to-emerald-50 transition-all text-left flex items-center gap-4 group cursor-pointer shadow-sm hover:shadow-md"
     >
-      <Euro className="w-6 h-6 text-white" />
-    </motion.div>
-    <span className="flex-1 font-semibold text-gray-800 group-hover:text-primary transition">
-      {label}
-    </span>
-    <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-primary transition" />
-  </motion.button>
-));
+      <motion.div
+        whileHover={{ rotate: 360, scale: 1.1 }}
+        transition={{ duration: 0.6 }}
+        className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center flex-shrink-0 shadow-md group-hover:shadow-lg transition"
+      >
+        <Euro className="w-6 h-6 text-white" />
+      </motion.div>
+      <span className="flex-1 font-semibold text-gray-800 group-hover:text-primary transition">
+        {label}
+      </span>
+      <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-primary transition" />
+    </motion.button>
+  ),
+);
 IncomeButton.displayName = "IncomeButton";
 
 // PROGRESS BAR COMPONENT
-const ProgressBar = memo(({ currentStep, totalSteps }: { currentStep: number; totalSteps: number }) => {
-  const progress = (currentStep / totalSteps) * 100;
-  
-  return (
-    <div className="w-full max-w-3xl mx-auto mb-8">
-      <div className="flex items-center justify-between mb-2">
-        <span className="text-sm font-medium text-gray-700">
-          Question {currentStep} of {totalSteps}
-        </span>
-        <span className="text-sm font-medium text-gray-700">
-          {Math.round(progress)}% Complete
-        </span>
+const ProgressBar = memo(
+  ({
+    currentStep,
+    totalSteps,
+  }: {
+    currentStep: number;
+    totalSteps: number;
+  }) => {
+    const progress = (currentStep / totalSteps) * 100;
+
+    return (
+      <div className="w-full max-w-3xl mx-auto mb-8">
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-sm font-medium text-gray-700">
+            Question {currentStep} of {totalSteps}
+          </span>
+          <span className="text-sm font-medium text-gray-700">
+            {Math.round(progress)}% Complete
+          </span>
+        </div>
+        <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+          <motion.div
+            className="h-full bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 rounded-full"
+            initial={{ width: 0 }}
+            animate={{ width: `${progress}%` }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+          />
+        </div>
       </div>
-      <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
-        <motion.div
-          className="h-full bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 rounded-full"
-          initial={{ width: 0 }}
-          animate={{ width: `${progress}%` }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
-        />
-      </div>
-    </div>
-  );
-});
+    );
+  },
+);
 ProgressBar.displayName = "ProgressBar";
 
 export default function InsuranceJourney() {
@@ -277,34 +316,34 @@ export default function InsuranceJourney() {
   }, []);
 
   // Calculate TK Price
-  const calculateTKPrice = useCallback(
-    (yearlyIncome: number, hasChildrenFlag: boolean, age: number) => {
-      const maxIncome = 5812.5 * 12;
-      const cappedIncome = Math.min(yearlyIncome, maxIncome);
+  // const calculateTKPrice = useCallback(
+  //   (yearlyIncome: number, hasChildrenFlag: boolean, age: number) => {
+  //     const maxIncome = 5812.5 * 12;
+  //     const cappedIncome = Math.min(yearlyIncome, maxIncome);
 
-      const mainPremium = cappedIncome * 0.146;
-      const zusatzbeitrag = cappedIncome * 0.0245;
-      const careInsuranceRate = hasChildrenFlag || age < 23 ? 0.036 : 0.042;
-      const careInsurance = cappedIncome * careInsuranceRate;
-      const totalAnnual = mainPremium + zusatzbeitrag + careInsurance;
-      const monthlyPremium = totalAnnual / 12;
+  //     const mainPremium = cappedIncome * 0.146;
+  //     const zusatzbeitrag = cappedIncome * 0.0245;
+  //     const careInsuranceRate = hasChildrenFlag || age < 23 ? 0.036 : 0.042;
+  //     const careInsurance = cappedIncome * careInsuranceRate;
+  //     const totalAnnual = mainPremium + zusatzbeitrag + careInsurance;
+  //     const monthlyPremium = totalAnnual / 12;
 
-      const employeeMainPremium = cappedIncome * 0.073;
-      const employeeZusatzbeitrag = cappedIncome * 0.01225;
-      const employeeCareInsurance =
-        cappedIncome * (hasChildrenFlag || age < 23 ? 0.018 : 0.024);
-      const employeeMonthly =
-        (employeeMainPremium + employeeZusatzbeitrag + employeeCareInsurance) /
-        12;
+  //     const employeeMainPremium = cappedIncome * 0.073;
+  //     const employeeZusatzbeitrag = cappedIncome * 0.01225;
+  //     const employeeCareInsurance =
+  //       cappedIncome * (hasChildrenFlag || age < 23 ? 0.018 : 0.024);
+  //     const employeeMonthly =
+  //       (employeeMainPremium + employeeZusatzbeitrag + employeeCareInsurance) /
+  //       12;
 
-      return {
-        monthly: Math.round(monthlyPremium * 100) / 100,
-        employeeMonthly: Math.round(employeeMonthly * 100) / 100,
-        annual: Math.round(totalAnnual * 100) / 100,
-      };
-    },
-    [],
-  );
+  //     return {
+  //       monthly: Math.round(monthlyPremium * 100) / 100,
+  //       employeeMonthly: Math.round(employeeMonthly * 100) / 100,
+  //       annual: Math.round(totalAnnual * 100) / 100,
+  //     };
+  //   },
+  //   [],
+  // );
 
   // Fetch countries
   useEffect(() => {
@@ -348,7 +387,9 @@ export default function InsuranceJourney() {
     }
 
     fetchCountries();
-    return () => { isMounted = false; };
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   // Close dropdown on outside click
@@ -383,19 +424,28 @@ export default function InsuranceJourney() {
     [setEmploymentStatus],
   );
 
-  const handleIncomeSelect = useCallback(
-    (val: string) => {
-      setIncomeRange(val);
+ const handleIncomeSelect = useCallback(
+  (val: string) => {
+    setIncomeRange(val);
 
-      let income = 50000;
-      if (val === ">77400" || val === "30001-77400") income = 66150;
-      setActualIncome(income);
+    let income = 50000;
 
-      if (val === "<30000") setStep(98);
-      else setStep(3);
-    },
-    [setIncomeRange, setActualIncome],
-  );
+    if (val === "<30000") {
+      income = 30000;
+      setStep(98); // contact flow
+    } else if (val === "30001-77400") {
+      income = 54000;
+      setStep(3);
+    } else if (val === ">77400") {
+      income = 6500 * 12; // monthly 6000 forced
+      setStep(3);
+    }
+
+    setActualIncome(income);
+  },
+  [setIncomeRange, setActualIncome]
+);
+
 
   const handleOtherSubmit = useCallback(() => {
     if (!otherEmployment || !email || !phone) {
@@ -472,6 +522,12 @@ export default function InsuranceJourney() {
       const currentDob = store.dob;
       const currentActualIncome = store.actualIncome || 50000;
       const currentEmploymentStatus = store.employmentStatus;
+      const employmentForCalculator =
+        currentEmploymentStatus === "Self-employed/Freelancer"
+          ? "Self Employed/Freelancer"
+          : currentEmploymentStatus === " Employed"
+            ? "Employed"
+            : "Other";
       const currentHasChildren = hasChildren ?? false;
 
       if (!currentSelectedCountry) {
@@ -486,16 +542,28 @@ export default function InsuranceJourney() {
         currentEmploymentStatus,
       );
 
-      const tkPrice = calculateTKPrice(
-        currentActualIncome,
-        currentHasChildren,
+      // const tkPrice = calculateTKPrice(
+      //   currentActualIncome,
+      //   currentHasChildren,
+      //   age,
+      // );
+      const result = calculateTKPremium(
+        currentActualIncome / 12, // convert yearly to monthly
         age,
+        currentHasChildren,
+       employmentForCalculator
+,
+        true, // always Saxony
       );
-      let adjustedTkEmployeeMonthly = tkPrice.employeeMonthly;
-      if (normalizedEmployment === "self-employed")
-        adjustedTkEmployeeMonthly *= 2;
 
-      setTKPremium(adjustedTkEmployeeMonthly);
+      // let adjustedTkEmployeeMonthly = tkPrice.employeeMonthly;
+      // let adjustedTkEmployeeMonthly = result.total;
+
+      // if (normalizedEmployment === "self-employed")
+      //   adjustedTkEmployeeMonthly *= 2;
+
+      // setTKPremium(adjustedTkEmployeeMonthly);
+      let adjustedTkEmployeeMonthly = result.total;
 
       const products: any[] = [];
       products.push({
@@ -564,7 +632,7 @@ export default function InsuranceJourney() {
       console.error("Error:", error);
       setPopup("An error occurred. Please try again.");
     }
-  }, [selectedCountry, hasChildren, calculateTKPrice, setTKPremium, router]);
+  }, [selectedCountry, hasChildren, setTKPremium, router]);
 
   const selectedCountryData = useMemo(
     () => countries.find((c) => c.name === selectedCountry),
@@ -587,7 +655,7 @@ export default function InsuranceJourney() {
 
   const calculatedAge = useMemo(
     () => (dob ? currentYear - parseInt(dob) : null),
-    [dob, currentYear]
+    [dob, currentYear],
   );
 
   // ================= UI ===================
@@ -603,7 +671,7 @@ export default function InsuranceJourney() {
         <h1 className="text-3xl sm:text-5xl font-extrabold text-gray-900 mb-3">
           Just{" "}
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-600">
-            2 minutes to find your 
+            2 minutes to find your
           </span>{" "}
           best-fit insurance
         </h1>
@@ -617,9 +685,7 @@ export default function InsuranceJourney() {
       <ProgressBar currentStep={getProgressStep(step)} totalSteps={5} />
 
       {/* Popup */}
-      <AnimatePresence>
-        {popup && <Popup message={popup} />}
-      </AnimatePresence>
+      <AnimatePresence>{popup && <Popup message={popup} />}</AnimatePresence>
 
       <AnimatePresence mode="wait">
         {/* Step 1: Employment Status */}
@@ -794,10 +860,16 @@ export default function InsuranceJourney() {
                           : "bg-gray-100"
                       }`}
                     >
-                      <CheckCircle2 className={`w-6 h-6 ${hasChildren === true ? "text-white" : "text-gray-400"}`} />
+                      <CheckCircle2
+                        className={`w-6 h-6 ${hasChildren === true ? "text-white" : "text-gray-400"}`}
+                      />
                     </motion.div>
-                    <span className="font-semibold text-gray-800 flex-1">Yes, I have children</span>
-                    {hasChildren === true && <ArrowRight className="w-5 h-5 text-primary" />}
+                    <span className="font-semibold text-gray-800 flex-1">
+                      Yes, I have children
+                    </span>
+                    {hasChildren === true && (
+                      <ArrowRight className="w-5 h-5 text-primary" />
+                    )}
                   </div>
                 </motion.button>
 
@@ -821,10 +893,16 @@ export default function InsuranceJourney() {
                           : "bg-gray-100"
                       }`}
                     >
-                      <XCircle className={`w-6 h-6 ${hasChildren === false ? "text-white" : "text-gray-400"}`} />
+                      <XCircle
+                        className={`w-6 h-6 ${hasChildren === false ? "text-white" : "text-gray-400"}`}
+                      />
                     </motion.div>
-                    <span className="font-semibold text-gray-800 flex-1">No children</span>
-                    {hasChildren === false && <ArrowRight className="w-5 h-5 text-primary" />}
+                    <span className="font-semibold text-gray-800 flex-1">
+                      No children
+                    </span>
+                    {hasChildren === false && (
+                      <ArrowRight className="w-5 h-5 text-primary" />
+                    )}
                   </div>
                 </motion.button>
               </motion.div>

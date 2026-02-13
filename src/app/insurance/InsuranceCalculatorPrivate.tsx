@@ -17,7 +17,7 @@ const statusOptions: EmploymentStatus[] = [
 /*                              CALCULATION LOGIC                             */
 /* -------------------------------------------------------------------------- */
 
-function calculateTKPremium(
+export function calculateTKPremium(
   monthlyIncome: number,
   age: number,
   hasChildren: boolean,
@@ -122,7 +122,11 @@ export default function InsuranceCalculatorPrivate({
   const [hasKids, setHasKids] = useState(false);
   const [isCalculating, setIsCalculating] = useState(false);
   const [isSaxony, setIsSaxony] = useState(false);
+  const numericIncome = parseFloat(income.replace(/[^0-9.]/g, ""));
+  const [showMidijobMessage, setShowMidijobMessage] = useState(false);
 
+  const isMidijob =
+    status === "Employed" && numericIncome > 0 && numericIncome <= 2000;
   const handleCalculate = () => {
     const inc = parseFloat(income.replace(/[^0-9.]/g, ""));
     const ag = parseInt(age);
@@ -131,7 +135,13 @@ export default function InsuranceCalculatorPrivate({
       setPremium(null);
       return;
     }
+     if (inc <= 2000 && status === "Employed") {
+    setShowMidijobMessage(true);
+    setPremium(null);
+    return;
+  }
 
+      setShowMidijobMessage(false);
     setIsCalculating(true);
 
     // Simulate calculation delay for animation effect
@@ -401,25 +411,52 @@ export default function InsuranceCalculatorPrivate({
             </p>
 
             <motion.div className="text-5xl bg-linear-to-r from-purple-600 to-primary bg-clip-text text-transparent mb-2">
-              {premium ? (
+              {showMidijobMessage  ? (
+                <div className="text-center space-y-4">
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    Your estimated monthly contribution to health and long-term
+                    care insurance
+                  </h3>
+
+                  <p className="text-gray-700 text-sm">
+                    You have stated that your monthly income does not exceed
+                    €2,000.00.
+                  </p>
+
+                  <p className="text-gray-600 text-sm">
+                    A special contribution calculation applies to low-wage
+                    earners. This is intended to reduce their contribution
+                    burden. <br/> <a
+                    href="https://www.tk-lex.tk.de/web/guest/externalcontent?_leongshared_serviceId=2006&_leongshared_externalcontentid=HI7546979"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-600 text-sm "
+                  >
+                    TK Midjob Calculator →
+                  </a>
+                  </p>
+
+                 
+                </div>
+              ) : premium ? (
                 <>
                   <div className="flex gap-4 text-sm text-gray-900">
                     <p className="text-sm text-gray-600 mb-2">
-                      Health insurance :{" "}
-                    </p>{" "}
+                      Health insurance :
+                    </p>
                     {premium.healthContribution.toFixed(2)} €
                   </div>
 
-                  <div className="flex gap-4 text-sm  text-gray-900">
+                  <div className="flex gap-4 text-sm text-gray-900">
                     <p className="text-sm text-gray-600 mb-2">
                       TK supplementary :
                     </p>
                     {premium.zusatzContribution.toFixed(2)} €
                   </div>
 
-                  <div className="flex gap-4 text-sm  text-gray-900">
+                  <div className="flex gap-4 text-sm text-gray-900">
                     <p className="text-sm text-gray-600 mb-4">
-                      Long-term care :{" "}
+                      Long-term care :
                     </p>
                     {premium.careContribution.toFixed(2)} €
                   </div>
@@ -436,11 +473,11 @@ export default function InsuranceCalculatorPrivate({
               )}
             </motion.div>
 
-            <p className="text-gray-500 text-sm mb-6">
+            {/* <p className="text-gray-500 text-sm mb-6">
               {status === "Self Employed/Freelancer"
                 ? "Full contribution"
                 : "Employee portion only"}
-            </p>
+            </p> */}
           </motion.div>
         </motion.div>
       </div>

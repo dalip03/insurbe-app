@@ -224,7 +224,7 @@ export default function ComparePlans() {
           product.loading || product.premium === null
             ? "..."
             : typeof product.premium === "number"
-              ? Math.round(product.premium).toString()
+              ? Math.round(product.premium).toFixed(2)
               : product.premium?.toString() || "N/A",
         period: "/ Month",
         logo,
@@ -393,6 +393,10 @@ export default function ComparePlans() {
 
   // ✅ Handle Choose Plan - Opens Health Modal for available plans
   const handleChoosePlan = (plan: (typeof plans)[0]) => {
+    if (plan.id === "tk") {
+    router.push("/insuranceSignupFlow");
+    return;
+  }  
     if (plan.available) {
       // ✅ Check if self-employed (always eligible for private)
       const isSelfEmployed =
@@ -738,7 +742,7 @@ export default function ComparePlans() {
                     ? "Loading..."
                     : plan.available
                       ? "Apply Now →"
-                      : "Coming Soon 🚀"}
+                      : "Apply Now →"}
                 </motion.button>
               </motion.div>
             );
