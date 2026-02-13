@@ -12,7 +12,14 @@ import { useState } from "react";
 
 export default function PublicHealthPage() {
 
-  const [premium, setPremium] = useState<number | null>(null);
+type PremiumBreakdown = {
+  healthContribution: number;
+  zusatzContribution: number;
+  careContribution: number;
+  total: number;
+};
+
+const [premium, setPremium] = useState<PremiumBreakdown | null>(null);
 
   return (
 

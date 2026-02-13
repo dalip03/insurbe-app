@@ -23,7 +23,7 @@ function calculateTKPremium(
   hasChildren: boolean,
   employmentStatus: EmploymentStatus,
   isSaxony: boolean,
-): number {
+): PremiumBreakdown {
   /* --------------------------- CONSTANTS (2025 TK) --------------------------- */
 
   const CONTRIBUTION_CEILING = 5850; // 2025 official
@@ -90,19 +90,31 @@ function calculateTKPremium(
   const totalMonthly =
     healthContribution + zusatzContribution + careContribution;
 
-  return round2(totalMonthly);
+  return {
+    healthContribution,
+    zusatzContribution,
+    careContribution,
+    total: round2(totalMonthly),
+  };
 }
 
 /* -------------------------------------------------------------------------- */
 /*                               MAIN COMPONENT                               */
 /* -------------------------------------------------------------------------- */
 
+type PremiumBreakdown = {
+  healthContribution: number;
+  zusatzContribution: number;
+  careContribution: number;
+  total: number;
+};
+
 export default function InsuranceCalculatorPrivate({
   setPremium,
   premium,
 }: {
-  setPremium: (value: number | null) => void;
-  premium: number | null;
+  setPremium: (value: PremiumBreakdown | null) => void;
+  premium: PremiumBreakdown | null;
 }) {
   const [status, setStatus] = useState<EmploymentStatus>("Employed");
   const [income, setIncome] = useState("6500");
@@ -388,9 +400,40 @@ export default function InsuranceCalculatorPrivate({
               Estimated Monthly Premium
             </p>
 
-            <motion.div className="text-5xl font-bold bg-linear-to-r from-purple-600 to-primary bg-clip-text text-transparent mb-2">
-              {/* € {premium !== null ? premium.toFixed(2) : "--"} */}€{" "}
-              {typeof premium === "number" ? premium.toFixed(2) : "--"}
+            <motion.div className="text-5xl bg-linear-to-r from-purple-600 to-primary bg-clip-text text-transparent mb-2">
+              {premium ? (
+                <>
+                  <div className="flex gap-4 text-sm text-gray-900">
+                    <p className="text-sm text-gray-600 mb-2">
+                      Health insurance :{" "}
+                    </p>{" "}
+                    {premium.healthContribution.toFixed(2)} €
+                  </div>
+
+                  <div className="flex gap-4 text-sm  text-gray-900">
+                    <p className="text-sm text-gray-600 mb-2">
+                      TK supplementary :
+                    </p>
+                    {premium.zusatzContribution.toFixed(2)} €
+                  </div>
+
+                  <div className="flex gap-4 text-sm  text-gray-900">
+                    <p className="text-sm text-gray-600 mb-4">
+                      Long-term care :{" "}
+                    </p>
+                    {premium.careContribution.toFixed(2)} €
+                  </div>
+
+                  <div className="border-t pt-3">
+                    <div className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-primary bg-clip-text text-transparent">
+                      {premium.total.toFixed(2)} €
+                    </div>
+                    <p className="text-gray-600 text-sm">Total contribution</p>
+                  </div>
+                </>
+              ) : (
+                <div className="text-5xl text-gray-800">--</div>
+              )}
             </motion.div>
 
             <p className="text-gray-500 text-sm mb-6">

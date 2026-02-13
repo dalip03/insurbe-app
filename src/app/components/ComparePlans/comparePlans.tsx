@@ -22,6 +22,8 @@ interface HealthAnswer {
   missingTeeth: string | null;
 }
 
+
+
 export default function ComparePlans() {
   const router = useRouter();
   // const { setPremium, setTKPremium } = usePremiumStore();
@@ -475,7 +477,7 @@ export default function ComparePlans() {
             </h1>
 
             {/* Buttons */}
-            <motion.div
+            {/* <motion.div
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.4 }}
@@ -522,12 +524,12 @@ export default function ComparePlans() {
               >
                 Personalized Calculation
               </motion.button>
-            </motion.div>
+            </motion.div> */}
           </motion.div>
         </div>
 
         {/* Insurance Calculator */}
-        <AnimatePresence>
+        {/* <AnimatePresence>
           {showCalculator && (
             <motion.div
               initial={{ opacity: 0, height: 0, marginBottom: 0 }}
@@ -539,7 +541,7 @@ export default function ComparePlans() {
               <InsuranceCalculatorPrivate setPremium={setPremium} premium={premium} />
             </motion.div>
           )}
-        </AnimatePresence>
+        </AnimatePresence> */}
 
         {/* Product Count Badge */}
         <motion.div

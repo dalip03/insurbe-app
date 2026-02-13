@@ -46,6 +46,12 @@ const providers = [
 /* -------------------------------------------------------------------------- */
 /* HELPERS */
 /* -------------------------------------------------------------------------- */
+type PremiumBreakdown = {
+  healthContribution: number;
+  zusatzContribution: number;
+  careContribution: number;
+  total: number;
+};
 
 const Stars = ({ count }: { count: number }) => (
   <div className="flex gap-1">
@@ -77,7 +83,7 @@ const Speed = ({ count }: { count: number }) => (
 export default function ProviderComparison({
   premium,
 }: {
-  premium: number | null;
+  premium: PremiumBreakdown | null;
 }) {
   const router = useRouter();
 
@@ -139,10 +145,10 @@ export default function ProviderComparison({
                   <h3 className="text-2xl font-bold">{p.name}</h3>
                 </div>
 
-                {p.id === "tk" && premium !== null && (
-                 <span className="text-2xl font-bold text-black drop-shadow-[0_0_8px_rgba(147,51,234,0.5)]">
-  € {premium.toFixed(2)}
-</span>
+                {premium && (
+                  <span className="text-2xl font-bold text-black drop-shadow-[0_0_8px_rgba(147,51,234,0.5)]">
+                    € {premium.total.toFixed(2)}
+                  </span>
                 )}
               </div>
 
