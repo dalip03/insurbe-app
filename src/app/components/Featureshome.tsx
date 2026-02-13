@@ -78,8 +78,8 @@ export default function Featureshome() {
               </div>
 
               {/* Icon */}
-              <div className={`relative w-14 h-14 mb-6 rounded-2xl ${ICON_BG} shadow-xl flex items-center justify-center`}>
-                <item.icon className="w-7 h-7 text-white" />
+              <div className={`relative w-14 h-14 mb-6 rounded-2xl shadow-xl flex items-center justify-center`}>
+                <item.icon className="w-7 h-7 text-black" />
               </div>
 
               {/* Content */}
