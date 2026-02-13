@@ -145,7 +145,7 @@ export default function ProviderComparison({
                   <h3 className="text-2xl font-bold">{p.name}</h3>
                 </div>
 
-                {premium && (
+                {p.id === "tk" && premium && (
                   <span className="text-2xl font-bold text-black drop-shadow-[0_0_8px_rgba(147,51,234,0.5)]">
                     € {premium.total.toFixed(2)}
                   </span>
