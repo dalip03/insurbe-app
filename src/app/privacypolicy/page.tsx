@@ -1,5 +1,7 @@
 "use client";
 
+import { INSURANCE_PLANS } from "../constants/insurance";
+
 const sections = [
   {
     title: "Introduction",
@@ -25,10 +27,10 @@ const sections = [
     title: "Changes to this Policy",
     content: `We may revise our Privacy Policy from time to time. We will post any changes to the Privacy Policy on this page. We will not reduce your rights under this Privacy Policy without your explicit consent.`,
   },
- {
+  {
     title: "Promotional Cashback Offers",
-    content: `As part of a promotional offer, InsurBe may grant a cashback of up to €50 following a successful insurance signup. The cashback is paid to a German bank account in the policyholder’s name, subject to eligibility criteria and verification.`
- }
+    content: `As part of a promotional offer, InsurBe may grant a cashback of up to €${INSURANCE_PLANS.INSURBE_STUDENT_BONUS} following a successful insurance signup. The cashback is paid to a German bank account in the policyholder’s name, subject to eligibility criteria and verification.`,
+  },
 ];
 
 export default function PrivacyPolicy() {
@@ -65,19 +67,25 @@ export default function PrivacyPolicy() {
             </p>
             <ul className="list-disc list-inside space-y-2 text-[16px] text-gray-700">
               <li>
-                <span className="font-medium">Right to Access:</span> Request copies of your personal data.
+                <span className="font-medium">Right to Access:</span> Request
+                copies of your personal data.
               </li>
               <li>
-                <span className="font-medium">Right to Rectification:</span> Request correction of inaccurate or incomplete data.
+                <span className="font-medium">Right to Rectification:</span>{" "}
+                Request correction of inaccurate or incomplete data.
               </li>
               <li>
-                <span className="font-medium">Right to Erasure:</span> Request deletion of your personal data under certain conditions.
+                <span className="font-medium">Right to Erasure:</span> Request
+                deletion of your personal data under certain conditions.
               </li>
               <li>
-                <span className="font-medium">Data Portability:</span> Request transfer of your data to another organization or directly to you.
+                <span className="font-medium">Data Portability:</span> Request
+                transfer of your data to another organization or directly to
+                you.
               </li>
               <li>
-                <span className="font-medium">Consent Management:</span> Withdraw consent at any time.
+                <span className="font-medium">Consent Management:</span>{" "}
+                Withdraw consent at any time.
               </li>
             </ul>
           </div>
@@ -87,9 +95,7 @@ export default function PrivacyPolicy() {
         <footer className="mt-16 pt-8 border-t border-gray-200 text-sm text-gray-600">
           <p>
             Last updated:{" "}
-            <span className="font-medium text-gray-800">
-              January 20, 2026
-            </span>
+            <span className="font-medium text-gray-800">January 20, 2026</span>
           </p>
           <p className="mt-2">
             Questions? Contact{" "}

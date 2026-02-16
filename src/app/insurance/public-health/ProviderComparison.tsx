@@ -28,7 +28,7 @@ const providers = [
     digital: 3,
     speed: 3,
     highlight: "Best service for expats, students, and families",
-    bonus: "Bonus up to €4,000*",
+    bonus: "Bonus up to €400*",
     featured: true,
   },
   {
@@ -181,7 +181,7 @@ export default function ProviderComparison({
               {/* BONUS */}
               <div className="flex items-center gap-2 mb-8">
                 <Gift className="w-5 h-5 " />
-                <span className="font-bold ">{p.bonus}</span>
+                <span className="font-medium ">{p.bonus}</span>
               </div>
 
               {/* CTA */}
