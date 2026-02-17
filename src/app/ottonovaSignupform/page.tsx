@@ -86,6 +86,7 @@ interface FormData {
   healthQ9: string; // Scheduled treatments
   healthQ10: string; // Mental health
   healthQ11: string; // Hospitalization
+  section19Accepted: boolean; // Section 19a acceptance
 
   // Step 7: Insurance Plan Selection
   selectedPlan: string;
@@ -94,6 +95,13 @@ interface FormData {
   // Terms
   acceptTerms: boolean;
   acceptMarketing: boolean;
+  grantImmediateExecution: boolean;
+  confirmHealthPackage: boolean;
+  consultationProtocol: boolean;
+  confirmCorrectInformation: boolean;
+  authorizeInsurBe: boolean;
+  insuranceContractDocuments: boolean;
+  healthDataDeclaration: boolean;
 }
 
 // Types
@@ -173,6 +181,7 @@ export default function ComprehensiveInsuranceForm() {
     healthQ9: "",
     healthQ10: "",
     healthQ11: "",
+    section19Accepted: false,
 
     // Step 7
     selectedPlan: "study-protect",
@@ -181,6 +190,16 @@ export default function ComprehensiveInsuranceForm() {
     // Terms
     acceptTerms: false,
     acceptMarketing: false,
+    // General
+    grantImmediateExecution: false,
+
+    // Health Insurance
+    confirmHealthPackage: false,
+    consultationProtocol: false,
+    confirmCorrectInformation: false,
+    healthDataDeclaration: false,
+    insuranceContractDocuments: false,
+    authorizeInsurBe: false,
   });
 
   const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>(
@@ -327,6 +346,7 @@ export default function ComprehensiveInsuranceForm() {
         "healthQ9",
         "healthQ10",
         "healthQ11",
+        "section19Accepted",
       ] as const;
 
       questions.forEach((q) => {
@@ -352,6 +372,10 @@ export default function ComprehensiveInsuranceForm() {
           }
         });
       }
+      if (!formData.section19Accepted) {
+        newErrors.section19Accepted =
+          "You must accept Section 19 notice to continue.";
+      }
     }
 
     // STEP 6 – Plan & Terms
@@ -359,8 +383,24 @@ export default function ComprehensiveInsuranceForm() {
       if (!formData.insuranceStartDate)
         newErrors.insuranceStartDate = "Insurance start date is required";
 
-      if (!formData.acceptTerms)
-        newErrors.acceptTerms = "You must accept the terms";
+      if (!formData.acceptTerms) newErrors.acceptTerms = "Required";
+
+      if (!formData.confirmHealthPackage)
+        newErrors.confirmHealthPackage = "Required";
+
+      if (!formData.consultationProtocol)
+        newErrors.consultationProtocol = "Required";
+
+      if (!formData.healthDataDeclaration)
+        newErrors.healthDataDeclaration = "Required";
+
+      if (!formData.insuranceContractDocuments)
+        newErrors.insuranceContractDocuments = "Required";
+
+      if (!formData.authorizeInsurBe) newErrors.authorizeInsurBe = "Required";
+
+      if (!formData.confirmCorrectInformation)
+        newErrors.confirmCorrectInformation = "Required";
     }
 
     setErrors(newErrors);
@@ -370,6 +410,39 @@ export default function ComprehensiveInsuranceForm() {
   const handleChange = (name: keyof FormData, value: string | boolean) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
     setTouched((prev) => ({ ...prev, [name]: true }));
+  };
+
+  const handleDownloadSection19 = () => {
+    const link = document.createElement("a");
+    link.href = "/pdfs/Section19_VVG_Notice.pdf"; // place PDF inside public/pdfs/
+    link.download = "Section19_VVG_Notice.pdf";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+  const downloadProtocol = async () => {
+    const res = await fetch("/api/generate-protocol", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    });
+
+    const blob = await res.blob();
+    const url = window.URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "InsurBe-Consultation-Protocol.pdf";
+    a.click();
+  };
+
+  const downloadPdf = (fileName: string) => {
+    const link = document.createElement("a");
+    link.href = `/pdfs/${fileName}`;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const handleNext = () => {
@@ -700,83 +773,6 @@ export default function ComprehensiveInsuranceForm() {
           </p>
 
           <AnimatePresence mode="wait">
-            {/* STEP 1: Email & Phone */}
-            {/* {step === 1 && (
-              <motion.div
-                key="step1"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="space-y-6"
-              >
-                <div className="grid sm:grid-cols-2 gap-6">
-                  <FormField label="Email Address *" error={errors.email}>
-                    <div className="relative">
-                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                      <input
-                        type="email"
-                        value={formData.email}
-                        onChange={(e) => handleChange("email", e.target.value)}
-                        className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition"
-                        placeholder="you@example.com"
-                      />
-                    </div>
-                  </FormField>
-
-                  <FormField
-                    label="Confirm Email *"
-                    error={errors.confirmEmail}
-                  >
-                    <div className="relative">
-                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                      <input
-                        type="email"
-                        value={formData.confirmEmail}
-                        onChange={(e) =>
-                          handleChange("confirmEmail", e.target.value)
-                        }
-                        className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition"
-                        placeholder="Confirm your email"
-                      />
-                    </div>
-                  </FormField>
-
-                  <FormField label="Phone Number *" error={errors.phoneNumber}>
-                    <div className="relative">
-                      <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                      <input
-                        type="tel"
-                        value={formData.phoneNumber}
-                        onChange={(e) =>
-                          handleChange("phoneNumber", e.target.value)
-                        }
-                        className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition"
-                        placeholder="+49 123 456 7890"
-                      />
-                    </div>
-                  </FormField>
-
-                  <FormField
-                    label="Confirm Phone Number *"
-                    error={errors.confirmPhoneNumber}
-                  >
-                    <div className="relative">
-                      <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                      <input
-                        type="tel"
-                        value={formData.confirmPhoneNumber}
-                        onChange={(e) =>
-                          handleChange("confirmPhoneNumber", e.target.value)
-                        }
-                        className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition"
-                        placeholder="Confirm your phone"
-                      />
-                    </div>
-                  </FormField>
-                </div>
-              </motion.div>
-            )} */}
-
             {/* STEP 2: Personal Information */}
             {step === 1 && (
               <motion.div
@@ -1217,7 +1213,7 @@ export default function ComprehensiveInsuranceForm() {
               </motion.div>
             )}
 
-            {/* STEP 6: Detailed Health Questions */}
+            {/* STEP 5: Detailed Health Questions */}
             {step === 5 && (
               <motion.div
                 key="step6"
@@ -1362,6 +1358,49 @@ export default function ComprehensiveInsuranceForm() {
                   onChange={(val) => handleChange("healthQ11", val)}
                   error={errors.healthQ11}
                 />
+                {/* Section 19 Declaration */}
+                <div className="mt-8 p-6 bg-gray-50 rounded-xl border border-gray-200">
+                  <div className="flex items-start gap-3">
+                    <input
+                      type="checkbox"
+                      id="section19"
+                      checked={formData.section19Accepted}
+                      onChange={(e) =>
+                        handleChange("section19Accepted", e.target.checked)
+                      }
+                      className="mt-1 w-5 h-5 accent-purple-600"
+                    />
+
+                    <label
+                      htmlFor="section19"
+                      className="text-sm text-gray-700 leading-relaxed"
+                    >
+                      I have taken note of the separate notice on the
+                      consequences of a breach of the duty of disclosure
+                      pursuant to Section 19 (5) of the German Insurance
+                      Contract Act (Versicherungsvertragsgesetz) and I
+                      understand that I must answer the health questions
+                      carefully, completely and correctly to the best of my
+                      knowledge. I am aware that a breach of the pre-contractual
+                      duty of disclosure may entitle ottonova
+                      Krankenversicherung AG to withdraw from or terminate the
+                      contract or lead to an amendment of my insurance contract.
+                      <br />
+                      <span
+                        onClick={handleDownloadSection19}
+                        className="text-purple-600 underline cursor-pointer font-medium hover:text-purple-800"
+                      >
+                        Read Section 19 (5) VVG Notice
+                      </span>
+                    </label>
+                  </div>
+
+                  {errors.section19Accepted && (
+                    <p className="text-red-500 text-sm mt-2">
+                      {errors.section19Accepted}
+                    </p>
+                  )}
+                </div>
               </motion.div>
             )}
 
@@ -1376,33 +1415,12 @@ export default function ComprehensiveInsuranceForm() {
               >
                 {/* Plan Card */}
                 <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-6 border-2 border-blue-200">
-                  <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center justify-between">
                     <h3 className="text-xl font-bold text-blue-900">
                       Study Protect
                     </h3>
                     <div className="text-3xl font-bold text-blue-600">
-                      €115.71
-                    </div>
-                  </div>
-                  <p className="text-sm text-blue-700 mb-4">
-                    Excess €500 / year
-                  </p>
-                  <div className="bg-white rounded-lg p-4">
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-600">
-                        Study Protect tariff
-                      </span>
-                      <span className="font-bold">€115.71</span>
-                    </div>
-                    <div className="flex items-center justify-between text-sm mt-2">
-                      <span className="text-gray-600">
-                        Long-term care insurance
-                      </span>
-                      <span className="font-bold">€31.92</span>
-                    </div>
-                    <div className="border-t mt-3 pt-3 flex items-center justify-between font-bold">
-                      <span>In total</span>
-                      <span className="text-lg text-blue-600">€147.63</span>
+                      €147.63
                     </div>
                   </div>
                 </div>
@@ -1421,56 +1439,217 @@ export default function ComprehensiveInsuranceForm() {
                     className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition"
                   />
                 </FormField>
+<div>
+  fghd
+</div>
+                {/* ================= TERMS SECTION ================= */}
+                <div className="space-y-8 border-t pt-6">
+                  {/* ================= GENERAL SECTION ================= */}
+                  <div className="bg-gray-50 p-6 rounded-xl border">
+                    <h3 className="text-lg font-semibold mb-4">General</h3>
 
-                {/* Terms */}
-                <div className="space-y-4 border-t pt-6">
-                  <label className="flex items-start gap-3 cursor-pointer group">
-                    <input
-                      type="checkbox"
-                      checked={formData.acceptTerms}
-                      onChange={(e) =>
-                        handleChange("acceptTerms", e.target.checked)
-                      }
-                      className="mt-1 w-5 h-5 text-purple-600 rounded"
-                    />
-                    <span className="text-sm text-gray-700">
-                      I have read and accept the{" "}
-                      <a
-                        href="/termscondition"
-                        className="text-purple-600 font-semibold hover:underline"
-                      >
-                        Terms and Conditions
-                      </a>{" "}
-                      and{" "}
-                      <a
-                        href="/privacypolicy"
-                        className="text-purple-600 font-semibold hover:underline"
-                      >
-                        Privacy Policy
-                      </a>
-                      . *
-                    </span>
-                  </label>
-                  {errors.acceptTerms && (
-                    <p className="text-red-600 text-sm flex items-center gap-1 ml-8">
-                      <AlertCircle className="w-4 h-4" />
-                      {errors.acceptTerms}
-                    </p>
-                  )}
+                    <label className="flex items-start gap-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={formData.acceptTerms}
+                        onChange={(e) =>
+                          handleChange("acceptTerms", e.target.checked)
+                        }
+                        className="mt-1 w-5 h-5 text-purple-600 rounded"
+                      />
+                      <span className="text-sm text-gray-700 leading-relaxed">
+                        I have read and accept the{" "}
+                        <span
+                          onClick={() => router.push("/termscondition")}
+                          className="text-purple-600 font-semibold underline cursor-pointer"
+                        >
+                          Terms and Conditions
+                        </span>{" "}
+                        and{" "}
+                        <span
+                          onClick={() => router.push("/privacypolicy")}
+                          className="text-purple-600 font-semibold underline cursor-pointer"
+                        >
+                          Privacy Policy
+                        </span>
+                        .
+                      </span>
+                    </label>
 
-                  <label className="flex items-start gap-3 cursor-pointer group">
-                    <input
-                      type="checkbox"
-                      checked={formData.acceptMarketing}
-                      onChange={(e) =>
-                        handleChange("acceptMarketing", e.target.checked)
-                      }
-                      className="mt-1 w-5 h-5 text-purple-600 rounded"
-                    />
-                    <span className="text-sm text-gray-700">
-                      I consent to receiving marketing communications via email.
-                    </span>
-                  </label>
+                    {/* Grant Immediate Execution (Checked in Image) */}
+                    <label className="flex items-start gap-3 cursor-pointer mt-4">
+                      <input
+                        type="checkbox"
+                        checked={formData.grantImmediateExecution}
+                        onChange={(e) =>
+                          handleChange(
+                            "grantImmediateExecution",
+                            e.target.checked,
+                          )
+                        }
+                        className="mt-1 w-5 h-5 text-purple-600 rounded"
+                      />
+                      <span className="text-sm text-gray-700">
+                        I grant my consent to immediately execute the contracts
+                        mentioned above.
+                      </span>
+                    </label>
+                  </div>
+
+                  {/* ================= HEALTH INSURANCE SECTION ================= */}
+                  <div className="bg-gray-50 p-6 rounded-xl border">
+                    <h3 className="text-lg font-semibold mb-6">
+                      Health Insurance
+                    </h3>
+
+                    {/* 1. Health Insurance Plus */}
+                    <label className="flex items-start gap-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={formData.confirmHealthPackage}
+                        onChange={(e) =>
+                          handleChange("confirmHealthPackage", e.target.checked)
+                        }
+                        className="mt-1 w-5 h-5 text-purple-600 rounded"
+                      />
+                      <span className="text-sm text-gray-700 leading-relaxed">
+                        I want to conclude the Health Insurance Plus package. I
+                        confirm that I have downloaded, read and agreed to
+                        InsurBe’s{" "}
+                        <span
+                          onClick={() => router.push("/termscondition")}
+                          className="text-purple-600 underline cursor-pointer"
+                        >
+                          Special Terms and Conditions Packages
+                        </span>{" "}
+                        including the instructions about the right of
+                        withdrawal.
+                      </span>
+                    </label>
+
+                    {/* 2. Consultation Protocol */}
+                    <label className="flex items-start gap-3 cursor-pointer mt-5">
+                      <input
+                        type="checkbox"
+                        checked={formData.consultationProtocol}
+                        onChange={(e) =>
+                          handleChange("consultationProtocol", e.target.checked)
+                        }
+                        className="mt-1 w-5 h-5 text-purple-600 rounded"
+                      />
+                      <span className="text-sm text-gray-700 leading-relaxed">
+                        I have downloaded, read, and agreed to the{" "}
+                        <span
+                          onClick={downloadProtocol}
+                          className="text-purple-600 underline cursor-pointer"
+                        >
+                          Consultation Protocol
+                        </span>{" "}
+                        of the conclusion of my health insurance contracts.
+                      </span>
+                    </label>
+
+                    {/* 3. Health Data Declaration */}
+                    <label className="flex items-start gap-3 cursor-pointer mt-5">
+                      <input
+                        type="checkbox"
+                        checked={formData.healthDataDeclaration}
+                        onChange={(e) =>
+                          handleChange(
+                            "healthDataDeclaration",
+                            e.target.checked,
+                          )
+                        }
+                        className="mt-1 w-5 h-5 text-purple-600 rounded"
+                      />
+                      <span className="text-sm text-gray-700 leading-relaxed">
+                        I hereby declare my consent to the collection and use of
+                        health data by the insurer in accordance with the{" "}
+                        <span
+                          onClick={() =>
+                            downloadPdf("health-data-declaration.pdf")
+                          }
+                          className="text-purple-600 underline cursor-pointer"
+                        >
+                          declaration on the collection and use of health data
+                          and release from the duty of confidentiality
+                        </span>
+                        .
+                      </span>
+                    </label>
+
+                    {/* 4. Insurance Contract Documents */}
+                    <label className="flex items-start gap-3 cursor-pointer mt-5">
+                      <input
+                        type="checkbox"
+                        checked={formData.insuranceContractDocuments}
+                        onChange={(e) =>
+                          handleChange(
+                            "insuranceContractDocuments",
+                            e.target.checked,
+                          )
+                        }
+                        className="mt-1 w-5 h-5 text-purple-600 rounded"
+                      />
+                      <span className="text-sm text-gray-700 leading-relaxed">
+                        I have taken note of the right of revocation, have read
+                        and accepted the{" "}
+                        <span
+                          onClick={() =>
+                            downloadPdf("insurance-contract-documents.pdf")
+                          }
+                          className="text-purple-600 underline cursor-pointer"
+                        >
+                          documents regarding my insurance contract
+                        </span>{" "}
+                        and agree to the validity of the insurance contract.
+                      </span>
+                    </label>
+
+                    {/* 5. Authorize InsurBe’s */}
+                    <label className="flex items-start gap-3 cursor-pointer mt-5">
+                      <input
+                        type="checkbox"
+                        checked={formData.authorizeInsurBe}
+                        onChange={(e) =>
+                          handleChange("authorizeInsurBe", e.target.checked)
+                        }
+                        className="mt-1 w-5 h-5 text-purple-600 rounded"
+                      />
+                      <span className="text-sm text-gray-700 leading-relaxed">
+                        I authorize InsurBe to accept the insurance policy
+                        issued by the insurer. In this respect, I release
+                        InsurBe from the obligation to act on its own behalf in
+                        accordance with Section 181 BGB. I am aware that the
+                        insurance contract is effectively concluded at the time
+                        of receipt of the insurance policy by InsurBe
+                      </span>
+                    </label>
+
+                    {/* 6. Confirm Information Correct */}
+                    <label className="flex items-start gap-3 cursor-pointer mt-5">
+                      <input
+                        type="checkbox"
+                        checked={formData.confirmCorrectInformation}
+                        onChange={(e) =>
+                          handleChange(
+                            "confirmCorrectInformation",
+                            e.target.checked,
+                          )
+                        }
+                        className="mt-1 w-5 h-5 text-purple-600 rounded"
+                      />
+                      <span className="text-sm text-gray-700 leading-relaxed">
+                        I confirm that the information I have provided is
+                        complete and correct. The insurance coverage begins at
+                        the agreed time in accordance with the insurance
+                        conditions. I agree to the commencement of the insurance
+                        coverage, even if it is before the expiry of the
+                        revocation period (details in the revocation
+                        instructions).
+                      </span>
+                    </label>
+                  </div>
                 </div>
               </motion.div>
             )}
