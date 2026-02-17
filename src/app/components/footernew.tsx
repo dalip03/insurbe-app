@@ -66,7 +66,7 @@ export default function Footernew() {
                 {/* Data Security */}
                 <div className="flex items-center gap-3 p-2">
                   <Image
-                    src="/gifs_assets/ssl.jpeg"
+                    src="/gifs_assets/sslnew.png"
                     alt="Secure SSL Encryption"
                     width={40}
                     height={40}
