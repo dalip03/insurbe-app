@@ -1426,7 +1426,7 @@ export default function ComprehensiveInsuranceForm() {
                       Study Protect
                     </h3>
                     <div className="text-3xl font-bold text-blue-600">
-                      €147.63
+                      €117.63
                     </div>
                   </div>
                 </div>
