@@ -103,7 +103,7 @@ interface FormData {
   authorizeInsurBe: boolean;
   insuranceContractDocuments: boolean;
   healthDataDeclaration: boolean;
-  signatureConsent:boolean;
+  signatureConsent: boolean;
 }
 
 // Types
@@ -295,7 +295,28 @@ export default function ComprehensiveInsuranceForm() {
 
       if (!formData.lastName) newErrors.lastName = "Last name is required";
 
-      if (!formData.birthday) newErrors.birthday = "Birthday is required";
+      if (!formData.birthday) {
+        newErrors.birthday = "Birthday is required";
+      } else {
+        const birthDate = new Date(formData.birthday);
+        const today = new Date();
+
+        const age =
+          today.getFullYear() -
+          birthDate.getFullYear() -
+          (today <
+          new Date(
+            today.getFullYear(),
+            birthDate.getMonth(),
+            birthDate.getDate(),
+          )
+            ? 1
+            : 0);
+
+        if (age <= 20) {
+          newErrors.birthday = "Enter a valid date";
+        }
+      }
 
       if (!formData.nationality)
         newErrors.nationality = "Nationality is required";
@@ -405,10 +426,10 @@ export default function ComprehensiveInsuranceForm() {
 
       if (!formData.confirmCorrectInformation)
         newErrors.confirmCorrectInformation = "Required";
-      if (!formData.signatureConsent) 
-          newErrors.signatureConsent = "You must confirm consent"; 
+      if (!formData.signatureConsent)
+        newErrors.signatureConsent = "You must confirm consent";
     }
-  
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -756,7 +777,6 @@ export default function ComprehensiveInsuranceForm() {
                   {s === 4 && "medical basic"}
                   {s === 5 && "Health Q&A"}
                   {s === 6 && "Terms & Plan"}
-                 
                 </span>
               </div>
             ))}
@@ -1486,7 +1506,7 @@ export default function ComprehensiveInsuranceForm() {
                   )}
 
                   {/* Consent Checkbox */}
-                  <label className="flex items-start gap-3 mt-6 cursor-pointer">
+                  {/* <label className="flex items-start gap-3 mt-6 cursor-pointer">
                     <input
                       type="checkbox"
                       checked={formData.signatureConsent}
@@ -1507,7 +1527,7 @@ export default function ComprehensiveInsuranceForm() {
                       </span>{" "}
                       and I hereby confirm that I give my full consent.
                     </span>
-                  </label>
+                  </label> */}
                 </div>
 
                 {/* ================= TERMS SECTION ================= */}

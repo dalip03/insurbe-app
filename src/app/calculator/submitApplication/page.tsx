@@ -27,15 +27,19 @@ export default function SubmitApplication() {
 
   const selectedPlan = journeyStore.selectedPlan;
 
-  /* ---------- Selected Plan from sessionStorage ---------- */
   const [plan, setPlan] = useState<{
     title: string;
     price: string;
     category: string;
   } | null>(null);
 
-  const storedPlan = sessionStorage.getItem("selectedPlan");
-  const plans = storedPlan ? JSON.parse(storedPlan) : null;
+  useEffect(() => {
+    const storedPlan = sessionStorage.getItem("selectedPlan");
+
+    if (storedPlan) {
+      setPlan(JSON.parse(storedPlan));
+    }
+  }, []);
 
   /* ---------- Form state ---------- */
 
@@ -241,13 +245,20 @@ export default function SubmitApplication() {
     return fallbackDate.toISOString().split("T")[0];
   }
 
-  let formattedCategory = "Private Health";
+  // let formattedCategory = "Private Health";
 
-  if (plans?.category) {
-    const parts = plans.category.split(" ");
-    formattedCategory =
-      parts.length > 1 ? `${parts[1]} - ${parts[0]}` : plans.category;
-  }
+  const formattedCategory = plan?.category
+  ? plan.category.split(" ").length > 1
+    ? `${plan.category.split(" ")[1]} - ${plan.category.split(" ")[0]}`
+    : plan.category
+  : "Private Health";
+
+  // if (plan?.category) {
+  //   const parts = plan.category.split(" ");
+  //   formattedCategory =
+  //     parts.length > 1 ? `${parts[1]} - ${parts[0]}` : plan.category;
+  // }
+
   /* ---------- UI ---------- */
 
   return (
