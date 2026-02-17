@@ -405,12 +405,10 @@ export default function ComprehensiveInsuranceForm() {
 
       if (!formData.confirmCorrectInformation)
         newErrors.confirmCorrectInformation = "Required";
-      
+      if (!formData.signatureConsent) 
+          newErrors.signatureConsent = "You must confirm consent"; 
     }
-    
-     if (!formData.signatureConsent) {
-    newErrors.signatureConsent = "You must confirm consent";
-  }
+  
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -752,13 +750,13 @@ export default function ComprehensiveInsuranceForm() {
                   {s < step ? "✓" : s}
                 </div>
                 <span className="text-xs text-gray-500 mt-2 hidden sm:block text-center max-w-[80px]">
-                  {s === 1 && "Contact"}
-                  {s === 2 && "Personal"}
-                  {s === 3 && "Insurance"}
-                  {s === 4 && "Occupation"}
-                  {s === 5 && "Health"}
-                  {s === 6 && "Questions"}
-                  {s === 7 && "Confirm"}
+                  {s === 1 && "Personal info"}
+                  {s === 2 && "Insurance history"}
+                  {s === 3 && "Occupation"}
+                  {s === 4 && "medical basic"}
+                  {s === 5 && "Health Q&A"}
+                  {s === 6 && "Terms & Plan"}
+                 
                 </span>
               </div>
             ))}
