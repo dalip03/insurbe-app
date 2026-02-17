@@ -32,7 +32,7 @@ export default function Footernew() {
             <div className="flex justify-center md:justify-start ">
               <div className="flex flex-col sm:flex-row gap-2 md:gap-4 py-4 ">
                 {/* GDPR Compliant */}
-                <div className="flex items-center gap-2 rounded-xl py-2">
+                <div className="flex items-center gap-3 rounded-xl py-2">
                   <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
                     <Image
                       src="/gifs_assets/gdprlogo.svg"
@@ -64,12 +64,12 @@ export default function Footernew() {
                 </div>
 
                 {/* Data Security */}
-                <div className="flex items-center gap-3 p-2">
+                <div className="flex items-center gap-1 p-2">
                   <Image
                     src="/gifs_assets/sslnew.png"
                     alt="Secure SSL Encryption"
-                    width={40}
-                    height={40}
+                    width={50}
+                    height={50}
                     className="rounded-full object-cover flex-shrink-0"
                   />
 
