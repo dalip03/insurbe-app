@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import jsPDF from "jspdf";
+import SignatureCanvas from "react-signature-canvas";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   CheckCircle,
@@ -102,6 +103,7 @@ interface FormData {
   authorizeInsurBe: boolean;
   insuranceContractDocuments: boolean;
   healthDataDeclaration: boolean;
+  signatureConsent:boolean;
 }
 
 // Types
@@ -200,6 +202,7 @@ export default function ComprehensiveInsuranceForm() {
     healthDataDeclaration: false,
     insuranceContractDocuments: false,
     authorizeInsurBe: false,
+    signatureConsent: false,
   });
 
   const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>(
@@ -208,7 +211,8 @@ export default function ComprehensiveInsuranceForm() {
   const [touched, setTouched] = useState<
     Partial<Record<keyof FormData, boolean>>
   >({});
-
+  const sigCanvas = useRef<SignatureCanvas | null>(null);
+  const [signatureError, setSignatureError] = useState("");
   const [selectedPlan, setSelectedPlan] = useState<{
     title: string;
     price: string;
@@ -401,8 +405,12 @@ export default function ComprehensiveInsuranceForm() {
 
       if (!formData.confirmCorrectInformation)
         newErrors.confirmCorrectInformation = "Required";
+      
     }
-
+    
+     if (!formData.signatureConsent) {
+    newErrors.signatureConsent = "You must confirm consent";
+  }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -1439,9 +1447,71 @@ export default function ComprehensiveInsuranceForm() {
                     className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition"
                   />
                 </FormField>
-<div>
-  fghd
-</div>
+                {/* ================= SIGNATURE SECTION ================= */}
+                <div className="mt-10 bg-white rounded-2xl shadow-sm border p-6">
+                  <h2 className="text-2xl font-semibold mb-2">
+                    Sign your application
+                  </h2>
+                  <p className="text-gray-600 mb-6">
+                    In order to start processing your application, we need a
+                    clear signature as a means of consent.
+                  </p>
+
+                  {/* Signature Pad */}
+                  <div className="bg-gray-100 rounded-xl p-4 relative">
+                    <SignatureCanvas
+                      ref={sigCanvas}
+                      penColor="black"
+                      canvasProps={{
+                        className:
+                          "w-full h-[200px] bg-white rounded-xl border border-gray-300",
+                      }}
+                    />
+
+                    {/* Reset Button */}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        sigCanvas.current?.clear();
+                        setSignatureError("");
+                      }}
+                      className="absolute bottom-4 right-6 text-sm text-gray-500 hover:text-black"
+                    >
+                      Reset
+                    </button>
+                  </div>
+
+                  {signatureError && (
+                    <p className="text-red-500 text-sm mt-2">
+                      {signatureError}
+                    </p>
+                  )}
+
+                  {/* Consent Checkbox */}
+                  <label className="flex items-start gap-3 mt-6 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={formData.signatureConsent}
+                      onChange={(e) =>
+                        handleChange("signatureConsent", e.target.checked)
+                      }
+                      className="mt-1 w-5 h-5 text-purple-600 rounded"
+                    />
+                    <span className="text-sm text-gray-700">
+                      I have read and understood the{" "}
+                      <span className="underline cursor-pointer">
+                        privacy policy
+                      </span>
+                      , <span className="underline cursor-pointer">T&Cs</span>{" "}
+                      and{" "}
+                      <span className="underline cursor-pointer">
+                        Feather broker mandate
+                      </span>{" "}
+                      and I hereby confirm that I give my full consent.
+                    </span>
+                  </label>
+                </div>
+
                 {/* ================= TERMS SECTION ================= */}
                 <div className="space-y-8 border-t pt-6">
                   {/* ================= GENERAL SECTION ================= */}
