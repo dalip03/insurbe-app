@@ -147,7 +147,7 @@ drawWrappedText(
 );
 
 drawWrappedText(
-  "InsurBe Global Services GmbH acts as an insurance agent for one or multiple clients in accordance with § 34d par. 1 Industrial Code. The competent authority is IHK Berlin, Breite Straße 29, 10178 Berlin, Germany. InsurBe Global Services GmbH is registered in the register of insurance intermediaries under the number D- IOJC-EBSW8-35."
+  "InsurBe GmbH acts as an insurance agent for one or multiple clients in accordance with § 34d par. 1 Industrial Code. The competent authority is IHK Berlin, Breite Straße 29, 10178 Berlin, Germany. InsurBe GmbH is registered in the register of insurance intermediaries under the number D- IOJC-EBSW8-35."
 );
 
 drawWrappedText(
@@ -155,7 +155,7 @@ drawWrappedText(
 );
 
 drawWrappedText(
-  "As part of its role as an insurance intermediary, InsurBe Global Services GmbH provides consulting in accordance with the legal requirements and receives a commission by the product provider for successful mediation of an insurance contract. As a result, this commission shall not be paid by you but is already part of the insurance premium. InsurBe Global Services GmbH does not receive any additional compensation in connection with the mediation. No insurance company or parent company of an insurance company has a direct or indirect interest of more than 10 % in voting rights or capital of InsurBe Global Services GmbH."
+  "As part of its role as an insurance intermediary, InsurBe GmbH provides consulting in accordance with the legal requirements and receives a commission by the product provider for successful mediation of an insurance contract. As a result, this commission shall not be paid by you but is already part of the insurance premium. InsurBe GmbH does not receive any additional compensation in connection with the mediation. No insurance company or parent company of an insurance company has a direct or indirect interest of more than 10 % in voting rights or capital of InsurBe GmbH."
 );
 
 

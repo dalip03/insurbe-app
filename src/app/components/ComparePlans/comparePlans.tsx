@@ -2,14 +2,13 @@
 
 import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, X, ArrowRight, Star } from "lucide-react";
+import { Check, X, Star } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import PlansCompare from "./PlanCompares";
 import { usePremiumStore } from "@/app/stores/premiumStore";
 import { useJourneyStore } from "@/app/stores/journeyStore";
 import { useDocumentStore } from "@/app/stores/documentStore";
-import InsuranceCalculatorPrivate from "@/app/insurance/InsuranceCalculatorPrivate";
 
 // ✅ Health Answer Types
 interface HealthAnswer {

@@ -34,12 +34,8 @@ export default function SubmitApplication() {
     category: string;
   } | null>(null);
 
-  useEffect(() => {
-    const planData = sessionStorage.getItem("selectedPlan");
-    if (planData) {
-      setPlan(JSON.parse(planData));
-    }
-  }, []);
+  const storedPlan = sessionStorage.getItem("selectedPlan");
+  const plans = storedPlan ? JSON.parse(storedPlan) : null;
 
   /* ---------- Form state ---------- */
 
@@ -245,6 +241,13 @@ export default function SubmitApplication() {
     return fallbackDate.toISOString().split("T")[0];
   }
 
+  let formattedCategory = "Private Health";
+
+  if (plans?.category) {
+    const parts = plans.category.split(" ");
+    formattedCategory =
+      parts.length > 1 ? `${parts[1]} - ${parts[0]}` : plans.category;
+  }
   /* ---------- UI ---------- */
 
   return (
@@ -273,10 +276,8 @@ export default function SubmitApplication() {
             className="text-3xl md:text-5xl md:px-12 font-extrabold bg-gradient-to-r from-primary to-purple-800 bg-clip-text text-transparent leading-snug"
           >
             <span className="text-gray-700">
-              {plan
-                ? `${plan.category.split(" ")[1]} - ${plan.category.split(" ")[0]} `
-                : "Private Health"}
-            </span>
+              <span className="text-gray-700">{formattedCategory}</span>
+            </span>{" "}
             Health insurance application{" "}
           </motion.h1>
 
