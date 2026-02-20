@@ -25,18 +25,18 @@ const plans = [
     bgGradient: "from-blue-50 to-cyan-50",
     badge: "Most Popular",
   },
-    {
-      title: "Student Private Health",
-      description:
-        "Premium care with faster access and flexible coverage options.",
-      icon: HeartPulse,
-      key: "private",
-      href: "/ottonovaSignupform",
-      gradient: "from-purple-500 to-pink-500",
-      bgGradient: "from-purple-50 to-pink-50",
-      badge: "Expat Choice",
-      priceNote: `Starts at ${INSURANCE_PLANS.INSURBE_STUDENT_CLASSIC} € / month`,
-    },
+  {
+    title: "Student Private Health",
+    description:
+      "Premium care with faster access and flexible coverage options.",
+    icon: HeartPulse,
+    key: "private",
+    href: "/ottonovaSignupform",
+    gradient: "from-purple-500 to-pink-500",
+    bgGradient: "from-purple-50 to-pink-50",
+    badge: "Expat Choice",
+    priceNote: `Starts at ${INSURANCE_PLANS.INSURBE_STUDENT_MAWISTA} € / month`,
+  },
 ];
 
 export default function WeOffersStudent() {
@@ -233,35 +233,35 @@ export default function WeOffersStudent() {
                 {/* Price note */}
                 {plan.priceNote && (
                   <div className="flex items-center gap-2 mb-2">
-                   <motion.div
-      animate={{
-        scale: [1, 1.3, 1],
-        opacity: [0.5, 1, 0.5],
-      }}
-      transition={{
-        duration: 2,
-        repeat: Infinity,
-        ease: "easeInOut",
-      }}
-      className="relative shrink-0"
-    >
-      <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-linear-to-r from-purple-500 to-pink-500"></div>
-      <motion.div
-        animate={{
-          scale: [1, 2, 1],
-          opacity: [0.7, 0, 0.7],
-        }}
-        transition={{
-          duration: 2,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-        className="absolute inset-0 w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-linear-to-r from-purple-500 to-pink-500"
-      ></motion.div>
-    </motion.div>
-    <span className="text-xs sm:text-sm font-bold text-transparent bg-clip-text bg-linear-to-r from-purple-700 via-primary to-pink-600 whitespace-nowrap">
-      {plan.priceNote}
-    </span>
+                    <motion.div
+                      animate={{
+                        scale: [1, 1.3, 1],
+                        opacity: [0.5, 1, 0.5],
+                      }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                      }}
+                      className="relative shrink-0"
+                    >
+                      <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-linear-to-r from-purple-500 to-pink-500"></div>
+                      <motion.div
+                        animate={{
+                          scale: [1, 2, 1],
+                          opacity: [0.7, 0, 0.7],
+                        }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                        }}
+                        className="absolute inset-0 w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-linear-to-r from-purple-500 to-pink-500"
+                      ></motion.div>
+                    </motion.div>
+                    <span className="text-xs sm:text-sm font-bold text-transparent bg-clip-text bg-linear-to-r from-purple-700 via-primary to-pink-600 whitespace-nowrap">
+                      {plan.priceNote}
+                    </span>
                   </div>
                 )}
 
