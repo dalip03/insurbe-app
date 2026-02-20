@@ -124,11 +124,11 @@ export default function ChooseUs() {
           "
                   >
                     {/* Icon */}
-              <div className={`relative w-14 h-14 mb-6 rounded-2xl ${ICON_BG} shadow-xl flex items-center justify-center`}>
-                     
-                     
-                        <Icon className="w-7 h-7 text-white" />
-                      </div>
+                    <div
+                      className={`relative w-14 h-14 mb-6 rounded-2xl ${ICON_BG} shadow-xl flex items-center justify-center`}
+                    >
+                      <Icon className="w-7 h-7 text-white" />
+                    </div>
 
                     <h3 className="text-lg font-semibold text-gray-900 mb-3">
                       {item.title}

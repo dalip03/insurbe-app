@@ -15,6 +15,11 @@ import {
   StarIcon,
   Users,
   Heart,
+  ArrowRight,
+  Globe,
+  Euro,
+  Zap,
+  Star,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -208,7 +213,7 @@ export default function InsuranceEligibilityQuiz() {
           className="relative"
         >
           {/* Glassmorphism Container */}
-          <div className="relative backdrop-blur-xl bg-white/70 border border-white/40 rounded-[2rem] shadow-2xl shadow-purple-500/10 p-8 sm:p-10">
+          <div className="relative backdrop-blur-xl bg-white/70 border border-white/40 rounded-[2rem] shadow-2xl shadow-purple-500/10 p-8 sm:p-6">
             {/* Progress Bar */}
             <div className="absolute top-0 left-0 right-0 h-1.5 bg-gray-200/50 rounded-t-[2rem] overflow-hidden">
               <motion.div
@@ -509,119 +514,187 @@ export default function InsuranceEligibilityQuiz() {
                       </div>
                     </div>
                   ) : (
-                    // PRIVATE INSURANCE PLAN (Age 30+)
-                    <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-purple-600 via-pink-600 to-blue-600 p-[2px]">
-                      <div className="bg-white rounded-3xl p-8 space-y-6">
-                        {/* Header */}
-                        <div className="flex items-start justify-between gap-4">
-                          <div className="flex-1">
-                            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-100 to-yellow-100 border border-amber-200 mb-3">
-                              <StarIcon className="w-4 h-4 text-amber-600" />
-                              <span className="text-xs font-bold text-amber-700 uppercase tracking-wide">
-                                Perfect Match
-                              </span>
-                            </div>
-                            <h4 className="text-3xl font-extrabold text-gray-900 mb-2">
-                              Private Insurance
-                            </h4>
-                            <p className="text-gray-600 text-sm">
-                              Tailored for{" "}
-                              {degree === "bachelor"
-                                ? "Bachelor's"
-                                : degree === "master"
-                                  ? "Master's"
-                                  : degree === "phd"
-                                    ? "PhD"
-                                    : "Graduate"}{" "}
-                              students in the {age} age group
-                            </p>
-                          </div>
-                          <div className="flex items-center">
-                            <Image
-                              src="/partners_asset/ottonova.png"
-                              alt="Logo"
-                              width={120}
-                              height={24}
-                              className="object-contain"
-                            />
-                          </div>
-                        </div>
+                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+  {/* ================= OTTONOVA ================= */}
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{ duration: 0.5 }}
+    whileHover={{ y: -4 }}
+    className="relative group"
+  >
+    <div className="absolute inset-0 bg-gradient-to-br from-purple-600 via-pink-600 to-blue-600 rounded-2xl sm:rounded-3xl blur-lg opacity-30 group-hover:opacity-50 transition-opacity" />
+    
+    <div className="relative bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-xl border border-purple-200">
+      {/* Header */}
+      <div className="flex items-start justify-between mb-3 sm:mb-4">
+        <div className="flex-1">
+          <div className="w-24 h-8 sm:w-32 sm:h-10 relative mb-2">
+            <Image
+              src="/partners_asset/ottonova.png"
+              alt="Ottonova"
+              fill
+              className="object-contain object-left"
+            />
+          </div>
+          <h4 className="text-base sm:text-lg font-bold text-gray-900 mb-1">
+            Ottonova Private Insurance
+          </h4>
+          <p className="text-xs text-gray-600 line-clamp-2">
+            Premium private health coverage for students
+          </p>
+        </div>
+       
+      </div>
 
-                        {/* Benefits Grid */}
-                        <div className="space-y-1">
-                          {benefits.map((benefit, idx) => {
-                            const Icon = benefit.icon;
-                            return (
-                              <motion.div
-                                key={idx}
-                                initial={{ opacity: 0, x: -20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: idx * 0.1 }}
-                                className="flex items-start gap-4 px-4 py-1 rounded-xl bg-gradient-to-br from-gray-50 to-white border border-gray-100 hover:shadow-md transition-shadow"
-                              >
-                                <div
-                                  className={`p-2 rounded-lg bg-gradient-to-br ${
-                                    idx === 0
-                                      ? "from-emerald-100 to-emerald-200"
-                                      : idx === 1
-                                        ? "from-blue-100 to-blue-200"
-                                        : idx === 2
-                                          ? "from-purple-100 to-purple-200"
-                                          : "from-pink-100 to-pink-200"
-                                  }`}
-                                >
-                                  <Icon
-                                    className={`w-5 h-5 ${benefit.color}`}
-                                  />
-                                </div>
-                                <span className="text-gray-700 font-medium text-sm leading-relaxed flex-1">
-                                  {benefit.text}
-                                </span>
-                              </motion.div>
-                            );
-                          })}
-                        </div>
+      {/* Features - Compact */}
+      <div className="grid grid-cols-2 gap-2 mb-3 sm:mb-4">
+        <div className="flex items-center gap-1.5 text-xs">
+          <div className="w-5 h-5 rounded bg-green-50 flex items-center justify-center flex-shrink-0">
+            <CheckCircle className="w-3 h-3 text-green-600" />
+          </div>
+          <span className="text-gray-700 truncate">Digital-first</span>
+        </div>
+        <div className="flex items-center gap-1.5 text-xs">
+          <div className="w-5 h-5 rounded bg-purple-50 flex items-center justify-center flex-shrink-0">
+            <Star className="w-3 h-3 text-purple-600" />
+          </div>
+          <span className="text-gray-700 truncate">English support</span>
+        </div>
+        <div className="flex items-center gap-1.5 text-xs">
+          <div className="w-5 h-5 rounded bg-blue-50 flex items-center justify-center flex-shrink-0">
+            <Zap className="w-3 h-3 text-blue-600" />
+          </div>
+          <span className="text-gray-700 truncate">Fast processing</span>
+        </div>
+        <div className="flex items-center gap-1.5 text-xs">
+          <div className="w-5 h-5 rounded bg-pink-50 flex items-center justify-center flex-shrink-0">
+            <Shield className="w-3 h-3 text-pink-600" />
+          </div>
+          <span className="text-gray-700 truncate">Full coverage</span>
+        </div>
+      </div>
 
-                        {/* Pricing & CTA */}
-                        <div className="pt-4 border-t border-gray-200">
-                          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                            <div>
-                              <p className="text-sm text-gray-500 mb-1">
-                                Starting from
-                              </p>
-                              <p className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">
-                                €{INSURANCE_PLANS.INSURBE_STUDENT_CLASSIC}
-                                <span className="text-lg text-gray-500 font-medium">
-                                  /month
-                                </span>
-                              </p>
-                            </div>
+      {/* Price Section - Compact */}
+      <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-3 sm:p-4 mb-3 sm:mb-4">
+        <p className="text-[10px] sm:text-xs text-gray-600 mb-1">Starting from</p>
+        <div className="flex items-baseline gap-1">
+          <span className="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">
+            €{INSURANCE_PLANS.INSURBE_STUDENT_OTTONOVA}
+          </span>
+          <span className="text-sm text-gray-500 font-semibold">/month</span>
+        </div>
+      </div>
 
-                            <motion.button
-                              onClick={() => {
-                                handlePlanSelect({
-                                  title: "Ottonova Private Insurance",
-                                    price: INSURANCE_PLANS.INSURBE_STUDENT_CLASSIC.toString(),
-                                  category: "Private",
-                                });
-                                router.push("/ottonovaSignupform");
-                              }}
-                              whileHover={{ scale: 1.05, y: -2 }}
-                              whileTap={{ scale: 0.95 }}
-                              className="w-full sm:w-auto px-8 py-4 rounded-2xl font-bold text-lg text-white bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 shadow-2xl shadow-purple-500/40 hover:shadow-purple-500/60 transition-all flex items-center justify-center gap-2"
-                            >
-                              Purchase Now
-                              <ChevronRight className="w-5 h-5" />
-                            </motion.button>
-                          </div>
+      {/* CTA Button - Compact */}
+      <motion.button
+        onClick={() => {
+          handlePlanSelect({
+            title: "Ottonova Private Insurance",
+            price: INSURANCE_PLANS.INSURBE_STUDENT_CLASSIC.toString(),
+            category: "Private",
+          });
+          router.push("/ottonovaSignupform");
+        }}
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+        className="w-full py-2.5 sm:py-3 rounded-xl font-bold text-sm sm:text-base text-white bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2"
+      >
+        Get Started
+        <ArrowRight className="w-4 h-4" />
+      </motion.button>
+    </div>
+  </motion.div>
 
-                          <p className="text-xs text-gray-500 mt-4 text-center sm:text-left">
-                            🔒 No commitment required • Cancel anytime •
-                            Money-back guarantee
-                          </p>
-                        </div>
-                      </div>
-                    </div>
+  {/* ================= MAWISTA ================= */}
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{ duration: 0.5, delay: 0.1 }}
+    whileHover={{ y: -4 }}
+    className="relative group"
+  >
+    <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-2xl sm:rounded-3xl blur-lg opacity-30 group-hover:opacity-50 transition-opacity" />
+    
+    <div className="relative bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-xl border border-blue-200">
+      {/* Header */}
+      <div className="flex items-start justify-between mb-3 sm:mb-4">
+        <div className="flex-1">
+          <div className="w-24 h-8 sm:w-32 sm:h-10 relative mb-2">
+            <Image
+              src="/partners_asset/mawista.svg"
+              alt="Mawista"
+              fill
+              className="object-contain object-left"
+            />
+          </div>
+          <h4 className="text-base sm:text-lg font-bold text-gray-900 mb-1">
+            Mawista Student Insurance
+          </h4>
+          <p className="text-xs text-gray-600 line-clamp-2">
+            Affordable coverage tailored for international students
+          </p>
+        </div>
+        
+      </div>
+
+      {/* Features - Compact */}
+      <div className="grid grid-cols-2 gap-2 mb-3 sm:mb-4">
+        <div className="flex items-center gap-1.5 text-xs">
+          <div className="w-5 h-5 rounded bg-green-50 flex items-center justify-center flex-shrink-0">
+            <Euro className="w-3 h-3 text-green-600" />
+          </div>
+          <span className="text-gray-700 truncate">Budget-friendly</span>
+        </div>
+        <div className="flex items-center gap-1.5 text-xs">
+          <div className="w-5 h-5 rounded bg-blue-50 flex items-center justify-center flex-shrink-0">
+            <Globe className="w-3 h-3 text-blue-600" />
+          </div>
+          <span className="text-gray-700 truncate">International</span>
+        </div>
+        <div className="flex items-center gap-1.5 text-xs">
+          <div className="w-5 h-5 rounded bg-purple-50 flex items-center justify-center flex-shrink-0">
+            <Clock className="w-3 h-3 text-purple-600" />
+          </div>
+          <span className="text-gray-700 truncate">Quick setup</span>
+        </div>
+        <div className="flex items-center gap-1.5 text-xs">
+          <div className="w-5 h-5 rounded bg-pink-50 flex items-center justify-center flex-shrink-0">
+            <Heart className="w-3 h-3 text-pink-600" />
+          </div>
+          <span className="text-gray-700 truncate">Great value</span>
+        </div>
+      </div>
+
+      {/* Price Section - Compact */}
+     <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-3 sm:p-4 mb-3 sm:mb-4">
+        <p className="text-[10px] sm:text-xs text-gray-600 mb-1">Starting from</p>
+        <div className="flex items-baseline gap-1">
+          <span className="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">
+            €{INSURANCE_PLANS.INSURBE_STUDENT_MAWISTA}
+          </span>
+          <span className="text-sm text-gray-500 font-semibold">/month</span>
+        </div>
+      </div>
+
+      {/* CTA Button - Compact */}
+      <motion.button
+        onClick={() => {
+          window.location.href =
+            "https://www2.elviab2b.de/mawista-booking/index.faces?SPRACHE=EN&PT=STU&UVM=IB25";
+        }}
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+        className="w-full py-2.5 sm:py-3 rounded-xl font-bold text-sm sm:text-base text-white bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2"
+      >
+        Get Started
+        <ArrowRight className="w-4 h-4" />
+      </motion.button>
+    </div>
+  </motion.div>
+</div>
                   )}
 
                   {/* Reset Button */}

@@ -67,7 +67,7 @@ export default function WeOffersStudent() {
   };
 
   return (
-    <section className="relative py-20 sm:py-24 px-4 sm:px-8 overflow-hidden bg-linear-to-b from-white via-purple-50/20 to-white">
+    <section className="relative py-20 sm:py-24 px-4 sm:px-8 overflow-hidden ">
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
