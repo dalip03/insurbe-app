@@ -145,7 +145,7 @@ export default function Terms() {
               href="mailto:info@insurbe.com"
               className="font-medium text-gray-800 hover:underline"
             >
-              [info@insurbe.com](mailto:info@insurbe.com)
+              [info@insurbe.com]
             </a>
           </p>
         </footer>
