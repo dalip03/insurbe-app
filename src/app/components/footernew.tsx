@@ -200,8 +200,17 @@ export default function Footernew() {
                   >
                     Terms & Conditions
                   </a>
+                 
                 </li>
-
+<li>
+                  <a
+                    href="/accessibility"
+                    className="hover:text-purple-300 text-xl md:text-[18px]"
+                  >
+                    Accessibility
+                  </a>
+                 
+                </li>
                
               </ul>
             </div>
