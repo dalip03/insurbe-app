@@ -156,7 +156,7 @@ export default function PrivateInsuranceTariffs() {
         </div>
 
         {/* Compare Button */}
-        <div className="text-center mt-8">
+        {/* <div className="text-center mt-8">
           <button
             onClick={() => setShowCompare(!showCompare)}
             className="px-10 py-4 rounded-full bg-linear-to-r from-purple-600 to-primary text-white font-semibold shadow-lg inline-flex items-center gap-2"
@@ -164,7 +164,20 @@ export default function PrivateInsuranceTariffs() {
             {showCompare ? "Hide" : "Compare"} tariffs
             {showCompare ? <ChevronUp /> : <ChevronDown />}
           </button>
-        </div>
+        </div> */}
+
+        {/* Button (Above Table Only When Closed) */}
+        {!showCompare && (
+          <div className="text-center mt-8">
+            <button
+              onClick={() => setShowCompare(true)}
+              className="px-10 py-4 rounded-full bg-linear-to-r from-purple-600 to-primary text-white font-semibold shadow-lg inline-flex items-center gap-2"
+            >
+              Compare tariffs
+              <ChevronDown />
+            </button>
+          </div>
+        )}
 
         {/* ================= SIMPLE FEATURE COMPARISON ================= */}
 
@@ -174,37 +187,29 @@ export default function PrivateInsuranceTariffs() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="mt-10"
+              className="mt-4"
             >
-              {/* Fixed Header */}
-              <div
-                className="grid grid-cols-3 text-xl font-bold 
-                      pl-28 py-4 px-8
-                      bg-gradient-to-r from-purple-100 to-purple-200 
-                      rounded-t-xl"
-              >
-                <div>Standard</div>
-                <div>Plus</div>
-                <div>Premium</div>
-              </div>
-
               {/* Scrollable Content */}
-              <div className="max-h-[500px] overflow-y-auto space-y-8 px-8 py-6 ">
+              <div className="h-full space-y-8 px-8 py-4 ">
                 {comparisonData.map((item, index) => (
                   <motion.div
                     key={item.label}
                     initial={{ opacity: 0, y: 15 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.05 }}
-                    className="border-b pb-6"
+                    className="border-b border-gray-400"
                   >
                     {/* Heading */}
-                    <h3 className="text-md font-semibold mb-4 pl-12">
+                    <h3 className="text-md font-semibold pl-12 pt-4 text-gray-800">
                       {item.label}
                     </h3>
 
                     {/* Values Row */}
-                    <div className="grid grid-cols-3 text-sm font-medium text-primary pl-28">
+                    <div
+                      className="grid grid-cols-3 text-sm font-medium text-gray-700 text-center py-4 
+                bg-linear-to-r from-white/20 via-gray-100/60 to-purple-100/40"
+                    >
+                      {" "}
                       <div>{item.standard}</div>
                       <div>{item.plus}</div>
                       <div>{item.premium}</div>
@@ -215,6 +220,19 @@ export default function PrivateInsuranceTariffs() {
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* Button (Below Table When Open) */}
+        {showCompare && (
+          <div className="text-center mt-10">
+            <button
+              onClick={() => setShowCompare(false)}
+              className="px-10 py-4 rounded-full bg-linear-to-r from-purple-600 to-primary text-white font-semibold shadow-lg inline-flex items-center gap-2"
+            >
+              Hide tariffs
+              <ChevronUp />
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );

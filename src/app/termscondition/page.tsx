@@ -142,10 +142,10 @@ export default function Terms() {
           <p className="mt-2">
             Questions? Contact{" "}
             <a
-              href="mailto:support@insurbe.com"
+              href="mailto:info@insurbe.com"
               className="font-medium text-gray-800 hover:underline"
             >
-              [support@insurbe.com](mailto:support@insurbe.com)
+              [info@insurbe.com](mailto:info@insurbe.com)
             </a>
           </p>
         </footer>

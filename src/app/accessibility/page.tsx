@@ -34,10 +34,10 @@ export default function AccessibilityPage() {
         <p className="text-lg text-gray-700 mb-6 leading-relaxed">
           Send us the issue at{" "}
           <a
-            href="mailto:support@insurbe.com"
+            href="mailto:info@insurbe.com"
             className="text-primary underline hover:text-purple-600 transition"
           >
-            support@insurbe.com
+            info@insurbe.com
           </a>
         </p>
 
