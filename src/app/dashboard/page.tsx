@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Shield, FileText, User } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 interface Policy {
   id: number;
@@ -27,35 +28,41 @@ export default function DashboardPage() {
   const userName = userEmail.split("@")[0] || "User";
   // Capitalize first letter
   const displayName = userName.charAt(0).toUpperCase() + userName.slice(1);
+  const router = useRouter();
+  // useEffect(() => {
+  //   setPolicies([
+  //     {
+  //       id: 1,
+  //       name: "Student Health Insurance",
+  //       status: "Active",
+  //       startDate: "01 Jan 2026",
+  //     },
+  //     {
+  //       id: 2,
+  //       name: "Travel Insurance",
+  //       status: "Pending",
+  //       startDate: "15 Feb 2026",
+  //     },
+  //   ]);
+
+  //   setDocuments([
+  //     {
+  //       id: 1,
+  //       title: "Policy Certificate",
+  //       uploadedAt: "02 Jan 2026",
+  //     },
+  //     {
+  //       id: 2,
+  //       title: "Invoice Receipt",
+  //       uploadedAt: "03 Jan 2026",
+  //     },
+  //   ]);
+  // }, []);
 
   useEffect(() => {
-    setPolicies([
-      {
-        id: 1,
-        name: "Student Health Insurance",
-        status: "Active",
-        startDate: "01 Jan 2026",
-      },
-      {
-        id: 2,
-        name: "Travel Insurance",
-        status: "Pending",
-        startDate: "15 Feb 2026",
-      },
-    ]);
-
-    setDocuments([
-      {
-        id: 1,
-        title: "Policy Certificate",
-        uploadedAt: "02 Jan 2026",
-      },
-      {
-        id: 2,
-        title: "Invoice Receipt",
-        uploadedAt: "03 Jan 2026",
-      },
-    ]);
+    // TODO: Fetch real data from API
+    setPolicies([]);
+    setDocuments([]);
   }, []);
 
   return (
@@ -115,53 +122,77 @@ export default function DashboardPage() {
         {/* Policies */}
         <div className="bg-white rounded-xl p-6 shadow-sm">
           <h2 className="text-xl font-bold text-gray-900 mb-4">My Policies</h2>
-          <div className="space-y-3">
-            {policies.map((policy) => (
-              <div
-                key={policy.id}
-                className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition"
+
+          {policies.length === 0 ? (
+            <div className="text-center py-12">
+              <Shield className="w-12 h-12 text-purple-300 mx-auto mb-4" />
+              <p className="text-gray-700 font-medium">
+                You don’t have any policies yet.
+              </p>
+              <p className="text-sm text-gray-500 mt-2 mb-6">
+                Get insured today and manage everything from your dashboard.
+              </p>
+              <button
+                onClick={() => router.push("/insurance/private-health")}
+                className="px-6 py-3 bg-purple-600 text-white rounded-lg text-sm font-medium hover:bg-purple-700 transition"
               >
-                <div>
-                  <p className="font-semibold text-gray-900">{policy.name}</p>
-                  <p className="text-sm text-gray-600">
-                    Start: {policy.startDate}
-                  </p>
-                </div>
-                <span
-                  className={`px-3 py-1 rounded-full text-sm font-medium ${
-                    policy.status === "Active"
-                      ? "bg-green-100 text-green-700"
-                      : "bg-yellow-100 text-yellow-700"
-                  }`}
+                Explore Plans
+              </button>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {policies.map((policy) => (
+                <div
+                  key={policy.id}
+                  className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition"
                 >
-                  {policy.status}
-                </span>
-              </div>
-            ))}
-          </div>
+                  <div>
+                    <p className="font-semibold text-gray-900">{policy.name}</p>
+                    <p className="text-sm text-gray-600">
+                      Start: {policy.startDate}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Documents */}
         <div className="bg-white rounded-xl p-6 shadow-sm">
           <h2 className="text-xl font-bold text-gray-900 mb-4">Documents</h2>
-          <div className="space-y-3">
-            {documents.map((doc) => (
-              <div
-                key={doc.id}
-                className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition"
-              >
-                <div>
-                  <p className="font-semibold text-gray-900">{doc.title}</p>
-                  <p className="text-sm text-gray-600">
-                    Uploaded: {doc.uploadedAt}
-                  </p>
+
+          {documents.length === 0 ? (
+            <div className="text-center py-12">
+              <FileText className="w-12 h-12 text-blue-300 mx-auto mb-4" />
+              <p className="text-gray-700 font-medium">
+                No documents available yet.
+              </p>
+              <p className="text-sm text-gray-500 mt-2 mb-6">
+                Once your policy is active, important documents will appear
+                here.
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {documents.map((doc) => (
+                <div
+                  key={doc.id}
+                  className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition"
+                >
+                  <div>
+                    <p className="font-semibold text-gray-900">{doc.title}</p>
+                    <p className="text-sm text-gray-600">
+                      Uploaded: {doc.uploadedAt}
+                    </p>
+                  </div>
+                  <button className="px-4 py-2 bg-purple-600 text-white rounded-lg text-sm font-medium hover:bg-purple-700 transition">
+                    View
+                  </button>
                 </div>
-                <button className="px-4 py-2 bg-purple-600 text-white rounded-lg text-sm font-medium hover:bg-purple-700 transition">
-                  View
-                </button>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
