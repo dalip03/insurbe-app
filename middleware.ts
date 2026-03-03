@@ -26,5 +26,6 @@ export const config = {
     "/calculator/submitApplication/:path*",
     "/ottonovaSignupform/:path*",
     "/insurance/public-health/:path*",
+    "/dashboard/:path*",
   ],
 };
