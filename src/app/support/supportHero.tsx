@@ -82,9 +82,9 @@ export default function SupportHeroPage() {
       id: "Email",
       title: "Reach us by Email",
       description:
-        "Email us at support@insurbe.com for personalized support and inquiries.",
+        "Email us at info@insurbe.com for personalized support and inquiries.",
       action: () => {
-        window.location.href = "mailto:support@insurbe.com";
+        window.location.href = "mailto:info@insurbe.com";
       },
       enabled: true,
       icon: (

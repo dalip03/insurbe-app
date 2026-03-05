@@ -21,11 +21,10 @@ export default withAuth(
 );
 
 export const config = {
-  matcher: [
-    "/insuranceSignupFlow/:path*",
-    "/calculator/submitApplication/:path*",
-    "/ottonovaSignupform/:path*",
-    "/insurance/public-health/:path*",
-    "/dashboard/:path*",
-  ],
+  matcher: ["/dashboard/:path*"],
 };
+
+//  "/insuranceSignupFlow/:path*",
+//     "/calculator/submitApplication/:path*",
+//     "/ottonovaSignupform/:path*",
+//     "/insurance/public-health/:path*",
