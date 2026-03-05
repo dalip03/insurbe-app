@@ -196,6 +196,27 @@ export default function SubmitApplication() {
         }),
       );
 
+      /* ✅ SEND ACKNOWLEDGEMENT EMAIL (ADDED) */
+      try {
+        const orderId = `INS-${Date.now()}`;
+
+        await fetch("/api/sendAcknowledgement", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+            name: `${firstName} ${lastName}`,
+            orderId,
+            formType: "private", // change if needed (public/private/expat)
+          }),
+        });
+
+        console.log("📧 Acknowledgement email sent");
+      } catch (emailError) {
+        console.error("⚠️ Email sending failed:", emailError);
+      }
       router.push("/calculator/submitApplication/success");
     } catch (err) {
       console.error("❌ Submit error:", err);
@@ -248,10 +269,10 @@ export default function SubmitApplication() {
   // let formattedCategory = "Private Health";
 
   const formattedCategory = plan?.category
-  ? plan.category.split(" ").length > 1
-    ? `${plan.category.split(" ")[1]} - ${plan.category.split(" ")[0]}`
-    : plan.category
-  : "Private Health";
+    ? plan.category.split(" ").length > 1
+      ? `${plan.category.split(" ")[1]} - ${plan.category.split(" ")[0]}`
+      : plan.category
+    : "Private Health";
 
   // if (plan?.category) {
   //   const parts = plan.category.split(" ");
