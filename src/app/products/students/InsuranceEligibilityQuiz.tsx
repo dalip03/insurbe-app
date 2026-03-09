@@ -52,39 +52,6 @@ export default function InsuranceEligibilityQuiz() {
     { value: "above-30", label: "30 years & above" },
   ];
 
-  const benefits = [
-    {
-      icon: Shield,
-      text: "Accepted for university enrollment & city registration in Germany",
-      color: "text-emerald-600",
-    },
-    {
-      icon: Clock,
-      text: "Access to private & public doctors including extensive dental care",
-      color: "text-blue-600",
-    },
-    {
-      icon: Award,
-      text: "Dedicated personal support to find doctors & schedule appointments",
-      color: "text-purple-600",
-    },
-    {
-      icon: Sparkles,
-      text: "Fast digital reimbursement process for medical bills",
-      color: "text-pink-600",
-    },
-    {
-      icon: Award,
-      text: "Awarded 1st place for service & customer satisfaction",
-      color: "text-yellow-600",
-    },
-    {
-      icon: Shield,
-      text: "Option to switch to Public Health Insurance after graduation",
-      color: "text-indigo-600",
-    },
-  ];
-
   // TK Public Insurance benefits for under 30
   const tkBenefits = [
     {
@@ -495,7 +462,8 @@ export default function InsuranceEligibilityQuiz() {
                                   price: "141",
                                   category: "Public",
                                 });
-                                router.push("/insuranceSignupFlow");
+                                // router.push("/insuranceSignupFlow");
+                                 router.push(`/insuranceSignupFlow?provider=${"tk"}`)
                               }}
                               whileHover={{ scale: 1.05, y: -2 }}
                               whileTap={{ scale: 0.95 }}

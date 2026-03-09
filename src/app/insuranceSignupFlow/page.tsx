@@ -52,7 +52,7 @@ interface City {
 export default function InsuranceSignupFlow() {
   const router = useRouter();
   const [providerFromUrl, setProviderFromUrl] = useState<string | null>(null);
-
+  
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     setProviderFromUrl(params.get("provider"));

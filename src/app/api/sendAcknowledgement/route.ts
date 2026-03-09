@@ -27,7 +27,8 @@ export async function POST(req: Request) {
         <div style="font-family:Arial,sans-serif;line-height:1.6">
           <h2 style="color:#820ad1;">Hi ${name || "there"},</h2>
 
-          <p>Thank you for submitting your <b>${formType} insurance</b> application with <b>InsurBe</b>.</p>
+          
+          <p>Thank you for submitting your <b>InsurBe expat insurance</b> application with <b>InsurBe</b>.</p>
 
           <p>Our team will review your details and contact you shortly.</p>
 
