@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import AppointmentModal from "../components/modals/AppointmentModal";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const categories = [
   {
@@ -32,8 +33,7 @@ const categories = [
 ];
 
 export default function EnterpriseHeroSection() {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-
+const router = useRouter();
   return (
     <section className="relative min-h-screen bg-gradient-to-br from-purple-400 via-purple-500 to-pink-500 py-16 sm:py-10 px-4 sm:px-8 lg:px-18 overflow-hidden">
       {/* Background Pattern */}
@@ -63,7 +63,7 @@ export default function EnterpriseHeroSection() {
           {/* CTA */}
         
      <motion.button
-                  onClick={() => setIsModalOpen(true)}
+                 onClick={() => router.push("/book-appointment")}
                   whileHover={{ scale: 1.04 }}
                   whileTap={{ scale: 0.96 }}
  className="
@@ -152,10 +152,7 @@ export default function EnterpriseHeroSection() {
           ))}
         </motion.div>
       </div>
-         <AppointmentModal
-            open={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
-          />
+        
     </section>
  
           

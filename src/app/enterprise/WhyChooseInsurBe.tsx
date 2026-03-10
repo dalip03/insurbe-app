@@ -9,6 +9,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const features = [
   {
@@ -40,7 +41,7 @@ const features = [
 export default function WhyChooseInsurBe() {
 
   const MotionLink = motion(Link);
-
+  const router = useRouter();
   return (
     <section className="relative py-20 px-4 sm:px-8 lg:px-20 overflow-hidden">
       {/* Background */}

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import AppointmentModal from "./modals/AppointmentModal";
+import { useRouter } from "next/navigation";
 
 export default function FAQ() {
   const faqs = [
@@ -35,8 +35,7 @@ export default function FAQ() {
   ];
 
   const [openIndex, setOpenIndex] = useState<number | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const router = useRouter();
   return (
     <>
       <section className="py-16 px-4 sm:px-8 overflow-hidden">
@@ -59,9 +58,7 @@ export default function FAQ() {
               <motion.div
                 key={index}
                 className="py-4 cursor-pointer"
-                onClick={() =>
-                  setOpenIndex(openIndex === index ? null : index)
-                }
+                onClick={() => setOpenIndex(openIndex === index ? null : index)}
               >
                 <div className="flex justify-between items-center">
                   <h3 className="text-sm md:text-[17px] font-semibold">
@@ -97,7 +94,7 @@ export default function FAQ() {
 
           <motion.div className="text-center pt-14">
             <button
-              onClick={() => setIsModalOpen(true)}
+              onClick={() => router.push("/book-appointment")}
               className="border-2 border-primary px-6 py-3 rounded-full
                 font-bold text-primary hover:bg-primary hover:text-white transition"
             >
@@ -106,12 +103,6 @@ export default function FAQ() {
           </motion.div>
         </div>
       </section>
-
-      {/*  MODAL */}
-      <AppointmentModal
-        open={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-      />
     </>
   );
 }

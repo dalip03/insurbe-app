@@ -6,10 +6,11 @@ import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import AppointmentModal from "../components/modals/AppointmentModal";
+import { useRouter } from "next/navigation";
 
 export default function BuildPerfectPlanCTA() {
       const [isModalOpen, setIsModalOpen] = useState(false);
-  
+      const router = useRouter();
   return (
     <section className="relative overflow-hidden py-20 px-4 sm:px-8 lg:px-20">
       {/* Background Gradient */}
@@ -61,7 +62,7 @@ export default function BuildPerfectPlanCTA() {
           </p>
 
            <motion.button
-                  onClick={() => setIsModalOpen(true)}
+                onClick={() => router.push("/book-appointment")}
                   whileHover={{ scale: 1.04 }}
                   whileTap={{ scale: 0.96 }}
  className="
