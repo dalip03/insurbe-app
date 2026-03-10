@@ -65,3 +65,13 @@ body {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;     /* Firefox */
 }
+
+/* Hide Calendly branding ribbon */
+.calendly-inline-widget iframe + div,
+.calendly-badge-content,
+.calendly-badge-widget {
+  display: none !important;
+}
+.calendly-wrapper iframe + div {
+  display: none !important;
+}
